@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta name="build" content="2026-11-02T18:49:32Z">
+<meta name="build" content="2026-11-02T18:51:49Z">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>I miei ammoniti</title>
@@ -90,7 +90,7 @@ h1 span { color: var(--muted); font-weight: 600; }
 .pill.prob { background: var(--or); color: #1a1205; font-size: 13px; font-weight: 800; letter-spacing: .8px; padding: 4px 10px; box-shadow: 0 0 0 2px color-mix(in srgb, var(--or) 35%, transparent); }
 .pill.uff { font-size: 12px; padding: 3px 8px; }
 .probnote { margin: 8px 0 0; padding: 8px 12px; border-left: 4px solid var(--or); background: color-mix(in srgb, var(--or) 12%, transparent); border-radius: 6px; font-size: 13px; }
-.ltag { display: block; margin-top: 3px; font-size: 9px; font-weight: 800; letter-spacing: .5px; text-transform: uppercase; padding: 1px 4px; border-radius: 3px; text-align: center; }
+.ltag { display: block; width: max-content; margin-left: auto; white-space: nowrap; margin-top: 4px; font-size: 9px; font-weight: 800; letter-spacing: .5px; text-transform: uppercase; padding: 1px 4px; border-radius: 3px; text-align: center; }
 .ltag.prob { background: var(--or); color: #1a1205; }
 .ltag.uff { color: var(--good); border: 1px solid color-mix(in srgb, var(--good) 50%, transparent); }
 .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: grid; gap: 18px; }
@@ -383,9 +383,9 @@ function renderList() {
     const best = pick(m, state.mode);
     const b = document.createElement('button'); b.className = 'match'; b.type = 'button'; b.id = 'b' + m.id;
     b.setAttribute('aria-current', String(m.id === state.id));
-    b.innerHTML = `<span class="time"><span class="wd">${fmtWd(m.ko)}</span>${fmtTime(m.ko)}${locked(m) ? '' : `<span class="ltag ${m.uff ? 'uff' : 'prob'}">${m.uff ? 'Ufficiali' : 'Probabili'}</span>`}</span>
+    b.innerHTML = `<span class="time"><span class="wd">${fmtWd(m.ko)}</span>${fmtTime(m.ko)}</span>
       <span class="teams"><span class="team"><i class="chip" style="background:${m.hc[0]}"></i>${m.h}</span><span class="team"><i class="chip" style="background:${m.ac[0]}"></i>${m.a}</span></span>
-      <span class="p3"><b>${(best.p3 * 100).toFixed(1)}%</b>trio${myTris[m.id] ? '<span class="mysaved">✓ tuo tris</span>' : ''}</span>`;
+      <span class="p3"><b>${(best.p3 * 100).toFixed(1)}%</b>trio<span class="ltag ${m.uff ? 'uff' : 'prob'}">${m.uff ? 'Ufficiali' : 'Probabili'}</span>${myTris[m.id] ? '<span class="mysaved">✓ tuo tris</span>' : ''}</span>`;
     b.addEventListener('click', () => { history.replaceState(null, '', '#m' + m.id); select(m.id); focusPanel(b); });
     el.appendChild(b);
   }
