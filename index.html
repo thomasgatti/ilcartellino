@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta name="build" content="2026-11-02T18:48:52Z">
+<meta name="build" content="2026-11-02T18:49:32Z">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>I miei ammoniti</title>
@@ -85,7 +85,14 @@ h1 span { color: var(--muted); font-weight: 600; }
 .p3 b { display: block; font-size: 16px; color: var(--ink); }
 .pill { display: inline-block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; padding: 2px 6px; border-radius: 4px; }
 .pill.uff { background: color-mix(in srgb, var(--good) 18%, transparent); color: var(--good); }
-.pill.prob { background: color-mix(in srgb, var(--muted) 16%, transparent); color: var(--muted); }
+:root { --or: #ff8a1f; }
+:root:not([data-theme="dark"]) { --or: #e06a00; }
+.pill.prob { background: var(--or); color: #1a1205; font-size: 13px; font-weight: 800; letter-spacing: .8px; padding: 4px 10px; box-shadow: 0 0 0 2px color-mix(in srgb, var(--or) 35%, transparent); }
+.pill.uff { font-size: 12px; padding: 3px 8px; }
+.probnote { margin: 8px 0 0; padding: 8px 12px; border-left: 4px solid var(--or); background: color-mix(in srgb, var(--or) 12%, transparent); border-radius: 6px; font-size: 13px; }
+.ltag { display: block; margin-top: 3px; font-size: 9px; font-weight: 800; letter-spacing: .5px; text-transform: uppercase; padding: 1px 4px; border-radius: 3px; text-align: center; }
+.ltag.prob { background: var(--or); color: #1a1205; }
+.ltag.uff { color: var(--good); border: 1px solid color-mix(in srgb, var(--good) 50%, transparent); }
 .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: grid; gap: 18px; }
 .vs { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 16px; justify-content: space-between; }
 .vs h2 { font-family: var(--display); font-weight: 900; font-size: clamp(32px, 5vw, 46px); margin: 0; line-height: .95; text-transform: uppercase; text-wrap: balance; }
@@ -376,7 +383,7 @@ function renderList() {
     const best = pick(m, state.mode);
     const b = document.createElement('button'); b.className = 'match'; b.type = 'button'; b.id = 'b' + m.id;
     b.setAttribute('aria-current', String(m.id === state.id));
-    b.innerHTML = `<span class="time"><span class="wd">${fmtWd(m.ko)}</span>${fmtTime(m.ko)}</span>
+    b.innerHTML = `<span class="time"><span class="wd">${fmtWd(m.ko)}</span>${fmtTime(m.ko)}${locked(m) ? '' : `<span class="ltag ${m.uff ? 'uff' : 'prob'}">${m.uff ? 'Ufficiali' : 'Probabili'}</span>`}</span>
       <span class="teams"><span class="team"><i class="chip" style="background:${m.hc[0]}"></i>${m.h}</span><span class="team"><i class="chip" style="background:${m.ac[0]}"></i>${m.a}</span></span>
       <span class="p3"><b>${(best.p3 * 100).toFixed(1)}%</b>trio${myTris[m.id] ? '<span class="mysaved">✓ tuo tris</span>' : ''}</span>`;
     b.addEventListener('click', () => { history.replaceState(null, '', '#m' + m.id); select(m.id); focusPanel(b); });
@@ -434,7 +441,7 @@ function select(id) {
   panel.innerHTML = `
     <div class="mhead">
       <div class="mteams"><span class="mt"><i class="chip big" style="background:${m.hc[0]}"></i>${m.h}</span><span class="mvs">–</span><span class="mt"><i class="chip big" style="background:${m.ac[0]}"></i>${m.a}</span></div>
-      <div class="mwhen"><span>${fmtDay(m.ko)}, <b>${fmtTime(m.ko)}</b></span><span class="pill ${m.uff ? 'uff' : 'prob'}">${m.uff ? 'Formazioni ufficiali' : 'Probabili · consenso 4 fonti'}</span>${m.derby ? '<span class="tag">Derby</span>' : ''}</div>
+      <div class="mwhen"><span>${fmtDay(m.ko)}, <b>${fmtTime(m.ko)}</b></span><span class="pill ${m.uff ? 'uff' : 'prob'}">${m.uff ? 'Formazioni ufficiali' : '⚠ Formazioni probabili'}</span>${m.derby ? '<span class="tag">Derby</span>' : ''}</div>${m.uff ? '' : '<p class="probnote"><b>Formazioni PROBABILI</b> (consenso di 4 fonti): circa un\'ora prima del calcio d\'inizio arrivano le ufficiali e probabilità e tris possono cambiare.</p>'}
     </div>
     <div class="stats">
       <div class="stat"><span class="k">Arbitro</span><span class="v">${m.ref}</span></div>
