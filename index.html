@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>I miei ammoniti</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Album di figurine: carta d'album fredda, inchiostro blu notte; l'unico colore forte è il giallo del cartellino.
+   Layout: elenco partite a sinistra (sopra su telefono), scheda partita con il cartellino-pulsante e le tre figurine. */
+:root {
+  --paper: #e9eef2;
+  --surface: #ffffff;
+  --ink: #13202d;
+  --muted: #5d6c7b;
+  --line: #d3dbe2;
+  --card: #f5c400;
+  --card-ink: #2a2200;
+  --good: #1f7a4d;
+  --display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+  --body: "Barlow", "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0f1720; --surface: #18232f; --ink: #e7edf3; --muted: #95a5b5; --line: #273544;
+    --card: #f5c400; --card-ink: #2a2200; --good: #4cc38a; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0f1720; --surface: #18232f; --ink: #e7edf3; --muted: #95a5b5; --line: #273544;
+  --card: #f5c400; --card-ink: #2a2200; --good: #4cc38a; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; }
+body {
+  background: var(--paper);
+  background-image: radial-gradient(color-mix(in srgb, var(--ink) 7%, transparent) 1px, transparent 1.2px);
+  background-size: 14px 14px;
+  color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.45;
+}
+.wrap { max-width: 1120px; margin: 0 auto; padding: 20px 16px 48px; display: grid; gap: 20px; }
+header { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px; }
+h1 { font-family: var(--display); font-weight: 900; font-size: clamp(34px, 6vw, 56px); line-height: .9; margin: 0; letter-spacing: .5px; text-transform: uppercase; text-wrap: balance; }
+h1 span { color: var(--muted); font-weight: 600; }
+.meta { color: var(--muted); font-size: 14px; display: flex; gap: 12px; flex-wrap: wrap; }
+.meta b { color: var(--ink); font-weight: 600; }
+.layout { display: grid; grid-template-columns: minmax(260px, 340px) 1fr; gap: 20px; align-items: start; }
+@media (max-width: 820px) { .layout { grid-template-columns: 1fr; } }
+.list { display: grid; gap: 8px; position: sticky; top: 12px; max-height: calc(100vh - 24px); overflow-y: auto; padding: 2px; }
+.list { scrollbar-width: none; -ms-overflow-style: none; }
+.list::-webkit-scrollbar { display: none; width: 0; height: 0; }
+.sectabs { scrollbar-width: none; } .sectabs::-webkit-scrollbar { display: none; }
+.wd { display: none; }
+.panel { scroll-margin-top: 112px; }
+@media (max-width: 820px) {
+  .list { display: flex; gap: 8px; overflow-x: auto; overflow-y: hidden; max-height: none; top: 0; z-index: 5; margin: 0 -16px; padding: 10px 16px;
+          background: var(--paper); border-bottom: 1px solid var(--line); scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; }
+  .day { display: none; }
+  .match { flex: none; width: 142px; grid-template-columns: 1fr auto; grid-template-areas: "time p3" "teams teams"; gap: 4px 8px; padding: 8px 10px; scroll-snap-align: start; }
+  .match .time { grid-area: time; font-size: 17px; }
+  .match .teams { grid-area: teams; font-size: 14px; }
+  .match .p3 { grid-area: p3; }
+  .match .p3 b { font-size: 14px; }
+  .wd { display: inline; color: var(--muted); font-weight: 600; margin-right: 4px; }
+}
+.day { font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: 18px; color: var(--muted); margin: 8px 0 0; letter-spacing: .6px; }
+.match {
+  display: grid; grid-template-columns: 46px 1fr auto; align-items: center; gap: 10px; width: 100%;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; cursor: pointer;
+  color: var(--ink); font: inherit; text-align: left;
+}
+.match:hover { border-color: var(--muted); }
+.match[aria-current="true"] { border-color: var(--ink); box-shadow: 0 0 0 2px var(--ink) inset; }
+.match:focus-visible, button:focus-visible { outline: 3px solid var(--card); outline-offset: 2px; }
+.time { font-family: var(--display); font-weight: 800; font-size: 20px; font-variant-numeric: tabular-nums; }
+.teams { display: grid; gap: 2px; font-weight: 600; }
+.team { display: flex; align-items: center; gap: 8px; }
+.chip { width: 12px; height: 12px; border-radius: 3px; flex: none; border: 1px solid var(--line); }
+.p3 { font-size: 12px; color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
+.p3 b { display: block; font-size: 16px; color: var(--ink); }
+.pill { display: inline-block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; padding: 2px 6px; border-radius: 4px; }
+.pill.uff { background: color-mix(in srgb, var(--good) 18%, transparent); color: var(--good); }
+.pill.prob { background: color-mix(in srgb, var(--muted) 16%, transparent); color: var(--muted); }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: grid; gap: 18px; }
+.vs { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 16px; justify-content: space-between; }
+.vs h2 { font-family: var(--display); font-weight: 900; font-size: clamp(32px, 5vw, 46px); margin: 0; line-height: .95; text-transform: uppercase; text-wrap: balance; }
+.facts { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 14px; color: var(--muted); }
+.facts b { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+.controls { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+.yellow {
+  font-family: var(--display); font-weight: 900; text-transform: uppercase; font-size: 26px; letter-spacing: .5px; line-height: 1;
+  background: var(--card); color: var(--card-ink); border: 0; border-radius: 8px; padding: 18px 26px 18px 24px; cursor: pointer;
+  box-shadow: 0 6px 0 color-mix(in srgb, var(--card) 55%, #000), 0 10px 22px rgba(0,0,0,.18); transform: rotate(-2deg);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.yellow:hover { transform: rotate(-4deg) translateY(-2px); }
+.yellow:active { transform: rotate(-1deg) translateY(4px); box-shadow: 0 2px 0 color-mix(in srgb, var(--card) 55%, #000); }
+.reset { font: 600 14px var(--body); background: var(--surface); color: var(--ink); border: 2px solid var(--ink); border-radius: 8px; padding: 8px 12px; cursor: pointer; }
+.reset:hover:not(:disabled) { background: var(--ink); color: var(--surface); }
+.mhead { display: grid; gap: 6px; }
+.mteams { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; font: 900 clamp(30px, 5vw, 44px) var(--display); text-transform: uppercase; line-height: 1; }
+.mt { display: inline-flex; align-items: center; gap: 10px; }
+.mvs { color: var(--muted); font-weight: 600; }
+.chip.big { width: 16px; height: 16px; border-radius: 4px; }
+.mwhen { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; color: var(--muted); font-size: 15px; }
+.mwhen b { color: var(--ink); }
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+@media (max-width: 700px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.stat { border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; display: grid; gap: 4px; align-content: start; }
+.stat .k { font-size: 12px; text-transform: uppercase; letter-spacing: .4px; color: var(--muted); font-weight: 600; }
+.stat .v { font-weight: 700; font-size: 15px; overflow-wrap: anywhere; }
+.odds { display: flex; height: 8px; border-radius: 4px; overflow: hidden; background: var(--line); }
+.odds span { display: block; height: 100%; }
+.sectabs { display: flex; gap: 4px; border-bottom: 2px solid var(--line); overflow-x: auto; }
+.sectabs button { font: 700 15px var(--body); background: transparent; color: var(--muted); border: 0; border-bottom: 3px solid transparent; margin-bottom: -2px; padding: 10px 12px; cursor: pointer; white-space: nowrap; }
+.sectabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--card); }
+.sec { display: grid; gap: 16px; }
+.hint { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.link { font: 700 14px var(--body); background: transparent; border: 0; color: var(--ink); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 4px 0; }
+.picker { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 640px) { .picker { grid-template-columns: 1fr; } }
+.pcol h4 { display: flex; align-items: center; gap: 8px; margin: 0 0 6px; font: 800 18px var(--display); text-transform: uppercase; letter-spacing: .4px; }
+.prow { display: grid; grid-template-columns: 34px 1fr auto; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--line); }
+.prow .nm { font-weight: 600; }
+.prow .sub { font-size: 12px; color: var(--muted); }
+.prow .pp { font-weight: 800; font-variant-numeric: tabular-nums; text-align: right; }
+.mybar { position: sticky; bottom: 0; z-index: 4; display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 -20px -20px; padding: 10px 20px; background: var(--surface); border-top: 1px solid var(--line); box-shadow: 0 -6px 16px rgba(0,0,0,.08); border-radius: 0 0 14px 14px; }
+.mybar .cnt { font-weight: 700; } .mybar .cnt small { display: block; font-weight: 500; color: var(--muted); font-size: 12px; }
+.mysaved { font-size: 11px; font-weight: 700; color: var(--good); display: block; margin-top: 2px; }
+footer { width: 100%; }
+.play { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin-top: 4px; }
+.playbtn { display: inline-flex; align-items: center; gap: 6px; font: 800 15px var(--body); text-decoration: none; padding: 9px 16px; border-radius: 999px; background: var(--good); color: #fff; border: 0; cursor: pointer; }
+.playbtn:hover { filter: brightness(1.08); } .playbtn:focus-visible { outline: 3px solid var(--card); outline-offset: 2px; }
+.play-note { font-size: 12px; color: var(--muted); }
+.play-msg { flex-basis: 100%; font-size: 13px; color: var(--ink); }
+.play-msg:empty { display: none; }
+details.how { display: block; width: 100%; box-sizing: border-box; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 18px; }
+details.how summary { cursor: pointer; font-weight: 700; }
+details.how p { margin: 8px 0 0; max-width: none; }
+.topbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+.tabs { display: inline-flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--surface); }
+.tabs button { font: 700 15px var(--body); background: transparent; color: var(--muted); border: 0; padding: 9px 14px; cursor: pointer; }
+.tabs button[aria-pressed="true"] { background: var(--ink); color: var(--surface); }
+.who-chip { font-size: 14px; color: var(--muted); }
+.histbtn { margin-left: auto; font: 700 15px var(--body); background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 10px; padding: 9px 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+.histbtn::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: #ff8a1f; }
+.histbtn[aria-pressed="true"] { background: var(--ink); color: var(--surface); }
+@media (max-width: 700px) { .histbtn { margin-left: 0; } }
+.hist-card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.hist-card { position: relative; }
+.hist-card .hh { min-height: 2.6em; align-items: center; flex-wrap: nowrap; padding-right: 58px; }
+.hist-card .hh h3 { font-size: 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.hist-card .hits-badge { position: absolute; top: 14px; right: 14px; }
+.hist-card > .note { min-height: 2.8em; }
+.hist-card .side { flex: 1; }
+.hist-card .side li { height: 3.6em; align-items: center; }
+.hist-card .side li .nm small { margin-top: 1px; }
+.hist-card .hh { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; }
+.hist-card h3 { font: 800 22px var(--display); text-transform: uppercase; margin: 0; }
+.hits-badge { font: 800 14px var(--body); padding: 3px 10px; border-radius: 999px; background: color-mix(in srgb, var(--line) 60%, transparent); }
+.hits-badge.h2 { background: color-mix(in srgb, var(--good) 22%, transparent); color: var(--good); }
+.hits-badge.h3 { background: var(--good); color: #fff; }
+.hist-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); grid-auto-rows: 1fr; gap: 12px; }
+.hist-card .side { border-left: 4px solid #ff8a1f; }
+.hist-card .side li .nm { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1 1 auto; min-width: 0; }
+.hist-card .side li .lead { flex: 0 1 24px; }
+.hist-card .side ul, .hist-card .side li { min-width: 0; }
+.hist-card .side li .nm small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hist-legend { font-size: 12px; color: var(--muted); }
+.gday { font: 800 18px var(--display); text-transform: uppercase; color: var(--muted); margin: 18px 0 8px; }
+
+.who-chip b { color: var(--ink); }
+.builder { border: 2px dashed var(--line); border-radius: 12px; padding: 14px; display: grid; gap: 10px; }
+.builder h3 { font: 900 24px var(--display); text-transform: uppercase; margin: 0; letter-spacing: .4px; }
+.b-head, .b-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.slots { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+@media (max-width: 560px) { .slots { grid-template-columns: 1fr; } }
+.slot { min-height: 44px; display: flex; align-items: center; justify-content: space-between; gap: 6px; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line); color: var(--muted); font-weight: 600; }
+.slot.full { background: color-mix(in srgb, var(--card) 22%, var(--surface)); border-color: color-mix(in srgb, var(--card) 70%, var(--line)); color: var(--ink); }
+.x { border: 0; background: transparent; color: var(--muted); font: 700 18px var(--body); cursor: pointer; line-height: 1; padding: 2px 6px; }
+.add { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font: 800 16px var(--body); cursor: pointer; }
+.add[aria-pressed="true"] { background: var(--card); color: var(--card-ink); border-color: var(--card); }
+.add:disabled { opacity: .35; cursor: default; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.area { display: grid; gap: 16px; }
+.area h2 { font: 900 clamp(30px, 5vw, 42px) var(--display); text-transform: uppercase; margin: 0; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.tile { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+.tile .k { font-size: 13px; color: var(--muted); }
+.tile .v { font: 900 32px var(--display); font-variant-numeric: tabular-nums; }
+.tile .v small { font: 600 14px var(--body); color: var(--muted); }
+.duel-card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px; display: grid; gap: 10px;  grid-template-columns: minmax(0, 1fr); }
+.duel-card h3 { font: 800 22px var(--display); text-transform: uppercase; margin: 0; }
+.cols2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; max-width: 920px; }
+@media (max-width: 600px) { .cols2 { grid-template-columns: 1fr; } }
+.side { background: color-mix(in srgb, var(--line) 22%, transparent); border: 1px solid var(--line); border-radius: 10px; padding: 10px; }
+.side { --or: #ff8a1f; border-left: 4px solid var(--or); }
+:root:not([data-theme="dark"]) .side { --or: #e06a00; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .side { --or: #ff8a1f; } }
+.side h4 { display: inline-block; margin: 0 0 10px 2px; padding: 4px 10px; border-radius: 999px; font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .6px; background: var(--or); color: #1d1100; }
+.side.app h4 { background: transparent; color: var(--or); box-shadow: inset 0 0 0 2px var(--or); }
+.side ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.side li { display: flex; align-items: baseline; gap: 8px; font-size: 15px; padding: 7px 10px; border-radius: 8px; background: color-mix(in srgb, var(--line) 30%, transparent); }
+.side li .nm { min-width: 0; }
+.side li .nm small { display: block; margin-top: 2px; }
+.side li .lead { flex: 1; min-width: 10px; border-bottom: 1px dotted color-mix(in srgb, var(--muted) 60%, transparent); }
+.side li .val { white-space: nowrap; font-weight: 700; font-variant-numeric: tabular-nums; }
+.side li.ok { background: color-mix(in srgb, var(--good) 18%, transparent); }
+.side li .hit { font-weight: 800; color: var(--good); }
+.side { display: flex; flex-direction: column; }
+.side h4 { align-self: flex-start; }
+.side .score { margin: auto 4px 0; padding-top: 10px; font-weight: 700; }
+.verdict { font-weight: 700; }
+.verdict.win { color: var(--good); }
+.save { font: 700 14px var(--body); background: var(--ink); color: var(--surface); border: 0; border-radius: 8px; padding: 10px 14px; cursor: pointer; }
+.save:disabled { opacity: .6; cursor: default; }
+.saved { font-size: 13px; color: var(--muted); }
+.saved b { color: var(--ink); }
+.reset:disabled { opacity: .45; cursor: default; }
+.rank { font: 800 20px var(--display); text-transform: uppercase; letter-spacing: .4px; font-variant-numeric: tabular-nums; }
+.rank small { font: 500 13px var(--body); color: var(--muted); text-transform: none; letter-spacing: 0; display: block; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.seg button { font: 600 14px var(--body); background: transparent; color: var(--muted); border: 0; padding: 8px 12px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--surface); }
+.stickers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 560px) { .stickers { grid-template-columns: 1fr; } }
+.sticker {
+  position: relative; border-radius: 12px; overflow: hidden; background: var(--surface); border: 1px solid var(--line);
+  box-shadow: 0 2px 0 var(--line), 0 10px 24px rgba(0,0,0,.08); min-height: 250px; display: grid; grid-template-rows: auto auto 1fr; align-content: start;
+}
+.sticker.hidden { background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--ink) 6%, var(--surface)) 0 10px, var(--surface) 10px 20px); }
+.sticker.hidden > * { visibility: hidden; }
+.sticker.hidden::after { content: "?"; position: absolute; inset: 0; display: grid; place-items: center; font: 900 72px var(--display); color: var(--line); }
+.sticker.reveal { animation: flip .55s cubic-bezier(.2,.8,.2,1) both; }
+.sticker.reveal:nth-child(2) { animation-delay: .12s; } .sticker.reveal:nth-child(3) { animation-delay: .24s; }
+@keyframes flip { from { transform: rotateY(90deg) scale(.96); } to { transform: rotateY(0) scale(1); } }
+@media (prefers-reduced-motion: reduce) { .sticker.reveal { animation: none; } .yellow, .yellow:hover { transition: none; transform: rotate(-2deg); } }
+.band { height: 56px; position: relative; }
+.band .club { position: absolute; left: 12px; bottom: 8px; font: 800 15px var(--display); text-transform: uppercase; letter-spacing: .6px; padding: 2px 6px; border-radius: 4px; background: rgba(255,255,255,.92); color: #13202d; }
+.band .pct { position: absolute; right: 10px; top: 10px; font: 900 26px var(--display); background: var(--card); color: var(--card-ink); padding: 2px 8px 0; border-radius: 4px; transform: rotate(3deg); font-variant-numeric: tabular-nums; }
+.face { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: center; padding: 12px 14px 8px; position: relative; z-index: 1; }
+.badge { width: 74px; height: 74px; border-radius: 50%; display: grid; place-items: center; font: 900 30px var(--display); color: #fff; border: 4px solid var(--surface); box-shadow: 0 0 0 2px var(--line); }
+.num { font: 900 54px var(--display); line-height: .9; font-variant-numeric: tabular-nums; justify-self: end; opacity: .9; }
+.who { padding: 0 14px 14px; display: grid; gap: 4px; align-content: start; }
+.who .name { font: 800 26px var(--display); text-transform: uppercase; line-height: 1; letter-spacing: .3px; overflow-wrap: anywhere; }
+.who .role { font-size: 13px; color: var(--muted); }
+.who .duel { font-size: 13px; }
+.summary { display: flex; flex-wrap: wrap; gap: 8px 22px; align-items: baseline; font-size: 15px; }
+.summary .big { font: 900 34px var(--display); font-variant-numeric: tabular-nums; }
+.note { font-size: 13px; color: var(--muted); max-width: 70ch; margin: 0; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { text-align: left; padding: 7px 6px; border-bottom: 1px solid var(--line); }
+th { font-weight: 600; color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .4px; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
+.bar { height: 6px; border-radius: 3px; background: var(--card); }
+.tablebox { overflow-x: auto; }
+.boost { font: 700 13px var(--body); border: 1px solid var(--line); background: transparent; color: var(--muted); border-radius: 6px; padding: 3px 7px; cursor: pointer; white-space: nowrap; }
+.boost[aria-pressed="true"] { background: var(--card); color: var(--card-ink); border-color: var(--card); }
+.tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.tag { font: 600 11px var(--body); color: var(--ink); background: color-mix(in srgb, var(--card) 28%, var(--surface)); border: 1px solid color-mix(in srgb, var(--card) 60%, var(--line)); border-radius: 4px; padding: 1px 6px; }
+.flag { font: 800 12px var(--body); background: var(--card); color: var(--card-ink); border-radius: 4px; padding: 1px 6px; margin-left: 6px; vertical-align: 2px; }
+.picked td:first-child { font-weight: 700; }
+.picked td:first-child::before { content: ""; display: inline-block; width: 8px; height: 11px; background: var(--card); border-radius: 1px; margin-right: 6px; vertical-align: -1px; }
+footer { font-size: 13px; color: var(--muted); display: grid; gap: 6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>I miei ammoniti <span id="hdr-round"></span></h1>
+    <div class="meta" id="meta"></div>
+  </header>
+  <div class="topbar">
+    <div class="tabs" role="group" aria-label="Sezione"><button type="button" id="tab-partite" aria-pressed="true">Partite</button><button type="button" id="tab-area" aria-pressed="false">La mia area</button></div>
+    <span class="who-chip" id="who">Collegamento al tuo account…</span>
+    <button type="button" class="histbtn" id="tab-storico" aria-pressed="false">Storico tris dell'app</button>
+  </div>
+  <div class="layout">
+    <nav class="list" id="list" aria-label="Partite della giornata"></nav>
+    <main class="panel" id="panel" aria-live="polite"></main>
+  </div>
+  <section class="area" id="area" hidden></section>
+  <section class="area" id="storico" hidden></section>
+  <footer>
+    <details class="how"><summary>Come funziona</summary>
+      <p id="lnote"></p>
+      <p>Le probabilità vengono dal modello statistico del progetto: storico Sofascore e FBref della Serie A (falli, duelli, gialli per proteste, arbitro, quote), combinato con un secondo modello su sei stagioni FotMob aggiornate a ogni giornata (falli fatti e subiti, avversari diretti, gialli delle squadre, livello della stagione). Per chi è al primo anno in Serie A conta anche lo storico degli anni precedenti negli altri campionati (Premier, LaLiga, Bundesliga, Ligue 1, Serie B, Championship, Eredivisie, Liga Portugal e altri), riportato alla scala della Serie A. Ogni partita giocata viene registrata e corregge il modello. Anche il trio migliore viene indovinato per intero circa una volta ogni 100 partite.</p>
+      <p id="subnote"></p>
+      <p>Le etichette (ex di turno, precedenti, diffidati, rientri, titolarità incerta, testa calda, storico estero) sono trovate in automatico e sono informative.</p>
+      <p>"Il mio tris" si salva nella tua area personale, visibile solo a te, e si blocca al calcio d'inizio. A fine partita il confronto con il tris dell'app assegna 3 punti per ogni ammonito azzeccato e mezzo punto per ogni fallo dei giocatori scelti.</p>
+      <p>Le figurine sono illustrazioni originali con i colori sociali: nessuna foto o marchio ufficiale.</p>
+    </details>
+  </footer>
+</div>
+<script>
+(() => { const RIS = [{"matchId": 16285066, "partita": "Bologna - Monza", "giornata": 10, "ko": 1793455200, "finale": "2-1", "p3_app": 0.0119, "ammoniti": ["R. Mangas", "J. Odgaard", "T. Pobega", "L. Lucchesi", "N. Zortea", "I. Touré", "M. Amondarain"], "falli": {"A. Dovbyk": 2, "A. El Azzouzi": 1, "A. Theate": 1, "C. Ngonge": 0, "D. Mota": 1, "E. Kouadio": 1, "E. Zeballos": 0, "F. Bernardeschi": 0, "G. Varela": 0, "I. Touré": 2, "J. Miranda": 0, "J. Odgaard": 4, "L. Colombo": 3, "L. Ferguson": 0, "L. Lucchesi": 3, "M. Amondarain": 1, "M. Darmian": 0, "M. Foe Ondoa": 2, "M. Mout": 1, "M. Vitík": 1, "N. Cambiaghi": 0, "N. Casale": 0, "N. Zortea": 2, "P. Cutrone": 0, "R. Mangas": 2, "Robinson": 1, "S. Birindelli": 1, "S. Goglichidze": 2, "S. Mbangula": 0, "T. Pobega": 1}, "sostituzioni": {"D. Mota": "C. Ngonge", "E. Kouadio": "I. Touré", "E. Zeballos": "Robinson", "F. Bernardeschi": "A. Dovbyk", "G. Varela": "P. Cutrone", "J. Odgaard": "S. Mbangula", "L. Colombo": "M. Mout", "M. Vitík": "M. Darmian", "N. Zortea": "M. Amondarain", "T. Pobega": "A. El Azzouzi"}, "tris_app": [{"n": "E. Kouadio", "p": 0.2636}, {"n": "L. Lucchesi", "p": 0.2596}, {"n": "L. Ferguson", "p": 0.1735}]}, {"matchId": 16285067, "partita": "Juventus - Napoli", "giornata": 10, "ko": 1793562300, "finale": "2-0", "p3_app": 0.0095, "ammoniti": ["D. Luiz", "J. Lucumí", "L. Marianucci", "K. Alajbegović", "R. Marín"], "falli": {"A. Cambiaso": 0, "A. Rrahmani": 2, "A. Vergara": 0, "B. Gilmour": 1, "Bremer": 2, "D. Luiz": 2, "E. Zhegrova": 0, "F. Anguissa": 1, "F. Gatti": 1, "G. Di Lorenzo": 0, "Giovane": 0, "J. Boga": 0, "J. Cabal": 0, "J. Lucumí": 2, "K. Alajbegović": 2, "K. De Bruyne": 0, "L. Lucca": 1, "L. Marianucci": 2, "M. Kelly": 0, "M. Olivera": 0, "M. Politano": 0, "N. Lang": 1, "N. Woltemade": 0, "P. Kalulu": 0, "R. Kolo Muani": 0, "R. Marín": 3, "S. Beukema": 0, "S. McTominay": 1, "T. Koopmeiners": 0, "W. McKennie": 0}, "sostituzioni": {"F. Anguissa": "Giovane", "G. Di Lorenzo": "A. Rrahmani", "J. Cabal": "A. Cambiaso", "J. Lucumí": "M. Kelly", "K. Alajbegović": "J. Boga", "K. De Bruyne": "B. Gilmour", "M. Olivera": "S. Beukema", "M. Politano": "A. Vergara", "R. Kolo Muani": "E. Zhegrova", "W. McKennie": "F. Gatti"}, "tris_app": [{"n": "D. Luiz", "p": 0.2372}, {"n": "M. Olivera", "p": 0.2034}, {"n": "R. Marín", "p": 0.1974}]}, {"matchId": 16285069, "partita": "Udinese - Roma", "giornata": 10, "ko": 1793466000, "finale": "2-5", "p3_app": 0.0104, "ammoniti": ["L. Miller", "B. Cristante"], "falli": {"Arizala": 0, "B. Cristante": 1, "C. Kabasele": 2, "D. Ghilardi": 2, "D. Malen": 0, "D. Rensch": 0, "E. Ndicka": 0, "G. Chakvetadze": 1, "G. Mancini": 0, "H. Kamara": 1, "J. Abankwah": 1, "J. Ekkelenkamp": 0, "J. Karlström": 0, "J. Piotrowski": 0, "Jovanovic": 0, "K. Davis": 1, "K. Koulierakis": 0, "L. Miller": 3, "M. Hermoso": 3, "M. Palma": 0, "M. Soulé": 0, "M. Vojvoda": 0, "M. de Roon": 0, "N. Molina": 1, "N. Pisilli": 0, "N. Zaniolo": 2, "R. Mora": 0, "S. Castro": 1, "U. Gómez": 0, "Wesley": 1}, "sostituzioni": {"D. Malen": "S. Castro", "H. Kamara": "Arizala", "J. Ekkelenkamp": "U. Gómez", "J. Karlström": "Jovanovic", "K. Davis": "G. Chakvetadze", "M. Hermoso": "K. Koulierakis", "M. Soulé": "G. Mancini", "N. Zaniolo": "J. Piotrowski", "R. Mora": "N. Pisilli", "Wesley": "D. Rensch"}, "tris_app": [{"n": "C. Kabasele", "p": 0.2281}, {"n": "J. Abankwah", "p": 0.2161}, {"n": "M. Hermoso", "p": 0.2109}]}, {"matchId": 16285072, "partita": "Lecce - Genoa", "giornata": 10, "ko": 1793552400, "finale": "1-2", "p3_app": 0.0071, "ammoniti": ["M. Kaba", "H. J. Traorè", "J. Siebert"], "falli": {"A. Dembélé": 0, "A. Fatah": 2, "A. Gallo": 0, "A. Marcandalli": 1, "D. Sow": 1, "D. Veiga": 0, "F. Meichtry": 0, "H. J. Traorè": 1, "J. Messias": 1, "J. Monteiro": 0, "J. Siebert": 2, "J. Vásquez": 1, "K. Ehizibue": 1, "K. N’Dri": 4, "L. Colombo": 0, "L. Østigård": 0, "M. Ellertsson": 0, "M. Frendrup": 0, "M. Kaba": 1, "M. Osmajić": 1, "N. Štulić": 3, "O. Gandelman": 1, "O. Gorter": 1, "O. Ngom": 2, "P. Esteban": 0, "S. El Shaarawy": 1, "S. Wiafe": 1, "T. Gabriel": 1, "Vitinha": 0, "Y. Maleh": 2}, "sostituzioni": {"H. J. Traorè": "D. Sow", "J. Messias": "F. Meichtry", "J. Monteiro": "A. Fatah", "K. N’Dri": "A. Dembélé", "M. Osmajić": "L. Colombo", "N. Štulić": "P. Esteban", "O. Gorter": "M. Kaba", "S. El Shaarawy": "Vitinha", "S. Wiafe": "K. Ehizibue", "Y. Maleh": "O. Gandelman"}, "tris_app": [{"n": "O. Ngom", "p": 0.2027}, {"n": "J. Siebert", "p": 0.1988}, {"n": "K. Ehizibue", "p": 0.1771}]}, {"matchId": 16285073, "partita": "Lazio - Cagliari", "giornata": 10, "ko": 1793541600, "finale": "2-1", "p3_app": 0.013, "ammoniti": ["J. Fazzini", "J. Rodríguez", "A. Obert", "A. Pinamonti"], "falli": {"A. Deiola": 1, "A. Fadera": 2, "A. Obert": 5, "A. Pedraza": 0, "A. Pinamonti": 0, "A. Romano": 1, "D. Cataldi": 0, "D. Frattesi": 0, "D. Maldini": 1, "Diogo Leite": 0, "F. Dele-Bashiru": 0, "G. Isaksen": 0, "J. Fazzini": 2, "J. Rodríguez": 1, "J. Šutalo": 1, "K. Carlos": 0, "K. Taylor": 2, "Liteta": 0, "M. Adopo": 1, "M. Nzola": 1, "M. Zaccagni": 1, "N. Tavares": 0, "O. Provstgaard": 1, "P. Mendy": 2, "R. Belahyane": 0, "R. F. Mussolini": 1, "R. Kofler": 0, "T. Noslin": 1, "Y. Trepy": 0, "Zé Pedro": 1}, "sostituzioni": {"A. Deiola": "K. Carlos", "A. Fadera": "R. Kofler", "D. Frattesi": "F. Dele-Bashiru", "D. Maldini": "Y. Trepy", "J. Fazzini": "Liteta", "M. Nzola": "P. Mendy", "M. Zaccagni": "A. Pinamonti", "N. Tavares": "A. Pedraza", "O. Provstgaard": "Diogo Leite", "R. Belahyane": "D. Cataldi"}, "tris_app": [{"n": "A. Deiola", "p": 0.292}, {"n": "J. Fazzini", "p": 0.273}, {"n": "R. F. Mussolini", "p": 0.1632}]}, {"matchId": 16285074, "partita": "Frosinone - Torino", "giornata": 10, "ko": 1793541600, "finale": "2-0", "p3_app": 0.009, "ammoniti": ["Z. Aboukhlal", "G. Gineitis", "P. Masini", "S. Coco"], "falli": {"A. Ismajli": 0, "A. Raimondo": 0, "A. Zerbin": 0, "Amey": 0, "C. Adams": 0, "D. Bragança": 3, "D. Bîrligea": 2, "D. Zapata": 1, "E. İlkhan": 1, "F. Ghedjemis": 0, "G. Bracaglia": 0, "G. Calvani": 0, "G. Calò": 1, "G. Gineitis": 3, "G. Kvernadze": 0, "G. Oristanio": 0, "G. Simeone": 1, "Kulenović": 0, "L. Hasa": 2, "M. Cichella": 1, "Monterisi": 3, "N. Patterson": 0, "N. Vlašić": 0, "P. Comuzzo": 0, "P. Masini": 4, "R. Belghali": 3, "R. Schmid": 0, "S. Coco": 0, "Tchato": 1, "Z. Aboukhlal": 1}, "sostituzioni": {"A. Raimondo": "D. Bîrligea", "C. Adams": "D. Zapata", "G. Gineitis": "E. İlkhan", "G. Kvernadze": "A. Zerbin", "G. Simeone": "Kulenović", "P. Masini": "M. Cichella", "R. Belghali": "G. Oristanio", "R. Schmid": "L. Hasa", "Tchato": "Amey", "Z. Aboukhlal": "N. Patterson"}, "tris_app": [{"n": "G. Gineitis", "p": 0.2636}, {"n": "R. Belghali", "p": 0.1879}, {"n": "P. Masini", "p": 0.1819}]}, {"matchId": 16285075, "partita": "Milan - Inter", "giornata": 10, "ko": 1793475900, "finale": "3-1", "p3_app": 0.009, "ammoniti": ["K. De Winter", "D. Moreira", "C. Augusto"], "sostituzioni": {"A. Bastoni": "F. Dimarco", "A. Diouf": "H. Mkhitaryan", "C. Pulisic": "A. Cisse", "D. Moreira": "Hutchinson", "G. Ramos": "F. Terracciano", "H. Çalhanoğlu": "P. Zieliński", "N. Barella": "F. P. Esposito", "S. Diawara": "D. Bartesaghi", "Y. Bisseck": "A. Bonny", "Y. Musah": "Jashari"}, "tris_app": [{"n": "H. Çalhanoğlu", "p": 0.2287}, {"n": "K. De Winter", "p": 0.2064}, {"n": "P. Sučić", "p": 0.1904}]}, {"matchId": 16285078, "partita": "Como - Venezia", "giornata": 10, "ko": 1793532600, "finale": "1-0", "p3_app": 0.0064, "nota": "Il terzo giallo (86') è attribuito a Kaiki per simulazione da una fonte e a Milla da un'altra", "ammoniti": ["S. Sohm", "J. Jesus", "Kaiki"], "falli": {"A. Adams": 1, "A. Douvikas": 0, "A. Hainaut": 1, "A. Rrahmani": 0, "G. Busio": 0, "I. Smolčić": 0, "J. Jesus": 2, "J. Ramón": 0, "J. Yeboah": 0, "K. Lauberbach": 1, "K. Pérez": 0, "Kaiki": 1, "L. Da Cunha": 0, "M. Baturina": 1, "M. Caqueret": 0, "M. Kempf": 1, "M. Liberali": 0, "M. Milla": 0, "M. Moreno": 0, "M. Perrone": 0, "N. Paz": 0, "P. Mazzocchi": 0, "R. Halhal": 0, "R. Sagrado": 1, "S. Ricci": 2, "S. Sohm": 2, "T. Bašić": 0, "T. Helgason": 0, "Y. Couto": 0, "Á. Valle": 0}, "sostituzioni": {"A. Hainaut": "R. Sagrado", "G. Busio": "K. Pérez", "K. Lauberbach": "J. Yeboah", "L. Da Cunha": "M. Liberali", "M. Baturina": "Á. Valle", "N. Paz": "M. Caqueret", "S. Ricci": "M. Perrone", "S. Sohm": "T. Bašić", "T. Helgason": "A. Rrahmani", "Y. Couto": "I. Smolčić"}, "tris_app": [{"n": "R. Halhal", "p": 0.1952}, {"n": "J. Jesus", "p": 0.1923}, {"n": "M. Baturina", "p": 0.1699}]}]; const K = 'ammoniti_tris_v1';
+  const load = () => { try { return JSON.parse(localStorage.getItem(K) || '{}'); } catch (e) { return {}; } };
+  const save = o => { try { localStorage.setItem(K, JSON.stringify(o)); } catch (e) {} };
+  const snap = arr => ({ docs: arr.map(v => ({ data: () => v })) });
+  const db = {
+    collection: path => ({
+      get: async () => path === 'risultati' ? snap(RIS) : snap(Object.values(load())),
+      doc: id => ({ set: async v => { const o = load(); o[id] = v; save(o); } }) }),
+    doc: path => ({ get: async () => { const id = +path.split('/')[1]; const r = RIS.find(x => x.matchId === id); return { exists: !!r, data: () => r }; } }) };
+  const user = { id: async () => 'browser', profiles: async () => ({}) };
+  window.claude = { use: async k => k === 'db' ? db : k === 'user' ? user : null };
+})();
+</script>
+<script id="data" type="application/json">{"round": 10, "season": "2026-27", "updated": "2026-11-02T18:20:00+01:00", "model": "v0.6", "matches": [{"id": 16285066, "ko": 1793455200, "h": "Bologna", "a": "Monza", "hc": ["#003366", "#cc0000"], "ac": ["#d71742", "#ffffff"], "ref": "Andrea Zanotti", "odds": "57/19", "line": 3.5, "uff": 1, "pl": [["E. Kouadio", "a", "D", "60", 0.246, "N. Cambiaghi", 100, 0.0233], ["L. Lucchesi", "a", "D", "3", 0.232, "J. Odgaard", 100, 0.036], ["L. Colombo", "a", "M", "21", 0.182, "J. Odgaard", 100, null], ["S. Birindelli", "a", "M", "19", 0.168, "N. Cambiaghi", 100, null], ["M. Foe Ondoa", "a", "M", "8", 0.165, "T. Pobega", 100, null], ["L. Ferguson", "h", "M", "19", 0.158, "L. Colombo", 100, 0.0184], ["S. Goglichidze", "a", "D", "2", 0.155, "N. Cambiaghi", 100, null], ["M. Vitík", "h", "D", "41", 0.139, "E. Zeballos", 100, null], ["N. Casale", "h", "D", "16", 0.131, "G. Varela", 100, 0.027], ["E. Zeballos", "a", "F", "22", 0.123, "M. Vitík", 100, null], ["N. Zortea", "h", "M", "20", 0.113, "R. Mangas", 100, 0.0253], ["T. Pobega", "h", "M", "4", 0.11, "M. Foe Ondoa", 100, 0.0583], ["R. Mangas", "a", "M", "7", 0.109, "N. Zortea", 100, null], ["A. Theate", "h", "D", "3", 0.101, "D. Mota", 100, null], ["F. Bernardeschi", "h", "F", "10", 0.077, "R. Mangas", 100, 0.047], ["N. Cambiaghi", "h", "F", "28", 0.076, "E. Kouadio", 100, 0.0499], ["D. Mota", "a", "F", "47", 0.075, "T. Pobega", 100, null], ["J. Miranda", "h", "M", "33", 0.072, "S. Birindelli", 100, 0.0168], ["G. Varela", "a", "F", "9", 0.059, "N. Casale", 100, null], ["J. Odgaard", "h", "F", "21", 0.057, "L. Colombo", 100, 0.0491]], "tags": {"S. Birindelli": ["3 gialli in 4 gare contro Bologna", "Testa calda: prende più gialli di quanto dicano i suoi falli"], "N. Casale": ["2 gialli in 4 gare contro Monza"], "F. Bernardeschi": ["Testa calda: prende più gialli di quanto dicano i suoi falli"]}, "derby": false, "src": "ufficiali"}, {"id": 16285069, "ko": 1793466000, "h": "Udinese", "a": "Roma", "hc": ["#ffffff", "#000000"], "ac": ["#990000", "#eaca15"], "ref": "Fabio Maresca", "odds": "17/60", "line": 3.5, "uff": 1, "pl": [["C. Kabasele", "h", "D", "27", 0.205, "D. Malen", 100, 0.0291], ["J. Abankwah", "h", "D", "14", 0.199, "R. Mora", 100, 0.0214], ["M. Hermoso", "a", "D", "22", 0.179, "M. Vojvoda", 100, 0.0389], ["B. Cristante", "a", "M", "4", 0.17, "J. Ekkelenkamp", 100, 0.0238], ["M. Palma", "h", "D", "16", 0.156, "M. Soulé", 100, 0.032], ["N. Zaniolo", "h", "F", "10", 0.151, "M. Hermoso", 100, 0.0407], ["M. de Roon", "a", "M", "15", 0.149, "J. Ekkelenkamp", 100, 0.0334], ["E. Ndicka", "a", "D", "", 0.137, "K. Davis", 100, 0.0106], ["D. Ghilardi", "a", "D", "", 0.134, "N. Zaniolo", 100, 0.0183], ["J. Karlström", "h", "M", "8", 0.132, "M. de Roon", 100, 0.0171], ["H. Kamara", "h", "M", "11", 0.128, "N. Molina", 100, 0.0511], ["N. Molina", "a", "D", "", 0.126, "H. Kamara", 100, 0.053], ["M. Vojvoda", "h", "M", "23", 0.115, "M. Hermoso", 100, 0.0381], ["D. Malen", "a", "F", "", 0.114, "C. Kabasele", 100, 0.0491], ["Wesley", "a", "M", "43", 0.11, "M. Vojvoda", 100, 0.0245], ["K. Davis", "h", "F", "9", 0.102, "E. Ndicka", 100, 0.049], ["M. Soulé", "a", "F", "", 0.097, "M. Palma", 100, 0.0529], ["L. Miller", "h", "M", "", 0.091, "B. Cristante", 50, 0.0749], ["R. Mora", "a", "M", "", 0.077, "M. Palma", 100, 0.0746], ["J. Piotrowski", "h", "M", "", 0.073, "B. Cristante", 50, 0.0638], ["J. Ekkelenkamp", "h", "M", "32", 0.065, "B. Cristante", 100, 0.0446]], "tags": {"B. Cristante": ["2 gialli in 8 gare contro Udinese"], "N. Zaniolo": ["Ex Roma", "Testa calda: prende più gialli di quanto dicano i suoi falli"], "M. de Roon": ["2 gialli in 7 gare contro Udinese"], "J. Karlström": ["2 gialli in 4 gare contro Roma", "Diffidato"], "N. Molina": ["Ex Udinese"], "L. Miller": ["Titolare al 50%: fonti discordanti tra Piotrowski e Miller"], "J. Piotrowski": ["Titolare al 50%: fonti discordanti tra Piotrowski e Miller"], "D. Ghilardi": ["Testa calda: prende più gialli di quanto dicano i suoi falli"]}, "derby": false, "src": "ufficiali"}, {"id": 16285075, "ko": 1793475900, "h": "Milan", "a": "Inter", "hc": ["#000000", "#cc0000"], "ac": ["#1a57cc", "#000000"], "ref": "Marco Guida", "odds": "26/47", "line": 4.5, "uff": 1, "pl": [["K. De Winter", "h", "D", "5", 0.202, "M. Thuram", 100, 0.0055], ["H. Çalhanoğlu", "a", "M", "20", 0.182, "A. Rabiot", 100, 0.0571], ["Y. Musah", "h", "M", "", 0.162, "P. Sučić", 100, 0.033], ["A. Bastoni", "a", "D", "95", 0.161, "D. Moreira", 100, 0.0306], ["M. Akanji", "a", "D", "25", 0.153, "G. Ramos", 100, 0.0082], ["S. Diawara", "h", "D", "", 0.15, "D. Spence", 100, 0.016], ["M. Gila", "h", "D", "34", 0.148, "C. Augusto", 100, 0.0233], ["A. Rabiot", "h", "M", "12", 0.143, "H. Çalhanoğlu", 100, 0.0089], ["C. Augusto", "a", "D", "", 0.142, "D. Moreira", 100, 0.0265], ["P. Sučić", "a", "M", "", 0.142, "L. Modrić", 100, 0.0564], ["Y. Bisseck", "a", "D", "31", 0.13, "C. Pulisic", 100, 0.008], ["S. Pavlović", "h", "D", "31", 0.129, "N. Barella", 100, 0.0094], ["N. Barella", "a", "M", "23", 0.116, "Y. Musah", 100, 0.038], ["L. Modrić", "h", "M", "14", 0.113, "A. Diouf", 100, 0.029], ["G. Ramos", "h", "F", "9", 0.107, "M. Akanji", 100, 0.014], ["D. Spence", "a", "D", "", 0.105, "S. Diawara", 100, null], ["A. Diouf", "a", "M", "17", 0.103, "L. Modrić", 100, 0.0369], ["D. Moreira", "h", "M", "22", 0.101, "C. Augusto", 100, 0.0383], ["M. Thuram", "a", "F", "9", 0.079, "K. De Winter", 100, 0.0461], ["C. Pulisic", "h", "F", "11", 0.075, "Y. Bisseck", 100, 0.0548]], "tags": {"H. Çalhanoğlu": ["Ex Milan", "3 gialli in 7 gare contro Milan"], "A. Bastoni": ["2 gialli in 8 gare contro Milan"], "A. Rabiot": ["2 gialli in 6 gare contro Inter"], "C. Pulisic": ["Stima: non era tra i probabili titolari"], "D. Spence": ["Stima: non era tra i probabili titolari"], "K. De Winter": ["Testa calda: prende più gialli di quanto dicano i suoi falli"]}, "derby": true, "src": "ufficiali"}, {"id": 16285078, "ko": 1793532600, "h": "Como", "a": "Venezia", "hc": ["#09436b", "#ffffff"], "ac": ["#231f20", "#ed7d01"], "ref": "Maria Sole Ferrieri Caputi", "odds": "73/10", "line": 3.5, "uff": 1, "pl": [["R. Halhal", "a", "D", "25", 0.188, "M. Baturina", 100, 0.0089], ["J. Jesus", "a", "D", "15", 0.185, "A. Douvikas", 100, 0.0089], ["M. Moreno", "a", "D", "2", 0.162, "L. Da Cunha", 100, 0.0344], ["P. Mazzocchi", "a", "D", "", 0.118, "Y. Couto", 100, 0.0496], ["S. Sohm", "a", "M", "19", 0.117, "S. Ricci", 100, 0.0416], ["A. Hainaut", "a", "M", "18", 0.111, "Kaiki", 100, 0.0206], ["M. Milla", "h", "M", "", 0.111, "T. Helgason", 100, null], ["L. Da Cunha", "h", "M", "33", 0.111, "M. Moreno", 100, null], ["M. Baturina", "h", "M", "", 0.111, "R. Halhal", 100, 0.0662], ["T. Helgason", "a", "M", "", 0.111, "M. Milla", 100, null], ["G. Busio", "a", "M", "6", 0.107, "N. Paz", 100, 0.0334], ["J. Ramón", "h", "D", "4", 0.104, "A. Adams", 100, 0.0041], ["Kaiki", "h", "D", "", 0.103, "A. Hainaut", 100, 0.0114], ["S. Ricci", "h", "M", "", 0.102, "S. Sohm", 100, 0.0536], ["Y. Couto", "h", "D", "27", 0.101, "P. Mazzocchi", 100, 0.0214], ["A. Douvikas", "h", "F", "", 0.09, "J. Jesus", 100, 0.0385], ["K. Lauberbach", "a", "F", "", 0.09, "M. Kempf", 100, null], ["M. Kempf", "h", "D", "2", 0.076, "K. Lauberbach", 100, 0.0149], ["N. Paz", "h", "M", "10", 0.068, "G. Busio", 100, 0.0292], ["A. Adams", "a", "F", "45", 0.06, "J. Ramón", 100, 0.0309]], "tags": {"S. Sohm": ["2 gialli in 3 gare contro Como"], "M. Milla": ["Stima per ruolo: non era tra i probabili titolari"], "L. Da Cunha": ["Stima per ruolo: non era tra i probabili titolari"], "M. Baturina": ["Stima per ruolo: non era tra i probabili titolari"], "A. Douvikas": ["Stima per ruolo: non era tra i probabili titolari"], "T. Helgason": ["Stima per ruolo: non era tra i probabili titolari"], "K. Lauberbach": ["Stima per ruolo: non era tra i probabili titolari"]}, "derby": false, "src": "ufficiali"}, {"id": 16285073, "ko": 1793541600, "h": "Lazio", "a": "Cagliari", "hc": ["#64b6e1", "#ffffff"], "ac": ["#990000", "#242766"], "ref": "Andrea Colombo", "odds": "67/14", "line": 4.5, "uff": 1, "pl": [["A. Deiola", "a", "M", "14", 0.265, "T. Noslin", 100, 0.0367], ["Zé Pedro", "a", "D", "2", 0.247, "M. Zaccagni", 100, 0.0318], ["J. Rodríguez", "a", "D", "15", 0.238, "T. Noslin", 100, 0.0301], ["J. Fazzini", "a", "M", "", 0.219, "D. Frattesi", 100, 0.0691], ["A. Obert", "a", "D", "33", 0.209, "G. Isaksen", 100, 0.0285], ["A. Romano", "a", "M", "4", 0.192, "D. Frattesi", 100, 0.0279], ["A. Fadera", "a", "F", "", 0.189, "R. F. Mussolini", 100, 0.051], ["J. Šutalo", "h", "D", "", 0.146, "M. Nzola", 100, 0.0187], ["M. Nzola", "a", "F", "", 0.139, "J. Šutalo", 100, 0.0547], ["D. Maldini", "a", "M", "70", 0.135, "R. Belahyane", 100, 0.0698], ["R. F. Mussolini", "h", "D", "15", 0.132, "A. Obert", 100, 0.036], ["O. Provstgaard", "h", "D", "25", 0.127, "M. Adopo", 100, 0.0137], ["M. Adopo", "a", "M", "8", 0.124, "K. Taylor", 100, 0.0182], ["N. Tavares", "h", "D", "17", 0.123, "Zé Pedro", 100, 0.027], ["R. Belahyane", "h", "M", "21", 0.112, "A. Romano", 100, 0.0167], ["D. Frattesi", "h", "M", "", 0.111, "A. Romano", 100, 0.0302], ["M. Zaccagni", "h", "F", "10", 0.11, "Zé Pedro", 100, 0.0253], ["K. Taylor", "h", "M", "24", 0.095, "M. Adopo", 100, 0.0406], ["G. Isaksen", "h", "F", "11", 0.09, "A. Obert", 100, 0.0608], ["T. Noslin", "h", "F", "", 0.09, "A. Deiola", 100, 0.0518]], "tags": {"A. Deiola": ["Diffidato"], "D. Maldini": ["Ex Lazio", "2 gialli in 5 gare contro Lazio"], "G. Isaksen": ["Testa calda: prende più gialli di quanto dicano i suoi falli"], "J. Šutalo": ["Stima per ruolo: non era tra i probabili titolari"], "D. Frattesi": ["Stima per ruolo: non era tra i probabili titolari"], "T. Noslin": ["Stima per ruolo: non era tra i probabili titolari"]}, "derby": false, "src": "ufficiali"}, {"id": 16285074, "ko": 1793541600, "h": "Frosinone", "a": "Torino", "hc": ["#ffff00", "#0033cc"], "ac": ["#6d1b1d", "#ffffff"], "ref": "Giuseppe Mucera", "odds": "45/30", "line": 3.5, "uff": 1, "pl": [["G. Gineitis", "a", "M", "", 0.216, "G. Calò", 100, 0.0607], ["P. Masini", "h", "M", "73", 0.154, "D. Bragança", 100, 0.033], ["R. Belghali", "a", "M", "45", 0.153, "G. Bracaglia", 100, 0.0412], ["S. Coco", "a", "D", "23", 0.147, "A. Raimondo", 100, 0.0071], ["D. Bragança", "a", "M", "21", 0.146, "P. Masini", 100, 0.0453], ["Tchato", "h", "D", "", 0.146, "Z. Aboukhlal", 100, null], ["Monterisi", "h", "D", "", 0.146, "G. Simeone", 100, null], ["G. Bracaglia", "h", "D", "79", 0.132, "R. Belghali", 100, 0.036], ["G. Calvani", "h", "D", "3", 0.126, "C. Adams", 100, 0.0214], ["P. Comuzzo", "a", "D", "15", 0.124, "F. Ghedjemis", 100, 0.014], ["A. Ismajli", "a", "D", "44", 0.114, "A. Raimondo", 100, 0.0114], ["F. Ghedjemis", "h", "M", "", 0.111, "P. Comuzzo", 100, 0.0458], ["Z. Aboukhlal", "a", "M", "", 0.111, "Tchato", 100, null], ["R. Schmid", "h", "M", "10", 0.101, "S. Coco", 100, 0.0498], ["A. Raimondo", "h", "F", "9", 0.091, "S. Coco", 100, 0.0365], ["C. Adams", "a", "F", "", 0.09, "G. Calvani", 100, 0.0466], ["G. Kvernadze", "h", "M", "17", 0.084, "R. Belghali", 100, 0.0352], ["G. Calò", "h", "M", "14", 0.084, "G. Gineitis", 100, 0.0426], ["N. Vlašić", "a", "F", "10", 0.08, "P. Masini", 100, 0.0236], ["G. Simeone", "a", "F", "18", 0.078, "P. Masini", 100, 0.0477]], "tags": {"G. Bracaglia": ["Diffidato"], "Tchato": ["Stima per ruolo: non era tra i probabili titolari"], "Monterisi": ["Stima per ruolo: non era tra i probabili titolari"], "F. Ghedjemis": ["Stima per ruolo: non era tra i probabili titolari"], "Z. Aboukhlal": ["Stima per ruolo: non era tra i probabili titolari"], "C. Adams": ["Stima per ruolo: non era tra i probabili titolari"]}, "derby": false, "src": "ufficiali"}, {"id": 16285072, "ko": 1793552400, "h": "Lecce", "a": "Genoa", "hc": ["#f6ea00", "#db2d1f"], "ac": ["#000033", "#660000"], "ref": "Matteo Marchetti", "odds": "29/40", "line": 3.5, "uff": 0, "pl": [["J. Siebert", "h", "D", "5", 0.194, "Vitinha", 100, 0.006], ["D. Veiga", "h", "D", "17", 0.182, "S. El Shaarawy", 95, 0.0075], ["O. Ngom", "h", "M", "79", 0.172, "Vitinha", 100, 0.0371], ["L. Østigård", "a", "D", "5", 0.141, "N. Štulić", 100, 0.008], ["T. Gabriel", "h", "D", "44", 0.138, "T. Baldanzi", 91, 0.0092], ["J. Vásquez", "a", "D", "22", 0.134, "K. N’Dri", 100, 0.0071], ["S. Wiafe", "a", "M", "", 0.117, "Y. Maleh", 69, 0.0446], ["K. Ehizibue", "a", "M", "3", 0.116, "A. Gallo", 90, 0.0691], ["Y. Maleh", "h", "M", "14", 0.109, "S. Wiafe", 78, 0.0495], ["A. Marcandalli", "a", "D", "27", 0.104, "A. Fatah", 95, 0.0152], ["M. Kaba", "h", "M", "77", 0.1, "M. Frendrup", 80, 0.0458], ["M. Frendrup", "a", "M", "32", 0.1, "M. Kaba", 100, 0.0199], ["M. Mitaj", "a", "M", "2", 0.091, "D. Veiga", 63, 0.0536], ["D. Puczka", "a", "D", "", 0.09, "K. N’Dri", 45, 0.032], ["O. Gorter", "h", "M", "", 0.08, "S. Wiafe", 56, 0.0604], ["S. El Shaarawy", "a", "F", "92", 0.079, "D. Veiga", 76, 0.0502], ["A. Fatah", "h", "F", "7", 0.079, "A. Marcandalli", 89, 0.0573], ["K. N’Dri", "h", "F", "11", 0.071, "J. Vásquez", 67, 0.0472], ["J. Monteiro", "h", "F", "", 0.064, "A. Marcandalli", 64, 0.0531], ["H. J. Traorè", "a", "M", "25", 0.063, "O. Ngom", 56, 0.0288], ["T. Baldanzi", "a", "M", "8", 0.061, "O. Ngom", 77, 0.0812], ["A. Gallo", "h", "D", "25", 0.055, "K. Ehizibue", 100, 0.0113]], "tags": {"L. Østigård": ["Diffidato"], "S. Wiafe": ["Titolare al 69%", "Storico Serie B: 0,16 gialli e 1,8 falli ogni 90'"], "Y. Maleh": ["Titolare al 78%"], "M. Mitaj": ["Titolare al 63%", "Storico Saudi Pro League, Premier League: 0,27 gialli e 1,3 falli ogni 90'"], "O. Gorter": ["Titolare al 56%"], "S. El Shaarawy": ["Titolare al 76%"], "D. Puczka": ["Titolare al 45%", "Storico 2. Liga: 0,37 gialli e 1,1 falli ogni 90'"], "K. N’Dri": ["Titolare al 67%"], "H. J. Traorè": ["Titolare al 56%"], "T. Baldanzi": ["Titolare al 77%"], "J. Monteiro": ["Titolare al 64%", "Storico Super League: 0,13 gialli e 2,0 falli ogni 90'"], "J. Vásquez": ["Testa calda: prende più gialli di quanto dicano i suoi falli"], "A. Fatah": ["Storico Premiership, Eredivisie: 0,18 gialli e 1,5 falli ogni 90'"]}, "derby": false, "src": "consenso"}, {"id": 16285067, "ko": 1793562300, "h": "Juventus", "a": "Napoli", "hc": ["#ffffff", "#000000"], "ac": ["#008cea", "#ffffff"], "ref": "Simone Sozza", "odds": "41/29", "line": 4.5, "uff": 0, "pl": [["D. Luiz", "h", "M", "12", 0.191, "S. McTominay", 100, 0.0571], ["R. Marín", "a", "D", "16", 0.186, "N. Woltemade", 100, 0.014], ["M. Olivera", "a", "D", "17", 0.172, "P. Kalulu", 100, 0.0379], ["P. Sarr", "h", "M", "29", 0.135, "S. McTominay", 87, 0.0383], ["F. Gatti", "h", "D", "4", 0.129, "N. Lang", 79, 0.0289], ["J. Lucumí", "h", "D", "26", 0.114, "F. Anguissa", 93, 0.0214], ["Bremer", "h", "D", "3", 0.112, "K. De Bruyne", 86, 0.0114], ["J. Cabal", "h", "D", "", 0.103, "G. Di Lorenzo", 43, null], ["G. Di Lorenzo", "a", "D", "22", 0.103, "J. Lucumí", 100, 0.0066], ["W. McKennie", "h", "M", "22", 0.091, "R. Marín", 100, 0.0222], ["P. Kalulu", "h", "D", "15", 0.09, "M. Olivera", 100, 0.0049], ["S. McTominay", "a", "M", "8", 0.087, "P. Sarr", 100, 0.0138], ["T. Koopmeiners", "h", "M", "", 0.086, "F. Anguissa", 71, 0.0349], ["A. Rrahmani", "a", "D", "13", 0.084, "T. Koopmeiners", 66, 0.0184], ["M. Politano", "a", "M", "21", 0.078, "J. Lucumí", 100, 0.0637], ["K. De Bruyne", "a", "M", "11", 0.072, "Bremer", 100, 0.0489], ["L. Lucca", "a", "F", "", 0.072, "P. Sarr", 43, 0.0608], ["A. Cambiaso", "h", "M", "20", 0.068, "G. Di Lorenzo", 53, 0.0599], ["N. Lang", "a", "F", "70", 0.068, "F. Gatti", 78, 0.057], ["F. Anguissa", "a", "M", "99", 0.065, "T. Koopmeiners", 80, 0.0323], ["A. Vergara", "a", "M", "", 0.064, "P. Sarr", 45, 0.078], ["E. Zhegrova", "h", "F", "", 0.061, "M. Olivera", 56, null]], "tags": {"Bremer": ["2 gialli in 5 gare contro Napoli"], "A. Cambiaso": ["2 gialli in 8 gare contro Napoli", "Titolare al 53%"], "J. Lucumí": ["3 gialli in 8 gare contro Napoli", "Testa calda: prende più gialli di quanto dicano i suoi falli"], "F. Gatti": ["Titolare al 79%"], "J. Cabal": ["Titolare al 43%"], "T. Koopmeiners": ["Titolare al 71%"], "A. Rrahmani": ["Titolare al 66%"], "L. Lucca": ["Titolare al 43%"], "E. Zhegrova": ["Titolare al 56%", "Storico Ligue 1: 0,13 gialli e 1,1 falli ogni 90'"], "N. Lang": ["Titolare al 78%"], "A. Vergara": ["Titolare al 45%"], "D. Luiz": ["Storico Premier League: 0,34 gialli e 1,8 falli ogni 90'"], "P. Sarr": ["Storico Premier League: 0,29 gialli e 1,8 falli ogni 90'"], "K. De Bruyne": ["Storico Premier League: 0,18 gialli e 1,1 falli ogni 90'"]}, "derby": false, "src": "consenso"}, {"id": 16285070, "ko": 1793640600, "h": "Sassuolo", "a": "Fiorentina", "hc": ["#006600", "#000000"], "ac": ["#542baa", "#ffffff"], "ref": "Matteo Marcenaro", "odds": "33/41", "line": 4.5, "uff": 1, "pl": [["Viery", "a", "D", "33", 0.232, "D. Berardi", 100, 0.0284], ["À. Jiménez", "a", "D", "20", 0.193, "J. Doig", 100, 0.0392], ["N. Matić", "h", "M", "18", 0.138, "N. Fagioli", 100, 0.0393], ["F. Mastantuono", "a", "F", "30", 0.153, "J. Doig", 100, 0.0327], ["A. Laurienté", "h", "F", "45", 0.128, "R. Drăguşin", 100, 0.0446], ["V. Adžić", "h", "M", "17", 0.145, "N. Fagioli", 100, 0.0614], ["A. Njie", "a", "F", "25", 0.147, "C. Odenthal", 100, 0.0547], ["C. Ndour", "a", "M", "27", 0.127, "D. Bakola", 100, 0.0401], ["J. Mário", "a", "D", "17", 0.158, "D. Bakola", 100, 0.024], ["J. Doig", "h", "D", "3", 0.14, "À. Jiménez", 100, 0.036], ["D. Berardi", "h", "F", "10", 0.123, "Viery", 100, 0.0376], ["S. Esposito", "h", "F", "94", 0.117, "N. Fagioli", 100, 0.0608], ["R. Drăguşin", "a", "D", "3", 0.116, "A. Laurienté", 100, 0.0062], ["N. Fagioli", "a", "M", "44", 0.126, "N. Matić", 100, 0.0313], ["B. Walukiewicz", "h", "D", "", 0.147, "Mastantuono", 100, null], ["J. Idzes", "h", "D", "", 0.123, "M. Pellegrino", 100, null], ["K. Candé", "h", "D", "", 0.169, "M. Pellegrino", 100, null], ["I. Sulemana", "h", "M", "", 0.159, "C. Ndour", 100, null], ["M. Brescianini", "a", "M", "", 0.107, "N. Matić", 100, null], ["M. Pellegrino", "a", "F", "", 0.14, "J. Idzes", 100, null]], "tags": {"D. Berardi": ["3 gialli in 3 gare contro Fiorentina"], "A. Laurienté": ["Testa calda: prende più gialli di quanto dicano i suoi falli"], "Viery": ["Storico Gaucho: 0,24 gialli e 1,5 falli ogni 90'", "Poca esperienza: 492' in Serie A in carriera (quest'anno 492' · 3 gialli)"], "F. Mastantuono": ["Storico LaLiga, Liga Profesional: 0,21 gialli e 1,5 falli ogni 90'", "Poca esperienza: 700' in Serie A in carriera (quest'anno 700' · 2 gialli)"], "R. Drăguşin": ["Storico Premier League: 0,14 gialli e 0,8 falli ogni 90'"], "V. Adžić": ["Poca esperienza: 569' in Serie A in carriera (quest'anno 367' · 0 gialli)"], "B. Walukiewicz": ["Stima FotMob (9.279' in Serie A): non era tra i probabili titolari"], "J. Idzes": ["Stima FotMob (6.452' in Serie A): non era tra i probabili titolari"], "K. Candé": ["Stima FotMob (2.154' in Serie A): non era tra i probabili titolari"], "I. Sulemana": ["Stima FotMob (3.331' in Serie A): non era tra i probabili titolari"], "M. Brescianini": ["Stima FotMob (4.664' in Serie A): non era tra i probabili titolari"], "M. Pellegrino": ["Stima FotMob (4.369' in Serie A): non era tra i probabili titolari"]}, "derby": false, "src": "ufficiali"}, {"id": 16285071, "ko": 1793648700, "h": "Atalanta", "a": "Parma", "hc": ["#0000cc", "#000000"], "ac": ["#ffffff", "#000000"], "ref": "Valerio Crezzini", "odds": "63/16", "line": 2.5, "uff": 0, "pl": [["R. Obrić", "h", "D", "40", 0.149, "D. Romero", 100, 0.0134], ["M. Troilo", "a", "D", "37", 0.158, "N. Krstović", 100, 0.0139], ["E. Delprato", "a", "D", "15", 0.122, "J. Rowe", 100, 0.0111], ["D. Carlos", "a", "D", "34", 0.14, "J. Rowe", 70, 0.0432], ["G. Scalvini", "h", "D", "42", 0.147, "D. Romero", 100, 0.0291], ["Éderson", "h", "M", "13", 0.116, "A. Bernabé", 100, 0.0336], ["V. Sierro", "a", "M", "4", 0.112, "E. Elmas", 77, 0.0614], ["S. Britschgi", "a", "M", "27", 0.097, "L. Bernasconi", 79, 0.0301], ["D. Drobnic", "a", "D", "", 0.09, "C. De Ketelaere", 66, 0.01], ["G. Fabbian", "a", "M", "", 0.082, "Éderson", 55, 0.0746], ["N. Krstović", "h", "F", "90", 0.096, "M. Troilo", 100, 0.0365], ["M. Keita", "a", "M", "16", 0.086, "E. Elmas", 100, 0.0249], ["F. Carboni", "a", "D", "", 0.079, "C. De Ketelaere", 46, null], ["E. Elmas", "h", "M", "99", 0.073, "V. Sierro", 71, 0.0534], ["M. Pašalić", "h", "M", "8", 0.078, "M. Keita", 88, 0.0401], ["D. Zappacosta", "h", "M", "77", 0.093, "M. Keita", 100, 0.0336], ["S. Lontani", "a", "F", "", 0.061, "D. Zappacosta", 68, 0.0593], ["L. Bernasconi", "h", "M", "47", 0.076, "S. Britschgi", 100, 0.0297], ["N. Zalewski", "h", "M", "", 0.065, "A. Bernabé", 70, 0.0691], ["A. Bernabé", "a", "M", "10", 0.056, "Éderson", 100, 0.0654], ["C. De Ketelaere", "h", "F", "17", 0.069, "M. Keita", 100, 0.0413], ["E. Touré", "a", "F", "19", 0.058, "M. Pašalić", 65, null]], "tags": {"E. Touré": ["Ex Atalanta", "Titolare al 65%", "Storico LaLiga, Ligue 1, Bundesliga: 0,12 gialli e 1,7 falli ogni 90'"], "D. Carlos": ["Titolare al 70%", "Storico Premier League: 0,21 gialli e 1,4 falli ogni 90'"], "V. Sierro": ["Titolare al 77%", "Storico Ligue 1, Saudi Pro League: 0,23 gialli e 1,5 falli ogni 90'", "Poca esperienza: 387' in Serie A in carriera"], "S. Britschgi": ["Titolare al 79%"], "D. Drobnic": ["Titolare al 66%", "Poca esperienza: 405' in Serie A in carriera (quest'anno 405' · 1 giallo)"], "G. Fabbian": ["Titolare al 55%"], "F. Carboni": ["Titolare al 46%", "Poca esperienza: 472' in Serie A in carriera (quest'anno 138' · 0 gialli)"], "E. Elmas": ["Titolare al 71%"], "S. Lontani": ["Titolare al 68%", "Poca esperienza: 435' in Serie A in carriera (quest'anno 435' · 1 giallo)"], "N. Zalewski": ["Titolare al 70%"], "R. Obrić": ["Poca esperienza: 250' in Serie A in carriera (quest'anno 250' · 2 gialli)", "2 espulsioni in Serie C con l'Atalanta U23 (2024/25)"]}, "derby": false, "src": "consenso"}], "lineups_note": "Formazioni probabili: consenso Fantacalcio.it, Gazzetta, SOS Fanta e Sky (media su Fantacalcio-Online); probabilità di giallo = probabilità di essere titolare × probabilità di giallo se gioca.", "subq": {"D": 0.019, "M": 0.042, "F": 0.039}, "subq_note": "Regola del sostituto: vale anche il giallo di chi entra al posto del giocatore scelto. Il bonus è calcolato giocatore per giocatore: quanto spesso viene sostituito da titolare (ultime due stagioni) × probabilità che chi entra venga ammonito (8,8% difensori, 9,5% centrocampisti, 7,3% attaccanti, storico 2017-2025)."}</script>
+<script>
+const DATA = JSON.parse(document.getElementById('data').textContent);
+// non usato più dall'interfaccia: il fattore personale manuale è stato tolto (state.boost resta vuoto)
+const ROLE = { D: 'Difensore', M: 'Centrocampista', F: 'Attaccante' };
+const fmtTime = ts => new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', hour: '2-digit', minute: '2-digit' }).format(ts * 1000);
+const fmtWd = ts => new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', weekday: 'short' }).format(ts * 1000);
+const fmtDay = ts => new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', weekday: 'long', day: 'numeric', month: 'long' }).format(ts * 1000);
+const pct = p => Math.round(p * 100) + '%';
+const lum = hex => { const h = (hex || '#888888').replace('#', ''); const [r, g, b] = [0, 2, 4].map(i => parseInt(h.substr(i, 2), 16) / 255).map(c => c <= .03928 ? c / 12.92 : ((c + .055) / 1.055) ** 2.4); return .2126 * r + .7152 * g + .0722 * b; };
+const strong = cols => cols.find(c => c && lum(c) < .6) || '#13202d';      // colore leggibile su fondo chiaro
+const initials = n => { const m = n.match(/^(\S)\.\s+(.+)$/u); const t = (m ? m[2] : n).split(/\s+/).filter(t => !/^\S\.$/.test(t)); const last = t[t.length - 1] || n; return ((m ? m[1] : (t.length > 1 ? t[0][0] : last[0])) + (m || t.length > 1 ? last[0] : (last[1] || ''))).toUpperCase(); };
+const state = { id: null, mode: '21', revealed: {}, idx: {}, boost: {}, view: 'partite', sec: 'app', subRule: true };
+let DB = null, USER = null, UID = null, MYNAME = '', loaded = false;
+const myTris = {}, pickNow = {}, results = {};
+const withTimeout = (pr, ms = 10000) => Promise.race([pr, new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), ms))]);
+const hm = iso => new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }).format(new Date(iso));
+function renderWho() {
+  const el = document.getElementById('who');
+  if (UID) el.innerHTML = `i tuoi tris restano salvati in questo browser`;
+  else el.textContent = loaded ? 'Collegati con il tuo account Claude per creare e salvare i tuoi tris' : 'Collegamento al tuo account…';
+  if (UID && MYNAME) el.querySelector('b').textContent = MYNAME.split(' ')[0];
+}
+async function loadMine() {
+  try { const snap = await withTimeout(DB.collection('data/users/' + UID).get()); snap.docs.forEach(d => { const v = d.data(); if (v && v.matchId) myTris[v.matchId] = v; }); } catch (e) {}
+}
+(async () => {
+  await Promise.resolve();   // aspetta che tutto lo script sia definito
+  try { const c = window.claude; if (c && c.use) {
+    const [db, u] = await Promise.all([c.use('db'), c.use('user')]); DB = db; USER = u;
+    if (USER) { try { UID = await USER.id(); } catch (e) {} if (UID) { try { const ps = await USER.profiles([UID]); MYNAME = (ps && ps[UID] && ps[UID].name) || ''; } catch (e) {} } }
+    if (DB && UID) await loadMine();
+  } } catch (e) {}
+  loaded = true; renderWho(); renderList(); if (state.view === 'area') renderArea(); else if (state.view === 'storico') renderStorico(); else if (state.id) select(state.id);
+})();
+const BOOST = 0.45;   // +0,45 sul logit ≈ probabilità × 1,4-1,5 per i valori tipici (15-25%)
+function bkey(m, n) { return m.id + '|' + n; }
+const adj = (p, on) => on ? 1 / (1 + Math.exp(-(Math.log(p / (1 - p)) + BOOST))) : p;
+try { const s = JSON.parse(localStorage.getItem('amm_ui') || '{}'); if (s.mode) state.mode = s.mode; if (s.boost) state.boost = s.boost; if (s.subRule === false) state.subRule = false; } catch (e) {}
+const saveUi = () => { try { localStorage.setItem('amm_ui', JSON.stringify({ mode: state.mode, boost: state.boost, subRule: state.subRule })); } catch (e) {} };
+const SUBQ = DATA.subq || { D: 0.019, M: 0.042, F: 0.039 };
+const slotP = (p, pos, q) => state.subRule ? 1 - (1 - p) * (1 - (q ?? SUBQ[pos] ?? 0.03)) : p;   // titolare O chi entra al suo posto
+
+function players(m, raw = false) { return m.pl.map(([n, side, pos, num, p0, vs, st = 100, q = null]) => { const b = !raw && !!state.boost[bkey(m, n)]; return { n, side, pos, num, st, q, p: slotP(adj(p0, b), pos, q), p0, b, vs, tags: (m.tags && m.tags[n]) || [], team: side === 'h' ? m.h : m.a, cols: side === 'h' ? m.hc : m.ac }; }).sort((x, y) => y.p - x.p); }
+function combos(m, mode, raw = false) {
+  const ps = players(m, raw), out = [];
+  if (mode === 'free') {
+    const top = ps.slice(0, 9);
+    for (let i = 0; i < top.length; i++) for (let j = i + 1; j < top.length; j++) for (let k = j + 1; k < top.length; k++) out.push([top[i], top[j], top[k]]);
+  } else {                                            // 2 della squadra A + 1 della squadra B (o viceversa)
+    for (const two of ['h', 'a']) {
+      const A = ps.filter(x => x.side === two).slice(0, 7), B = ps.filter(x => x.side !== two).slice(0, 7);
+      for (let i = 0; i < A.length; i++) for (let j = i + 1; j < A.length; j++) for (const b of B) out.push([A[i], A[j], b]);
+    }
+  }
+  return out.map(t => ({ trio: t.sort((x, y) => y.p - x.p), p3: t.reduce((a, x) => a * x.p, 1) })).sort((x, y) => y.p3 - x.p3).slice(0, 10);
+}
+function pick(m, mode, idx = 0, raw = false) { const c = combos(m, mode, raw); return { ...c[Math.min(idx, c.length - 1)], rank: Math.min(idx, c.length - 1) + 1, n: c.length }; }
+function renderList() {
+  const el = document.getElementById('list'); el.innerHTML = ''; let lastDay = '';
+  for (const m of DATA.matches) {
+    const d = fmtDay(m.ko); if (d !== lastDay) { const h = document.createElement('div'); h.className = 'day'; h.textContent = d; el.appendChild(h); lastDay = d; }
+    const best = pick(m, state.mode);
+    const b = document.createElement('button'); b.className = 'match'; b.type = 'button'; b.id = 'b' + m.id;
+    b.setAttribute('aria-current', String(m.id === state.id));
+    b.innerHTML = `<span class="time"><span class="wd">${fmtWd(m.ko)}</span>${fmtTime(m.ko)}</span>
+      <span class="teams"><span class="team"><i class="chip" style="background:${m.hc[0]}"></i>${m.h}</span><span class="team"><i class="chip" style="background:${m.ac[0]}"></i>${m.a}</span></span>
+      <span class="p3"><b>${(best.p3 * 100).toFixed(1)}%</b>trio${myTris[m.id] ? '<span class="mysaved">✓ tuo tris</span>' : ''}</span>`;
+    b.addEventListener('click', () => { history.replaceState(null, '', '#m' + m.id); select(m.id); focusPanel(b); });
+    el.appendChild(b);
+  }
+}
+const lumOf = h => { const m = String(h).replace('#', ''); if (m.length < 6) return .5; const [r, g, b] = [0, 2, 4].map(i => { const c = parseInt(m.slice(i, i + 2), 16) / 255; return c <= .03928 ? c / 12.92 : ((c + .055) / 1.055) ** 2.4; }); return .2126 * r + .7152 * g + .0722 * b; };
+const isDark = () => document.documentElement.dataset.theme === 'dark' || (document.documentElement.dataset.theme !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
+// numero di maglia leggibile sullo sfondo della scheda: se il colore della squadra è troppo scuro (o troppo chiaro) usa l'altro colore sociale
+const readable = (ink, cols) => { const bgDark = isDark(), l = lumOf(ink); if ((bgDark && l < .08) || (!bgDark && l > .7)) { const alt = (cols || []).find(c => c && (bgDark ? lumOf(c) >= .08 : lumOf(c) <= .7)); return alt || `color-mix(in srgb, ${ink} ${bgDark ? 45 : 60}%, ${bgDark ? '#ffffff' : '#000000'})`; } return ink; };
+function sticker(x, hidden) {
+  const c1 = x.cols[0] || '#13202d', c2 = x.cols[1] || '#ffffff', ink = strong(x.cols);
+  return `<article class="sticker ${hidden ? 'hidden' : ''}">
+    <div class="band" style="background:linear-gradient(115deg, ${c1} 0 58%, ${c2} 58% 70%, ${c1} 70%)"><span class="club">${x.team}</span><span class="pct">${pct(x.p)}</span></div>
+    <div class="face"><div class="badge" style="background:${ink}">${initials(x.n)}</div><div class="num" style="color:${readable(ink, x.cols)}">${x.num || ''}</div></div>
+    <div class="who"><div class="name">${x.n}</div>${x.tags.length ? `<div class="tags">${x.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>` : ''}<div class="role">${ROLE[x.pos] || ''}</div><div class="duel">Di fronte: <b>${x.vs || 'n/d'}</b></div></div>
+  </article>`;
+}
+function select(id) {
+  const m = DATA.matches.find(x => x.id === id) || DATA.matches[0]; state.id = m.id;
+  document.querySelectorAll('.match').forEach(b => b.setAttribute('aria-current', String(b.id === 'b' + m.id)));
+  const key = m.id + state.mode, best = pick(m, state.mode, state.idx[key] || 0), shown = !!state.revealed[key], sec = state.sec;
+  const [oh, oa] = (m.odds || '').split('/').map(Number), od = Math.max(0, 100 - (oh || 0) - (oa || 0)), saved = myTris[m.id];
+  const tagsHtml = x => x.tags.length ? `<div class="tags">${x.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>` : '';
+  const appSec = `
+    <div class="controls">
+      <button class="yellow" id="go" type="button">${shown ? 'Un altro trio' : 'I miei ammoniti'}</button>
+      ${shown ? `<button class="reset" id="reset" type="button" ${best.rank === 1 ? 'disabled' : ''}>↺ Torna al trio migliore</button>
+      <span class="rank">Trio ${best.rank} di ${best.n}<small>${best.rank === 1 ? 'il più probabile' : 'alternativa'}</small></span>` : ''}
+    </div>
+    <div class="stickers">${best.trio.map(x => sticker(x, !shown)).join('')}</div>
+    <div class="summary"><span>Tutti e tre ammoniti</span><span class="big">${shown ? (best.p3 * 100).toFixed(1) + '%' : '?'}</span>
+      <div class="seg" role="group" aria-label="Composizione del trio">
+        <button type="button" id="mode21" aria-pressed="${state.mode === '21'}">2 + 1 tra le squadre</button>
+        <button type="button" id="modefree" aria-pressed="${state.mode === 'free'}">Liberi</button>
+      </div>
+      <div class="seg" role="group" aria-label="Regola del sostituto">
+        <button type="button" class="subrule" data-sub="1" aria-pressed="${state.subRule}">Conta anche il sostituto</button>
+        <button type="button" class="subrule" data-sub="0" aria-pressed="${!state.subRule}">Solo il titolare</button>
+      </div></div>
+    ${shown ? playHtml(m, best.trio.map(t => t.n)) : ''}
+    ${shown && !locked(m) ? '<div class="hint"><button type="button" class="link" id="tomine">Usa questo trio come base per il mio tris →</button></div>' : ''}`;
+  const ps = players(m), mine = current(m);
+  const col = side => { const L = ps.filter(x => x.side === side), cols = side === 'h' ? m.hc : m.ac;
+    return `<div class="pcol"><h4><i class="chip big" style="background:${cols[0]}"></i>${side === 'h' ? m.h : m.a}</h4>
+      ${L.map(x => `<div class="prow">${addBtn(m, x)}<div><div class="nm">${x.n}</div><div class="sub">${ROLE[x.pos] || ''}${x.st < 100 ? ' · titolare al ' + x.st + '%' : ''}</div>${tagsHtml(x)}</div><div class="pp">${pct(x.p)}</div></div>`).join('')}</div>`; };
+  const same = saved && saved.mio.map(t => t.n).sort().join('|') === [...mine].sort().join('|');
+  const mioSec = `${builderHtml(m)}<p class="note">${state.subRule ? 'Percentuali con la regola del sostituto: vale anche il giallo di chi entra al posto del giocatore scelto.' : 'Percentuali solo per il titolare.'} Si cambia dalla scheda "Tris dell\'app".</p><div class="picker">${col('h')}${col('a')}</div>
+    ${locked(m) ? '' : `<div class="mybar"><span class="cnt">${mine.length}/3 scelti<small>${mine.join(', ') || 'tocca + per aggiungere'}</small></span>
+      <button type="button" class="save" id="savemine2" ${mine.length === 3 && DB && UID && !same ? '' : 'disabled'}>${same ? 'Salvato ✓' : 'Salva'}</button></div>`}`;
+  const tuttiSec = `<div class="tablebox"><table><thead><tr><th><span class="sr">Scegli per il mio tris</span></th><th>Giocatore</th><th>Squadra</th><th>Ruolo</th><th>Di fronte</th><th class="n">Titolare</th><th class="n">Giallo</th><th style="width:20%"></th></tr></thead><tbody>
+      ${ps.map(x => `<tr class="${mine.includes(x.n) ? 'picked' : ''}"><td>${addBtn(m, x)}</td><td>${x.n}${tagsHtml(x)}</td><td>${x.team}</td><td>${x.pos}</td><td>${x.vs}</td><td class="n">${x.st}%</td><td class="n">${pct(x.p)}</td><td><div class="bar" style="width:${Math.min(100, Math.round(x.p / 0.3 * 100))}%"></div></td></tr>`).join('')}
+    </tbody></table></div><p class="note">Il simbolo + aggiunge il giocatore al tuo tris (scheda "Il mio tris").</p>`;
+  const panel = document.getElementById('panel');
+  panel.innerHTML = `
+    <div class="mhead">
+      <div class="mteams"><span class="mt"><i class="chip big" style="background:${m.hc[0]}"></i>${m.h}</span><span class="mvs">–</span><span class="mt"><i class="chip big" style="background:${m.ac[0]}"></i>${m.a}</span></div>
+      <div class="mwhen"><span>${fmtDay(m.ko)}, <b>${fmtTime(m.ko)}</b></span><span class="pill ${m.uff ? 'uff' : 'prob'}">${m.uff ? 'Formazioni ufficiali' : 'Probabili · consenso 4 fonti'}</span>${m.derby ? '<span class="tag">Derby</span>' : ''}</div>
+    </div>
+    <div class="stats">
+      <div class="stat"><span class="k">Arbitro</span><span class="v">${m.ref}</span></div>
+      <div class="stat"><span class="k">Pronostico 1X2</span><div class="odds" aria-hidden="true"><span style="width:${oh}%;background:${strong(m.hc)}"></span><span style="width:${od}%;background:var(--line)"></span><span style="width:${oa}%;background:${strong(m.ac)}"></span></div><span class="v">${oh}% · X ${od}% · ${oa}%</span></div>
+      <div class="stat"><span class="k">Linea cartellini</span><span class="v">${m.line ?? '–'}</span></div>
+      <div class="stat"><span class="k">Il mio tris</span><span class="v">${saved ? 'Salvato ✓' : locked(m) ? 'Non creato' : 'Da creare'}</span></div>
+    </div>
+    <div class="sectabs" role="tablist" aria-label="Sezioni della partita">
+      <button type="button" role="tab" data-sec="app" aria-selected="${sec === 'app'}">Tris dell'app</button>
+      <button type="button" role="tab" data-sec="mio" aria-selected="${sec === 'mio'}">Il mio tris${saved ? ' ✓' : ''}</button>
+      <button type="button" role="tab" data-sec="tutti" aria-selected="${sec === 'tutti'}">Tutti i titolari</button>
+    </div>
+    <div class="sec" role="tabpanel">${sec === 'app' ? appSec : sec === 'mio' ? mioSec : tuttiSec}</div>`;
+  panel.querySelectorAll('[data-sec]').forEach(b => b.addEventListener('click', () => { state.sec = b.dataset.sec; select(m.id); }));
+  panel.querySelectorAll('.subrule').forEach(b => b.addEventListener('click', () => { state.subRule = b.dataset.sub === '1'; saveUi(); renderList(); select(m.id); }));
+  if (sec === 'app') {
+    document.getElementById('go').addEventListener('click', () => {
+      if (state.revealed[key]) state.idx[key] = ((state.idx[key] || 0) + 1) % best.n; state.revealed[key] = true; select(m.id);
+      document.querySelectorAll('.sticker').forEach(s => { s.classList.remove('reveal'); void s.offsetWidth; s.classList.add('reveal'); });
+    });
+    const rs = document.getElementById('reset');
+    if (rs) rs.addEventListener('click', () => { state.idx[key] = 0; select(m.id);
+      document.querySelectorAll('.sticker').forEach(s => { s.classList.remove('reveal'); void s.offsetWidth; s.classList.add('reveal'); }); document.getElementById('go').focus(); });
+    const setMode = md => { state.mode = md; saveUi(); renderList(); select(m.id); };
+    document.getElementById('mode21').addEventListener('click', () => setMode('21'));
+    document.getElementById('modefree').addEventListener('click', () => setMode('free'));
+    const tm = document.getElementById('tomine'); if (tm) tm.addEventListener('click', () => { pickNow[m.id] = best.trio.map(t => t.n); state.sec = 'mio'; select(m.id); });
+  } else wireBuilder(m);
+}
+const slugT = t => String(t).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const sisalUrl = m => `https://www.sisal.it/scommesse-matchpoint/evento/calcio/serie-a/${slugT(m.h)}-${slugT(m.a)}`;
+// bottone verso la pagina Sisal della partita: copia i tre nomi negli appunti (Sisal non permette di precompilare il biglietto da siti esterni)
+const playHtml = (m, names) => names.length === 3 && !locked(m) ? `<div class="play"><a class="playbtn" href="${sisalUrl(m)}" target="_blank" rel="noopener noreferrer" data-names="${names.join(', ').replace(/"/g, '&quot;')}">Gioca su Sisal ↗</a><span class="play-note">Copia i 3 nomi e apre la partita su Sisal · 18+ · Gioca responsabilmente</span><span class="play-msg" aria-live="polite"></span></div>` : '';
+document.addEventListener('click', async e => {
+  const a = e.target.closest && e.target.closest('.playbtn'); if (!a) return;
+  const names = a.dataset.names, msg = a.parentElement.querySelector('.play-msg'); let ok = false;
+  try { await navigator.clipboard.writeText(names); ok = true; } catch (er) {
+    try { const t = document.createElement('textarea'); t.value = names; t.style.position = 'fixed'; t.style.opacity = '0'; document.body.appendChild(t); t.select(); ok = document.execCommand('copy'); t.remove(); } catch (er2) {} }
+  if (msg) msg.innerHTML = `${ok ? 'Nomi copiati' : 'I tuoi nomi'}: <b>${names}</b>. Su Sisal apri la scheda <b>Giocatori</b> e cerca la scommessa sul giocatore ammonito.`;
+});
+const locked = m => Date.now() / 1000 > m.ko;
+const current = m => pickNow[m.id] || (myTris[m.id] ? myTris[m.id].mio.map(t => t.n) : []);
+function addBtn(m, x) {
+  const mine = current(m), on = mine.includes(x.n), dis = locked(m) || (!on && mine.length >= 3);
+  return `<button type="button" class="add" data-add="${x.n.replace(/"/g, '&quot;')}" aria-pressed="${on}" ${dis ? 'disabled' : ''} aria-label="${on ? 'Togli' : 'Aggiungi'} ${x.n.replace(/"/g, '&quot;')} ${on ? 'dal' : 'al'} mio tris">${on ? '✓' : '+'}</button>`;
+}
+function builderHtml(m) {
+  const mine = current(m), ps = players(m), app = pick(m, state.mode, 0, true), saved = myTris[m.id];
+  const prod = mine.length === 3 ? mine.reduce((a, n) => a * ((ps.find(x => x.n === n) || {}).p || 0), 1) : null;
+  const same = saved && saved.mio.map(t => t.n).sort().join('|') === [...mine].sort().join('|');
+  return `<section class="builder" aria-label="Il mio tris">
+    <div class="b-head"><h3>Il mio tris</h3><span class="note">${locked(m) ? 'Partita iniziata: il tris è bloccato.' : 'Tocca + accanto ai giocatori qui sotto (fino a 3), oppure parti dal tris dell\'app.'}</span></div>
+    <div class="slots">${[0, 1, 2].map(i => mine[i] ? `<span class="slot full">${mine[i]}${locked(m) ? '' : `<button type="button" class="x" data-rm="${i}" aria-label="Togli ${mine[i]}">×</button>`}</span>` : `<span class="slot">Scelta ${i + 1}</span>`).join('')}</div>
+    <div class="b-foot">
+      <span>Tutti e tre ammoniti: <b>${prod != null ? (prod * 100).toFixed(1) + '%' : '–'}</b> <span class="note">(tris dell'app ${(app.p3 * 100).toFixed(1)}%)</span></span>
+      ${locked(m) ? '' : `<button type="button" class="save" id="savemine" ${mine.length === 3 && DB && UID && !same ? '' : 'disabled'}>${same ? 'Salvato ✓' : 'Salva il mio tris'}</button>
+      <button type="button" class="reset" id="useapp">Parti dal tris dell'app</button>`}
+      <span class="saved" id="savedmsg">${saved ? `Salvato il ${hm(saved.savedAt)}: <b>${saved.mio.map(t => t.n).join(', ')}</b>` : ''}</span>
+    </div>
+    ${playHtml(m, mine)}
+    ${loaded && !UID ? '<p class="note">Per salvare il tris serve essere collegati con il proprio account Claude.</p>' : ''}
+  </section>`;
+}
+function wireBuilder(m) {
+  const panel = document.getElementById('panel');
+  panel.querySelectorAll('[data-add]').forEach(b => b.addEventListener('click', () => {
+    const n = b.dataset.add, mine = [...current(m)]; const i = mine.indexOf(n); if (i >= 0) mine.splice(i, 1); else if (mine.length < 3) mine.push(n);
+    pickNow[m.id] = mine; select(m.id); }));
+  panel.querySelectorAll('[data-rm]').forEach(b => b.addEventListener('click', () => { const mine = [...current(m)]; mine.splice(+b.dataset.rm, 1); pickNow[m.id] = mine; select(m.id); }));
+  const ua = document.getElementById('useapp'); if (ua) ua.addEventListener('click', () => { pickNow[m.id] = pick(m, state.mode, 0, true).trio.map(t => t.n); select(m.id); });
+  const sv2 = document.getElementById('savemine2'); if (sv2) sv2.addEventListener('click', () => { const b = document.getElementById('savemine'); if (b && !b.disabled) b.click(); });
+  const sv = document.getElementById('savemine');
+  if (sv) sv.addEventListener('click', async () => {
+    const ps = players(m, true), mine = current(m), app = pick(m, state.mode, 0, true);
+    const doc = { matchId: m.id, partita: `${m.h} - ${m.a}`, ko: m.ko, giornata: DATA.round, savedAt: new Date().toISOString(), modalita: state.mode, regolaSostituto: state.subRule,
+      mio: mine.map(n => ({ n, p: +(((ps.find(x => x.n === n) || {}).p) || 0).toFixed(3) })), app: app.trio.map(t => ({ n: t.n, p: +t.p.toFixed(3) })) };
+    sv.disabled = true; sv.textContent = 'Salvataggio…';
+    try { await DB.collection('data/users/' + UID).doc('t' + m.id).set(doc); myTris[m.id] = doc; delete pickNow[m.id]; renderList(); select(m.id); }
+    catch (e) { sv.disabled = false; sv.textContent = 'Riprova'; const msg = document.getElementById('savedmsg'); if (msg) msg.textContent = 'Salvataggio non riuscito: riprova tra poco.'; }
+  });
+}
+function score(trio, res, subRule = true) {
+  const am = new Set(res.ammoniti || []), fl = res.falli || {}, sb = res.sostituzioni || {};
+  const rows = trio.map(t => { const r = subRule ? sb[t.n] : null; const viaSub = !!(r && am.has(r) && !am.has(t.n));
+    return { n: t.n, hit: am.has(t.n) || viaSub, viaSub, sub: r, f: fl[t.n] == null && (!r || fl[r] == null) ? null : (fl[t.n] || 0) + (r ? (fl[r] || 0) : 0) }; });
+  const hits = rows.filter(r => r.hit).length, falli = rows.reduce((a, r) => a + (r.f || 0), 0);
+  return { rows, hits, falli, punti: hits * 3 + falli * 0.5 };
+}
+async function renderArea() {
+  const el = document.getElementById('area');
+  if (!UID) { el.innerHTML = `<h2>La mia area</h2><p class="note">${loaded ? 'Collegati con il tuo account Claude per avere la tua area personale con i tuoi tris.' : 'Collegamento al tuo account…'}</p>`; return; }
+  const list = Object.values(myTris).sort((a, b) => b.ko - a.ko);
+  el.innerHTML = `<h2>La mia area</h2><p class="note">Caricamento dei risultati…</p>`;
+  await Promise.all(list.map(async t => { if (results[t.matchId] === undefined) { try { const s = await withTimeout(DB.doc('risultati/' + t.matchId).get()); results[t.matchId] = s.exists ? s.data() : null; } catch (e) { results[t.matchId] = null; } } }));
+  let me = { p: 0, h: 0, full: 0 }, ap = { p: 0, h: 0, full: 0 }, judged = 0, wins = 0;
+  const cards = list.map(t => {
+    const res = results[t.matchId];
+    // tris dell'app aggiornato: quello registrato al calcio d'inizio (risultati.tris_app) o, prima della partita, quello attuale dell'app; il tris salvato insieme al tuo era una fotografia del momento
+    const mm = DATA.matches.find(x => x.id === t.matchId);
+    const appTrio = (res && res.tris_app && res.tris_app.length) ? res.tris_app : mm ? pick(mm, '21', 0).trio.map(x => ({ n: x.n, p: x.p })) : t.app;
+    if (!res) return `<article class="duel-card"><h3>${t.partita}</h3><span class="note">Salvato il ${hm(t.savedAt)} · in attesa del risultato</span>
+      <div class="cols2"><div class="side"><h4>Il tuo tris</h4><ul>${t.mio.map(x => `<li><span class="nm">${x.n}</span><span class="lead"></span><span class="val">${Math.round(x.p * 100)}%</span></li>`).join('')}</ul></div>
+      <div class="side app"><h4>Tris dell'app</h4><ul>${appTrio.map(x => `<li><span class="nm">${x.n}</span><span class="lead"></span><span class="val">${Math.round(x.p * 100)}%</span></li>`).join('')}</ul></div></div></article>`;
+    const rule = t.regolaSostituto !== false, a = score(t.mio, res, rule), b = score(appTrio, res, rule); judged++;
+    me.p += a.punti; me.h += a.hits; me.full += a.hits === 3; ap.p += b.punti; ap.h += b.hits; ap.full += b.hits === 3; if (a.punti > b.punti) wins++;
+    const li = r => `<li class="${r.hit ? 'ok' : ''}"><span class="nm">${r.n}${r.sub ? `<small class="note">→ entrato ${r.sub}</small>` : ''}</span><span class="lead"></span><span class="val">${r.hit ? `<span class="hit">${r.viaSub ? 'giallo al sostituto ✓' : 'ammonito ✓'}</span> · ` : ''}${r.f != null ? r.f + (r.f === 1 ? ' fallo' : ' falli') : (res.falli && Object.keys(res.falli).length ? 'non ha giocato' : 'falli in arrivo')}</span></li>`;
+    const v = a.punti > b.punti ? '<span class="verdict win">Hai battuto l\'app</span>' : a.punti < b.punti ? '<span class="verdict">Vince l\'app</span>' : '<span class="verdict">Pareggio</span>';
+    return `<article class="duel-card"><h3>${t.partita} ${res.finale ? '· ' + res.finale : ''}</h3>${v}
+      <div class="cols2"><div class="side"><h4>Il tuo tris</h4><ul>${a.rows.map(li).join('')}</ul><div class="score">${a.hits}/3 ammoniti · ${a.falli} ${a.falli === 1 ? 'fallo' : 'falli'} · ${a.punti} punti</div></div>
+      <div class="side app"><h4>Tris dell'app</h4><ul>${b.rows.map(li).join('')}</ul><div class="score">${b.hits}/3 ammoniti · ${b.falli} ${b.falli === 1 ? 'fallo' : 'falli'} · ${b.punti} punti</div></div></div></article>`;
+  });
+  el.innerHTML = `<h2>La mia area</h2>
+    <div class="tiles">
+      <div class="tile"><div class="k">Tris salvati</div><div class="v">${list.length}<small> · ${judged} giudicati</small></div></div>
+      <div class="tile"><div class="k">I tuoi punti</div><div class="v">${me.p}<small> · app ${ap.p}</small></div></div>
+      <div class="tile"><div class="k">Ammoniti azzeccati</div><div class="v">${me.h}<small> · app ${ap.h}</small></div></div>
+      <div class="tile"><div class="k">Tris completi (3/3)</div><div class="v">${me.full}<small> · app ${ap.full}</small></div></div>
+      <div class="tile"><div class="k">Partite vinte contro l'app</div><div class="v">${wins}<small> su ${judged}</small></div></div>
+    </div>
+    <p class="note">I tris dell'app di tutte le partite, anche quelle in cui non hai giocato, sono nello <button type="button" class="link" onclick="setView('storico')">Storico tris dell'app</button>.</p>
+    ${cards.length ? cards.join('') : '<p class="note">Non hai ancora salvato nessun tris: torna su "Partite", scegli una partita e crea il tuo.</p>'}`;
+}
+function setView(v) {
+  state.view = v; document.getElementById('tab-partite').setAttribute('aria-pressed', String(v === 'partite')); document.getElementById('tab-area').setAttribute('aria-pressed', String(v === 'area'));
+  document.getElementById('tab-storico').setAttribute('aria-pressed', String(v === 'storico'));
+  document.querySelector('.layout').hidden = v !== 'partite'; document.getElementById('area').hidden = v !== 'area'; document.getElementById('storico').hidden = v !== 'storico';
+  if (v === 'area') { history.replaceState(null, '', '#area'); renderArea(); }
+  else if (v === 'storico') { history.replaceState(null, '', '#storico'); renderStorico(); }
+  else if (state.id) { history.replaceState(null, '', '#m' + state.id); select(state.id); }
+}
+// Storico: il tris dell'app di ogni partita giocata, salvato nel risultato (campo tris_app) e giudicato in automatico
+async function renderStorico() {
+  const el = document.getElementById('storico');
+  if (!DB) { el.innerHTML = `<h2>Storico tris dell'app</h2><p class="note">${loaded ? 'Lo storico si legge dal database dell\'app: aprila dal link di Claude per vederlo.' : 'Caricamento…'}</p>`; return; }
+  el.innerHTML = `<h2>Storico tris dell'app</h2><p class="note">Caricamento…</p>`;
+  let docs = [];
+  try { const snap = await withTimeout(DB.collection('risultati').get()); docs = snap.docs.map(d => d.data()).filter(r => r && r.tris_app && r.tris_app.length); docs.forEach(r => { results[r.matchId] = r; }); }
+  catch (e) { el.innerHTML = `<h2>Storico tris dell'app</h2><p class="note">Non riesco a leggere lo storico in questo momento: riprova tra poco.</p>`; return; }
+  docs.sort((a, b) => (b.ko || 0) - (a.ko || 0));
+  let hits = 0, full = 0, two = 0, pts = 0;
+  const li = (r, p) => `<li class="${r.hit ? 'ok' : ''}"><span class="nm" title="${r.n}${r.sub ? ' → entrato ' + r.sub : ''}">${r.n}${r.sub ? `<small class="note">→ entrato ${r.sub}</small>` : ''}</span><span class="lead"></span><span class="val">${r.hit ? `<span class="hit">${r.viaSub ? '✓ sostituto' : '✓ giallo'}</span> · ` : ''}${Math.round(p * 100)}%${r.f != null ? ' · ' + r.f + ' f.' : ''}</span></li>`;
+  const byG = {};
+  for (const r of docs) {
+    const sc = score(r.tris_app, r, true); hits += sc.hits; full += sc.hits === 3; two += sc.hits >= 2; pts += sc.punti;
+    const card = `<article class="hist-card"><div class="hh"><h3>${r.partita}${r.finale ? ' · ' + r.finale : ''}</h3><span class="hits-badge ${sc.hits === 3 ? 'h3' : sc.hits === 2 ? 'h2' : ''}">${sc.hits}/3</span></div>
+      <span class="note">${r.ko ? fmtDay(r.ko) + ', ' + fmtTime(r.ko) + ' · ' : ''}tutti e tre ammoniti: ${r.p3_app != null ? (r.p3_app * 100).toFixed(1) + '% previsto' : 'n/d'}</span>
+      <div class="side app"><h4>Tris dell'app</h4><ul>${sc.rows.map((x, i) => li(x, r.tris_app[i].p)).join('')}</ul><div class="score">${sc.hits}/3 ammoniti · ${sc.falli} ${sc.falli === 1 ? 'fallo' : 'falli'} · ${sc.punti} punti</div></div></article>`;
+    (byG[r.giornata || 0] ||= []).push(card);
+  }
+  const n = docs.length;
+  el.innerHTML = `<h2>Storico tris dell'app</h2>
+    <p class="note">Per ogni partita giocata, il tris che l'app proponeva al calcio d'inizio (2 + 1 tra le squadre, regola del sostituto). Si aggiorna da solo a fine partita, anche se non hai salvato un tuo tris.</p>
+    <p class="hist-legend">Per ogni giocatore: ✓ giallo (o ✓ sostituto, se il giallo l'ha preso chi è entrato al suo posto) · probabilità prevista · falli fatti (f.)</p>
+    <div class="tiles">
+      <div class="tile"><div class="k">Partite</div><div class="v">${n}</div></div>
+      <div class="tile"><div class="k">Ammoniti azzeccati</div><div class="v">${hits}<small> su ${n * 3}${n ? ' · ' + Math.round(hits / (n * 3) * 100) + '%' : ''}</small></div></div>
+      <div class="tile"><div class="k">Almeno 2 su 3</div><div class="v">${two}<small> su ${n}</small></div></div>
+      <div class="tile"><div class="k">Tris completi (3/3)</div><div class="v">${full}<small> su ${n}</small></div></div>
+      <div class="tile"><div class="k">Punti</div><div class="v">${pts}</div></div>
+    </div>
+    ${n ? Object.keys(byG).sort((a, b) => b - a).map(g => `<div class="gday">${g > 0 ? 'Giornata ' + g : 'Altre partite'}</div><div class="hist-grid">${byG[g].join('')}</div>`).join('') : '<p class="note">Ancora nessuna partita giudicata.</p>'}`;
+}
+function focusPanel(btn) {
+  const narrow = matchMedia('(max-width: 820px)').matches, smooth = matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+  if (btn) btn.scrollIntoView({ behavior: smooth, inline: 'center', block: 'nearest' });
+  const panel = document.getElementById('panel'), top = panel.getBoundingClientRect().top;
+  const strip = narrow ? document.getElementById('list').getBoundingClientRect().height : 0;
+  if (top < strip || top > innerHeight * 0.5) window.scrollTo({ top: scrollY + top - strip - 8, behavior: smooth });
+}
+function start() {
+  document.getElementById('hdr-round').textContent = `· Giornata ${DATA.round}`;
+  const up = new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }).format(new Date(DATA.updated));
+  document.getElementById('meta').innerHTML = `<span>Serie A <b>${DATA.season}</b></span><span>Aggiornato <b>${up}</b></span><span>Modello <b>${DATA.model}</b></span>`;
+  if (DATA.lineups_note) document.getElementById('lnote').textContent = DATA.lineups_note;
+  if (DATA.subq_note) document.getElementById('subnote').textContent = DATA.subq_note;
+  document.getElementById('tab-partite').addEventListener('click', () => setView('partite'));
+  document.getElementById('tab-area').addEventListener('click', () => setView('area'));
+  document.getElementById('tab-storico').addEventListener('click', () => setView('storico'));
+  renderList();
+  const now = Date.now() / 1000, fromHash = +(location.hash || '').replace('#m', '');
+  const next = DATA.matches.find(m => m.ko + 7200 > now) || DATA.matches[0];
+  select(DATA.matches.some(m => m.id === fromHash) ? fromHash : next.id);
+  const chip = document.getElementById('b' + state.id), strip = document.getElementById('list');
+  if (chip && matchMedia('(max-width: 820px)').matches) strip.scrollLeft = chip.offsetLeft - (strip.clientWidth - chip.clientWidth) / 2;
+  if (location.hash === '#area') setView('area');
+  if (location.hash === '#storico') setView('storico');
+}
+window.addEventListener('hashchange', () => { if (location.hash === '#storico') { if (state.view !== 'storico') setView('storico'); return; } if (location.hash === '#area') { if (state.view !== 'area') setView('area'); return; } const id = +(location.hash || '').replace('#m', ''); if (DATA.matches.some(m => m.id === id)) { if (state.view !== 'partite') setView('partite'); select(id); } });
+start();
+</script>
+</body>
+</html>
