@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta name="build" content="2026-11-03T18:38:04Z">
+<meta name="build" content="2026-11-03T18:39:25Z">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -892,7 +892,7 @@ async function liveFetch(m) {
 const liveMin = L => { if (!L.run) return L.t; const sec = L.clk + (Date.now() - L.at) / 1000, mn = Math.floor(sec / 60) + 1, cap = L.per >= 2 ? 90 : 45;
   return mn > cap ? cap + "'+" + (mn - cap) + "'" : mn + "'"; };
 setInterval(() => { const m = (typeof DATA !== 'undefined' && DATA) ? DATA.matches.find(x => x.id === state.id) : null, el = document.querySelector('.livebox .lmin');
-  if (m && m.live && m.live.src === 'espn' && el) el.textContent = 'Live ' + liveMin(m.live); }, 5000);
+  if (m && m.live && m.live.src === 'espn' && m.live.run && el) el.textContent = 'Live ' + liveMin(m.live); }, 5000);
 async function liveLoop() {
   if (!document.hidden) {
     const now = Date.now() / 1000, all = [...ALL.matches, ...(CUP ? CUP.matches : [])];
