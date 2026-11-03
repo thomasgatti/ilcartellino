@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1b2a8c"/><stop offset="1" stop-color="#0b1440"/></linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe14d"/><stop offset=".55" stop-color="#ffcc00"/><stop offset="1" stop-color="#f2b200"/></linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <g transform="rotate(-12 256 262)">
+    <rect x="166" y="112" width="186" height="268" rx="22" fill="#000" opacity=".28" transform="translate(10 14)"/>
+    <rect x="166" y="112" width="186" height="268" rx="22" fill="url(#card)"/>
+    <path d="M188 112h142a22 22 0 0 1 22 22v40C290 150 230 140 166 150v-16a22 22 0 0 1 22-22z" fill="#fff" opacity=".28"/>
+  </g>
+</svg>
