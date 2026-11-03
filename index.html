@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta name="build" content="2026-11-03T12:34:46Z">
+<meta name="build" content="2026-11-03T12:38:40Z">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>I miei ammoniti</title>
@@ -477,6 +477,12 @@ function combos(m, mode, raw = false) {
   return res.slice(0, 10);
 }
 function pick(m, mode, idx = 0, raw = false) { const c = combos(m, mode, raw); return { ...c[Math.min(idx, c.length - 1)], rank: Math.min(idx, c.length - 1) + 1, n: c.length }; }
+function probNote(m) {
+  const tipo = m.src === 'provv' ? 'PROVVISORIE' : 'PROBABILI';
+  const fonte = m.src === 'provv' ? 'ultima formazione e presenze da titolare nelle ultime giornate' : m.src === 'fotmob' ? 'FotMob' : 'consenso di 4 giornali';
+  const poi = m.src === 'provv' ? "le probabili dei giornali arrivano verso fine settimana e le ufficiali circa un'ora prima del calcio d'inizio" : "le ufficiali arrivano circa un'ora prima del calcio d'inizio";
+  return `<p class="probnote"><b>Formazioni ${tipo}</b> (${fonte}): ${poi}, quindi probabilità e tris cambieranno.</p>`;
+}
 function statusPill(m) {
   const now = Date.now() / 1000, base = `<span class="basis">Tris calcolato sulle formazioni ${m.uff ? 'ufficiali' : m.src === 'provv' ? 'provvisorie' : 'probabili'}</span>`;
   if (now > m.ko + 115 * 60) return '<span class="pill done">Finita</span>' + base;
@@ -554,7 +560,7 @@ function select(id) {
   panel.innerHTML = `
     <div class="mhead">
       <div class="mteams"><span class="mt"><i class="chip big" style="background:${m.hc[0]}"></i>${m.h}</span><span class="mvs">–</span><span class="mt"><i class="chip big" style="background:${m.ac[0]}"></i>${m.a}</span></div>
-      <div class="mwhen"><span>${fmtDay(m.ko)}, <b>${fmtTime(m.ko)}</b></span>${statusPill(m)}${m.derby ? '<span class="tag">Derby</span>' : ''}</div>${m.uff || locked(m) ? '' : (m.src === 'provv' ? '<p class="probnote"><b>Formazioni PROVVISORIE</b> (ultima formazione e presenze da titolare nelle ultime giornate): le probabili dei giornali arrivano verso fine settimana e le ufficiali circa un\'ora prima del calcio d\'inizio, quindi probabilità e tris cambieranno.</p>' : '<p class="probnote"><b>Formazioni PROBABILI</b> (' + (m.src === 'fotmob' ? 'FotMob' : 'consenso di 4 fonti') + '): circa un\'ora prima del calcio d\'inizio arrivano le ufficiali e probabilità e tris possono cambiare.</p>')}
+      <div class="mwhen"><span>${fmtDay(m.ko)}, <b>${fmtTime(m.ko)}</b></span>${statusPill(m)}${m.derby ? '<span class="tag">Derby</span>' : ''}</div>${m.uff || locked(m) ? '' : probNote(m)}
     </div>
     <div class="stats">
       <div class="stat"><span class="k">Arbitro</span><span class="v">${m.ref}</span>${m.refnote ? `<span class="k2">${m.refnote}</span>` : ''}</div>
