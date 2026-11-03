@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta name="build" content="2026-11-03T18:39:25Z">
+<meta name="build" content="2026-11-03T18:53:50Z">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -294,6 +294,11 @@ details.how p { margin: 8px 0 0; max-width: none; }
 .note { font-size: 13px; color: var(--muted); max-width: 70ch; margin: 0; }
 .stat .k2 { display: block; font-size: 11.5px; color: var(--muted); margin-top: 3px; }
 .livebox { margin: 12px 0 0; border: 1px solid color-mix(in srgb, #d92d20 40%, transparent); background: color-mix(in srgb, #d92d20 8%, transparent); border-radius: 12px; padding: 10px 12px; display: grid; gap: 6px; font-size: 14px; }
+.livebox .lmin { background: #e5332a; color: #fff; animation: livepulse 1.6s ease-in-out infinite; }
+.livebox .lmin.still { animation: none; background: var(--line); color: inherit; }
+.pill.live { animation: livepulse 1.6s ease-in-out infinite; }
+@keyframes livepulse { 0%, 100% { opacity: 1; box-shadow: 0 0 10px 2px rgba(255, 59, 48, .75); } 50% { opacity: .35; box-shadow: 0 0 0 0 rgba(255, 59, 48, 0); } }
+@media (prefers-reduced-motion: reduce) { .livebox .lmin, .pill.live { animation: none; } }
 .livebox .lh { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-weight: 600; }
 .livebox .lh small { font-weight: 400; color: var(--muted, #667); }
 .livebox .lr { display: grid; gap: 1px; }
@@ -589,7 +594,7 @@ function liveHtml(m) {
   const fl = Object.entries(L.fl).filter(([, v]) => v[0] > 0).sort((a, b) => b[1][0] - a[1][0]).slice(0, 5).map(([n, v]) => `${n} ${v[0]}`).join(' · ');
   const fs = Object.entries(L.fl).filter(([, v]) => v[1] > 0).sort((a, b) => b[1][1] - a[1][1]).slice(0, 4).map(([n, v]) => `${n} ${v[1]}`).join(' · ');
   const risk = Object.entries(L.p).filter(([, v]) => v > 0 && v < 1).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([n, v]) => `${n} ${pc(v)}`).join(' · ');
-  return `<div class="livebox"><div class="lh"><span class="pill live lmin">${L.fin ? 'Finita' : L.t === 'Intervallo' ? 'Intervallo' : 'Live ' + (L.src === 'espn' ? liveMin(L) : L.t)}</span>${m.h} ${L.sc} ${m.a}<small>aggiornato alle ${L.agg}</small></div>
+  return `<div class="livebox"><div class="lh"><span class="pill live lmin${L.fin || L.t === 'Intervallo' ? ' still' : ''}">${L.fin ? 'Finita' : L.t === 'Intervallo' ? 'Intervallo' : L.src === 'espn' ? liveMin(L) : L.t}</span>${m.h} ${L.sc} ${m.a}</div>
     <div class="lr"><span class="lk">Ammoniti</span><span>${L.cards.length ? L.cards.map(c => `<span class="yc${c[2] === 'R' ? ' rc' : ''}"></span>${c[1]} ${c[0]}'${trio.includes(c[1]) ? ' ✓' : ''}`).join(' · ') : 'nessuno'}</span></div>
     <div class="lr"><span class="lk">Tris dell'app</span><span>${trioTxt}</span></div>
     ${L.fin ? '' : `<div class="lr"><span class="lk">Rischio ora</span><span>${risk}</span></div>`}
@@ -861,7 +866,8 @@ async function liveFetch(m) {
   const j = await fetch(ESPN + id[0] + '/summary?event=' + id[1]).then(r => r.json());
   const cp = j.header?.competitions?.[0], stt = cp?.status?.type?.state; if (!cp || stt === 'pre') return;
   const side = {}, sc = {}; (cp.competitors || []).forEach(c => { side[c.homeAway] = c; sc[c.homeAway === 'home' ? 'h' : 'a'] = +c.score || 0; });
-  const fin = stt === 'post', clock = /half/i.test(cp.status?.type?.description || '') ? 'Intervallo' : cp.status?.displayClock || '', t = fin ? 95 : clock === 'Intervallo' ? 45 : Math.min(95, parseInt(clock) || 0);
+  const ht = cp.status?.type?.name === 'STATUS_HALFTIME' || /^half ?time$/i.test(cp.status?.type?.description || ''), fin = stt === 'post', clock = ht ? 'Intervallo' : cp.status?.displayClock || '',
+    mm = (clock.match(/\d+/g) || []).map(Number), m0 = (mm[0] || 0) + (mm[1] || 0), t = fin ? 95 : ht ? 45 : Math.min(95, m0);
   const es = {}; (j.rosters || []).forEach(r => { es[r.homeAway === 'home' ? 'h' : 'a'] = (r.roster || []).map(p => {
     const st = {}; (p.stats || []).forEach(x => st[x.name] = +x.value || 0);
     return { n: p.athlete?.displayName || '', start: !!p.starter, out: !!p.subbedOut, fc: st.foulsCommitted || 0, fs: st.foulsSuffered || 0, y: st.yellowCards || 0, r: st.redCards || 0 }; }); });
@@ -882,17 +888,17 @@ async function liveFetch(m) {
   }
   cards.sort((a, b) => a[0] - b[0]);
   m.live = { t: clock, sc: sc.h + ' - ' + sc.a, fin, agg: new Date().toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit', second: '2-digit' }), cards, fl, p: P, out, src: 'espn',
-    clk: +cp.status?.clock || 0, per: +cp.status?.period || 0, at: Date.now(), run: stt === 'in' && clock !== 'Intervallo' };
+    m0, per: +cp.status?.period || 0, at: Date.now(), run: stt === 'in' && !ht && m0 > 0 };
   if (state.id === m.id && state.view !== 'storico' && state.view !== 'area') {
     const box = document.querySelector('.livebox');
     if (box) box.outerHTML = liveHtml(m); else select(m.id);
   }
 }
 // minuto che scorre da solo tra un aggiornamento e l'altro (stile 41'... 42'... 45'+1')
-const liveMin = L => { if (!L.run) return L.t; const sec = L.clk + (Date.now() - L.at) / 1000, mn = Math.floor(sec / 60) + 1, cap = L.per >= 2 ? 90 : 45;
+const liveMin = L => { if (!L.run) return L.t; const mn = L.m0 + Math.floor((Date.now() - L.at) / 60000), cap = L.per >= 2 ? 90 : 45;
   return mn > cap ? cap + "'+" + (mn - cap) + "'" : mn + "'"; };
 setInterval(() => { const m = (typeof DATA !== 'undefined' && DATA) ? DATA.matches.find(x => x.id === state.id) : null, el = document.querySelector('.livebox .lmin');
-  if (m && m.live && m.live.src === 'espn' && m.live.run && el) el.textContent = 'Live ' + liveMin(m.live); }, 5000);
+  if (m && m.live && m.live.src === 'espn' && m.live.run && el) el.textContent = liveMin(m.live); }, 5000);
 async function liveLoop() {
   if (!document.hidden) {
     const now = Date.now() / 1000, all = [...ALL.matches, ...(CUP ? CUP.matches : [])];
