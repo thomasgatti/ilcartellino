@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta name="build" content="2026-11-03T12:32:54Z">
+<meta name="build" content="2026-11-03T12:34:46Z">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>I miei ammoniti</title>
@@ -467,7 +467,14 @@ function combos(m, mode, raw = false) {
       for (let i = 0; i < A.length; i++) for (let j = i + 1; j < A.length; j++) for (const b of B) out.push([A[i], A[j], b]);
     }
   }
-  return out.map(t => ({ trio: t.sort((x, y) => y.p - x.p), p3: t.reduce((a, x) => a * x.p, 1) })).sort((x, y) => y.p3 - x.p3).slice(0, 10);
+  const res = out.map(t => ({ trio: t.sort((x, y) => y.p - x.p), p3: t.reduce((a, x) => a * x.p, 1), two: mode === 'free' ? null : (t.filter(x => x.side === 'h').length === 2 ? 'h' : 'a') })).sort((x, y) => y.p3 - x.p3);
+  // parità (entro il 5%): due posti alla squadra che nel complesso prende più gialli (somma delle p di tutti i suoi giocatori)
+  if (mode !== 'free' && res.length > 1) {
+    const E = sd => ps.filter(x => x.side === sd).reduce((a, x) => a + x.p, 0);
+    const alt = res.find(c => c.two !== res[0].two);
+    if (alt && alt.p3 >= res[0].p3 * .95 && E(alt.two) > E(res[0].two)) { res.splice(res.indexOf(alt), 1); res.unshift(alt); }
+  }
+  return res.slice(0, 10);
 }
 function pick(m, mode, idx = 0, raw = false) { const c = combos(m, mode, raw); return { ...c[Math.min(idx, c.length - 1)], rank: Math.min(idx, c.length - 1) + 1, n: c.length }; }
 function statusPill(m) {
