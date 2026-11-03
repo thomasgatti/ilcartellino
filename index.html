@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta name="build" content="2026-11-03T11:25:06Z">
+<meta name="build" content="2026-11-03T12:22:59Z">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>I miei ammoniti</title>
@@ -308,6 +308,27 @@ footer { font-size: 13px; color: var(--muted); display: grid; gap: 6px; }
 .comps button[aria-pressed="true"] { background: var(--ink); color: var(--surface); }
 .comps .star { font-size: 12px; }
 /* Tema coppe europee: notte blu, luci iridescenti; il giallo resta solo per il cartellino */
+/* Tema Serie A: blu notte e azzurro da stadio, tricolore, un'idea di prato */
+:root[data-comp="sa"] { --sa1: #14228c; --sa2: #1e6fe0; --sa3: #13b5ea; --sag: #1f9d55; --sar: #d62b36; }
+:root[data-comp="sa"] body {
+  background-image:
+    radial-gradient(1100px 420px at 85% -120px, color-mix(in srgb, var(--sa3) 22%, transparent), transparent 70%),
+    radial-gradient(900px 380px at 0% -140px, color-mix(in srgb, var(--sa2) 20%, transparent), transparent 70%),
+    linear-gradient(to top, color-mix(in srgb, var(--sag) 13%, transparent), transparent 180px),
+    radial-gradient(color-mix(in srgb, var(--ink) 7%, transparent) 1px, transparent 1.2px);
+  background-size: auto, auto, auto, 14px 14px; background-attachment: fixed, fixed, fixed, scroll;
+}
+:root[data-comp="sa"] body::before { content: ""; position: fixed; inset: 0 0 auto 0; height: 5px; z-index: 50; pointer-events: none;
+  background: linear-gradient(90deg, var(--sag) 0 33.3%, #ffffff 33.3% 66.6%, var(--sar) 66.6% 100%); box-shadow: 0 1px 0 rgba(0,0,0,.08); }
+:root[data-comp="sa"] h1 { background: linear-gradient(90deg, var(--sa1) 0%, var(--sa2) 55%, var(--sa3) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+:root[data-comp="sa"][data-theme="dark"] h1 { background-image: linear-gradient(90deg, #ffffff 0%, #9cc7ff 50%, var(--sa3) 100%); }
+@media (prefers-color-scheme: dark) { :root[data-comp="sa"]:not([data-theme="light"]) h1 { background-image: linear-gradient(90deg, #ffffff 0%, #9cc7ff 50%, var(--sa3) 100%); } }
+:root[data-comp="sa"] h1 span { color: var(--muted); -webkit-text-fill-color: var(--muted); }
+:root[data-comp="sa"] .comps button[aria-pressed="true"] { background: linear-gradient(90deg, var(--sa1), var(--sa2) 60%, var(--sa3)); color: #fff; box-shadow: 0 0 14px color-mix(in srgb, var(--sa2) 45%, transparent); }
+:root[data-comp="sa"] .day { color: var(--sa2); }
+:root[data-comp="sa"] .match[aria-current="true"] { border-color: transparent; box-shadow: 0 0 0 2px var(--sa2) inset, 0 4px 16px color-mix(in srgb, var(--sa2) 22%, transparent); }
+:root[data-comp="sa"] .panel { background: linear-gradient(90deg, var(--sa1), var(--sa2), var(--sa3)) top / 100% 5px no-repeat, var(--surface); }
+:root[data-comp="sa"] .tabs button[aria-pressed="true"], :root[data-comp="sa"] .histbtn[aria-pressed="true"] { background: var(--sa1); color: #fff; }
 :root[data-comp="ucl"] body { isolation: isolate; }
 :root[data-comp="ucl"] {
   --paper: #040a2c; --surface: #0b1550; --ink: #eef2ff; --muted: #a9b6ea; --line: #22307f;
@@ -450,16 +471,16 @@ function combos(m, mode, raw = false) {
 }
 function pick(m, mode, idx = 0, raw = false) { const c = combos(m, mode, raw); return { ...c[Math.min(idx, c.length - 1)], rank: Math.min(idx, c.length - 1) + 1, n: c.length }; }
 function statusPill(m) {
-  const now = Date.now() / 1000, base = `<span class="basis">Tris calcolato sulle formazioni ${m.uff ? 'ufficiali' : 'probabili'}</span>`;
+  const now = Date.now() / 1000, base = `<span class="basis">Tris calcolato sulle formazioni ${m.uff ? 'ufficiali' : m.src === 'provv' ? 'provvisorie' : 'probabili'}</span>`;
   if (now > m.ko + 115 * 60) return '<span class="pill done">Finita</span>' + base;
   if (now > m.ko) return '<span class="pill live">In corso</span>' + base;
-  return m.uff ? '<span class="pill uff">Formazioni ufficiali</span>' : '<span class="pill prob">⚠ Formazioni probabili</span>';
+  return m.uff ? '<span class="pill uff">Formazioni ufficiali</span>' : `<span class="pill prob">⚠ Formazioni ${m.src === 'provv' ? 'provvisorie' : 'probabili'}</span>`;
 }
 function statusTag(m) {
   const now = Date.now() / 1000;
   if (now > m.ko + 115 * 60) return '<span class="ltag done">Finita</span>';
   if (now > m.ko) return '<span class="ltag live">In corso</span>';
-  return `<span class="ltag ${m.uff ? 'uff' : 'prob'}">${m.uff ? 'Ufficiali' : 'Probabili'}</span>`;
+  return `<span class="ltag ${m.uff ? 'uff' : 'prob'}">${m.uff ? 'Ufficiali' : m.src === 'provv' ? 'Provvisorie' : 'Probabili'}</span>`;
 }
 function renderList() {
   const el = document.getElementById('list'); el.innerHTML = ''; let lastDay = '';
@@ -697,7 +718,7 @@ function focusPanel(btn) {
   if (top < strip || top > innerHeight * 0.5) window.scrollTo({ top: scrollY + top - strip - 8, behavior: smooth });
 }
 function paintHeader() {
-  document.getElementById('hdr-round').textContent = state.comp === 'ucl' ? `· Champions ${DATA.round}ª` : `· Giornata ${DATA.round}`;
+  document.getElementById('hdr-round').textContent = state.comp === 'ucl' ? `· Champions ${DATA.round}ª` : `· Giornata ${DATA.round}ª`;
   const up = new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }).format(new Date(DATA.updated));
   document.getElementById('meta').innerHTML = `<span>${state.comp === 'ucl' ? 'Champions League' : 'Serie A'} <b>${DATA.season}</b></span><span>Aggiornato <b>${up}</b></span><span>Modello <b>${DATA.model}</b></span>`;
   document.getElementById('lnote').textContent = DATA.lineups_note || '';
