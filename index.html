@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta name="build" content="2026-11-03T18:28:31Z">
+<meta name="build" content="2026-11-03T18:33:17Z">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -595,7 +595,7 @@ function liveHtml(m) {
     ${L.fin ? '' : `<div class="lr"><span class="lk">Rischio ora</span><span>${risk}</span></div>`}
     <div class="lr"><span class="lk">Falli fatti</span><span>${fl || '–'}</span></div>
     <div class="lr"><span class="lk">Falli subiti</span><span>${fs || '–'}</span></div>
-    ${L.fin ? '' : '<p class="note">Rischio ora: probabilità di giallo da qui alla fine (modello live più i falli già fatti, stima indicativa).</p>'}</div>`;
+    ${L.fin ? '' : `<p class="note">Rischio ora: probabilità di giallo da qui alla fine (modello live più i falli già fatti, stima indicativa).${L.src === 'espn' ? ' Si aggiorna da solo ogni minuto.' : ''}</p>`}</div>`;
 }
 function select(id) {
   const m = DATA.matches.find(x => x.id === id) || DATA.matches[0]; state.id = m.id;
@@ -825,6 +825,75 @@ function setComp(c, keepId) {
   state.id = null; select(keepId && DATA.matches.some(m => m.id === keepId) ? keepId : next.id);
   if (state.view === 'storico') renderStorico(); else if (state.view === 'area') renderArea(); else history.replaceState(null, '', '#m' + state.id);
 }
+// ---- live dal browser: dati ESPN ogni 60 secondi durante le partite (nessun server, nessun PC) ----
+const LIVE_B = { sa: [-0.103, 0.891, -0.198, 0.034, 0.103, -0.015, -0.066, -0.023], ucl: [0.090, 0.894, 0.025, 0.006, 0.086, -0.063, -0.117, 0.020] };
+function liveProb(p0, t, all, own, opp, sd, comp) {
+  const lgY = comp === 'sa' ? 4.2 : 3.6, rem = Math.max(0, (95 - t) / 95), base = 1 - Math.pow(1 - p0, rem);
+  const L = x => Math.log(Math.max(1e-4, x) / (1 - Math.min(.9999, x))), b = LIVE_B[comp]; sd = Math.max(-2, Math.min(2, sd));
+  const x = [1, L(base), Math.log((all + 1) / (lgY * t / 95 + 1)), own, opp, sd, Math.abs(sd), t >= 45 ? 1 : 0];
+  return 1 / (1 + Math.exp(-x.reduce((s, v, i) => s + v * b[i], 0)));
+}
+const nrm = s => String(s || '').replace(/ı/g, 'i').replace(/[øØ]/g, 'o').replace(/ß/g, 'ss').replace(/[łŁ]/g, 'l').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z ]/g, ' ').split(/\s+/).filter(Boolean);
+const wPre = (a, b) => a.length >= 3 && b.length >= 3 && (a.startsWith(b) || b.startsWith(a));
+function findPl(app, list) { // list: [{n, ...}] della stessa squadra
+  const a = nrm(app); if (!a.length) return null;
+  const c = list.filter(x => { const f = nrm(x.n); return f.length && f[f.length - 1] === a[a.length - 1]; });
+  if (c.length === 1) return c[0];
+  return c.find(x => { const f = nrm(x.n); return a.length === 1 || (a[0].length === 1 ? f[0].startsWith(a[0]) : f.some(w => w === a[0] || wPre(w, a[0]))); }) || null;
+}
+const ESPN = 'https://site.api.espn.com/apis/site/v2/sports/soccer/', espnId = {}, sbCache = {};
+async function espnEvent(m) {
+  if (espnId[m.id]) return espnId[m.id];
+  const lg = m.comp === 'ucl' ? 'uefa.champions' : 'ita.1', d = new Date(m.ko * 1000).toISOString().slice(0, 10).replace(/-/g, '');
+  const k = lg + d; sbCache[k] = sbCache[k] || fetch(ESPN + lg + '/scoreboard?dates=' + d).then(r => r.json());
+  const ev = (await sbCache[k]).events || [], tk = [...nrm(m.h), ...nrm(m.a)];
+  let best = null, bs = 0;
+  for (const e of ev) {
+    if (Math.abs(Date.parse(e.date) / 1000 - m.ko) > 1200) continue;
+    const et = (e.competitions?.[0]?.competitors || []).flatMap(c => nrm(c.team?.displayName));
+    const sc = tk.filter(w => et.some(v => v === w || wPre(v, w))).length;
+    if (sc > bs) { bs = sc; best = e.id; }
+  }
+  if (best) espnId[m.id] = [lg, best]; return espnId[m.id];
+}
+async function liveFetch(m) {
+  const id = await espnEvent(m); if (!id) return;
+  const j = await fetch(ESPN + id[0] + '/summary?event=' + id[1]).then(r => r.json());
+  const cp = j.header?.competitions?.[0], stt = cp?.status?.type?.state; if (!cp || stt === 'pre') return;
+  const side = {}, sc = {}; (cp.competitors || []).forEach(c => { side[c.homeAway] = c; sc[c.homeAway === 'home' ? 'h' : 'a'] = +c.score || 0; });
+  const fin = stt === 'post', clock = cp.status?.displayClock || '', t = fin ? 95 : Math.min(95, parseInt(clock) || 0);
+  const es = {}; (j.rosters || []).forEach(r => { es[r.homeAway === 'home' ? 'h' : 'a'] = (r.roster || []).map(p => {
+    const st = {}; (p.stats || []).forEach(x => st[x.name] = +x.value || 0);
+    return { n: p.athlete?.displayName || '', start: !!p.starter, out: !!p.subbedOut, fc: st.foulsCommitted || 0, fs: st.foulsSuffered || 0, y: st.yellowCards || 0, r: st.redCards || 0 }; }); });
+  const yc = { h: 0, a: 0 }, cards = [], fl = {}, P = {}, out = [];
+  for (const e of j.keyEvents || []) {
+    const ty = e.type?.text || ''; if (!/card/i.test(ty)) continue;
+    const nm = e.participants?.[0]?.athlete?.displayName || '', s = ['h', 'a'].find(s => (es[s] || []).some(x => x.n === nm)) || (e.team?.id === side.home?.team?.id ? 'h' : 'a');
+    yc[s]++; const ap = m.pl.find(p => p[1] === s && findPl(p[0], [{ n: nm }]));
+    cards.push([parseInt(e.clock?.displayValue) || 0, ap ? ap[0] : nm, /red/i.test(ty) ? 'R' : 'G']);
+  }
+  for (const p of m.pl) {
+    const x = findPl(p[0], es[p[1]] || []), s = p[1], o = s === 'h' ? 'a' : 'h';
+    if (x && (x.fc || x.fs)) fl[p[0]] = [x.fc, x.fs];
+    if (x && (x.y || x.r) || cards.some(c => c[1] === p[0])) { P[p[0]] = 1; continue; }
+    if (x && x.out) { P[p[0]] = 0; out.push(p[0]); continue; }
+    let q = liveProb(p[4], t, yc.h + yc.a, yc[s], yc[o], s === 'h' ? sc.h - sc.a : sc.a - sc.h, m.comp === 'ucl' ? 'ucl' : 'sa');
+    const f = Math.pow(1.3, Math.min(4, x ? x.fc : 0)); P[p[0]] = q * f / (1 - q + q * f);
+  }
+  cards.sort((a, b) => a[0] - b[0]);
+  m.live = { t: clock, sc: sc.h + ' - ' + sc.a, fin, agg: new Date().toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }), cards, fl, p: P, out, src: 'espn' };
+  if (state.id === m.id && state.view !== 'storico' && state.view !== 'area') {
+    const box = document.querySelector('.livebox');
+    if (box) box.outerHTML = liveHtml(m); else select(m.id);
+  }
+}
+async function liveLoop() {
+  if (!document.hidden) {
+    const now = Date.now() / 1000, all = [...ALL.matches, ...(CUP ? CUP.matches : [])];
+    await Promise.all(all.filter(m => now > m.ko - 120 && now < m.ko + 9000 && !(m.live?.fin && m.live?.src === 'espn')).map(m => liveFetch(m).catch(() => {})));
+  }
+  setTimeout(liveLoop, 60000);
+}
 function start() {
   paintHeader();
   if (DATA.lineups_note) document.getElementById('lnote').textContent = DATA.lineups_note;
@@ -840,6 +909,7 @@ function start() {
   if (location.hash === '#ucl') c0 = 'ucl';
   if (CUP && CUP.matches.some(m => m.id === fromHash)) c0 = 'ucl'; else if (ALL.matches.some(m => m.id === fromHash)) c0 = 'sa';
   setComp(c0, fromHash);
+  setTimeout(liveLoop, 1000);
   const chip = document.getElementById('b' + state.id), strip = document.getElementById('list');
   if (chip && matchMedia('(max-width: 820px)').matches) strip.scrollLeft = chip.offsetLeft - (strip.clientWidth - chip.clientWidth) / 2;
   if (location.hash === '#area') setView('area');
