@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta name="build" content="2026-11-03T18:33:17Z">
+<meta name="build" content="2026-11-03T18:34:45Z">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -589,7 +589,7 @@ function liveHtml(m) {
   const fl = Object.entries(L.fl).filter(([, v]) => v[0] > 0).sort((a, b) => b[1][0] - a[1][0]).slice(0, 5).map(([n, v]) => `${n} ${v[0]}`).join(' · ');
   const fs = Object.entries(L.fl).filter(([, v]) => v[1] > 0).sort((a, b) => b[1][1] - a[1][1]).slice(0, 4).map(([n, v]) => `${n} ${v[1]}`).join(' · ');
   const risk = Object.entries(L.p).filter(([, v]) => v > 0 && v < 1).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([n, v]) => `${n} ${pc(v)}`).join(' · ');
-  return `<div class="livebox"><div class="lh"><span class="pill live">${L.fin ? 'Finita' : 'Live ' + L.t}</span>${m.h} ${L.sc} ${m.a}<small>aggiornato alle ${L.agg}</small></div>
+  return `<div class="livebox"><div class="lh"><span class="pill live">${L.fin ? 'Finita' : L.t === 'Intervallo' ? 'Intervallo' : 'Live ' + L.t}</span>${m.h} ${L.sc} ${m.a}<small>aggiornato alle ${L.agg}</small></div>
     <div class="lr"><span class="lk">Ammoniti</span><span>${L.cards.length ? L.cards.map(c => `<span class="yc${c[2] === 'R' ? ' rc' : ''}"></span>${c[1]} ${c[0]}'${trio.includes(c[1]) ? ' ✓' : ''}`).join(' · ') : 'nessuno'}</span></div>
     <div class="lr"><span class="lk">Tris dell'app</span><span>${trioTxt}</span></div>
     ${L.fin ? '' : `<div class="lr"><span class="lk">Rischio ora</span><span>${risk}</span></div>`}
@@ -861,7 +861,7 @@ async function liveFetch(m) {
   const j = await fetch(ESPN + id[0] + '/summary?event=' + id[1]).then(r => r.json());
   const cp = j.header?.competitions?.[0], stt = cp?.status?.type?.state; if (!cp || stt === 'pre') return;
   const side = {}, sc = {}; (cp.competitors || []).forEach(c => { side[c.homeAway] = c; sc[c.homeAway === 'home' ? 'h' : 'a'] = +c.score || 0; });
-  const fin = stt === 'post', clock = cp.status?.displayClock || '', t = fin ? 95 : Math.min(95, parseInt(clock) || 0);
+  const fin = stt === 'post', clock = /half/i.test(cp.status?.type?.description || '') ? 'Intervallo' : cp.status?.displayClock || '', t = fin ? 95 : clock === 'Intervallo' ? 45 : Math.min(95, parseInt(clock) || 0);
   const es = {}; (j.rosters || []).forEach(r => { es[r.homeAway === 'home' ? 'h' : 'a'] = (r.roster || []).map(p => {
     const st = {}; (p.stats || []).forEach(x => st[x.name] = +x.value || 0);
     return { n: p.athlete?.displayName || '', start: !!p.starter, out: !!p.subbedOut, fc: st.foulsCommitted || 0, fs: st.foulsSuffered || 0, y: st.yellowCards || 0, r: st.redCards || 0 }; }); });
