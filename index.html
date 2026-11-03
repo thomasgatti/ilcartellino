@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta name="build" content="2026-11-03T12:22:59Z">
+<meta name="build" content="2026-11-03T12:23:30Z">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>I miei ammoniti</title>
@@ -720,7 +720,7 @@ function focusPanel(btn) {
 function paintHeader() {
   document.getElementById('hdr-round').textContent = state.comp === 'ucl' ? `· Champions ${DATA.round}ª` : `· Giornata ${DATA.round}ª`;
   const up = new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }).format(new Date(DATA.updated));
-  document.getElementById('meta').innerHTML = `<span>${state.comp === 'ucl' ? 'Champions League' : 'Serie A'} <b>${DATA.season}</b></span><span>Aggiornato <b>${up}</b></span><span>Modello <b>${DATA.model}</b></span>`;
+  document.getElementById('meta').innerHTML = `<span>${state.comp === 'ucl' ? 'Champions' : 'Serie A'} <b>${DATA.season}</b></span><span>Aggiornato <b>${up}</b></span><span>Modello <b>${String(DATA.model).replace(/^coppe /, '').replace(/ \+ quote$/, '')}</b></span>`;
   document.getElementById('lnote').textContent = DATA.lineups_note || '';
 }
 function setComp(c, keepId) {
