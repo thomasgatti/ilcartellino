@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta name="build" content="2026-11-03T16:39:04Z">
+<meta name="build" content="2026-11-03T16:42:29Z">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -317,7 +317,7 @@ footer { font-size: 13px; color: var(--muted); display: grid; gap: 6px; }
 .pitchwrap { display: grid; gap: 10px; }
 .pitchhead { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
 .pitchhead h3 { margin: 0; font: 800 18px var(--display); letter-spacing: .6px; text-transform: uppercase; }
-.pitch { position: relative; width: 100%; max-width: 440px; aspect-ratio: 68 / 105; margin: 0 auto; border-radius: 12px; overflow: hidden;
+.pitch { position: relative; width: 100%; max-width: 440px; aspect-ratio: 68 / 118; margin: 0 auto; border-radius: 12px; overflow: hidden;
   background: repeating-linear-gradient(0deg, #2e8b47 0 9.09%, #29803f 9.09% 18.18%); border: 2px solid rgba(255,255,255,.55); box-shadow: 0 6px 18px rgba(0,0,0,.18); }
 .pitch .ln { position: absolute; border: 2px solid rgba(255,255,255,.55); pointer-events: none; }
 .pitch .mid { left: 0; right: 0; top: 50%; height: 0; border-width: 2px 0 0; }
@@ -325,14 +325,14 @@ footer { font-size: 13px; color: var(--muted); display: grid; gap: 6px; }
 .pitch .box1 { left: 22%; right: 22%; top: -2px; height: 15%; } .pitch .box2 { left: 22%; right: 22%; bottom: -2px; height: 15%; }
 .pitch .sm1 { left: 37%; right: 37%; top: -2px; height: 5.5%; } .pitch .sm2 { left: 37%; right: 37%; bottom: -2px; height: 5.5%; }
 .pitch .tm { position: absolute; left: 8px; font: 700 11px var(--body); color: #fff; background: rgba(0,0,0,.35); padding: 2px 7px; border-radius: 999px; }
-.pitch .tm.t1 { top: 8px; } .pitch .tm.t2 { bottom: 8px; }
+.pitch .tm.t1 { top: 8px; } .pitch .tm.t2 { bottom: 8px; } .pitch .tm { font-size: 10px; }
 .pl { position: absolute; transform: translate(-50%, -50%); width: 70px; text-align: center; color: #fff; font-family: var(--body); }
 .pl .dot { position: relative; width: 30px; height: 30px; border-radius: 50%; margin: 0 auto 2px; display: grid; place-items: center; font: 800 12px var(--body); border: 2px solid rgba(255,255,255,.9); box-shadow: 0 2px 4px rgba(0,0,0,.35); }
 .pl .nm { font-size: 11px; font-weight: 700; line-height: 1.1; text-shadow: 0 1px 2px rgba(0,0,0,.8); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .pl .pp { font-size: 10px; font-weight: 600; opacity: .95; text-shadow: 0 1px 2px rgba(0,0,0,.8); }
 .pl.trio .dot::after { content: ""; position: absolute; right: -8px; top: -7px; width: 11px; height: 15px; border-radius: 2px; background: #f5c400; transform: rotate(14deg); box-shadow: 0 1px 2px rgba(0,0,0,.4); }
 .pl.trio .pp { color: #ffe14d; font-weight: 800; }
-@media (max-width: 420px) { .pl { width: 58px; } .pl .nm { font-size: 10px; } .pl .dot { width: 26px; height: 26px; font-size: 11px; } }
+@media (max-width: 420px) { .pl { width: 60px; } .pl .nm { font-size: 10px; } .pl .pp { font-size: 9.5px; } .pl .dot { width: 24px; height: 24px; font-size: 10.5px; margin-bottom: 1px; } }
 /* Tema Serie A: blu notte e azzurro da stadio, tricolore, un'idea di prato */
 :root[data-comp="sa"] { --sa1: #14228c; --sa2: #1e6fe0; --sa3: #13b5ea; --sag: #1f9d55; --sar: #d62b36; }
 :root[data-comp="sa"] body {
@@ -556,10 +556,14 @@ function campoHtml(m, trio) {
   const tri = new Set(trio.map(x => x.n));
   const find = (name, side) => ps.find(x => x.side === side && last(x.n) === last(name));
   const dot = (cols) => { const c = cols[0] || '#333', ink = lumOf(c) > .45 ? '#111' : '#fff'; return `background:${c};color:${ink}`; };
+  // righe del modulo distribuite in modo uniforme nella metà campo (niente nomi sovrapposti tra reparti vicini)
+  const lev = side => [...new Set(lu[side].map(r => r[3]))].sort((a, b) => a - b);
+  const LV = { h: lev('h'), a: lev('a') };
   const P = (r, side) => { const [name, num, x, y, gk] = r; const home = side === 'h';
-    const left = (home ? 1 - x : x) * 100, top = home ? 100 - (y * 46 + 2.5) : y * 46 + 2.5;
+    const L = LV[side], i = L.indexOf(y), d = 3.5 + (L.length > 1 ? i * (41 / (L.length - 1)) : 0);
+    const left = 8 + (home ? 1 - x : x) * 84, top = home ? 100 - d : d;
     const row = gk ? null : find(name, side), inT = row && tri.has(row.n);
-    const short = String(name).split(' ').length > 1 ? String(name).split(' ').slice(-1)[0] : name;
+    const w = String(name).split(' '), short = w.length > 1 ? (w.length > 2 && /^(de|di|da|van|von|der|den|dos|del|la|le|el|ten|ter|mac)$/i.test(w[w.length - 2]) ? w.slice(-2).join(' ') : w[w.length - 1]) : name;
     return `<div class="pl ${inT ? 'trio' : ''}" style="left:${left.toFixed(1)}%;top:${top.toFixed(1)}%"><div class="dot" style="${dot(home ? m.hc : m.ac)}">${num}</div><div class="nm">${short}</div>${row ? `<div class="pp">${pct(row.p)}</div>` : ''}</div>`; };
   return `<div class="pitchwrap"><div class="pitchhead"><h3>${titolo}</h3><span class="pill ${uff ? 'uff' : 'prob'}">${uff ? 'Ufficiali' : '⚠ Possibili titolari'}</span></div>
     <div class="pitch"><span class="ln mid"></span><span class="ln circ"></span><span class="ln box1"></span><span class="ln box2"></span><span class="ln sm1"></span><span class="ln sm2"></span>
