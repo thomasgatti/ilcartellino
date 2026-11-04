@@ -324,3 +324,4 @@ Fatte il 3/11: 6106341, 6106335.
 - Variabili nuove (deep_feats.js): tenuto solo "palloni persi per 90'" (coeff. −0,16: chi perde molti palloni prende meno gialli): dll −0,00033, top3 +0,010 ± 0,010 → cup_x3.js (cupX3Build, __CUPM5 = __CUPM3). Scartati: dribbling degli avversari di zona (odrib/odatt), tocchi, recuperi, intercetti.
 - Regola del sostituto per giocatore: subqBuild() (amm_boot.js) → riga[9] dell'export → ottavo campo di pl.
 - ammBuild() ora fa tutto (v4 compresa): ~40 s.
+- 4/11 17:22: la sveglia ha aperto una finestra con "Accesso negato" (le attività create da amministratore non si possono riscrivere senza amministratore). sveglia.ps1 ora non rilegge più sveglie.txt e si rilancia invisibile (conhost --headless). Le sveglie dal sonno non funzionano comunque (sospensione moderna): la soluzione vera è il bot nel cloud. Nuove sveglie solo rifacendo il doppio clic su INSTALLA_SVEGLIE.bat.
