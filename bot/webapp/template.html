@@ -735,7 +735,7 @@ function score(trio, res, subRule = true) {
 async function renderArea() {
   const el = document.getElementById('area');
   if (!UID) { el.innerHTML = `<h2>La mia area</h2><p class="note">${loaded ? 'Collegati con il tuo account Claude per avere la tua area personale con i tuoi tris.' : 'Collegamento al tuo account…'}</p>`; return; }
-  const list = Object.values(myTris).sort((a, b) => b.ko - a.ko);
+  const list = Object.values(myTris).filter(t => (t.comp || (results[t.matchId] && results[t.matchId].comp) || (CUP && CUP.matches.some(x => x.id === t.matchId) ? 'ucl' : 'sa')) === state.comp).sort((a, b) => b.ko - a.ko);
   el.innerHTML = `<h2>La mia area</h2><p class="note">Caricamento dei risultati…</p>`;
   await Promise.all(list.map(async t => { if (results[t.matchId] === undefined) { try { const s = await withTimeout(DB.doc('risultati/' + t.matchId).get()); results[t.matchId] = s.exists ? s.data() : null; } catch (e) { results[t.matchId] = null; } } }));
   let me = { p: 0, h: 0, full: 0 }, ap = { p: 0, h: 0, full: 0 }, judged = 0, wins = 0;
