@@ -1,0 +1,69 @@
+{
+ "nota": "Tris indicati dall'utente in chat (Champions giornata 4, mercoledì 4/11); da confrontare con gli esiti e con il tris dell'app",
+ "6106330": {
+  "partita": "Fenerbahçe - Liverpool",
+  "tris": [
+   "K. Tsimikas",
+   "N. Semedo"
+  ],
+  "terzo_a_scelta": [
+   "M. Guendouzi",
+   "Demir"
+  ]
+ },
+ "6106288": {
+  "partita": "FC Porto - Napoli",
+  "tris": [
+   "R. Marín",
+   "P. Rosario",
+   "J. Kiwior"
+  ]
+ },
+ "6106416": {
+  "partita": "Lens - Como",
+  "tris": [
+   "S. Baidoo",
+   "Á. Valle",
+   "R. Aguilar"
+  ]
+ },
+ "6106322": {
+  "partita": "RB Leipzig - Manchester City",
+  "tris": [
+   "C. Baumgartner",
+   "A. Khusanov"
+  ],
+  "terzo_a_scelta": [
+   "B. Gruda",
+   "W. Orbán",
+   "C. Lukeba",
+   "Nkunku (non titolare)"
+  ]
+ },
+ "6106271": {
+  "partita": "Borussia Dortmund - Real Betis",
+  "tris": [
+   "Natan",
+   "J. Ryerson",
+   "J. Veerman"
+  ]
+ },
+ "6106303": {
+  "partita": "PSV Eindhoven - Club Brugge",
+  "tris": [
+   "F. Potts",
+   "F. Kostić",
+   "H. Vanaken"
+  ]
+ },
+ "gialli_live": {
+  "6106271": [
+   "J. Ryerson",
+   "Natan",
+   "J. Veerman"
+  ],
+  "6106416": [
+   "S. Baidoo"
+  ]
+ }
+}
