@@ -317,3 +317,10 @@ Fatte il 3/11: 6106341, 6106335.
 - Verifica: Man United-Roma ricostruito ≈ previsioni del 3/11 (Mancini .314 vs .317, Hermoso .288 vs .289, Bruno .107 = .107); Barcellona-Villa ~+10% (shift e dati diversi).
 - Peso della storia personale nel modello coppe: window.__CK = 600 minuti (prima 1500). Test UCL: log loss 300 .41868, 600 .41854, 900 .41857, 1500 .41873, 3000 .41910; top3 uguale nel rumore. Serie A resta __K = 1500 (scelto a suo tempo).
 - Quando si cambia un file .js: copiarlo anche in ilcartellino/lib/ e fare push.
+
+## Modello coppe v4 (4/11 pomeriggio)
+- Scaricate +9.061 partite (stagioni vecchie: Premier/Liga/Bundesliga/Ligue 1 dal 2021/22, Olanda/Portogallo dal 2022/23, Turchia/Belgio dal 2023/24, altri 2024/25, Europa e Conference 2023/24-2024/25) e statistiche extra per tutte (IndexedDB amm_xs; nel cloud dentro m.x). Totale: Serie A 2.381, UCL 807, altri 18.609.
+- Effetto della storia più lunga (stesse righe di test UCL): log loss .41854 → .41618, top3 per partita .705 → .750. Il guadagno più grande della giornata.
+- Variabili nuove (deep_feats.js): tenuto solo "palloni persi per 90'" (coeff. −0,16: chi perde molti palloni prende meno gialli): dll −0,00033, top3 +0,010 ± 0,010 → cup_x3.js (cupX3Build, __CUPM5 = __CUPM3). Scartati: dribbling degli avversari di zona (odrib/odatt), tocchi, recuperi, intercetti.
+- Regola del sostituto per giocatore: subqBuild() (amm_boot.js) → riga[9] dell'export → ottavo campo di pl.
+- ammBuild() ora fa tutto (v4 compresa): ~40 s.

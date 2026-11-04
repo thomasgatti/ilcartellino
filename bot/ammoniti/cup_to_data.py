@@ -198,7 +198,7 @@ def main():
     d.setdefault('cups', {})['ucl'] = {
         'name': 'Champions League', 'round': rnd, 'season': '2026-27',
         'updated': datetime.datetime.now(datetime.timezone.utc).astimezone().isoformat(timespec='minutes'),
-        'model': 'coppe v3 + quote' if OC else 'coppe v2',
+        'model': 'coppe v4 + quote' if OC else 'coppe v4',
         'lineups_note': "Champions League: formazioni probabili di FotMob fino a circa un'ora prima, poi le ufficiali. Probabilità dal modello per le coppe: storico di gialli e falli di ogni giocatore in tutti i campionati (Serie A, Premier, LaLiga, Bundesliga, Ligue 1, Eredivisie, Portogallo e altri) e nelle coppe europee, riportato alla scala della Champions, più chi ha di fronte, quanto è severo l'arbitro, i precedenti tra le due squadre e i diffidati.",
         'matches': matches}
     if OC:
