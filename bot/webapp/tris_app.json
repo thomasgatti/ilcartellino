@@ -479,22 +479,22 @@
   "id": 6106401,
   "ko": 1793814300,
   "partita": "AEK Athens - Real Madrid",
-  "uff": false,
-  "p3": 0.011978876244722598,
+  "uff": true,
+  "p3": 0.012184702260728314,
   "trio": [
    {
     "n": "L. Majer",
+    "p": 0.2389,
+    "team": "AEK Athens"
+   },
+   {
+    "n": "M. Gaćinović",
     "p": 0.2333,
     "team": "AEK Athens"
    },
    {
-    "n": "M. Vitális",
-    "p": 0.2318,
-    "team": "AEK Athens"
-   },
-   {
     "n": "E. Camavinga",
-    "p": 0.2215,
+    "p": 0.2186,
     "team": "Real Madrid"
    }
   ]
@@ -504,22 +504,22 @@
   "id": 6106330,
   "ko": 1793814300,
   "partita": "Fenerbahçe - Liverpool",
-  "uff": false,
-  "p3": 0.00840286576450846,
+  "uff": true,
+  "p3": 0.009459188225290566,
   "trio": [
    {
-    "n": "İ. Kahveci",
-    "p": 0.2127,
+    "n": "I. Yüksek",
+    "p": 0.2292,
     "team": "Fenerbahçe"
    },
    {
     "n": "A. Brown",
-    "p": 0.202,
+    "p": 0.2068,
     "team": "Fenerbahçe"
    },
    {
     "n": "A. Mac Allister",
-    "p": 0.1956,
+    "p": 0.1995,
     "team": "Liverpool"
    }
   ]
