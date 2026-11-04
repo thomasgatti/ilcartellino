@@ -5,7 +5,7 @@
 import fs from 'node:fs'; import path from 'node:path'; import zlib from 'node:zlib'; import { loadLib } from './lib_node.mjs';
 const ROOT = path.join(path.dirname(new URL(import.meta.url).pathname), '..'), BOT = path.join(ROOT, 'bot');
 const [cmd = 'uff', DATI = path.join(ROOT, 'dati', 'fotmob')] = process.argv.slice(2);
-loadLib(['fotmob_scrape.js', 'fm_model.js', 'cup_model.js', 'cup_model2.js', 'ext_model.js', 'cup_x2.js', 'field_lineups.js', 'uff_lineup.js', 'sa_export.js', 'deep_scrape.js', 'amm_boot.js', 'live_model.js']);
+loadLib(['fotmob_scrape.js', 'fm_model.js', 'cup_model.js', 'cup_model2.js', 'ext_model.js', 'cup_x2.js', 'deep_scrape.js', 'deep_feats.js', 'cup_x3.js', 'field_lineups.js', 'uff_lineup.js', 'sa_export.js', 'amm_boot.js', 'live_model.js']);
 // dati dai file .json.gz del ramo dati
 const ALL = {}; for (const f of fs.readdirSync(DATI).filter(f => f.endsWith('.json.gz'))) Object.assign(ALL, JSON.parse(zlib.gunzipSync(fs.readFileSync(path.join(DATI, f)))));
 globalThis.idbAll = async (name) => { const out = {}; for (const [id, m] of Object.entries(ALL)) {
