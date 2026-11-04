@@ -1,0 +1,17 @@
+name: Esiti partite
+on:
+  workflow_dispatch:
+    inputs:
+      ids:
+        description: 'id FotMob separati da virgola'
+        required: true
+jobs:
+  esiti:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: node cloud/esiti.mjs '${{ inputs.ids }}'
