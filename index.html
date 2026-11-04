@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta name="build" content="2026-11-04T16:42:34Z">
+<meta name="build" content="2026-11-04T16:56:55Z">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -506,7 +506,7 @@ function combos(m, mode, raw = false) {
       for (let i = 0; i < A.length; i++) for (let j = i + 1; j < A.length; j++) for (const b of B) out.push([A[i], A[j], b]);
     }
   }
-  const res = out.map(t => ({ trio: t.sort((x, y) => y.p - x.p), p3: t.reduce((a, x) => a * x.p, 1), two: mode === 'free' ? null : (t.filter(x => x.side === 'h').length === 2 ? 'h' : 'a') })).sort((x, y) => y.p3 - x.p3);
+  const res = out.map(t => ({ trio: t.sort((x, y) => y.p - x.p), p3: t.reduce((a, x) => a * x.p, 1) * jointK(t), two: mode === 'free' ? null : (t.filter(x => x.side === 'h').length === 2 ? 'h' : 'a') })).sort((x, y) => y.p3 - x.p3);
   // parità (entro il 5%): due posti alla squadra che nel complesso prende più gialli (somma delle p di tutti i suoi giocatori)
   if (mode !== 'free' && res.length > 1) {
     const E = sd => ps.filter(x => x.side === sd).reduce((a, x) => a + x.p, 0);
@@ -515,6 +515,9 @@ function combos(m, mode, raw = false) {
   }
   return res.slice(0, 10);
 }
+// i gialli di una stessa partita non sono indipendenti: su 21.000 partite (24 milioni di terne di titolari) i tris "2 + 1" finiscono tutti ammoniti
+// il 16% più spesso del prodotto delle probabilità, quelli tutti della stessa squadra solo il 4% (coppie di avversari +8%, compagni +2%, stesso reparto nessuna penalità)
+const jointK = t => (new Set(t.map(x => x.side)).size > 1 ? 1.16 : 1.04);
 function pick(m, mode, idx = 0, raw = false) { const c = combos(m, mode, raw); return { ...c[Math.min(idx, c.length - 1)], rank: Math.min(idx, c.length - 1) + 1, n: c.length }; }
 function probNote(m) {
   const tipo = m.src === 'provv' ? 'PROVVISORIE' : 'PROBABILI';
@@ -691,7 +694,7 @@ function addBtn(m, x) {
 }
 function builderHtml(m) {
   const mine = current(m), ps = players(m), app = pick(m, state.mode, 0, true), saved = myTris[m.id];
-  const prod = mine.length === 3 ? mine.reduce((a, n) => a * ((ps.find(x => x.n === n) || {}).p || 0), 1) : null;
+  const mineP = mine.map(n => ps.find(x => x.n === n) || {}); const prod = mine.length === 3 ? mineP.reduce((a, x) => a * (x.p || 0), 1) * jointK(mineP) : null;
   const same = saved && saved.mio.map(t => t.n).sort().join('|') === [...mine].sort().join('|');
   return `<section class="builder" aria-label="Il mio tris">
     <div class="b-head"><h3>Il mio tris</h3><span class="note">${locked(m) ? 'Partita iniziata: il tris è bloccato.' : 'Tocca + accanto ai giocatori qui sotto (fino a 3), oppure parti dal tris dell\'app.'}</span></div>
