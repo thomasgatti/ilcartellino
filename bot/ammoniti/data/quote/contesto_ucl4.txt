@@ -1,0 +1,18 @@
+6106341|predicted|Chris Kavanagh|70|4.5|1.03|LWWWW/LDLWW||Zagadou,Vagnoman,Stiller,Diehl,Sauer
+6106335|predicted|Ivan Kružliak|36|4.4|1.08|WLDWW/WLLWW|Eguinaldo,Santos,Pedrinho|Debast,Santos
+6106266|predicted|François Letexier|67|3.8|0.95|WWDWW/WDWWD|Cardoso|Ndiaye,Saibari,Musiala,Gnabry,Díaz
+6106263|predicted|Davide Massa|131|4.5|1.03|WWLLW/WWWLD|Christensen,García,Koundé,Espart,Olmo,Bardghji|Wan-Bissaka,Ruggeri,Onana
+6106316|predicted|João Pinheiro|8|2.9|0.62|WWLLW/LDLDW|Lund,Evjen,Mikkelsen|Bentaleb,Santos,Ueda,Mbappé (squalificato),Igamane
+6106306|predicted|Glenn Nyberg|22|2.8|0.68|WWLDD/WWWWL|Nelson,Persie,Nieuwkoop,Smal,Juste,Bos,Beelen|Henrique,Stones,Jones,Martínez
+6106408|predicted|Donatas Rumšas|16|4.1|1|WWLWW/WLDWW|Bello,Harakaté|Čerepkai
+6106291|predicted|Jesús Gil Manzano|64|4.9|1.09|LDLLL/WWDWW|Shaw,Ugarte,Šeško,Rashford,Dorgu|Dybala,Svilar,Pellegrini,Koné
+6106326|predicted|Felix Zwayer|67|4.6|1.13|DLWWL/WWWWW|Saliba,Foyth,Diatta,Moreno,Akhomach|Marquinhos,Mendes,Kvaratskhelia,Dembélé
+6106401|predicted|Maurizio Mariani|118|4.2|0.95|LLWLL/WWWWW|Strakosha|Tchouaméni,Mendy,Asencio,Rodrygo
+6106330|predicted|Clément Turpin|73|3.3|0.83|LWDLL/WWWDL|Brown (squalificato),Oppong,Diouf,Oosterwolde,Aké,Asensio|Bradley,Leoni,Frimpong,Ekitiké
+6106271|predicted|Serdar Gözübüyük|85|3.7|1.12|DWWWD/WLWDW|Lerma,Konstantelias,Can,Prates|Bernal (squalificato),Fidalgo,Firpo,Hernández
+6106288|predicted|Michael Oliver|95|3.9|0.91|LLWWW/LWDWL|Smalling,Pietuszewski,Gomes,Sousa|De Bruyne,Favasuli,Buongiorno,Badiashile,Di Lorenzo,Olivera,Santos,Neres,Spinazzola,Lobotka
+6106416|predicted|Rohit Saggi|44|3.4|0.94|LWLWL/WWWWW|Chávez,Nawrocki,Ganiou,Sima,Édouard|Chalobah,Diao,Addai,Rodríguez,Kean
+6106303|predicted|Irfan Peljto|22|3.4|0.82|LLWDW/WWWWW|Nagalo,Pléa,Schouten,Wanner,Ouaissa,Lammers|Ordóñez
+6106322|predicted|Marco Guida|93|4|0.92|LLWWW/WWLDL|Estève,Ouédraogo,Guiu|Semenyo
+6106389|predicted|Tobias Stieler|53|3.7|0.91|DDDWW/WDWDW|Ogbu,Piták,Schranz,Ouanda|Dowman (squalificato),Saliba,Saka
+6106420|predicted|Sander van der Eijk|53|3.5|1.06|DWLWL/WWLDL|Bærtelsen,Roseth,Bjørshol,D'Agostino,Berisha|

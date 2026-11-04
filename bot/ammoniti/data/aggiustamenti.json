@@ -1,0 +1,649 @@
+{
+ "partite": 8,
+ "calibrazione_moltiplicatore": 1.087,
+ "arbitri": {
+  "Andrea Zanotti": {
+   "partite": 1,
+   "gialli": 7
+  },
+  "Fabio Maresca": {
+   "partite": 1,
+   "gialli": 2
+  },
+  "Marco Guida": {
+   "partite": 1,
+   "gialli": 3
+  },
+  "Maria Sole Ferrieri Caputi": {
+   "partite": 1,
+   "gialli": 3
+  },
+  "Andrea Colombo": {
+   "partite": 1,
+   "gialli": 4
+  },
+  "Giuseppe Mucera": {
+   "partite": 1,
+   "gialli": 4
+  },
+  "Matteo Marchetti": {
+   "partite": 1,
+   "gialli": 3
+  },
+  "Simone Sozza": {
+   "partite": 1,
+   "gialli": 5
+  }
+ },
+ "giocatori": {
+  "Monza|E. Kouadio": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Monza|L. Lucchesi": {
+   "partite": 1,
+   "gialli": 1
+  },
+  "Monza|L. Colombo": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Monza|S. Birindelli": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Monza|M. Foe Ondoa": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Bologna|L. Ferguson": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Monza|S. Goglichidze": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Bologna|M. Vitík": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Bologna|N. Casale": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Monza|E. Zeballos": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Bologna|N. Zortea": {
+   "partite": 1,
+   "gialli": 1
+  },
+  "Bologna|T. Pobega": {
+   "partite": 1,
+   "gialli": 1
+  },
+  "Monza|R. Mangas": {
+   "partite": 1,
+   "gialli": 1
+  },
+  "Bologna|A. Theate": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Bologna|F. Bernardeschi": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Bologna|N. Cambiaghi": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Monza|D. Mota": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Bologna|J. Miranda": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Monza|G. Varela": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Bologna|J. Odgaard": {
+   "partite": 1,
+   "gialli": 1
+  },
+  "Udinese|C. Kabasele": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Udinese|J. Abankwah": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Roma|M. Hermoso": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Roma|B. Cristante": {
+   "partite": 1,
+   "gialli": 1
+  },
+  "Udinese|M. Palma": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Udinese|N. Zaniolo": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Roma|M. de Roon": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Roma|E. Ndicka": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Roma|D. Ghilardi": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Udinese|J. Karlström": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Udinese|H. Kamara": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Roma|N. Molina": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Udinese|M. Vojvoda": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Roma|D. Malen": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Roma|Wesley": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Udinese|K. Davis": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Roma|M. Soulé": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Roma|R. Mora": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Udinese|J. Ekkelenkamp": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Udinese|L. Miller": {
+   "partite": 1,
+   "gialli": 1
+  },
+  "Milan|K. De Winter": {
+   "partite": 1,
+   "gialli": 1
+  },
+  "Inter|H. Çalhanoğlu": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Milan|Y. Musah": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Inter|A. Bastoni": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Inter|M. Akanji": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Milan|S. Diawara": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Milan|M. Gila": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Milan|A. Rabiot": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Inter|C. Augusto": {
+   "partite": 1,
+   "gialli": 1
+  },
+  "Inter|P. Sučić": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Inter|Y. Bisseck": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Milan|S. Pavlović": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Inter|N. Barella": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Milan|L. Modrić": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Milan|G. Ramos": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Inter|D. Spence": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Inter|A. Diouf": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Milan|D. Moreira": {
+   "partite": 1,
+   "gialli": 1
+  },
+  "Inter|M. Thuram": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Milan|C. Pulisic": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Venezia|R. Halhal": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Venezia|J. Jesus": {
+   "partite": 1,
+   "gialli": 1
+  },
+  "Venezia|M. Moreno": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Venezia|P. Mazzocchi": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Venezia|S. Sohm": {
+   "partite": 1,
+   "gialli": 1
+  },
+  "Venezia|A. Hainaut": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Como|M. Milla": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Como|L. Da Cunha": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Como|M. Baturina": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Venezia|T. Helgason": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Venezia|G. Busio": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Como|J. Ramón": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Como|Kaiki": {
+   "partite": 1,
+   "gialli": 1
+  },
+  "Como|S. Ricci": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Como|Y. Couto": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Como|A. Douvikas": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Venezia|K. Lauberbach": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Como|M. Kempf": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Como|N. Paz": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Venezia|A. Adams": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Cagliari|A. Deiola": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Cagliari|Zé Pedro": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Cagliari|J. Rodríguez": {
+   "partite": 1,
+   "gialli": 1
+  },
+  "Cagliari|J. Fazzini": {
+   "partite": 1,
+   "gialli": 1
+  },
+  "Cagliari|A. Obert": {
+   "partite": 1,
+   "gialli": 1
+  },
+  "Cagliari|A. Romano": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Cagliari|A. Fadera": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Lazio|J. Šutalo": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Cagliari|M. Nzola": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Cagliari|D. Maldini": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Lazio|R. F. Mussolini": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Lazio|O. Provstgaard": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Cagliari|M. Adopo": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Lazio|N. Tavares": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Lazio|R. Belahyane": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Lazio|D. Frattesi": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Lazio|M. Zaccagni": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Lazio|K. Taylor": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Lazio|G. Isaksen": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Lazio|T. Noslin": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Torino|G. Gineitis": {
+   "partite": 1,
+   "gialli": 1
+  },
+  "Frosinone|P. Masini": {
+   "partite": 1,
+   "gialli": 1
+  },
+  "Torino|R. Belghali": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Torino|S. Coco": {
+   "partite": 1,
+   "gialli": 1
+  },
+  "Torino|D. Bragança": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Frosinone|Tchato": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Frosinone|Monterisi": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Frosinone|G. Bracaglia": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Frosinone|G. Calvani": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Torino|P. Comuzzo": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Torino|A. Ismajli": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Frosinone|F. Ghedjemis": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Torino|Z. Aboukhlal": {
+   "partite": 1,
+   "gialli": 1
+  },
+  "Frosinone|R. Schmid": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Frosinone|A. Raimondo": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Torino|C. Adams": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Frosinone|G. Kvernadze": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Frosinone|G. Calò": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Torino|N. Vlašić": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Torino|G. Simeone": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Lecce|J. Siebert": {
+   "partite": 1,
+   "gialli": 1
+  },
+  "Lecce|D. Veiga": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Lecce|O. Ngom": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Genoa|L. Østigård": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Lecce|T. Gabriel": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Genoa|J. Vásquez": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Genoa|S. Wiafe": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Lecce|Y. Maleh": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Genoa|A. Marcandalli": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Genoa|M. Frendrup": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Lecce|O. Gorter": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Genoa|S. El Shaarawy": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Lecce|K. N’Dri": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Lecce|J. Monteiro": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Genoa|H. J. Traorè": {
+   "partite": 1,
+   "gialli": 1
+  },
+  "Lecce|A. Gallo": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Juventus|D. Luiz": {
+   "partite": 1,
+   "gialli": 1
+  },
+  "Napoli|R. Marín": {
+   "partite": 1,
+   "gialli": 1
+  },
+  "Napoli|M. Olivera": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Juventus|J. Lucumí": {
+   "partite": 1,
+   "gialli": 1
+  },
+  "Juventus|Bremer": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Juventus|J. Cabal": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Napoli|G. Di Lorenzo": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Juventus|W. McKennie": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Juventus|P. Kalulu": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Napoli|S. McTominay": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Juventus|T. Koopmeiners": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Napoli|M. Politano": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Napoli|K. De Bruyne": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Napoli|L. Lucca": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Napoli|N. Lang": {
+   "partite": 1,
+   "gialli": 0
+  },
+  "Napoli|F. Anguissa": {
+   "partite": 1,
+   "gialli": 0
+  }
+ },
+ "tasso_giallo_subentrati": 0.0654
+}

@@ -1,0 +1,702 @@
+[
+ {
+  "comp": "sa",
+  "id": 5749749,
+  "ko": 1793994300,
+  "partita": "Venezia - Udinese",
+  "uff": false,
+  "p3": 0.009330940241077668,
+  "trio": [
+   {
+    "n": "M. Moreno",
+    "p": 0.2358,
+    "team": "Venezia"
+   },
+   {
+    "n": "K. Pérez",
+    "p": 0.2077,
+    "team": "Venezia"
+   },
+   {
+    "n": "J. Karlström",
+    "p": 0.1905,
+    "team": "Udinese"
+   }
+  ]
+ },
+ {
+  "comp": "sa",
+  "id": 5749741,
+  "ko": 1794060000,
+  "partita": "Cagliari - Frosinone",
+  "uff": false,
+  "p3": 0.011391256027809427,
+  "trio": [
+   {
+    "n": "P. Masini",
+    "p": 0.2384,
+    "team": "Frosinone"
+   },
+   {
+    "n": "A. Deiola",
+    "p": 0.2231,
+    "team": "Cagliari"
+   },
+   {
+    "n": "Z. Pedro",
+    "p": 0.2142,
+    "team": "Cagliari"
+   }
+  ]
+ },
+ {
+  "comp": "sa",
+  "id": 5749748,
+  "ko": 1794060000,
+  "partita": "Torino - Lecce",
+  "uff": false,
+  "p3": 0.006352226606388001,
+  "trio": [
+   {
+    "n": "Y. Maleh",
+    "p": 0.2288,
+    "team": "Lecce"
+   },
+   {
+    "n": "D. Veiga",
+    "p": 0.2015,
+    "team": "Lecce"
+   },
+   {
+    "n": "R. Belghali",
+    "p": 0.1378,
+    "team": "Torino"
+   }
+  ]
+ },
+ {
+  "comp": "sa",
+  "id": 5749747,
+  "ko": 1794070800,
+  "partita": "Parma - Bologna",
+  "uff": false,
+  "p3": 0.015341391153089289,
+  "trio": [
+   {
+    "n": "T. Pobega",
+    "p": 0.2892,
+    "team": "Bologna"
+   },
+   {
+    "n": "M. Troilo",
+    "p": 0.2348,
+    "team": "Parma"
+   },
+   {
+    "n": "L. Ferguson",
+    "p": 0.2259,
+    "team": "Bologna"
+   }
+  ]
+ },
+ {
+  "comp": "sa",
+  "id": 5749740,
+  "ko": 1794080700,
+  "partita": "Roma - Sassuolo",
+  "uff": false,
+  "p3": 0.002766813299684544,
+  "trio": [
+   {
+    "n": "D. Berardi",
+    "p": 0.1476,
+    "team": "Sassuolo"
+   },
+   {
+    "n": "M. de Roon",
+    "p": 0.1455,
+    "team": "Roma"
+   },
+   {
+    "n": "D. Ćaleta-Car",
+    "p": 0.1289,
+    "team": "Sassuolo"
+   }
+  ]
+ },
+ {
+  "comp": "sa",
+  "id": 5749746,
+  "ko": 1794137400,
+  "partita": "Napoli - Lazio",
+  "uff": false,
+  "p3": 0.0056688662999682575,
+  "trio": [
+   {
+    "n": "K. Taylor",
+    "p": 0.1962,
+    "team": "Lazio"
+   },
+   {
+    "n": "R. Belahyane",
+    "p": 0.1895,
+    "team": "Lazio"
+   },
+   {
+    "n": "R. Marín",
+    "p": 0.1524,
+    "team": "Napoli"
+   }
+  ]
+ },
+ {
+  "comp": "sa",
+  "id": 5749743,
+  "ko": 1794146400,
+  "partita": "Genoa - Milan",
+  "uff": false,
+  "p3": 0.006017208187124994,
+  "trio": [
+   {
+    "n": "G. Ramos",
+    "p": 0.2043,
+    "team": "Milan"
+   },
+   {
+    "n": "Y. Musah",
+    "p": 0.1838,
+    "team": "Milan"
+   },
+   {
+    "n": "L. Østigard",
+    "p": 0.1603,
+    "team": "Genoa"
+   }
+  ]
+ },
+ {
+  "comp": "sa",
+  "id": 5749745,
+  "ko": 1794146400,
+  "partita": "Monza - Atalanta",
+  "uff": false,
+  "p3": 0.004478738785817384,
+  "trio": [
+   {
+    "n": "N. Krstović",
+    "p": 0.1755,
+    "team": "Atalanta"
+   },
+   {
+    "n": "L. Lucchesi",
+    "p": 0.1612,
+    "team": "Monza"
+   },
+   {
+    "n": "S. Birindelli",
+    "p": 0.1583,
+    "team": "Monza"
+   }
+  ]
+ },
+ {
+  "comp": "sa",
+  "id": 5749744,
+  "ko": 1794157200,
+  "partita": "Inter - Como",
+  "uff": false,
+  "p3": 0.0054123303320012155,
+  "trio": [
+   {
+    "n": "Y. Couto",
+    "p": 0.2068,
+    "team": "Como"
+   },
+   {
+    "n": "M. Caqueret",
+    "p": 0.1742,
+    "team": "Como"
+   },
+   {
+    "n": "P. Sučić",
+    "p": 0.1503,
+    "team": "Inter"
+   }
+  ]
+ },
+ {
+  "comp": "sa",
+  "id": 5749742,
+  "ko": 1794167100,
+  "partita": "Fiorentina - Juventus",
+  "uff": false,
+  "p3": 0.00871395091742081,
+  "trio": [
+   {
+    "n": "D. Luiz",
+    "p": 0.2336,
+    "team": "Juventus"
+   },
+   {
+    "n": "F. Mastantuono",
+    "p": 0.1995,
+    "team": "Fiorentina"
+   },
+   {
+    "n": "A. Njie",
+    "p": 0.187,
+    "team": "Fiorentina"
+   }
+  ]
+ },
+ {
+  "comp": "ucl",
+  "id": 6106341,
+  "ko": 1793727900,
+  "partita": "Galatasaray - VfB Stuttgart",
+  "uff": true,
+  "p3": 0.017196865461008765,
+  "trio": [
+   {
+    "n": "J. Chabot",
+    "p": 0.2907,
+    "team": "VfB Stuttgart"
+   },
+   {
+    "n": "A. Karazor",
+    "p": 0.2585,
+    "team": "VfB Stuttgart"
+   },
+   {
+    "n": "M. Lemina",
+    "p": 0.2288,
+    "team": "Galatasaray"
+   }
+  ]
+ },
+ {
+  "comp": "ucl",
+  "id": 6106335,
+  "ko": 1793727900,
+  "partita": "Shakhtar Donetsk - Sporting CP",
+  "uff": true,
+  "p3": 0.018765256597322928,
+  "trio": [
+   {
+    "n": "M. Gomes",
+    "p": 0.2825,
+    "team": "Shakhtar Donetsk"
+   },
+   {
+    "n": "M. Araújo",
+    "p": 0.27,
+    "team": "Sporting CP"
+   },
+   {
+    "n": "Y. Nazaryna",
+    "p": 0.2461,
+    "team": "Shakhtar Donetsk"
+   }
+  ]
+ },
+ {
+  "comp": "ucl",
+  "id": 6106266,
+  "ko": 1793736000,
+  "partita": "Atlético Madrid - Bayern München",
+  "uff": true,
+  "p3": 0.014186750496982332,
+  "trio": [
+   {
+    "n": "K. Laimer",
+    "p": 0.2901,
+    "team": "Bayern München"
+   },
+   {
+    "n": "R. Le Normand",
+    "p": 0.224,
+    "team": "Atlético Madrid"
+   },
+   {
+    "n": "Á. Baena",
+    "p": 0.2183,
+    "team": "Atlético Madrid"
+   }
+  ]
+ },
+ {
+  "comp": "ucl",
+  "id": 6106263,
+  "ko": 1793736000,
+  "partita": "Barcelona - Aston Villa",
+  "uff": true,
+  "p3": 0.01533080977896298,
+  "trio": [
+   {
+    "n": "J. Gomes",
+    "p": 0.292,
+    "team": "Aston Villa"
+   },
+   {
+    "n": "M. Cash",
+    "p": 0.2662,
+    "team": "Aston Villa"
+   },
+   {
+    "n": "F. López",
+    "p": 0.1972,
+    "team": "Barcelona"
+   }
+  ]
+ },
+ {
+  "comp": "ucl",
+  "id": 6106316,
+  "ko": 1793736000,
+  "partita": "Bodø/Glimt - Lille",
+  "uff": true,
+  "p3": 0.00811585921644483,
+  "trio": [
+   {
+    "n": "T. Nianzou",
+    "p": 0.2486,
+    "team": "Lille"
+   },
+   {
+    "n": "B. André",
+    "p": 0.2173,
+    "team": "Lille"
+   },
+   {
+    "n": "S. Auklend",
+    "p": 0.1503,
+    "team": "Bodø/Glimt"
+   }
+  ]
+ },
+ {
+  "comp": "ucl",
+  "id": 6106306,
+  "ko": 1793736000,
+  "partita": "Feyenoord - Inter",
+  "uff": true,
+  "p3": 0.005430027323798002,
+  "trio": [
+   {
+    "n": "C. Vanhoutte",
+    "p": 0.1962,
+    "team": "Feyenoord"
+   },
+   {
+    "n": "N. Barella",
+    "p": 0.1665,
+    "team": "Inter"
+   },
+   {
+    "n": "J. López",
+    "p": 0.1662,
+    "team": "Feyenoord"
+   }
+  ]
+ },
+ {
+  "comp": "ucl",
+  "id": 6106408,
+  "ko": 1793736000,
+  "partita": "LASK - Slovan Bratislava",
+  "uff": true,
+  "p3": 0.007254869908234858,
+  "trio": [
+   {
+    "n": "A. Mustafić",
+    "p": 0.2307,
+    "team": "Slovan Bratislava"
+   },
+   {
+    "n": "C. Martínez",
+    "p": 0.1867,
+    "team": "Slovan Bratislava"
+   },
+   {
+    "n": "M. Bogarde",
+    "p": 0.1685,
+    "team": "LASK"
+   }
+  ]
+ },
+ {
+  "comp": "ucl",
+  "id": 6106291,
+  "ko": 1793736000,
+  "partita": "Manchester United - Roma",
+  "uff": true,
+  "p3": 0.022448753678425457,
+  "trio": [
+   {
+    "n": "G. Mancini",
+    "p": 0.3005,
+    "team": "Roma"
+   },
+   {
+    "n": "M. Hermoso",
+    "p": 0.2868,
+    "team": "Roma"
+   },
+   {
+    "n": "C. Baleba",
+    "p": 0.2604,
+    "team": "Manchester United"
+   }
+  ]
+ },
+ {
+  "comp": "ucl",
+  "id": 6106326,
+  "ko": 1793736000,
+  "partita": "Villarreal - Paris Saint-Germain",
+  "uff": true,
+  "p3": 0.00864768848527291,
+  "trio": [
+   {
+    "n": "S. Mouriño",
+    "p": 0.2289,
+    "team": "Villarreal"
+   },
+   {
+    "n": "P. Gueye",
+    "p": 0.2135,
+    "team": "Villarreal"
+   },
+   {
+    "n": "L. Hernández",
+    "p": 0.1769,
+    "team": "Paris Saint-Germain"
+   }
+  ]
+ },
+ {
+  "comp": "ucl",
+  "id": 6106401,
+  "ko": 1793814300,
+  "partita": "AEK Athens - Real Madrid",
+  "uff": false,
+  "p3": 0.012989622286728423,
+  "trio": [
+   {
+    "n": "M. Vitális",
+    "p": 0.2394,
+    "team": "AEK Athens"
+   },
+   {
+    "n": "L. Majer",
+    "p": 0.2378,
+    "team": "AEK Athens"
+   },
+   {
+    "n": "E. Camavinga",
+    "p": 0.2282,
+    "team": "Real Madrid"
+   }
+  ]
+ },
+ {
+  "comp": "ucl",
+  "id": 6106330,
+  "ko": 1793814300,
+  "partita": "Fenerbahçe - Liverpool",
+  "uff": false,
+  "p3": 0.008130369030859742,
+  "trio": [
+   {
+    "n": "A. Brown",
+    "p": 0.2073,
+    "team": "Fenerbahçe"
+   },
+   {
+    "n": "İ. Kahveci",
+    "p": 0.2006,
+    "team": "Fenerbahçe"
+   },
+   {
+    "n": "A. Mac Allister",
+    "p": 0.1955,
+    "team": "Liverpool"
+   }
+  ]
+ },
+ {
+  "comp": "ucl",
+  "id": 6106271,
+  "ko": 1793822400,
+  "partita": "Borussia Dortmund - Real Betis",
+  "uff": false,
+  "p3": 0.011475496854737506,
+  "trio": [
+   {
+    "n": "M. Roca",
+    "p": 0.2595,
+    "team": "Real Betis"
+   },
+   {
+    "n": "Isco",
+    "p": 0.2431,
+    "team": "Real Betis"
+   },
+   {
+    "n": "J. Ryerson",
+    "p": 0.1819,
+    "team": "Borussia Dortmund"
+   }
+  ]
+ },
+ {
+  "comp": "ucl",
+  "id": 6106288,
+  "ko": 1793822400,
+  "partita": "FC Porto - Napoli",
+  "uff": false,
+  "p3": 0.008350462539388787,
+  "trio": [
+   {
+    "n": "L. Lucca",
+    "p": 0.2136,
+    "team": "Napoli"
+   },
+   {
+    "n": "G. Veiga",
+    "p": 0.2008,
+    "team": "FC Porto"
+   },
+   {
+    "n": "R. Marín",
+    "p": 0.1947,
+    "team": "Napoli"
+   }
+  ]
+ },
+ {
+  "comp": "ucl",
+  "id": 6106416,
+  "ko": 1793822400,
+  "partita": "Lens - Como",
+  "uff": false,
+  "p3": 0.011694295705131816,
+  "trio": [
+   {
+    "n": "A. Haidara",
+    "p": 0.2328,
+    "team": "Lens"
+   },
+   {
+    "n": "M. Cuisance",
+    "p": 0.2275,
+    "team": "Lens"
+   },
+   {
+    "n": "Y. Couto",
+    "p": 0.2208,
+    "team": "Como"
+   }
+  ]
+ },
+ {
+  "comp": "ucl",
+  "id": 6106303,
+  "ko": 1793822400,
+  "partita": "PSV Eindhoven - Club Brugge",
+  "uff": false,
+  "p3": 0.009917106143466078,
+  "trio": [
+   {
+    "n": "H. Vetlesen",
+    "p": 0.2388,
+    "team": "Club Brugge"
+   },
+   {
+    "n": "F. Potts",
+    "p": 0.2123,
+    "team": "Club Brugge"
+   },
+   {
+    "n": "R. van Bommel",
+    "p": 0.1956,
+    "team": "PSV Eindhoven"
+   }
+  ]
+ },
+ {
+  "comp": "ucl",
+  "id": 6106322,
+  "ko": 1793822400,
+  "partita": "RB Leipzig - Manchester City",
+  "uff": false,
+  "p3": 0.01728776422569309,
+  "trio": [
+   {
+    "n": "E. Banzuzi",
+    "p": 0.2907,
+    "team": "RB Leipzig"
+   },
+   {
+    "n": "C. Baumgartner",
+    "p": 0.2692,
+    "team": "RB Leipzig"
+   },
+   {
+    "n": "A. Bouaddi",
+    "p": 0.2208,
+    "team": "Manchester City"
+   }
+  ]
+ },
+ {
+  "comp": "ucl",
+  "id": 6106389,
+  "ko": 1793822400,
+  "partita": "Slavia Prague - Arsenal",
+  "uff": false,
+  "p3": 0.014099685020879854,
+  "trio": [
+   {
+    "n": "D. Moses",
+    "p": 0.2501,
+    "team": "Slavia Prague"
+   },
+   {
+    "n": "S. Chaloupek",
+    "p": 0.2459,
+    "team": "Slavia Prague"
+   },
+   {
+    "n": "M. Merino",
+    "p": 0.2293,
+    "team": "Arsenal"
+   }
+  ]
+ },
+ {
+  "comp": "ucl",
+  "id": 6106420,
+  "ko": 1793822400,
+  "partita": "Viking - Sabah FK",
+  "uff": false,
+  "p3": 0.012738272537371509,
+  "trio": [
+   {
+    "n": "A. Khaybulaev",
+    "p": 0.2547,
+    "team": "Sabah FK"
+   },
+   {
+    "n": "I. Lepinjica",
+    "p": 0.2409,
+    "team": "Sabah FK"
+   },
+   {
+    "n": "H. Heggheim",
+    "p": 0.2077,
+    "team": "Viking"
+   }
+  ]
+ }
+]

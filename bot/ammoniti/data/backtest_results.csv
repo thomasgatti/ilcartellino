@@ -1,0 +1,7 @@
+test,metodo,partite,giusti_medi_su_3,P(3/3),P(>=2/3),P(0/3),P(3/3) stimata dal modello
+2022-23 (stagione intera),Baseline: più gialli/90 in carriera,381,0.667,0.0079,0.1286,0.4698,
+2022-23 (stagione intera),Logistica,381,0.738,0.0131,0.1444,0.4199,0.019
+2022-23 (stagione intera),Gradient boosting,381,0.753,0.0236,0.1391,0.4094,0.0179
+2024-25 + 2025-26 (parziali),Baseline: più gialli/90 in carriera,258,0.527,0.0039,0.0775,0.5543,
+2024-25 + 2025-26 (parziali),Logistica,258,0.647,0.0039,0.1279,0.4845,0.0161
+2024-25 + 2025-26 (parziali),Gradient boosting,258,0.605,0.0078,0.1124,0.5155,0.0153

@@ -1,0 +1,109 @@
+{
+ "campionati": {
+  "ENG": {
+   "y90": 0.16309833892832576,
+   "fls90": 0.9721668311280397,
+   "stagioni": [
+    2024,
+    2025,
+    2026
+   ]
+  },
+  "ESP": {
+   "y90": 0.22415077019628415,
+   "fls90": 1.211238449397472,
+   "stagioni": [
+    2024,
+    2025,
+    2026
+   ]
+  },
+  "FRA": {
+   "y90": 0.1722101551345953,
+   "fls90": 1.1526171795747175,
+   "stagioni": [
+    2024,
+    2025,
+    2026
+   ]
+  },
+  "GER": {
+   "y90": 0.17248918254656656,
+   "fls90": 1.1004720362965847,
+   "stagioni": [
+    2024,
+    2025,
+    2026
+   ]
+  },
+  "ITA": {
+   "y90": 0.2045571554476536,
+   "fls90": 1.1972553517634956,
+   "stagioni": [
+    2024,
+    2025,
+    2026
+   ]
+  },
+  "USA": {
+   "y90": 0.18438044241422533,
+   "fls90": 1.091563080275552,
+   "stagioni": [
+    2023,
+    2024,
+    2025
+   ]
+  }
+ },
+ "trasferimenti_verso_serieA": {
+  "ENG": {
+   "giocatori": 29,
+   "gialli90_prima": 0.147,
+   "gialli90_in_serieA": 0.197,
+   "rapporto_gialli": 1.337,
+   "falli90_prima": 1.03,
+   "falli90_in_serieA": 1.16,
+   "correlazione_gialli": 0.21
+  },
+  "ESP": {
+   "giocatori": 29,
+   "gialli90_prima": 0.204,
+   "gialli90_in_serieA": 0.228,
+   "rapporto_gialli": 1.115,
+   "falli90_prima": 1.3,
+   "falli90_in_serieA": 1.32,
+   "correlazione_gialli": 0.5
+  },
+  "FRA": {
+   "giocatori": 38,
+   "gialli90_prima": 0.196,
+   "gialli90_in_serieA": 0.229,
+   "rapporto_gialli": 1.169,
+   "falli90_prima": 1.21,
+   "falli90_in_serieA": 1.21,
+   "correlazione_gialli": 0.58
+  },
+  "GER": {
+   "giocatori": 17,
+   "gialli90_prima": 0.213,
+   "gialli90_in_serieA": 0.209,
+   "rapporto_gialli": 0.981,
+   "falli90_prima": 1.42,
+   "falli90_in_serieA": 1.4,
+   "correlazione_gialli": 0.19
+  },
+  "USA": {
+   "giocatori": 1,
+   "gialli90_prima": 0.276,
+   "gialli90_in_serieA": 0.066,
+   "rapporto_gialli": 0.24,
+   "falli90_prima": 1.83,
+   "falli90_in_serieA": 1.98,
+   "correlazione_gialli": NaN
+  },
+  "ITA (anno su anno)": {
+   "giocatori": 1059,
+   "correlazione_gialli": 0.48
+  }
+ }
+}
