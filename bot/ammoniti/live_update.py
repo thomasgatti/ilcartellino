@@ -34,11 +34,12 @@ def main(src, dpath=str(__import__('pathlib').Path(__file__).resolve().parent.pa
         for mn, c, nm, s in L['ev']:
             yc[s] += 1
             hit = [p[0] for p in m['pl'] if p[1] == s and same(p[0], nm)]
-            card[hit[0] if hit else nm] = [mn, 'R' if 'Red' in c else 'G']
+            w = nm.split(); card[hit[0] if hit else (w[0][0] + '. ' + ' '.join(w[1:]) if len(w) > 1 else nm)] = [mn, 'R' if 'Red' in c else 'G']
         fl = {}
         for nm, s, fc, fs in L['fl']:
-            for p in m['pl']:
-                if p[1] == s and same(p[0], nm): fl[p[0]] = [fc, fs]
+            hit = [p[0] for p in m['pl'] if p[1] == s and same(p[0], nm)]
+            w = nm.split(); key = hit[0] if hit else (w[0][0] + '. ' + ' '.join(w[1:]) if len(w) > 1 else nm)
+            fl[key] = [fc, fs, s]
         out = {p[0] for mn, nm, s in L.get('subs', []) for p in m['pl'] if p[1] == s and same(p[0], nm)}
         P = {}
         for p in m['pl']:
@@ -47,7 +48,7 @@ def main(src, dpath=str(__import__('pathlib').Path(__file__).resolve().parent.pa
             if n in out: P[n] = 0.0; continue
             o = 'a' if s == 'h' else 'h'; sd = (gh - ga) if s == 'h' else (ga - gh)
             q = live_prob(p0, t, yc['h'] + yc['a'], yc[s], yc[o], sd, comp)
-            k = min(4, fl.get(n, [0])[0]); q = q * FOUL_OR ** k / (1 - q + q * FOUL_OR ** k)
+            k = min(4, (fl.get(n) or [0])[0]); q = q * FOUL_OR ** k / (1 - q + q * FOUL_OR ** k)
             P[n] = round(q, 3)
         m['live'] = {'t': L['t'].replace('‎', ''), 'sc': L['sc'], 'fin': bool(L.get('fin')), 'agg': now,
                      'cards': [[v[0], n, v[1]] for n, v in sorted(card.items(), key=lambda kv: kv[1][0])],

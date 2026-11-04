@@ -325,3 +325,9 @@ Fatte il 3/11: 6106341, 6106335.
 - Regola del sostituto per giocatore: subqBuild() (amm_boot.js) → riga[9] dell'export → ottavo campo di pl.
 - ammBuild() ora fa tutto (v4 compresa): ~40 s.
 - 4/11 17:22: la sveglia ha aperto una finestra con "Accesso negato" (le attività create da amministratore non si possono riscrivere senza amministratore). sveglia.ps1 ora non rilegge più sveglie.txt e si rilancia invisibile (conhost --headless). Le sveglie dal sonno non funzionano comunque (sospensione moderna): la soluzione vera è il bot nel cloud. Nuove sveglie solo rifacendo il doppio clic su INSTALLA_SVEGLIE.bat.
+
+## Gialli insieme: stesso reparto e squadre diverse (4/11 sera)
+- Idea dell'utente: due compagni nella stessa zona (es. coppia di mediani) si "rubano" il giallo → meglio pescare da posizioni diverse.
+- Verifica su 21.000 partite (coppie di titolari, attesi = prodotto dei tassi personali): avversari +8%, compagni linee diverse +2%, compagni vicini D +2%, M +6%, F −7% (pochi casi). Nessuna penalità per lo stesso reparto.
+- Terne: "2 + 1" ×1,164 sul prodotto, tutti della stessa squadra ×1,039 (24 milioni di terne).
+- App: jointK(t) in template.html moltiplica il "tutti e tre ammoniti" (combos e "Il mio tris").
