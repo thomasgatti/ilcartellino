@@ -728,7 +728,7 @@ function wireBuilder(m) {
 function score(trio, res, subRule = true) {
   const am = new Set(res.ammoniti || []), fl = res.falli || {}, sb = res.sostituzioni || {};
   const rows = trio.map(t => { const r = subRule ? sb[t.n] : null; const viaSub = !!(r && am.has(r) && !am.has(t.n));
-    return { n: t.n, hit: am.has(t.n) || viaSub, viaSub, sub: r, f: fl[t.n] == null && (!r || fl[r] == null) ? null : (fl[t.n] || 0) + (r ? (fl[r] || 0) : 0) }; });
+    const f = fl[t.n] == null && (!r || fl[r] == null) ? null : (fl[t.n] || 0) + (r ? (fl[r] || 0) : 0); return { n: t.n, hit: am.has(t.n) || viaSub, viaSub, sub: r, f, np: f == null && Object.keys(fl).length > 0 }; });
   const hits = rows.filter(r => r.hit).length, falli = rows.reduce((a, r) => a + (r.f || 0), 0);
   return { rows, hits, falli, punti: hits * 3 + falli * 0.5 };
 }
@@ -784,7 +784,7 @@ async function renderStorico() {
   catch (e) { el.innerHTML = `<h2>Storico tris dell'app</h2><p class="note">Non riesco a leggere lo storico in questo momento: riprova tra poco.</p>`; return; }
   docs.sort((a, b) => (b.ko || 0) - (a.ko || 0));
   let hits = 0, full = 0, two = 0, pts = 0;
-  const li = (r, p) => `<li class="${r.hit ? 'ok' : ''}"><span class="nm" title="${r.n}${r.sub ? ' → entrato ' + r.sub : ''}">${r.n}${r.sub ? `<small class="note">→ entrato ${r.sub}</small>` : ''}</span><span class="lead"></span><span class="val">${r.hit ? `<span class="hit">${r.viaSub ? '✓ sostituto' : '✓ giallo'}</span> · ` : ''}${Math.round(p * 100)}%${r.f != null ? ' · ' + r.f + ' f.' : ''}</span></li>`;
+  const li = (r, p) => `<li class="${r.hit ? 'ok' : ''}"><span class="nm" title="${r.n}${r.sub ? ' → entrato ' + r.sub : ''}">${r.n}${r.sub ? `<small class="note">→ entrato ${r.sub}</small>` : ''}</span><span class="lead"></span><span class="val">${r.hit ? `<span class="hit">${r.viaSub ? '✓ sostituto' : '✓ giallo'}</span> · ` : ''}${Math.round(p * 100)}%${r.np ? ' · non ha giocato' : r.f != null ? ' · ' + r.f + ' f.' : ''}</span></li>`;
   const byG = {};
   for (const r of docs) {
     const sc = score(r.tris_app, r, true); hits += sc.hits; full += sc.hits === 3; two += sc.hits >= 2; pts += sc.punti;
