@@ -15,7 +15,8 @@ const log = (...a) => console.log(new Date().toISOString().slice(11, 19), ...a);
 const dataJson = JSON.parse(fs.readFileSync(path.join(BOT, 'webapp', 'data.json'), 'utf8'));
 if (cmd === 'uff') {
   const now = Date.now() / 1000, ucl = dataJson.cups?.ucl?.matches || [];
-  const win = ucl.filter(m => !m.uff && m.ko - now < 100 * 60 && now - m.ko < 30 * 60);
+  const FORCE = (process.env.FORCE || '').split(',').filter(Boolean).map(Number);
+  const win = FORCE.length ? ucl.filter(m => FORCE.includes(m.id)) : ucl.filter(m => !m.uff && m.ko - now < 100 * 60 && now - m.ko < 30 * 60);
   log('partite nella finestra:', win.map(m => m.h + '-' + m.a).join(', ') || 'nessuna');
   if (!win.length) process.exit(0);
   const ready = []; for (const m of win) { const j = await fetch('/api/data/matchDetails?matchId=' + m.id).then(r => r.json()); if (j.content?.lineup?.lineupType === 'standard') ready.push(m.id); }

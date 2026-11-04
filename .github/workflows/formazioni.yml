@@ -1,8 +1,15 @@
 name: Formazioni ufficiali Champions
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '*/10 15-20 * * 2,3'   # martedì e mercoledì, ogni 10 minuti dalle 15 alle 20:50 UTC
+    inputs:
+      ids:
+        description: 'Prova: id FotMob da ricalcolare comunque (separati da virgola)'
+        required: false
+      prova:
+        description: 'Solo prova, senza pubblicare'
+        type: boolean
+        default: true
+  # schedule: '*/10 15-20 * * 2,3' (martedì e mercoledì) — da attivare quando il PC non fa più questo lavoro
 concurrency: formazioni
 jobs:
   uff:
@@ -20,7 +27,7 @@ jobs:
         with:
           node-version: '20'
       - name: Formazioni e modello
-        run: node cloud/bot.mjs uff dati/fotmob
+        run: FORCE='${{ inputs.ids }}' node cloud/bot.mjs uff dati/fotmob
       - name: App e sito
         run: |
           if [ -f bot/ammoniti/tmp/uff_ids.txt ]; then
@@ -29,5 +36,6 @@ jobs:
             for f in tmp/live*.json; do [ -f "$f" ] && python3 live_update.py "$f" > /dev/null; done
             cd ../webapp && python3 build.py && python3 build_vercel.py && cp vercel/sito/index.html ../../index.html && rm -rf vercel/sito
             cd ../.. && git config user.name "bot ammoniti" && git config user.email "bot@users.noreply.github.com"
+            if [ "${{ inputs.prova }}" = "true" ]; then git status --short; python3 -c "import json;d=json.load(open('bot/webapp/data.json'));[print(m['h'],m['a'],sorted([(p[4],p[0]) for p in m['pl']],reverse=True)[:3]) for m in d['cups']['ucl']['matches'] if str(m['id']) in '${{ inputs.ids }}']"; exit 0; fi
             git add -A && git commit -qm "Formazioni ufficiali Champions (cloud)" && git push -q
           fi
