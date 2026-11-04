@@ -1,0 +1,31 @@
+name: Aggiorna dati FotMob
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 5 * * *'   # ogni giorno 05:17 UTC
+concurrency: dati
+jobs:
+  dati:
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          ref: dati
+          path: dati
+        continue-on-error: true
+      - name: Ramo dati (se non esiste)
+        run: |
+          if [ ! -d dati/.git ]; then mkdir -p dati && cd dati && git init -q -b dati && git remote add origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"; fi
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Scarica
+        run: node cloud/scrape.mjs dati/fotmob 320
+      - name: Salva
+        run: |
+          cd dati && git config user.name "bot ammoniti" && git config user.email "bot@users.noreply.github.com"
+          git add -A && (git commit -qm "dati $(date -u +%F)" && git push -q origin HEAD:dati) || echo "niente di nuovo"
