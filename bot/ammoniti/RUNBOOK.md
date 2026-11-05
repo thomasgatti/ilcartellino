@@ -331,3 +331,12 @@ Fatte il 3/11: 6106341, 6106335.
 - Verifica su 21.000 partite (coppie di titolari, attesi = prodotto dei tassi personali): avversari +8%, compagni linee diverse +2%, compagni vicini D +2%, M +6%, F −7% (pochi casi). Nessuna penalità per lo stesso reparto.
 - Terne: "2 + 1" ×1,164 sul prodotto, tutti della stessa squadra ×1,039 (24 milioni di terne).
 - App: jointK(t) in template.html moltiplica il "tutti e tre ammoniti" (combos e "Il mio tris").
+
+## Ruoli dalla formazione (5/11) — provato e scartato
+Caso El Aynaoui (Lipsia-City): FotMob lo segna F (posizione abituale), gioca mediano. Ruolo = usualPlayingPositionId, fissato alla prima partita vista; nel modello SA F rispetto a M vale circa -0,19 log-odds (~-3 punti a p=0,2).
+Prove (exp/roles.mjs, test stagione per stagione 2022/23→2025/26): ruolo dalla linea in campo (line), con esterni del 3 dietro come D (hybrid), dalla posizione media nelle ultime 8 (habit), solo centrocampisti centrali rimessi M (narrow).
+Nessuna migliora: log loss e top 3 oscillano nel rumore, narrow peggiora la log loss in Serie A in tutte e 4 le stagioni e in Bundesliga. Ruoli lasciati come sono.
+Posta in palio e riposo: nel modello semplice (exp/stakes.mjs) riposo <4 giorni + lotta salvezza davano ~0,0002-0,0004 a stagione; nel modello vero di produzione (__FS_SA3, extPair 2022/23→2025/26, 1.521 partite) riposo_salvezza dll -0,00009, top3 -0,003±0,003 (riposo da solo 0, salvezza da sola -0,00008): sotto la soglia 0,0002, NON aggiunto. Candidata riposo_salvezza resta in EXT_CANDS (campi ex.otrest, ex.srel) per riprovarla a fine stagione, quando la salvezza pesa di più.
+Tris indicati dall'utente: data/tris_utente.json (giornata 4 UCL: 7 ammoniti su 18 contro 8 dell'app nelle stesse partite; Dortmund-Betis 3/3).
+Idea per marzo-aprile (utente, 5/11): riprovare posta in palio solo nelle ultime ~10 giornate, con scontro diretto (entrambe nella stessa corsa) e incroci tipo "chi lotta per lo scudetto contro chi lotta per salvarsi"; unire più campionati per avere abbastanza partite. Nota: nei dati la lotta salvezza ha dato MENO gialli del previsto (coef. negativo, 4 stagioni su 4).
+Diffidati in Serie A (5/11, 2021/22→oggi, __SAM3 senza diffida): diffidati ammoniti 17,5% contro 18,7% previsto (rapporto ~0,93, prudenza). "Pulire la diffida" (oggi avversaria normale, dopo una top 5): 745 casi, 17,0% osservato contro 18,6% previsto, nessun segno di gialli cercati. extPair con EXT_CANDS.diffida: dll -0,00003, top3 -0,001: non aggiunta in SA (resta nel modello coppe).
