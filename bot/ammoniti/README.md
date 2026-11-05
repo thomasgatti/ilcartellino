@@ -1,4 +1,6 @@
-# Bot ammoniti Serie A — prototipo v0
+# Bot ammoniti Serie A — prototipo v0 (storico)
+
+> Questo file descrive la **prima versione** del modello (ottobre 2026, dati FBref). Lo stato attuale del progetto è nel `README.md` della radice; le procedure aggiornate sono in `RUNBOOK.md`.
 
 Stima per ogni titolare la probabilità di essere ammonito e sceglie i 3 più probabili della partita.
 
