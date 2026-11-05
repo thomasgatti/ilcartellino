@@ -1,0 +1,2375 @@
+{
+ "schema": 1,
+ "baseCommit": "4ef307827be2ab64e7074717a424195fa42bee65",
+ "inputHashes": {
+  "appData": "2519cbe22f2f7b1ba3a9871ee2be625fe3049cff71924c7a4c10edcb95fc48c9",
+  "marketLog": "19a0166253ada42547b62625405c2c848aa929320aea05c0f66e762b2bed6bfd"
+ },
+ "purpose": "Audit di qualità e casi descrittivi. Nessuna stima del guadagno predittivo; nessuna modifica del modello.",
+ "totals": {
+  "matches": 40,
+  "rawFoulRows": 1831,
+  "foulEvents": 922,
+  "trustedPairs": 849,
+  "expectedFouls": 970,
+  "missingTeamTotals": 0,
+  "untrustedFouls": 73,
+  "unstructuredFoulRows": 1,
+  "duplicateSourceIds": 2,
+  "coordinateConflicts": 2,
+  "cards": 155,
+  "linkedCards": 102,
+  "verifiedSubstitutions": 337,
+  "unverifiedSubstitutions": 35
+ },
+ "groups": {
+  "uefa.champions|2026/2027": {
+   "matches": 10,
+   "rawFoulRows": 417,
+   "foulEvents": 211,
+   "trustedPairs": 183,
+   "expectedFouls": 223,
+   "missingTeamTotals": 0,
+   "untrustedFouls": 28,
+   "unstructuredFoulRows": 0,
+   "duplicateSourceIds": 1,
+   "coordinateConflicts": 1,
+   "cards": 37,
+   "linkedCards": 18,
+   "verifiedSubstitutions": 86,
+   "unverifiedSubstitutions": 6
+  },
+  "uefa.champions|2025/2026": {
+   "matches": 10,
+   "rawFoulRows": 474,
+   "foulEvents": 237,
+   "trustedPairs": 220,
+   "expectedFouls": 248,
+   "missingTeamTotals": 0,
+   "untrustedFouls": 17,
+   "unstructuredFoulRows": 0,
+   "duplicateSourceIds": 0,
+   "coordinateConflicts": 0,
+   "cards": 44,
+   "linkedCards": 29,
+   "verifiedSubstitutions": 74,
+   "unverifiedSubstitutions": 12
+  },
+  "ita.1|2026/2027": {
+   "matches": 10,
+   "rawFoulRows": 426,
+   "foulEvents": 217,
+   "trustedPairs": 202,
+   "expectedFouls": 234,
+   "missingTeamTotals": 0,
+   "untrustedFouls": 15,
+   "unstructuredFoulRows": 0,
+   "duplicateSourceIds": 0,
+   "coordinateConflicts": 0,
+   "cards": 36,
+   "linkedCards": 25,
+   "verifiedSubstitutions": 88,
+   "unverifiedSubstitutions": 11
+  },
+  "ita.1|2025/2026": {
+   "matches": 10,
+   "rawFoulRows": 514,
+   "foulEvents": 257,
+   "trustedPairs": 244,
+   "expectedFouls": 265,
+   "missingTeamTotals": 0,
+   "untrustedFouls": 13,
+   "unstructuredFoulRows": 1,
+   "duplicateSourceIds": 1,
+   "coordinateConflicts": 1,
+   "cards": 38,
+   "linkedCards": 30,
+   "verifiedSubstitutions": 89,
+   "unverifiedSubstitutions": 6
+  }
+ },
+ "problemCounts": {
+  "grafia_o_alias_non_verificato": 64,
+  "testo_indica_altro_giocatore": 10
+ },
+ "appComparison": {
+  "matches": 10,
+  "mappedPlayers": 189,
+  "totalPlayers": 200,
+  "linkedCardContacts": 18,
+  "comparable": 16,
+  "sameOpponent": 6,
+  "warning": "Riscontro descrittivo fra file attuale e contatti sanzionati, non accuratezza delle marcature né valutazione prepartita."
+ },
+ "market": {
+  "rows": 180,
+  "paired": 173,
+  "matches": 9,
+  "weights": [
+   {
+    "marketWeight": 0,
+    "logloss": 0.45823852075224736
+   },
+   {
+    "marketWeight": 0.25,
+    "logloss": 0.4524180454445023
+   },
+   {
+    "marketWeight": 0.5,
+    "logloss": 0.447280193787759
+   },
+   {
+    "marketWeight": 0.75,
+    "logloss": 0.4428213155401749
+   },
+   {
+    "marketWeight": 1,
+    "logloss": 0.43904143901748405
+   }
+  ],
+  "warning": "Confronto descrittivo su un solo turno; nessuna selezione del peso e nessuna prova temporale fuori campione."
+ },
+ "appDataQuality": [
+  {
+   "id": 5749749,
+   "partita": "Venezia - Udinese",
+   "comp": "sa",
+   "official": false,
+   "players": 28,
+   "missingVs": 0,
+   "substituteFallback": 28,
+   "thinHistory": 1
+  },
+  {
+   "id": 5749741,
+   "partita": "Cagliari - Frosinone",
+   "comp": "sa",
+   "official": false,
+   "players": 26,
+   "missingVs": 0,
+   "substituteFallback": 26,
+   "thinHistory": 8
+  },
+  {
+   "id": 5749748,
+   "partita": "Torino - Lecce",
+   "comp": "sa",
+   "official": false,
+   "players": 28,
+   "missingVs": 0,
+   "substituteFallback": 28,
+   "thinHistory": 3
+  },
+  {
+   "id": 5749747,
+   "partita": "Parma - Bologna",
+   "comp": "sa",
+   "official": false,
+   "players": 26,
+   "missingVs": 0,
+   "substituteFallback": 26,
+   "thinHistory": 4
+  },
+  {
+   "id": 5749740,
+   "partita": "Roma - Sassuolo",
+   "comp": "sa",
+   "official": false,
+   "players": 31,
+   "missingVs": 0,
+   "substituteFallback": 31,
+   "thinHistory": 3
+  },
+  {
+   "id": 5749746,
+   "partita": "Napoli - Lazio",
+   "comp": "sa",
+   "official": false,
+   "players": 31,
+   "missingVs": 31,
+   "substituteFallback": 31,
+   "thinHistory": 0
+  },
+  {
+   "id": 5749743,
+   "partita": "Genoa - Milan",
+   "comp": "sa",
+   "official": false,
+   "players": 35,
+   "missingVs": 35,
+   "substituteFallback": 35,
+   "thinHistory": 5
+  },
+  {
+   "id": 5749745,
+   "partita": "Monza - Atalanta",
+   "comp": "sa",
+   "official": false,
+   "players": 33,
+   "missingVs": 33,
+   "substituteFallback": 33,
+   "thinHistory": 6
+  },
+  {
+   "id": 5749744,
+   "partita": "Inter - Como",
+   "comp": "sa",
+   "official": false,
+   "players": 36,
+   "missingVs": 36,
+   "substituteFallback": 36,
+   "thinHistory": 2
+  },
+  {
+   "id": 5749742,
+   "partita": "Fiorentina - Juventus",
+   "comp": "sa",
+   "official": false,
+   "players": 33,
+   "missingVs": 33,
+   "substituteFallback": 33,
+   "thinHistory": 3
+  },
+  {
+   "id": 6106341,
+   "partita": "Galatasaray - VfB Stuttgart",
+   "comp": "ucl",
+   "official": true,
+   "players": 20,
+   "missingVs": 0,
+   "substituteFallback": 20,
+   "thinHistory": 1
+  },
+  {
+   "id": 6106335,
+   "partita": "Shakhtar Donetsk - Sporting CP",
+   "comp": "ucl",
+   "official": true,
+   "players": 20,
+   "missingVs": 0,
+   "substituteFallback": 20,
+   "thinHistory": 4
+  },
+  {
+   "id": 6106266,
+   "partita": "Atlético Madrid - Bayern München",
+   "comp": "ucl",
+   "official": true,
+   "players": 20,
+   "missingVs": 0,
+   "substituteFallback": 20,
+   "thinHistory": 0
+  },
+  {
+   "id": 6106263,
+   "partita": "Barcelona - Aston Villa",
+   "comp": "ucl",
+   "official": true,
+   "players": 20,
+   "missingVs": 0,
+   "substituteFallback": 20,
+   "thinHistory": 1
+  },
+  {
+   "id": 6106316,
+   "partita": "Bodø/Glimt - Lille",
+   "comp": "ucl",
+   "official": true,
+   "players": 20,
+   "missingVs": 1,
+   "substituteFallback": 20,
+   "thinHistory": 2
+  },
+  {
+   "id": 6106306,
+   "partita": "Feyenoord - Inter",
+   "comp": "ucl",
+   "official": true,
+   "players": 20,
+   "missingVs": 0,
+   "substituteFallback": 20,
+   "thinHistory": 0
+  },
+  {
+   "id": 6106408,
+   "partita": "LASK - Slovan Bratislava",
+   "comp": "ucl",
+   "official": true,
+   "players": 20,
+   "missingVs": 0,
+   "substituteFallback": 20,
+   "thinHistory": 5
+  },
+  {
+   "id": 6106291,
+   "partita": "Manchester United - Roma",
+   "comp": "ucl",
+   "official": true,
+   "players": 20,
+   "missingVs": 0,
+   "substituteFallback": 20,
+   "thinHistory": 0
+  },
+  {
+   "id": 6106326,
+   "partita": "Villarreal - Paris Saint-Germain",
+   "comp": "ucl",
+   "official": true,
+   "players": 20,
+   "missingVs": 0,
+   "substituteFallback": 20,
+   "thinHistory": 1
+  },
+  {
+   "id": 6106401,
+   "partita": "AEK Athens - Real Madrid",
+   "comp": "ucl",
+   "official": true,
+   "players": 20,
+   "missingVs": 0,
+   "substituteFallback": 0,
+   "thinHistory": 0
+  },
+  {
+   "id": 6106330,
+   "partita": "Fenerbahçe - Liverpool",
+   "comp": "ucl",
+   "official": true,
+   "players": 20,
+   "missingVs": 0,
+   "substituteFallback": 0,
+   "thinHistory": 1
+  },
+  {
+   "id": 6106271,
+   "partita": "Borussia Dortmund - Real Betis",
+   "comp": "ucl",
+   "official": true,
+   "players": 20,
+   "missingVs": 0,
+   "substituteFallback": 0,
+   "thinHistory": 1
+  },
+  {
+   "id": 6106288,
+   "partita": "FC Porto - Napoli",
+   "comp": "ucl",
+   "official": true,
+   "players": 20,
+   "missingVs": 0,
+   "substituteFallback": 0,
+   "thinHistory": 0
+  },
+  {
+   "id": 6106416,
+   "partita": "Lens - Como",
+   "comp": "ucl",
+   "official": true,
+   "players": 20,
+   "missingVs": 0,
+   "substituteFallback": 0,
+   "thinHistory": 0
+  },
+  {
+   "id": 6106303,
+   "partita": "PSV Eindhoven - Club Brugge",
+   "comp": "ucl",
+   "official": true,
+   "players": 20,
+   "missingVs": 0,
+   "substituteFallback": 0,
+   "thinHistory": 0
+  },
+  {
+   "id": 6106322,
+   "partita": "RB Leipzig - Manchester City",
+   "comp": "ucl",
+   "official": true,
+   "players": 20,
+   "missingVs": 0,
+   "substituteFallback": 0,
+   "thinHistory": 0
+  },
+  {
+   "id": 6106389,
+   "partita": "Slavia Prague - Arsenal",
+   "comp": "ucl",
+   "official": true,
+   "players": 20,
+   "missingVs": 0,
+   "substituteFallback": 0,
+   "thinHistory": 1
+  },
+  {
+   "id": 6106420,
+   "partita": "Viking - Sabah FK",
+   "comp": "ucl",
+   "official": true,
+   "players": 20,
+   "missingVs": 2,
+   "substituteFallback": 2,
+   "thinHistory": 8
+  }
+ ],
+ "matches": [
+  {
+   "fixture": {
+    "id": "401915310",
+    "league": "uefa.champions",
+    "season": "2026/2027",
+    "date": "2026-11-03T17:45Z",
+    "name": "Sporting CP at Shakhtar Donetsk",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915310"
+   },
+   "audit": {
+    "commentaryRows": 111,
+    "rawFoulRows": 52,
+    "foulEvents": 27,
+    "trustedPairs": 20,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 7,
+    "unstructuredFoulRows": 0,
+    "cards": 2,
+    "linkedCards": 2,
+    "teamAudit": [
+     {
+      "team": "Shakhtar Donetsk",
+      "side": "home",
+      "expected": 10,
+      "found": 6,
+      "rosterTotal": 10,
+      "gap": 4
+     },
+     {
+      "team": "Sporting CP",
+      "side": "away",
+      "expected": 18,
+      "found": 14,
+      "rosterTotal": 18,
+      "gap": 4
+     }
+    ]
+   },
+   "appComparison": {
+    "appMatchId": 6106335,
+    "mappedPlayers": 19,
+    "totalAppPlayers": 20,
+    "unmappedPlayers": [
+     {
+      "name": "P. Henrique",
+      "side": "home",
+      "reason": "non_trovato"
+     }
+    ],
+    "cards": [
+     {
+      "minute": "66'",
+      "player": "Maxi Araújo",
+      "playerId": "287025",
+      "victim": "Vinícius Tobias",
+      "victimId": "307928",
+      "appVs": "A. Santana",
+      "mappedVsId": "359420",
+      "sameOpponent": false
+     },
+     {
+      "minute": "74'",
+      "player": "Isaque",
+      "playerId": "382970",
+      "victim": "Silas Andersen",
+      "victimId": "355408",
+      "appVs": null,
+      "mappedVsId": null,
+      "sameOpponent": null
+     }
+    ]
+   }
+  },
+  {
+   "fixture": {
+    "id": "401915311",
+    "league": "uefa.champions",
+    "season": "2026/2027",
+    "date": "2026-11-03T17:45Z",
+    "name": "VfB Stuttgart at Galatasaray",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915311"
+   },
+   "audit": {
+    "commentaryRows": 131,
+    "rawFoulRows": 57,
+    "foulEvents": 29,
+    "trustedPairs": 24,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 5,
+    "unstructuredFoulRows": 0,
+    "cards": 8,
+    "linkedCards": 3,
+    "teamAudit": [
+     {
+      "team": "Galatasaray",
+      "side": "home",
+      "expected": 13,
+      "found": 11,
+      "rosterTotal": 13,
+      "gap": 2
+     },
+     {
+      "team": "VfB Stuttgart",
+      "side": "away",
+      "expected": 16,
+      "found": 13,
+      "rosterTotal": 16,
+      "gap": 3
+     }
+    ]
+   },
+   "appComparison": {
+    "appMatchId": 6106341,
+    "mappedPlayers": 19,
+    "totalAppPlayers": 20,
+    "unmappedPlayers": [
+     {
+      "name": "B. Alper Yılmaz",
+      "side": "home",
+      "reason": "non_trovato"
+     }
+    ],
+    "cards": [
+     {
+      "minute": "2'",
+      "player": "Atakan Karazor",
+      "playerId": "241742",
+      "victim": "Mario Lemina",
+      "victimId": "181729",
+      "appVs": "M. Lemina",
+      "mappedVsId": "181729",
+      "sameOpponent": true
+     },
+     {
+      "minute": "62'",
+      "player": "Roland Sallai",
+      "playerId": "219444",
+      "victim": "Jamie Leweling",
+      "victimId": "290811",
+      "appVs": "C. Führich",
+      "mappedVsId": "268951",
+      "sameOpponent": false
+     },
+     {
+      "minute": "79'",
+      "player": "Ramon Hendriks",
+      "playerId": "289322",
+      "victim": "Victor Osimhen",
+      "victimId": "228296",
+      "appVs": "Y. Akgün",
+      "mappedVsId": "266575",
+      "sameOpponent": false
+     }
+    ]
+   }
+  },
+  {
+   "fixture": {
+    "id": "401915307",
+    "league": "uefa.champions",
+    "season": "2026/2027",
+    "date": "2026-11-03T20:00Z",
+    "name": "Internazionale at Feyenoord Rotterdam",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915307"
+   },
+   "audit": {
+    "commentaryRows": 95,
+    "rawFoulRows": 38,
+    "foulEvents": 19,
+    "trustedPairs": 12,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 7,
+    "unstructuredFoulRows": 0,
+    "cards": 3,
+    "linkedCards": 1,
+    "teamAudit": [
+     {
+      "team": "Feyenoord Rotterdam",
+      "side": "home",
+      "expected": 7,
+      "found": 3,
+      "rosterTotal": 7,
+      "gap": 4
+     },
+     {
+      "team": "Internazionale",
+      "side": "away",
+      "expected": 13,
+      "found": 9,
+      "rosterTotal": 13,
+      "gap": 4
+     }
+    ]
+   },
+   "appComparison": {
+    "appMatchId": 6106306,
+    "mappedPlayers": 17,
+    "totalAppPlayers": 20,
+    "unmappedPlayers": [
+     {
+      "name": "O. Targhalline",
+      "side": "home",
+      "reason": "non_trovato"
+     },
+     {
+      "name": "Y. Aurel Bisseck",
+      "side": "away",
+      "reason": "non_trovato"
+     },
+     {
+      "name": "F. Pio Esposito",
+      "side": "away",
+      "reason": "non_trovato"
+     }
+    ],
+    "cards": [
+     {
+      "minute": "3'",
+      "player": "Hakan Çalhanoglu",
+      "playerId": "170785",
+      "victim": "Nacho Ferri",
+      "victimId": "364582",
+      "appVs": "T. Kraaijeveld",
+      "mappedVsId": "343202",
+      "sameOpponent": false
+     }
+    ]
+   }
+  },
+  {
+   "fixture": {
+    "id": "401915308",
+    "league": "uefa.champions",
+    "season": "2026/2027",
+    "date": "2026-11-03T20:00Z",
+    "name": "AS Roma at Manchester United",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915308"
+   },
+   "audit": {
+    "commentaryRows": 107,
+    "rawFoulRows": 43,
+    "foulEvents": 22,
+    "trustedPairs": 22,
+    "duplicateSourceIds": 1,
+    "coordinateConflicts": 1,
+    "untrustedFouls": 0,
+    "unstructuredFoulRows": 0,
+    "cards": 7,
+    "linkedCards": 3,
+    "teamAudit": [
+     {
+      "team": "Manchester United",
+      "side": "home",
+      "expected": 11,
+      "found": 9,
+      "rosterTotal": 11,
+      "gap": 2
+     },
+     {
+      "team": "AS Roma",
+      "side": "away",
+      "expected": 14,
+      "found": 13,
+      "rosterTotal": 14,
+      "gap": 1
+     }
+    ]
+   },
+   "appComparison": {
+    "appMatchId": 6106291,
+    "mappedPlayers": 20,
+    "totalAppPlayers": 20,
+    "unmappedPlayers": [],
+    "cards": [
+     {
+      "minute": "42'",
+      "player": "Donyell Malen",
+      "playerId": "259481",
+      "victim": "Carlos Baleba",
+      "victimId": "338814",
+      "appVs": "D. Dalot",
+      "mappedVsId": "238902",
+      "sameOpponent": false
+     },
+     {
+      "minute": "70'",
+      "player": "Ayden Heaven",
+      "playerId": "356044",
+      "victim": "Matìas Soulè",
+      "victimId": "323974",
+      "appVs": "M. Soulé",
+      "mappedVsId": "323974",
+      "sameOpponent": true
+     },
+     {
+      "minute": "78'",
+      "player": "Harry Maguire",
+      "playerId": "157073",
+      "victim": "Santiago Castro",
+      "victimId": "250284",
+      "appVs": "R. Mora",
+      "mappedVsId": "387204",
+      "sameOpponent": false
+     }
+    ]
+   }
+  },
+  {
+   "fixture": {
+    "id": "401915309",
+    "league": "uefa.champions",
+    "season": "2026/2027",
+    "date": "2026-11-03T20:00Z",
+    "name": "Paris Saint-Germain at Villarreal",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915309"
+   },
+   "audit": {
+    "commentaryRows": 119,
+    "rawFoulRows": 46,
+    "foulEvents": 23,
+    "trustedPairs": 22,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 1,
+    "unstructuredFoulRows": 0,
+    "cards": 5,
+    "linkedCards": 3,
+    "teamAudit": [
+     {
+      "team": "Villarreal",
+      "side": "home",
+      "expected": 19,
+      "found": 18,
+      "rosterTotal": 19,
+      "gap": 1
+     },
+     {
+      "team": "Paris Saint-Germain",
+      "side": "away",
+      "expected": 4,
+      "found": 4,
+      "rosterTotal": 4,
+      "gap": 0
+     }
+    ]
+   },
+   "appComparison": {
+    "appMatchId": 6106326,
+    "mappedPlayers": 20,
+    "totalAppPlayers": 20,
+    "unmappedPlayers": [],
+    "cards": [
+     {
+      "minute": "45'",
+      "player": "Santi Comesaña",
+      "playerId": "240623",
+      "victim": "Senny Mayulu",
+      "victimId": "379088",
+      "appVs": "I. Zabarnyi",
+      "mappedVsId": "304503",
+      "sameOpponent": false
+     },
+     {
+      "minute": "50'",
+      "player": "Santiago Mouriño",
+      "playerId": "318098",
+      "victim": "Fabián Ruiz",
+      "victimId": "214596",
+      "appVs": "F. Ruiz",
+      "mappedVsId": "214596",
+      "sameOpponent": true
+     },
+     {
+      "minute": "78'",
+      "player": "Alberto Moleiro",
+      "playerId": "307390",
+      "victim": "Mika Godts",
+      "victimId": "353363",
+      "appVs": null,
+      "mappedVsId": null,
+      "sameOpponent": null
+     }
+    ]
+   }
+  },
+  {
+   "fixture": {
+    "id": "401915384",
+    "league": "uefa.champions",
+    "season": "2026/2027",
+    "date": "2026-11-03T20:00Z",
+    "name": "Lille at Bodo/Glimt",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915384"
+   },
+   "audit": {
+    "commentaryRows": 79,
+    "rawFoulRows": 38,
+    "foulEvents": 19,
+    "trustedPairs": 14,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 5,
+    "unstructuredFoulRows": 0,
+    "cards": 1,
+    "linkedCards": 1,
+    "teamAudit": [
+     {
+      "team": "Bodo/Glimt",
+      "side": "home",
+      "expected": 12,
+      "found": 10,
+      "rosterTotal": 12,
+      "gap": 2
+     },
+     {
+      "team": "Lille",
+      "side": "away",
+      "expected": 8,
+      "found": 4,
+      "rosterTotal": 8,
+      "gap": 4
+     }
+    ]
+   },
+   "appComparison": {
+    "appMatchId": 6106316,
+    "mappedPlayers": 17,
+    "totalAppPlayers": 20,
+    "unmappedPlayers": [
+     {
+      "name": "O. Lurås Bjørtuft",
+      "side": "home",
+      "reason": "non_trovato"
+     },
+     {
+      "name": "M. Kjærgaard",
+      "side": "away",
+      "reason": "non_trovato"
+     },
+     {
+      "name": "H. Arnar Haraldsson",
+      "side": "away",
+      "reason": "non_trovato"
+     }
+    ],
+    "cards": [
+     {
+      "minute": "83'",
+      "player": "Nathan Ngoy",
+      "playerId": "318577",
+      "victim": "Jens Petter Hauge",
+      "victimId": "235789",
+      "appVs": "S. Brunstad Fet",
+      "mappedVsId": "208353",
+      "sameOpponent": false
+     }
+    ]
+   }
+  },
+  {
+   "fixture": {
+    "id": "401915385",
+    "league": "uefa.champions",
+    "season": "2026/2027",
+    "date": "2026-11-03T20:00Z",
+    "name": "Slovan Bratislava at LASK Linz",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915385"
+   },
+   "audit": {
+    "commentaryRows": 106,
+    "rawFoulRows": 24,
+    "foulEvents": 12,
+    "trustedPairs": 11,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 1,
+    "unstructuredFoulRows": 0,
+    "cards": 2,
+    "linkedCards": 2,
+    "teamAudit": [
+     {
+      "team": "LASK Linz",
+      "side": "home",
+      "expected": 5,
+      "found": 3,
+      "rosterTotal": 5,
+      "gap": 2
+     },
+     {
+      "team": "Slovan Bratislava",
+      "side": "away",
+      "expected": 9,
+      "found": 8,
+      "rosterTotal": 9,
+      "gap": 1
+     }
+    ]
+   },
+   "appComparison": {
+    "appMatchId": 6106408,
+    "mappedPlayers": 18,
+    "totalAppPlayers": 20,
+    "unmappedPlayers": [
+     {
+      "name": "S. Camara",
+      "side": "away",
+      "reason": "ambiguo"
+     },
+     {
+      "name": "S. Camara",
+      "side": "away",
+      "reason": "ambiguo"
+     }
+    ],
+    "cards": [
+     {
+      "minute": "25'",
+      "player": "Cristian Martínez",
+      "playerId": "176145",
+      "victim": "Melayro Bogarde",
+      "victimId": "290638",
+      "appVs": "Alemão",
+      "mappedVsId": "338948",
+      "sameOpponent": false
+     },
+     {
+      "minute": "36'",
+      "player": "Kevin Wimmer",
+      "playerId": "174526",
+      "victim": "Robert Ljubicic",
+      "victimId": "273480",
+      "appVs": "R. Ljubičić",
+      "mappedVsId": "273480",
+      "sameOpponent": true
+     }
+    ]
+   }
+  },
+  {
+   "fixture": {
+    "id": "401915386",
+    "league": "uefa.champions",
+    "season": "2026/2027",
+    "date": "2026-11-03T20:00Z",
+    "name": "Bayern Munich at Atlético Madrid",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915386"
+   },
+   "audit": {
+    "commentaryRows": 89,
+    "rawFoulRows": 28,
+    "foulEvents": 14,
+    "trustedPairs": 14,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 0,
+    "unstructuredFoulRows": 0,
+    "cards": 3,
+    "linkedCards": 1,
+    "teamAudit": [
+     {
+      "team": "Atlético Madrid",
+      "side": "home",
+      "expected": 13,
+      "found": 11,
+      "rosterTotal": 13,
+      "gap": 2
+     },
+     {
+      "team": "Bayern Munich",
+      "side": "away",
+      "expected": 3,
+      "found": 3,
+      "rosterTotal": 3,
+      "gap": 0
+     }
+    ]
+   },
+   "appComparison": {
+    "appMatchId": 6106266,
+    "mappedPlayers": 20,
+    "totalAppPlayers": 20,
+    "unmappedPlayers": [],
+    "cards": [
+     {
+      "minute": "79'",
+      "player": "Giuliano Simeone",
+      "playerId": "323838",
+      "victim": "Tom Bischof",
+      "victimId": "324660",
+      "appVs": "T. Bischof",
+      "mappedVsId": "324660",
+      "sameOpponent": true
+     }
+    ]
+   }
+  },
+  {
+   "fixture": {
+    "id": "401915387",
+    "league": "uefa.champions",
+    "season": "2026/2027",
+    "date": "2026-11-03T20:00Z",
+    "name": "Aston Villa at Barcelona",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915387"
+   },
+   "audit": {
+    "commentaryRows": 109,
+    "rawFoulRows": 42,
+    "foulEvents": 21,
+    "trustedPairs": 21,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 0,
+    "unstructuredFoulRows": 0,
+    "cards": 4,
+    "linkedCards": 1,
+    "teamAudit": [
+     {
+      "team": "Barcelona",
+      "side": "home",
+      "expected": 14,
+      "found": 14,
+      "rosterTotal": 14,
+      "gap": 0
+     },
+     {
+      "team": "Aston Villa",
+      "side": "away",
+      "expected": 9,
+      "found": 7,
+      "rosterTotal": 9,
+      "gap": 2
+     }
+    ]
+   },
+   "appComparison": {
+    "appMatchId": 6106263,
+    "mappedPlayers": 19,
+    "totalAppPlayers": 20,
+    "unmappedPlayers": [
+     {
+      "name": "V. Nilsson Lindelöf",
+      "side": "away",
+      "reason": "non_trovato"
+     }
+    ],
+    "cards": [
+     {
+      "minute": "11'",
+      "player": "Ian Maatsen",
+      "playerId": "281125",
+      "victim": "Lamine Yamal",
+      "victimId": "362150",
+      "appVs": "L. Yamal",
+      "mappedVsId": "362150",
+      "sameOpponent": true
+     }
+    ]
+   }
+  },
+  {
+   "fixture": {
+    "id": "401915382",
+    "league": "uefa.champions",
+    "season": "2026/2027",
+    "date": "2026-11-04T17:45Z",
+    "name": "Liverpool at Fenerbahce",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915382"
+   },
+   "audit": {
+    "commentaryRows": 128,
+    "rawFoulRows": 49,
+    "foulEvents": 25,
+    "trustedPairs": 23,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 2,
+    "unstructuredFoulRows": 0,
+    "cards": 2,
+    "linkedCards": 1,
+    "teamAudit": [
+     {
+      "team": "Fenerbahce",
+      "side": "home",
+      "expected": 13,
+      "found": 11,
+      "rosterTotal": 13,
+      "gap": 2
+     },
+     {
+      "team": "Liverpool",
+      "side": "away",
+      "expected": 12,
+      "found": 12,
+      "rosterTotal": 12,
+      "gap": 0
+     }
+    ]
+   },
+   "appComparison": {
+    "appMatchId": 6106330,
+    "mappedPlayers": 20,
+    "totalAppPlayers": 20,
+    "unmappedPlayers": [],
+    "cards": [
+     {
+      "minute": "85'",
+      "player": "Alexis Mac Allister",
+      "playerId": "249299",
+      "victim": "Kerem Aktürkoglu",
+      "victimId": "306789",
+      "appVs": "I. Yüksek",
+      "mappedVsId": "305629",
+      "sameOpponent": false
+     }
+    ]
+   }
+  },
+  {
+   "fixture": {
+    "id": "757707",
+    "league": "uefa.champions",
+    "season": "2025/2026",
+    "date": "2025-11-04T17:45Z",
+    "name": "Arsenal at Slavia Prague",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757707"
+   },
+   "audit": {
+    "commentaryRows": 144,
+    "rawFoulRows": 66,
+    "foulEvents": 33,
+    "trustedPairs": 31,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 2,
+    "unstructuredFoulRows": 0,
+    "cards": 7,
+    "linkedCards": 5,
+    "teamAudit": [
+     {
+      "team": "Slavia Prague",
+      "side": "home",
+      "expected": 24,
+      "found": 20,
+      "rosterTotal": 24,
+      "gap": 4
+     },
+     {
+      "team": "Arsenal",
+      "side": "away",
+      "expected": 12,
+      "found": 11,
+      "rosterTotal": 12,
+      "gap": 1
+     }
+    ]
+   },
+   "appComparison": null
+  },
+  {
+   "fixture": {
+    "id": "757708",
+    "league": "uefa.champions",
+    "season": "2025/2026",
+    "date": "2025-11-04T17:45Z",
+    "name": "Eintracht Frankfurt at Napoli",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757708"
+   },
+   "audit": {
+    "commentaryRows": 106,
+    "rawFoulRows": 44,
+    "foulEvents": 22,
+    "trustedPairs": 22,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 0,
+    "unstructuredFoulRows": 0,
+    "cards": 3,
+    "linkedCards": 2,
+    "teamAudit": [
+     {
+      "team": "Napoli",
+      "side": "home",
+      "expected": 12,
+      "found": 12,
+      "rosterTotal": 12,
+      "gap": 0
+     },
+     {
+      "team": "Eintracht Frankfurt",
+      "side": "away",
+      "expected": 10,
+      "found": 10,
+      "rosterTotal": 10,
+      "gap": 0
+     }
+    ]
+   },
+   "appComparison": null
+  },
+  {
+   "fixture": {
+    "id": "757709",
+    "league": "uefa.champions",
+    "season": "2025/2026",
+    "date": "2025-11-04T20:00Z",
+    "name": "Bayern Munich at Paris Saint-Germain",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757709"
+   },
+   "audit": {
+    "commentaryRows": 109,
+    "rawFoulRows": 32,
+    "foulEvents": 16,
+    "trustedPairs": 16,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 0,
+    "unstructuredFoulRows": 0,
+    "cards": 4,
+    "linkedCards": 2,
+    "teamAudit": [
+     {
+      "team": "Paris Saint-Germain",
+      "side": "home",
+      "expected": 7,
+      "found": 7,
+      "rosterTotal": 7,
+      "gap": 0
+     },
+     {
+      "team": "Bayern Munich",
+      "side": "away",
+      "expected": 9,
+      "found": 9,
+      "rosterTotal": 9,
+      "gap": 0
+     }
+    ]
+   },
+   "appComparison": null
+  },
+  {
+   "fixture": {
+    "id": "757710",
+    "league": "uefa.champions",
+    "season": "2025/2026",
+    "date": "2025-11-04T20:00Z",
+    "name": "Sporting CP at Juventus",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757710"
+   },
+   "audit": {
+    "commentaryRows": 115,
+    "rawFoulRows": 56,
+    "foulEvents": 28,
+    "trustedPairs": 25,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 3,
+    "unstructuredFoulRows": 0,
+    "cards": 5,
+    "linkedCards": 3,
+    "teamAudit": [
+     {
+      "team": "Juventus",
+      "side": "home",
+      "expected": 15,
+      "found": 12,
+      "rosterTotal": 15,
+      "gap": 3
+     },
+     {
+      "team": "Sporting CP",
+      "side": "away",
+      "expected": 14,
+      "found": 13,
+      "rosterTotal": 14,
+      "gap": 1
+     }
+    ]
+   },
+   "appComparison": null
+  },
+  {
+   "fixture": {
+    "id": "757711",
+    "league": "uefa.champions",
+    "season": "2025/2026",
+    "date": "2025-11-04T20:00Z",
+    "name": "Union St.-Gilloise at Atlético Madrid",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757711"
+   },
+   "audit": {
+    "commentaryRows": 109,
+    "rawFoulRows": 44,
+    "foulEvents": 22,
+    "trustedPairs": 22,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 0,
+    "unstructuredFoulRows": 0,
+    "cards": 4,
+    "linkedCards": 4,
+    "teamAudit": [
+     {
+      "team": "Atlético Madrid",
+      "side": "home",
+      "expected": 10,
+      "found": 9,
+      "rosterTotal": 10,
+      "gap": 1
+     },
+     {
+      "team": "Union St.-Gilloise",
+      "side": "away",
+      "expected": 13,
+      "found": 13,
+      "rosterTotal": 13,
+      "gap": 0
+     }
+    ]
+   },
+   "appComparison": null
+  },
+  {
+   "fixture": {
+    "id": "757712",
+    "league": "uefa.champions",
+    "season": "2025/2026",
+    "date": "2025-11-04T20:00Z",
+    "name": "AS Monaco at Bodo/Glimt",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757712"
+   },
+   "audit": {
+    "commentaryRows": 120,
+    "rawFoulRows": 60,
+    "foulEvents": 30,
+    "trustedPairs": 23,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 7,
+    "unstructuredFoulRows": 0,
+    "cards": 5,
+    "linkedCards": 2,
+    "teamAudit": [
+     {
+      "team": "Bodo/Glimt",
+      "side": "home",
+      "expected": 14,
+      "found": 11,
+      "rosterTotal": 14,
+      "gap": 3
+     },
+     {
+      "team": "AS Monaco",
+      "side": "away",
+      "expected": 16,
+      "found": 12,
+      "rosterTotal": 16,
+      "gap": 4
+     }
+    ]
+   },
+   "appComparison": null
+  },
+  {
+   "fixture": {
+    "id": "757713",
+    "league": "uefa.champions",
+    "season": "2025/2026",
+    "date": "2025-11-04T20:00Z",
+    "name": "PSV Eindhoven at Olympiacos",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757713"
+   },
+   "audit": {
+    "commentaryRows": 102,
+    "rawFoulRows": 32,
+    "foulEvents": 16,
+    "trustedPairs": 16,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 0,
+    "unstructuredFoulRows": 0,
+    "cards": 2,
+    "linkedCards": 2,
+    "teamAudit": [
+     {
+      "team": "Olympiacos",
+      "side": "home",
+      "expected": 7,
+      "found": 7,
+      "rosterTotal": 7,
+      "gap": 0
+     },
+     {
+      "team": "PSV Eindhoven",
+      "side": "away",
+      "expected": 9,
+      "found": 9,
+      "rosterTotal": 9,
+      "gap": 0
+     }
+    ]
+   },
+   "appComparison": null
+  },
+  {
+   "fixture": {
+    "id": "757714",
+    "league": "uefa.champions",
+    "season": "2025/2026",
+    "date": "2025-11-04T20:00Z",
+    "name": "Real Madrid at Liverpool",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757714"
+   },
+   "audit": {
+    "commentaryRows": 114,
+    "rawFoulRows": 54,
+    "foulEvents": 27,
+    "trustedPairs": 27,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 0,
+    "unstructuredFoulRows": 0,
+    "cards": 5,
+    "linkedCards": 5,
+    "teamAudit": [
+     {
+      "team": "Liverpool",
+      "side": "home",
+      "expected": 16,
+      "found": 16,
+      "rosterTotal": 16,
+      "gap": 0
+     },
+     {
+      "team": "Real Madrid",
+      "side": "away",
+      "expected": 11,
+      "found": 11,
+      "rosterTotal": 11,
+      "gap": 0
+     }
+    ]
+   },
+   "appComparison": null
+  },
+  {
+   "fixture": {
+    "id": "757715",
+    "league": "uefa.champions",
+    "season": "2025/2026",
+    "date": "2025-11-04T20:00Z",
+    "name": "F.C. København at Tottenham Hotspur",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757715"
+   },
+   "audit": {
+    "commentaryRows": 112,
+    "rawFoulRows": 38,
+    "foulEvents": 19,
+    "trustedPairs": 19,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 0,
+    "unstructuredFoulRows": 0,
+    "cards": 4,
+    "linkedCards": 3,
+    "teamAudit": [
+     {
+      "team": "Tottenham Hotspur",
+      "side": "home",
+      "expected": 10,
+      "found": 10,
+      "rosterTotal": 10,
+      "gap": 0
+     },
+     {
+      "team": "F.C. København",
+      "side": "away",
+      "expected": 11,
+      "found": 9,
+      "rosterTotal": 11,
+      "gap": 2
+     }
+    ]
+   },
+   "appComparison": null
+  },
+  {
+   "fixture": {
+    "id": "757716",
+    "league": "uefa.champions",
+    "season": "2025/2026",
+    "date": "2025-11-05T17:45Z",
+    "name": "Chelsea at FK Qarabag",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757716"
+   },
+   "audit": {
+    "commentaryRows": 120,
+    "rawFoulRows": 48,
+    "foulEvents": 24,
+    "trustedPairs": 19,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 5,
+    "unstructuredFoulRows": 0,
+    "cards": 5,
+    "linkedCards": 1,
+    "teamAudit": [
+     {
+      "team": "FK Qarabag",
+      "side": "home",
+      "expected": 9,
+      "found": 7,
+      "rosterTotal": 9,
+      "gap": 2
+     },
+     {
+      "team": "Chelsea",
+      "side": "away",
+      "expected": 19,
+      "found": 12,
+      "rosterTotal": 19,
+      "gap": 7
+     }
+    ]
+   },
+   "appComparison": null
+  },
+  {
+   "fixture": {
+    "id": "401874798",
+    "league": "ita.1",
+    "season": "2026/2027",
+    "date": "2026-10-31T14:00Z",
+    "name": "Monza at Bologna",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874798"
+   },
+   "audit": {
+    "commentaryRows": 119,
+    "rawFoulRows": 59,
+    "foulEvents": 30,
+    "trustedPairs": 28,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 2,
+    "unstructuredFoulRows": 0,
+    "cards": 7,
+    "linkedCards": 6,
+    "teamAudit": [
+     {
+      "team": "Bologna",
+      "side": "home",
+      "expected": 13,
+      "found": 12,
+      "rosterTotal": 13,
+      "gap": 1
+     },
+     {
+      "team": "Monza",
+      "side": "away",
+      "expected": 19,
+      "found": 16,
+      "rosterTotal": 19,
+      "gap": 3
+     }
+    ]
+   },
+   "appComparison": null
+  },
+  {
+   "fixture": {
+    "id": "401874990",
+    "league": "ita.1",
+    "season": "2026/2027",
+    "date": "2026-10-31T17:00Z",
+    "name": "AS Roma at Udinese",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874990"
+   },
+   "audit": {
+    "commentaryRows": 103,
+    "rawFoulRows": 39,
+    "foulEvents": 20,
+    "trustedPairs": 19,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 1,
+    "unstructuredFoulRows": 0,
+    "cards": 2,
+    "linkedCards": 1,
+    "teamAudit": [
+     {
+      "team": "Udinese",
+      "side": "home",
+      "expected": 11,
+      "found": 10,
+      "rosterTotal": 11,
+      "gap": 1
+     },
+     {
+      "team": "AS Roma",
+      "side": "away",
+      "expected": 9,
+      "found": 9,
+      "rosterTotal": 9,
+      "gap": 0
+     }
+    ]
+   },
+   "appComparison": null
+  },
+  {
+   "fixture": {
+    "id": "401874795",
+    "league": "ita.1",
+    "season": "2026/2027",
+    "date": "2026-10-31T19:45Z",
+    "name": "Internazionale at AC Milan",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874795"
+   },
+   "audit": {
+    "commentaryRows": 111,
+    "rawFoulRows": 40,
+    "foulEvents": 20,
+    "trustedPairs": 20,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 0,
+    "unstructuredFoulRows": 0,
+    "cards": 3,
+    "linkedCards": 2,
+    "teamAudit": [
+     {
+      "team": "AC Milan",
+      "side": "home",
+      "expected": 8,
+      "found": 7,
+      "rosterTotal": 8,
+      "gap": 1
+     },
+     {
+      "team": "Internazionale",
+      "side": "away",
+      "expected": 14,
+      "found": 13,
+      "rosterTotal": 14,
+      "gap": 1
+     }
+    ]
+   },
+   "appComparison": null
+  },
+  {
+   "fixture": {
+    "id": "401875002",
+    "league": "ita.1",
+    "season": "2026/2027",
+    "date": "2026-11-01T11:30Z",
+    "name": "Venezia at Como",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401875002"
+   },
+   "audit": {
+    "commentaryRows": 96,
+    "rawFoulRows": 26,
+    "foulEvents": 13,
+    "trustedPairs": 13,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 0,
+    "unstructuredFoulRows": 0,
+    "cards": 3,
+    "linkedCards": 2,
+    "teamAudit": [
+     {
+      "team": "Como",
+      "side": "home",
+      "expected": 5,
+      "found": 4,
+      "rosterTotal": 5,
+      "gap": 1
+     },
+     {
+      "team": "Venezia",
+      "side": "away",
+      "expected": 9,
+      "found": 9,
+      "rosterTotal": 9,
+      "gap": 0
+     }
+    ]
+   },
+   "appComparison": null
+  },
+  {
+   "fixture": {
+    "id": "401874782",
+    "league": "ita.1",
+    "season": "2026/2027",
+    "date": "2026-11-01T14:00Z",
+    "name": "Torino at Frosinone",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874782"
+   },
+   "audit": {
+    "commentaryRows": 128,
+    "rawFoulRows": 50,
+    "foulEvents": 25,
+    "trustedPairs": 23,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 2,
+    "unstructuredFoulRows": 0,
+    "cards": 4,
+    "linkedCards": 2,
+    "teamAudit": [
+     {
+      "team": "Frosinone",
+      "side": "home",
+      "expected": 14,
+      "found": 10,
+      "rosterTotal": 14,
+      "gap": 4
+     },
+     {
+      "team": "Torino",
+      "side": "away",
+      "expected": 13,
+      "found": 13,
+      "rosterTotal": 13,
+      "gap": 0
+     }
+    ]
+   },
+   "appComparison": null
+  },
+  {
+   "fixture": {
+    "id": "401874983",
+    "league": "ita.1",
+    "season": "2026/2027",
+    "date": "2026-11-01T14:00Z",
+    "name": "Cagliari at Lazio",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874983"
+   },
+   "audit": {
+    "commentaryRows": 105,
+    "rawFoulRows": 48,
+    "foulEvents": 24,
+    "trustedPairs": 21,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 3,
+    "unstructuredFoulRows": 0,
+    "cards": 4,
+    "linkedCards": 3,
+    "teamAudit": [
+     {
+      "team": "Lazio",
+      "side": "home",
+      "expected": 7,
+      "found": 6,
+      "rosterTotal": 7,
+      "gap": 1
+     },
+     {
+      "team": "Cagliari",
+      "side": "away",
+      "expected": 18,
+      "found": 15,
+      "rosterTotal": 18,
+      "gap": 3
+     }
+    ]
+   },
+   "appComparison": null
+  },
+  {
+   "fixture": {
+    "id": "401874968",
+    "league": "ita.1",
+    "season": "2026/2027",
+    "date": "2026-11-01T17:00Z",
+    "name": "Genoa at Lecce",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874968"
+   },
+   "audit": {
+    "commentaryRows": 125,
+    "rawFoulRows": 50,
+    "foulEvents": 26,
+    "trustedPairs": 22,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 4,
+    "unstructuredFoulRows": 0,
+    "cards": 3,
+    "linkedCards": 3,
+    "teamAudit": [
+     {
+      "team": "Lecce",
+      "side": "home",
+      "expected": 19,
+      "found": 16,
+      "rosterTotal": 19,
+      "gap": 3
+     },
+     {
+      "team": "Genoa",
+      "side": "away",
+      "expected": 9,
+      "found": 6,
+      "rosterTotal": 9,
+      "gap": 3
+     }
+    ]
+   },
+   "appComparison": null
+  },
+  {
+   "fixture": {
+    "id": "401874949",
+    "league": "ita.1",
+    "season": "2026/2027",
+    "date": "2026-11-01T19:45Z",
+    "name": "Napoli at Juventus",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874949"
+   },
+   "audit": {
+    "commentaryRows": 114,
+    "rawFoulRows": 36,
+    "foulEvents": 18,
+    "trustedPairs": 18,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 0,
+    "unstructuredFoulRows": 0,
+    "cards": 5,
+    "linkedCards": 3,
+    "teamAudit": [
+     {
+      "team": "Juventus",
+      "side": "home",
+      "expected": 9,
+      "found": 8,
+      "rosterTotal": 9,
+      "gap": 1
+     },
+     {
+      "team": "Napoli",
+      "side": "away",
+      "expected": 12,
+      "found": 10,
+      "rosterTotal": 12,
+      "gap": 2
+     }
+    ]
+   },
+   "appComparison": null
+  },
+  {
+   "fixture": {
+    "id": "401874963",
+    "league": "ita.1",
+    "season": "2026/2027",
+    "date": "2026-11-02T17:30Z",
+    "name": "Fiorentina at Sassuolo",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874963"
+   },
+   "audit": {
+    "commentaryRows": 114,
+    "rawFoulRows": 51,
+    "foulEvents": 26,
+    "trustedPairs": 25,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 1,
+    "unstructuredFoulRows": 0,
+    "cards": 5,
+    "linkedCards": 3,
+    "teamAudit": [
+     {
+      "team": "Sassuolo",
+      "side": "home",
+      "expected": 12,
+      "found": 10,
+      "rosterTotal": 12,
+      "gap": 2
+     },
+     {
+      "team": "Fiorentina",
+      "side": "away",
+      "expected": 15,
+      "found": 15,
+      "rosterTotal": 15,
+      "gap": 0
+     }
+    ]
+   },
+   "appComparison": null
+  },
+  {
+   "fixture": {
+    "id": "401874971",
+    "league": "ita.1",
+    "season": "2026/2027",
+    "date": "2026-11-02T19:45Z",
+    "name": "Parma at Atalanta",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874971"
+   },
+   "audit": {
+    "commentaryRows": 94,
+    "rawFoulRows": 27,
+    "foulEvents": 15,
+    "trustedPairs": 13,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 2,
+    "unstructuredFoulRows": 0,
+    "cards": 0,
+    "linkedCards": 0,
+    "teamAudit": [
+     {
+      "team": "Atalanta",
+      "side": "home",
+      "expected": 8,
+      "found": 6,
+      "rosterTotal": 8,
+      "gap": 2
+     },
+     {
+      "team": "Parma",
+      "side": "away",
+      "expected": 10,
+      "found": 7,
+      "rosterTotal": 10,
+      "gap": 3
+     }
+    ]
+   },
+   "appComparison": null
+  },
+  {
+   "fixture": {
+    "id": "736881",
+    "league": "ita.1",
+    "season": "2025/2026",
+    "date": "2025-11-01T14:00Z",
+    "name": "Atalanta at Udinese",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=736881"
+   },
+   "audit": {
+    "commentaryRows": 104,
+    "rawFoulRows": 50,
+    "foulEvents": 25,
+    "trustedPairs": 25,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 0,
+    "unstructuredFoulRows": 0,
+    "cards": 4,
+    "linkedCards": 3,
+    "teamAudit": [
+     {
+      "team": "Udinese",
+      "side": "home",
+      "expected": 14,
+      "found": 14,
+      "rosterTotal": 14,
+      "gap": 0
+     },
+     {
+      "team": "Atalanta",
+      "side": "away",
+      "expected": 11,
+      "found": 11,
+      "rosterTotal": 11,
+      "gap": 0
+     }
+    ]
+   },
+   "appComparison": null
+  },
+  {
+   "fixture": {
+    "id": "736875",
+    "league": "ita.1",
+    "season": "2025/2026",
+    "date": "2025-11-01T17:00Z",
+    "name": "Como at Napoli",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=736875"
+   },
+   "audit": {
+    "commentaryRows": 125,
+    "rawFoulRows": 62,
+    "foulEvents": 31,
+    "trustedPairs": 31,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 0,
+    "unstructuredFoulRows": 0,
+    "cards": 5,
+    "linkedCards": 5,
+    "teamAudit": [
+     {
+      "team": "Napoli",
+      "side": "home",
+      "expected": 15,
+      "found": 15,
+      "rosterTotal": 15,
+      "gap": 0
+     },
+     {
+      "team": "Como",
+      "side": "away",
+      "expected": 16,
+      "found": 16,
+      "rosterTotal": 16,
+      "gap": 0
+     }
+    ]
+   },
+   "appComparison": null
+  },
+  {
+   "fixture": {
+    "id": "736880",
+    "league": "ita.1",
+    "season": "2025/2026",
+    "date": "2025-11-01T19:45Z",
+    "name": "Juventus at Cremonese",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=736880"
+   },
+   "audit": {
+    "commentaryRows": 101,
+    "rawFoulRows": 48,
+    "foulEvents": 24,
+    "trustedPairs": 23,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 1,
+    "unstructuredFoulRows": 0,
+    "cards": 1,
+    "linkedCards": 1,
+    "teamAudit": [
+     {
+      "team": "Cremonese",
+      "side": "home",
+      "expected": 10,
+      "found": 9,
+      "rosterTotal": 10,
+      "gap": 1
+     },
+     {
+      "team": "Juventus",
+      "side": "away",
+      "expected": 14,
+      "found": 14,
+      "rosterTotal": 14,
+      "gap": 0
+     }
+    ]
+   },
+   "appComparison": null
+  },
+  {
+   "fixture": {
+    "id": "736883",
+    "league": "ita.1",
+    "season": "2025/2026",
+    "date": "2025-11-02T11:30Z",
+    "name": "Internazionale at Hellas Verona",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=736883"
+   },
+   "audit": {
+    "commentaryRows": 108,
+    "rawFoulRows": 38,
+    "foulEvents": 19,
+    "trustedPairs": 17,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 2,
+    "unstructuredFoulRows": 1,
+    "cards": 3,
+    "linkedCards": 1,
+    "teamAudit": [
+     {
+      "team": "Hellas Verona",
+      "side": "home",
+      "expected": 16,
+      "found": 14,
+      "rosterTotal": 16,
+      "gap": 2
+     },
+     {
+      "team": "Internazionale",
+      "side": "away",
+      "expected": 4,
+      "found": 3,
+      "rosterTotal": 4,
+      "gap": 1
+     }
+    ]
+   },
+   "appComparison": null
+  },
+  {
+   "fixture": {
+    "id": "736879",
+    "league": "ita.1",
+    "season": "2025/2026",
+    "date": "2025-11-02T14:00Z",
+    "name": "Lecce at Fiorentina",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=736879"
+   },
+   "audit": {
+    "commentaryRows": 133,
+    "rawFoulRows": 68,
+    "foulEvents": 34,
+    "trustedPairs": 30,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 4,
+    "unstructuredFoulRows": 0,
+    "cards": 5,
+    "linkedCards": 4,
+    "teamAudit": [
+     {
+      "team": "Fiorentina",
+      "side": "home",
+      "expected": 14,
+      "found": 13,
+      "rosterTotal": 14,
+      "gap": 1
+     },
+     {
+      "team": "Lecce",
+      "side": "away",
+      "expected": 21,
+      "found": 17,
+      "rosterTotal": 21,
+      "gap": 4
+     }
+    ]
+   },
+   "appComparison": null
+  },
+  {
+   "fixture": {
+    "id": "736882",
+    "league": "ita.1",
+    "season": "2025/2026",
+    "date": "2025-11-02T14:00Z",
+    "name": "Pisa at Torino",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=736882"
+   },
+   "audit": {
+    "commentaryRows": 106,
+    "rawFoulRows": 42,
+    "foulEvents": 21,
+    "trustedPairs": 18,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 3,
+    "unstructuredFoulRows": 0,
+    "cards": 3,
+    "linkedCards": 2,
+    "teamAudit": [
+     {
+      "team": "Torino",
+      "side": "home",
+      "expected": 14,
+      "found": 11,
+      "rosterTotal": 14,
+      "gap": 3
+     },
+     {
+      "team": "Pisa",
+      "side": "away",
+      "expected": 8,
+      "found": 7,
+      "rosterTotal": 8,
+      "gap": 1
+     }
+    ]
+   },
+   "appComparison": null
+  },
+  {
+   "fixture": {
+    "id": "736874",
+    "league": "ita.1",
+    "season": "2025/2026",
+    "date": "2025-11-02T17:00Z",
+    "name": "Bologna at Parma",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=736874"
+   },
+   "audit": {
+    "commentaryRows": 133,
+    "rawFoulRows": 60,
+    "foulEvents": 30,
+    "trustedPairs": 27,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 3,
+    "unstructuredFoulRows": 0,
+    "cards": 5,
+    "linkedCards": 4,
+    "teamAudit": [
+     {
+      "team": "Parma",
+      "side": "home",
+      "expected": 16,
+      "found": 14,
+      "rosterTotal": 16,
+      "gap": 2
+     },
+     {
+      "team": "Bologna",
+      "side": "away",
+      "expected": 15,
+      "found": 13,
+      "rosterTotal": 15,
+      "gap": 2
+     }
+    ]
+   },
+   "appComparison": null
+  },
+  {
+   "fixture": {
+    "id": "736876",
+    "league": "ita.1",
+    "season": "2025/2026",
+    "date": "2025-11-02T19:45Z",
+    "name": "AS Roma at AC Milan",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=736876"
+   },
+   "audit": {
+    "commentaryRows": 125,
+    "rawFoulRows": 46,
+    "foulEvents": 23,
+    "trustedPairs": 23,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 0,
+    "unstructuredFoulRows": 0,
+    "cards": 6,
+    "linkedCards": 4,
+    "teamAudit": [
+     {
+      "team": "AC Milan",
+      "side": "home",
+      "expected": 12,
+      "found": 11,
+      "rosterTotal": 12,
+      "gap": 1
+     },
+     {
+      "team": "AS Roma",
+      "side": "away",
+      "expected": 13,
+      "found": 12,
+      "rosterTotal": 13,
+      "gap": 1
+     }
+    ]
+   },
+   "appComparison": null
+  },
+  {
+   "fixture": {
+    "id": "736878",
+    "league": "ita.1",
+    "season": "2025/2026",
+    "date": "2025-11-03T17:30Z",
+    "name": "Genoa at Sassuolo",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=736878"
+   },
+   "audit": {
+    "commentaryRows": 123,
+    "rawFoulRows": 50,
+    "foulEvents": 25,
+    "trustedPairs": 25,
+    "duplicateSourceIds": 0,
+    "coordinateConflicts": 0,
+    "untrustedFouls": 0,
+    "unstructuredFoulRows": 0,
+    "cards": 4,
+    "linkedCards": 4,
+    "teamAudit": [
+     {
+      "team": "Sassuolo",
+      "side": "home",
+      "expected": 13,
+      "found": 12,
+      "rosterTotal": 13,
+      "gap": 1
+     },
+     {
+      "team": "Genoa",
+      "side": "away",
+      "expected": 13,
+      "found": 13,
+      "rosterTotal": 13,
+      "gap": 0
+     }
+    ]
+   },
+   "appComparison": null
+  },
+  {
+   "fixture": {
+    "id": "736877",
+    "league": "ita.1",
+    "season": "2025/2026",
+    "date": "2025-11-03T19:45Z",
+    "name": "Cagliari at Lazio",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=736877"
+   },
+   "audit": {
+    "commentaryRows": 112,
+    "rawFoulRows": 50,
+    "foulEvents": 25,
+    "trustedPairs": 25,
+    "duplicateSourceIds": 1,
+    "coordinateConflicts": 1,
+    "untrustedFouls": 0,
+    "unstructuredFoulRows": 0,
+    "cards": 2,
+    "linkedCards": 2,
+    "teamAudit": [
+     {
+      "team": "Lazio",
+      "side": "home",
+      "expected": 8,
+      "found": 8,
+      "rosterTotal": 8,
+      "gap": 0
+     },
+     {
+      "team": "Cagliari",
+      "side": "away",
+      "expected": 18,
+      "found": 17,
+      "rosterTotal": 18,
+      "gap": 1
+     }
+    ]
+   },
+   "appComparison": null
+  }
+ ],
+ "caveats": [
+  "Il numero di falli con coppia identificata diviso per il totale del tabellino è un riscontro contabile, non una misura di accuratezza: falli di mano e rigori possono avere struttura diversa.",
+  "Un fallo osservato prova un contatto sanzionato fra due giocatori; non misura tutti gli 1 contro 1 né il tempo passato a marcarsi.",
+  "L’associazione fallo-cartellino richiede motivo esplicito, stesso autore e periodo, un solo fallo precedente entro 30 secondi; resta un’associazione temporale da validare.",
+  "Coordinate discordi conservate come conflitto e non usate; serve verificare orientamento e convenzione prima di confrontarle con FotMob.",
+  "Rosa e file attuale dell’app sono dati a posteriori: per un test prepartita servono snapshot archiviati prima del calcio di inizio.",
+  "Campione di convenienza selezionato per date e id, non rappresentativo dell’intera stagione. Per misurare il valore predittivo occorrono più stagioni e test temporale."
+ ]
+}

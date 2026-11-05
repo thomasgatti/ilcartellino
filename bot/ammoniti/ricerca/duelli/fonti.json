@@ -1,0 +1,311 @@
+{
+  "collectedAt": "2026-11-05T10:41:37.916Z",
+  "config": {
+    "schema": 1,
+    "descrizione": "Campione di qualità, non campione per selezionare variabili predittive. Dieci partite per competizione e stagione, in ordine di data e id ESPN; soltanto incontri conclusi.",
+    "groups": [
+      {
+        "league": "uefa.champions",
+        "season": "2026/2027",
+        "dates": [
+          "20261103",
+          "20261104"
+        ],
+        "take": 10
+      },
+      {
+        "league": "uefa.champions",
+        "season": "2025/2026",
+        "dates": [
+          "20251104",
+          "20251105"
+        ],
+        "take": 10
+      },
+      {
+        "league": "ita.1",
+        "season": "2026/2027",
+        "dates": [
+          "20261030",
+          "20261031",
+          "20261101",
+          "20261102"
+        ],
+        "take": 10
+      },
+      {
+        "league": "ita.1",
+        "season": "2025/2026",
+        "dates": [
+          "20251031",
+          "20251101",
+          "20251102",
+          "20251103"
+        ],
+        "take": 10
+      }
+    ]
+  },
+  "sources": [
+    {
+      "file": "scoreboard-uefa.champions-20261103.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20261103",
+      "sha256": "17d2c4592254be4cc3eb3f87489880532c0f042884585dc99ba9f27837d8cf67"
+    },
+    {
+      "file": "scoreboard-uefa.champions-20261104.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20261104",
+      "sha256": "95c4bb74909a70de062f6944424035ff39eba0c76ba3120cd8ff31a8cc6ee090"
+    },
+    {
+      "file": "scoreboard-uefa.champions-20251104.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20251104",
+      "sha256": "c5c7a1864f7fa2e90357e441c6e3497fc524aa5b8d3872c8be7d7a023e36c677"
+    },
+    {
+      "file": "scoreboard-uefa.champions-20251105.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates=20251105",
+      "sha256": "31af22b4458de72c0d2925031636eec8346bfce6906dfa92c36190be2a38d1c8"
+    },
+    {
+      "file": "scoreboard-ita.1-20261030.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/scoreboard?dates=20261030",
+      "sha256": "2048ebfe872d9a0cca6236e6397c9e0a3044969672cee3a2dfa21cf34c450d5b"
+    },
+    {
+      "file": "scoreboard-ita.1-20261031.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/scoreboard?dates=20261031",
+      "sha256": "38ab495f58ef99ffd1b1b24c702d91f33733e993fbd807bddcdc8c15b2e7e411"
+    },
+    {
+      "file": "scoreboard-ita.1-20261101.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/scoreboard?dates=20261101",
+      "sha256": "0a7d7aa8008555869d31f056d438ef0c09fe97c9facd44bda93cd70af4e9388c"
+    },
+    {
+      "file": "scoreboard-ita.1-20261102.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/scoreboard?dates=20261102",
+      "sha256": "0a11da63dc1fa87ade7aeea0d52294787076a414a4e80ff86d4ce63479881f95"
+    },
+    {
+      "file": "scoreboard-ita.1-20251031.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/scoreboard?dates=20251031",
+      "sha256": "7e2267a3e520b2a8a63ec458d2b29c8814b689bbc297321494e8bae8812800be"
+    },
+    {
+      "file": "scoreboard-ita.1-20251101.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/scoreboard?dates=20251101",
+      "sha256": "4744aac556f36f1067f5254c4f8c807e4060105f62446d46c23bb10f50545155"
+    },
+    {
+      "file": "scoreboard-ita.1-20251102.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/scoreboard?dates=20251102",
+      "sha256": "bc37d4f2c8df14e0e4f56217746bd1c36a9c8e49538eaaeb0183026b58f59025"
+    },
+    {
+      "file": "scoreboard-ita.1-20251103.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/scoreboard?dates=20251103",
+      "sha256": "7d0c1ebfd16ef306932c4bd662203d44c5257a25dd1959cae43044a102719f2e"
+    },
+    {
+      "file": "summary-401915311.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915311",
+      "sha256": "89c99409868ff625731b4836b5b6fc4ec0f623c6ab51b54e37cac46ff6a96f03"
+    },
+    {
+      "file": "summary-401915307.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915307",
+      "sha256": "2ed68df6cee74f4485bbd57324800001f06fc24b9e3c36802bdb7664e1b02432"
+    },
+    {
+      "file": "summary-401915308.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915308",
+      "sha256": "a52a8cfb5e30ad215a7f60a0eb365f19148da822d280bc921fd73f2cbfb53549"
+    },
+    {
+      "file": "summary-401915309.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915309",
+      "sha256": "f7903d025b99e6ea3fc96fbdd178a9c90ab46beedec15ef5068276b4fe631e6e"
+    },
+    {
+      "file": "summary-401915384.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915384",
+      "sha256": "8070ae6c028af33d19351d72d90ea2792dfc7de6887ea2757b500d5085ace34e"
+    },
+    {
+      "file": "summary-401915310.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915310",
+      "sha256": "6daaa9be240f87dc773f74b5c7ef5a91a20f008f7aa201fedaf2220e92dda6a5"
+    },
+    {
+      "file": "summary-401915385.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915385",
+      "sha256": "ed1af9ae7ee39a201afc9a0b00d5d305b1c281fa306c3c1214517638461b2d49"
+    },
+    {
+      "file": "summary-401915387.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915387",
+      "sha256": "1319b927a994af6bceeedb9a4eeee1396e27ed79cb6a4cfb20dd54bc2f1754e9"
+    },
+    {
+      "file": "summary-401915382.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915382",
+      "sha256": "512029e7a15603a0573693d807acb2bee7e03d79f56a9d1387efd9db5f865e29"
+    },
+    {
+      "file": "summary-401915386.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915386",
+      "sha256": "f1b9dddbbe7662c29478a44e13a3cb0009d96ac75400412a22d73035f1cc034b"
+    },
+    {
+      "file": "summary-757708.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757708",
+      "sha256": "4521f8f5a4cbcf080ead6c0df6a61810ec8019d7e75ad7d7696d9126332aca97"
+    },
+    {
+      "file": "summary-757710.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757710",
+      "sha256": "e18551c70b2fc3837bb83543e50b7d4e4a398b9d1c616a6d5dc42876d4212219"
+    },
+    {
+      "file": "summary-757707.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757707",
+      "sha256": "5f755f285fdd20be9157bb7c8f9c6285858c088f6c21e0818bea8ff7fa89b5ed"
+    },
+    {
+      "file": "summary-757709.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757709",
+      "sha256": "f364aaafbbbef9e16dce20ed8b84ea026277d419567b98345c38f65a51a20562"
+    },
+    {
+      "file": "summary-757712.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757712",
+      "sha256": "81a8d5908782a04e87ae58441ff36062104486e4fd5f67d54dd4e37d67893c69"
+    },
+    {
+      "file": "summary-757713.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757713",
+      "sha256": "f71fc28239db63aafd2268790e9a504c553a1406c3e46504f4a9a9a3dde6f661"
+    },
+    {
+      "file": "summary-757714.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757714",
+      "sha256": "a4bf772d5a46d91845e3a2edb5751270f2d6cffc9e1e0d7f27a1d7093192b723"
+    },
+    {
+      "file": "summary-757711.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757711",
+      "sha256": "2f9485d110d6560e4148741efd929ea5758f67294dfbc9a6d5c13b3cee6ccb54"
+    },
+    {
+      "file": "summary-757716.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757716",
+      "sha256": "89cdeb2db2a09a4a45405ca0882984b761a8f84174a0b4aaa9587179a33ba5db"
+    },
+    {
+      "file": "summary-401874798.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874798",
+      "sha256": "0b18a7ea6b5739e28511a5f3c3f5b8d91f3bdb0fa9de2059a4e576bd256ca688"
+    },
+    {
+      "file": "summary-757715.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757715",
+      "sha256": "3c75694fe62d83b1f7f03ac2bddefeccbb9513591dded685d6ad618fcdaf29cf"
+    },
+    {
+      "file": "summary-401874795.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874795",
+      "sha256": "c52e2b5361d56c5c9a005cd57ced7e02b9bc5c691cf928b4743eb77b1cc49eb3"
+    },
+    {
+      "file": "summary-401874990.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874990",
+      "sha256": "11af312bd3dad6624e34aa6d7536731a4d207b8d6937459d6a36f5271b2a9ccc"
+    },
+    {
+      "file": "summary-401874782.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874782",
+      "sha256": "067c1e4693291d140e765308eeab0bd2b6990f0e2e669c5e90502d05902b465d"
+    },
+    {
+      "file": "summary-401874983.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874983",
+      "sha256": "da522a6a2d0b3c4b7cb3eb5799d4cbe177bad5d1369887daf96362ac8492ee75"
+    },
+    {
+      "file": "summary-401875002.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401875002",
+      "sha256": "d6c32ffe230a4b2ae1f4e4a97c2bab87a385d542b3613ff4d95afaf06599e22f"
+    },
+    {
+      "file": "summary-401874968.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874968",
+      "sha256": "ea8adf298f88b5fb52e7ac8de67a08b093bf7697a31b8a9556e02221c964903f"
+    },
+    {
+      "file": "summary-401874949.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874949",
+      "sha256": "111f0c790f8ccc4745316c8b146fa290237343d2d56e99128376aabe13634528"
+    },
+    {
+      "file": "summary-401874963.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874963",
+      "sha256": "983fa295a6744ba02854880d26ae2fc6596968a2c94ec1cdd34bc7612ae27916"
+    },
+    {
+      "file": "summary-401874971.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874971",
+      "sha256": "fa2537654f105f22a78ef08b2d6ef4263765028f6ddac2ee056bc9c2d6ba55f9"
+    },
+    {
+      "file": "summary-736881.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=736881",
+      "sha256": "db4867ae695c2f4f919808ad8c71a8ce09b2e071489aa2d07b91ecdc9acfa1bc"
+    },
+    {
+      "file": "summary-736875.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=736875",
+      "sha256": "fa48819260e42405a95d1e13f42ea1448b28ed8384298db9c2a0b0b489915e94"
+    },
+    {
+      "file": "summary-736883.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=736883",
+      "sha256": "627c4c6418a6ff327a91ca9f0bfdf65a9d977561273fd85f4cad378bbd8661a7"
+    },
+    {
+      "file": "summary-736879.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=736879",
+      "sha256": "98c2d204d48b4365ea86d23d95ccd286bab7d4de18ad12cf6045112845cd4944"
+    },
+    {
+      "file": "summary-736880.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=736880",
+      "sha256": "f8801b796be5c23e03f90edf44ce057f01e405823d1fc2be1608fda2296c3d6d"
+    },
+    {
+      "file": "summary-736882.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=736882",
+      "sha256": "f02c1d79c54f934c25a5b36b4310377aee83bb59f9ab4e64fa67feaf0575151c"
+    },
+    {
+      "file": "summary-736874.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=736874",
+      "sha256": "81cecc47fba2f4696a16d3fbdf36419ba839fe61647d48976b3cfca8a88512ae"
+    },
+    {
+      "file": "summary-736876.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=736876",
+      "sha256": "044a98f82b1b60c8e42e4cd8719b7ab89aa9b719a927a491d5c2dae32dfbcaf6"
+    },
+    {
+      "file": "summary-736878.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=736878",
+      "sha256": "9026162e6a37ce3436bd0519b4e63b6316fdcbcd4f074b2ff8590d5f6aa71789"
+    },
+    {
+      "file": "summary-736877.json",
+      "url": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=736877",
+      "sha256": "c715c7751b60a5e9cb6b247f6265a3a8ac3732bd66503c073b1c790a29ae05f8"
+    }
+  ]
+}
