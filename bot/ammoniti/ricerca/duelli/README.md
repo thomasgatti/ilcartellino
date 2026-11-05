@@ -2,9 +2,11 @@
 
 Ricerca separata dal sito e dal modello servito. Node 20 o successivo, nessuna dipendenza da installare. Non esegue workflow né scrive previsioni.
 
-Risultato corrente: **898 coppie utilizzabili su 922 falli** in 40 gare, 107 associazioni temporali fallo–giallo; tre ipotesi su 46.240 righe di test senza candidati ammessi. Leggere rapporto-fase2.md, audit-fase2.json, revisioni-fase2.json ed esperimento-sintesi.json.
+Seconda fase (fotografia precedente): **898 coppie utilizzabili su 922 falli** in 40 gare, 107 associazioni temporali fallo–giallo; tre ipotesi su 46.240 righe di test senza candidati ammessi. Leggere rapporto-fase2.md, audit-fase2.json, revisioni-fase2.json ed esperimento-sintesi.json.
 
 rapporto.md, sintesi.json e revisioni.json conservano la prima fase (849 coppie): per riprodurre quei numeri usare il codice al commit 8824f5e94d1198fb88f93493e171e1d401a21b1a. La seconda fase recupera 50 coppie da nomi verificati ed esclude un nuovo conflitto mano/fallo: saldo +49.
+
+**Stato più recente: terza fase.** 2.816 cronache, 39.090 trial verificati, 4.773 associazioni positive e nessun indice promosso al modello. Iniziare da rapporto-fase3.md e PASSAGGIO_CLAUDE.md; le sezioni precedenti restano istruzioni delle prime due fasi.
 
 ## Riprodurre il pilota
 
@@ -49,3 +51,42 @@ Il confronto riguarda la componente FotMob ricostruita, senza Sofascore, quote, 
 priorFouls esclude eventi contemporanei e futuri rispetto all'istante richiesto, ma non verifica il ritardo della fonte. Il confronto con l'app è descrittivo, senza snapshot certificati prepartita. Il confronto quote della prima fase è limitato a un turno: nessuna modifica al peso del mercato.
 
 L'indice individuale di gialli provocati dall'attaccante resta da testare su più stagioni di episodi verificati. Un fallo non misura tutti i dribbling o il tempo di marcatura. Il RUNBOOK già documenta prove scartate su ruoli dalla formazione e dribbling di zona; non sono idee mai provate.
+
+
+## Terza fase: archivio multi-stagione e indici degli attaccanti
+
+Lo stato più recente è in rapporto-fase3.md, sintesi-fase3.json e PASSAGGIO_CLAUDE.md. Le prime due fasi restano documentate come fotografie precedenti. La ricerca ora comprende 2.816 gare ESPN, 39.090 trial di fallo utilizzabili e 4.773 associazioni positive dopo i controlli. Nessun nuovo indice è stato promosso al modello del sito.
+
+Il documento fornito dall'utente è stato confrontato con il codice successivo in confronto-documento.md: riguarda v0.6 al 2 novembre, non sostituisce il RUNBOOK corrente.
+
+### Replica dal dataset già verificato
+
+Con gli archivi FotMob e le otto sorgenti fissate preparati come nella seconda fase:
+
+~~~sh
+node --test duelli.test.mjs provider_bridge.test.mjs temporal_baseline.test.mjs attacker_history.test.mjs capture_predictions.test.mjs
+node attacker_experiment.mjs
+~~~
+
+Se manca results-fase3/observations.json.gz, l'esperimento legge il dataset dati-episodi.json.gz incluso. Le metriche complete vengono scritte in results-fase3/. I risultati pubblicati sono in esperimento-attaccanti.json. Il protocollo attacker.protocol.json fissa due candidati e i controlli di copertura; non aggiunge varianti dopo aver visto la diagnostica. Gli anni 2025/26 e 2026/27 erano già consultati e non sono una verifica cieca.
+
+### Ricostruire anche l'estrazione
+
+~~~sh
+node collect_archive.mjs
+node audit_archive.mjs
+node attacker_experiment.mjs
+node summarize_phase3.mjs
+~~~
+
+La raccolta usa calendari annuali ESPN, tre richieste concorrenti, cache gzip, ritentativi e manifesto SHA-256. Non esegue Actions né cambia il ramo dati. Per confrontare una nuova raccolta con questa servono i manifesti delle risposte: fonti-archivio.json.gz conserva gli hash originali; il provider potrebbe correggere i resoconti. Una replica esatta dell'estrazione richiede le cache grezze originali, conservate localmente. Il dataset derivato è invece incluso e verificabile con fase3-manifest.json, così non occorre riscaricare migliaia di cronache per ripetere l'allenamento.
+
+### Primo confronto prospettico
+
+~~~sh
+node capture_predictions.mjs /percorso/data.json snapshots/nuova-fotografia.json <commit-esatto-dei-dati>
+~~~
+
+Salva soltanto gare con kickoff strettamente futuro e non in live; conserva p0 e q originali e rifiuta di sovrascrivere il file. Non calcola pronostici della ricerca, non pianifica attività e non pubblica il sito. Il timestamp locale è dichiarato, non certificato: conservarlo in un commit remoto prima delle gare aggiunge un riscontro. snapshots/2026-11-05.json contiene la prima fotografia di dieci gare future dal main fissato al commit indicato nel file.
+
+Per giudicare l'indice degli attaccanti occorrono nuove gare e il sistema completo: quote, Sofascore, calibrazione, formazioni disponibili prima del kickoff, 2+1 e sostituti. I profili descrittivi sono limitati al sottoinsieme riconciliabile e non sono una classifica definitiva dei giocatori.

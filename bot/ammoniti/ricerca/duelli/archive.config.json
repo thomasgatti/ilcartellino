@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "cutoff": "2026-11-05T00:00:00Z",
+  "firstSeason": 2021,
+  "calendarYears": [2021, 2022, 2023, 2024, 2025, 2026],
+  "leagues": [{"espn":"ita.1","fotmob":55},{"espn":"uefa.champions","fotmob":42}],
+  "selection": "Tutte le gare concluse con kickoff compatibile entro 5 minuti con almeno una gara FotMob del medesimo campionato negli archivi fissati; nessun filtro sugli esiti. L'identità della partita viene verificata separatamente anche sulle squadre.",
+  "concurrency": 3
+}
