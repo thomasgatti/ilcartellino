@@ -299,23 +299,68 @@ details.how p { margin: 8px 0 0; max-width: none; }
 @media (prefers-reduced-motion: reduce) { .livebox .lmin, .pill.live { animation: none; } }
 .livebox .lh { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-weight: 600; }
 .livebox .lh small { font-weight: 400; color: var(--muted, #667); }
-.livebox .lr { display: grid; gap: 1px; }
-.livebox .lk { color: var(--muted, #667); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
-.livebox .yc { display: inline-block; width: 9px; height: 12px; border-radius: 2px; background: #f5c400; vertical-align: -1px; margin-right: 3px; }
+.livebox { --c-amm: #8a6a00; --c-app: #d35f00; --c-mine: #1a5fd0; --c-risk: #c2185b; --c-fl: #6b3fc9; --c-fatti: #c23a2b; --c-sub: #1f7a4d; --c-in: #1f7a4d; }
+:root[data-theme="dark"] .livebox { --c-amm: #f5c400; --c-app: #ff8a1f; --c-mine: #5cb2ff; --c-risk: #ff7ab8; --c-fl: #c4a3ff; --c-fatti: #ff8f80; --c-sub: #6fe0a6; --c-in: #6fe0a6; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .livebox { --c-amm: #f5c400; --c-app: #ff8a1f; --c-mine: #5cb2ff; --c-risk: #ff7ab8; --c-fl: #c4a3ff; --c-fatti: #ff8f80; --c-sub: #6fe0a6; --c-in: #6fe0a6; } }
+:root[data-comp="ucl"] .livebox { --c-amm: #ffd43b; --c-app: #ff9a3c; --c-mine: #5cc3ff; --c-risk: #ff7ab8; --c-fl: #c9a8ff; --c-fatti: #ff8f80; --c-sub: #6fe0a6; --c-in: #6fe0a6; }
+.livebox { gap: 12px; padding: 14px 16px; }
+.livebox .lscore { font-size: 16px; } .livebox .lscore b { font-variant-numeric: tabular-nums; padding: 0 2px; }
+.livebox .lr { display: grid; gap: 2px; align-content: start; --c: var(--muted); }
+.livebox .lk { color: var(--c); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; display: inline-flex; align-items: center; gap: 6px; }
+.livebox .lk::before { content: ""; width: 4px; height: 12px; border-radius: 2px; background: currentColor; }
+.livebox .lr.amm { --c: var(--c-amm); } .livebox .lr.app { --c: var(--c-app); } .livebox .lr.mine { --c: var(--c-mine); }
+.livebox .lr.risk { --c: var(--c-risk); } .livebox .lr.fl { --c: var(--c-fl); }
+.livebox .ltris { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px 28px; }
+.livebox .ltris .lr { padding-left: 10px; border-left: 3px solid color-mix(in srgb, var(--c) 70%, transparent); }
+.livebox .yc { display: inline-block; width: 9px; height: 12px; border-radius: 2px; background: #f5c400; vertical-align: -1px; margin-right: 3px; flex: none; }
 .livebox .rc { background: #d92d20; }
 .livebox .hit { font-weight: 700; color: #0a7d32; }
-.livebox .lchips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 3px; }
-.livebox .lchip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 4px 3px 9px; border-radius: 999px; background: color-mix(in srgb, var(--ink, #fff) 8%, transparent); font-size: 13px; }
-.livebox .lchip b { display: inline-block; min-width: 26px; text-align: center; padding: 1px 6px; border-radius: 999px; background: color-mix(in srgb, var(--ink, #fff) 14%, transparent); font-variant-numeric: tabular-nums; font-size: 12px; }
+.livebox .lchips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.livebox .lchip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 4px 4px 10px; border-radius: 999px; background: color-mix(in srgb, var(--ink, #fff) 8%, transparent); font-size: 13.5px; max-width: 100%; }
+.livebox .lchip b { flex: none; display: inline-block; min-width: 28px; text-align: center; padding: 1px 6px; border-radius: 999px; background: color-mix(in srgb, var(--ink, #fff) 14%, transparent); font-variant-numeric: tabular-nums; font-size: 12px; }
 .livebox .lchip.ok b { background: #f5c400; color: #2a2200; }
-.livebox .lchip.off { opacity: .55; }
-.livebox .lchip.card { padding-left: 7px; }
-.livebox .ltabs { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 8px; margin-top: 3px; }
-.livebox .ltab { width: 100%; border-collapse: collapse; font-size: 13px; }
-.livebox .ltab th { text-align: left; font-weight: 700; font-size: 12px; padding: 2px 4px; border-bottom: 1px solid var(--line); }
-.livebox .ltab th + th, .livebox .ltab td + td { text-align: center; width: 46px; font-variant-numeric: tabular-nums; }
-.livebox .ltab td { padding: 3px 4px; border-bottom: 1px dashed color-mix(in srgb, var(--line) 70%, transparent); }
+.livebox .lchip.off { opacity: .7; }
+.livebox .lchip.off b { opacity: .8; }
+.livebox .lchip.card { padding-left: 8px; }
+.livebox .lr.app .lchip, .livebox .lr.mine .lchip { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 45%, transparent); }
+.livebox .sw { display: inline-flex; align-items: center; gap: 5px; flex-wrap: wrap; min-width: 0; }
+.livebox .sw .so { text-decoration: line-through; text-decoration-color: color-mix(in srgb, var(--ink) 45%, transparent); opacity: .75; }
+.livebox .arr { color: var(--c-in); font-size: 12px; line-height: 1; }
+.livebox .sw .si { color: var(--c-in); font-weight: 700; }
+.livebox .pn { font-weight: 700; }
+.livebox .pn.app { color: var(--c-app); } .livebox .pn.mine { color: var(--c-mine); }
+.livebox .pn.both { color: var(--c-app); text-decoration: underline 2px var(--c-mine); text-underline-offset: 3px; }
+.livebox .pn.via { font-style: italic; font-weight: 600; }
+.livebox .ltabs { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px 28px; margin-top: 6px; }
+.livebox .lteam { border-radius: 10px; padding: 4px 10px 6px; background: color-mix(in srgb, var(--ink, #fff) 5%, transparent); border: 1px solid color-mix(in srgb, var(--ink, #fff) 10%, transparent); border-top: 3px solid var(--tc, var(--line)); min-width: 0; }
+.livebox .ltab { width: 100%; border-collapse: collapse; font-size: 13.5px; table-layout: fixed; }
+.livebox .ltab th { text-align: left; font-weight: 800; font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; padding: 7px 4px 6px; border-bottom: 1px solid color-mix(in srgb, var(--c-fl) 40%, transparent); }
+.livebox .ltab th.tn { color: var(--c-fl); font-size: 13px; letter-spacing: .04em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.livebox .tchip { display: inline-block; width: 10px; height: 10px; border-radius: 3px; background: var(--tc, var(--line)); margin-right: 7px; vertical-align: 0; box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink) 25%, transparent); }
+.livebox .ltab th.cf, .livebox .ltab th.cs, .livebox .ltab td.cf, .livebox .ltab td.cs { text-align: center; width: 54px; font-variant-numeric: tabular-nums; }
+.livebox .ltab th.cf { color: var(--c-fatti); } .livebox .ltab th.cs { color: var(--c-sub); }
+.livebox .ltab td.cf { color: color-mix(in srgb, var(--c-fatti) 75%, var(--ink)); font-weight: 600; }
+.livebox .ltab td.cs { color: color-mix(in srgb, var(--c-sub) 75%, var(--ink)); font-weight: 600; }
+.livebox .ltab td { padding: 5px 4px; border-bottom: 1px dashed color-mix(in srgb, var(--line) 70%, transparent); overflow-wrap: anywhere; }
+.livebox .ltab tr:last-child td { border-bottom: 0; }
 .livebox .ltab tfoot td { font-weight: 700; border-bottom: 0; }
+.livebox .llegend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12px; color: var(--muted); padding-top: 8px; border-top: 1px solid color-mix(in srgb, var(--line) 60%, transparent); }
+.livebox .llegend span { display: inline-flex; align-items: center; gap: 6px; }
+.livebox .llegend .sq { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+.livebox .sq.app { background: var(--c-app); } .livebox .sq.mine { background: var(--c-mine); }
+.livebox .sq.both { background: linear-gradient(135deg, var(--c-app) 50%, var(--c-mine) 50%); }
+@media (max-width: 600px) {
+  .livebox { padding: 12px; gap: 10px; margin-left: -4px; margin-right: -4px; }
+  .livebox .lh { font-size: 15px; }
+  .livebox .ltris, .livebox .ltabs { grid-template-columns: 1fr; gap: 10px; }
+  .livebox .lchips { gap: 5px; }
+  .livebox .lchip { font-size: 13px; padding: 5px 4px 5px 10px; }
+  .livebox .lteam { padding: 2px 8px 4px; }
+  .livebox .ltab { font-size: 14px; }
+  .livebox .ltab th.cf, .livebox .ltab th.cs, .livebox .ltab td.cf, .livebox .ltab td.cs { width: 50px; }
+  .livebox .ltab td { padding: 7px 4px; }
+  .livebox .llegend { gap: 6px 12px; }
+}
 .livebox .note { margin: 0; }
 .note.ctx { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 3px; }
 table { width: 100%; border-collapse: collapse; font-size: 14px; }
@@ -584,23 +629,51 @@ function campoHtml(m, trio) {
       ${lu.a.map(r => P(r, 'a')).join('')}${lu.h.map(r => P(r, 'h')).join('')}</div>
     <p class="note">${nota} Sotto ogni nome la probabilità di giallo; il cartellino giallo indica i giocatori del tris dell'app.</p></div>`;
 }
-// riquadro live: ammoniti, falli fatti/subiti, tris dell'app e rischio da qui alla fine
+// riquadro live: ammoniti, tris dell'app e tuo, falli fatti/subiti (casa | ospite), sostituzioni dei giocatori dei tris
+let risLoad = null;
+function needRis(m) {            // a partita finita le sostituzioni si leggono anche dagli esiti salvati
+  if (!m.live || !m.live.fin || results[m.id] || !DB || risLoad) return;
+  risLoad = withTimeout(DB.collection('risultati').get()).then(snap => {
+    snap.docs.forEach(d => { const r = d.data(); if (r && r.matchId) results[r.matchId] = r; });
+    const cur = DATA.matches.find(x => x.id === state.id), box = document.querySelector('.livebox');
+    if (cur && cur.live && box && results[cur.id] && results[cur.id].sostituzioni) box.outerHTML = liveHtml(cur);
+  }).catch(() => {});
+}
 function liveHtml(m) {
   const L = m.live; if (!L) return '';
-  const trio = pick(m, '21', 0).trio.map(t => t.n), bk = new Set(L.cards.map(c => c[1]));
+  setTimeout(() => needRis(m), 0);
+  const app = pick(m, '21', 0).trio.map(t => t.n), mine = current(m), bk = new Set(L.cards.map(c => c[1]));
+  const sub = { ...((results[m.id] || {}).sostituzioni || {}), ...(L.sub || {}) }, inFor = {};   // sub: uscito → entrato
+  Object.entries(sub).forEach(([o, i]) => { if (i) inFor[i] = o; });
   const pc = v => Math.round(v * 100) + '%', side = {}; m.pl.forEach(p => side[p[0]] = p[1]);
-  const chip = (n, v, cls = '') => `<span class="lchip ${cls}">${n}<b>${v}</b></span>`;
-  const trioTxt = trio.map(n => bk.has(n) ? chip(n, '✓', 'ok') : L.fin ? chip(n, 'no', 'off') : (L.out || []).includes(n) ? chip(n, 'uscito', 'off') : chip(n, pc(L.p[n] ?? 0))).join('');
-  const risk = Object.entries(L.p).filter(([, v]) => v > 0 && v < 1).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([n, v]) => chip(n, pc(v))).join('');
-  const cards = L.cards.length ? L.cards.map(c => `<span class="lchip card"><span class="yc${c[2] === 'R' ? ' rc' : ''}"></span>${c[1]}${trio.includes(c[1]) ? ' ✓' : ''}<b>${c[0]}'</b></span>`).join('') : '<span class="note">nessuno</span>';
+  // colore del nome: arancione tris dell'app, blu il tuo; in corsivo chi è entrato al posto di uno di loro
+  const tone = n => { const o = inFor[n], A = app.includes(n) || (!!o && app.includes(o)), M = mine.includes(n) || (!!o && mine.includes(o));
+    return !A && !M ? '' : (A && M ? 'both' : A ? 'app' : 'mine') + (app.includes(n) || mine.includes(n) ? '' : ' via'); };
+  const nm = n => { const t = tone(n); return t ? `<span class="pn ${t}">${n}</span>` : n; };
+  const swap = n => sub[n] ? `<span class="sw"><span class="so">${n}</span><span class="arr" aria-label="sostituito da">➜</span><span class="si">${sub[n]}</span></span>` : n;
+  const trioChip = n => {
+    const s = sub[n], viaSub = state.subRule && s && bk.has(s), out = !!s || (L.out || []).includes(n);
+    const [v, cls] = bk.has(n) || viaSub ? ['✓', 'ok'] : L.fin ? ['no', 'off'] : !out ? [pc(L.p[n] ?? 0), '']
+      : state.subRule && s ? [L.p[s] != null ? pc(L.p[s]) : '·', 'subbed'] : ['uscito', 'off'];
+    return `<span class="lchip ${cls}">${swap(n)}<b>${v}</b></span>`;
+  };
+  const risk = Object.entries(L.p).filter(([, v]) => v > 0 && v < 1).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([n, v]) => `<span class="lchip">${nm(n)}<b>${pc(v)}</b></span>`).join('');
+  const cards = L.cards.length ? L.cards.map(c => `<span class="lchip card"><span class="yc${c[2] === 'R' ? ' rc' : ''}"></span>${nm(c[1])}<b>${c[0]}'</b></span>`).join('') : '<span class="note">nessuno</span>';
   const rows = Object.entries(L.fl).map(([n, v]) => ({ n, f: v[0] || 0, s: v[1] || 0, side: v[2] || side[n] })).filter(r => r.f || r.s);
-  const team = sd => { const R = rows.filter(r => r.side === sd).sort((a, b) => b.f - a.f || b.s - a.s); if (!R.length) return '';
-    return `<table class="ltab"><thead><tr><th>${sd === 'h' ? m.h : m.a}</th><th>Fatti</th><th>Subiti</th></tr></thead><tbody>${R.map(r => `<tr><td>${r.n}${bk.has(r.n) ? ' <span class="yc"></span>' : ''}</td><td>${r.f || '·'}</td><td>${r.s || '·'}</td></tr>`).join('')}</tbody></table>`; };
-  return `<div class="livebox"><div class="lh"><span class="pill live lmin${L.fin || L.t === 'Intervallo' ? ' still' : ''}">${L.fin ? 'Finita' : L.t === 'Intervallo' ? 'Intervallo' : L.src === 'espn' ? liveMin(L) : L.t}</span>${m.h} ${L.sc} ${m.a}</div>
-    <div class="lr"><span class="lk">Ammoniti</span><div class="lchips">${cards}</div></div>
-    <div class="lr"><span class="lk">Tris dell'app</span><div class="lchips">${trioTxt}</div></div>
-    ${L.fin ? '' : `<div class="lr"><span class="lk">Rischio da qui alla fine</span><div class="lchips">${risk}</div></div>`}
-    <div class="lr"><span class="lk">Falli</span><div class="ltabs">${team('h')}${team('a')}</div></div>
+  const team = sd => { const R = rows.filter(r => r.side === sd).sort((a, b) => b.f - a.f || b.s - a.s);
+    return `<div class="lteam" style="--tc:${[].concat(sd === 'h' ? m.hc : m.ac)[0] || 'var(--line)'}"><table class="ltab"><thead><tr><th class="tn"><span class="tchip"></span>${sd === 'h' ? m.h : m.a}</th><th class="cf">Fatti</th><th class="cs">Subiti</th></tr></thead>
+      <tbody>${R.length ? R.map(r => `<tr><td>${nm(r.n)}${bk.has(r.n) ? ' <span class="yc"></span>' : ''}</td><td class="cf">${r.f || '·'}</td><td class="cs">${r.s || '·'}</td></tr>`).join('') : '<tr><td colspan="3" class="note">nessun fallo</td></tr>'}</tbody></table></div>`; };
+  const anyVia = rows.some(r => tone(r.n).includes('via')) || L.cards.some(c => tone(c[1]).includes('via'));
+  const legend = `<div class="llegend"><span><i class="sq app"></i>Tris dell'app</span>${mine.length ? '<span><i class="sq mine"></i>Il tuo tris</span>' : ''}${mine.some(n => app.includes(n)) ? '<span><i class="sq both"></i>In entrambi</span>' : ''}${anyVia ? '<span><i>Corsivo</i> = entrato al loro posto</span>' : ''}${Object.keys(sub).some(n => app.includes(n) || mine.includes(n)) ? '<span><b class="arr">➜</b> sostituzione</span>' : ''}</div>`;
+  return `<div class="livebox"><div class="lh"><span class="pill live lmin${L.fin || L.t === 'Intervallo' ? ' still' : ''}">${L.fin ? 'Finita' : L.t === 'Intervallo' ? 'Intervallo' : L.src === 'espn' ? liveMin(L) : L.t}</span><span class="lscore">${m.h} <b>${L.sc}</b> ${m.a}</span></div>
+    <div class="lr amm"><span class="lk">Ammoniti</span><div class="lchips">${cards}</div></div>
+    <div class="ltris">
+      <div class="lr app"><span class="lk">Tris dell'app</span><div class="lchips">${app.map(trioChip).join('')}</div></div>
+      ${mine.length ? `<div class="lr mine"><span class="lk">Il tuo tris</span><div class="lchips">${mine.map(trioChip).join('')}</div></div>` : ''}
+    </div>
+    ${L.fin ? '' : `<div class="lr risk"><span class="lk">Rischio da qui alla fine</span><div class="lchips">${risk}</div></div>`}
+    <div class="lr fl"><span class="lk">Falli</span><div class="ltabs">${team('h')}${team('a')}</div></div>
+    ${legend}
     <p class="note">${L.fin ? '' : 'Rischio: modello live più i falli già fatti (stima indicativa). '}${L.fin ? '' : L.src === 'espn' ? ' Si aggiorna da solo ogni 30 secondi.' : location.hostname.endsWith('vercel.app') ? '' : ' Qui si aggiorna ogni tanto; ogni minuto su <a href="https://ilcartellino.vercel.app/#m' + m.id + '" target="_blank" rel="noopener">ilcartellino.vercel.app</a>.'}</p></div>`;
 }
 function select(id) {
@@ -870,7 +943,7 @@ async function liveFetch(m) {
     mm = (clock.match(/\d+/g) || []).map(Number), m0 = (mm[0] || 0) + (mm[1] || 0), t = fin ? 95 : ht ? 45 : Math.min(95, m0);
   const es = {}; (j.rosters || []).forEach(r => { es[r.homeAway === 'home' ? 'h' : 'a'] = (r.roster || []).map(p => {
     const st = {}; (p.stats || []).forEach(x => st[x.name] = +x.value || 0);
-    return { n: p.athlete?.displayName || '', start: !!p.starter, out: !!p.subbedOut, fc: st.foulsCommitted || 0, fs: st.foulsSuffered || 0, y: st.yellowCards || 0, r: st.redCards || 0 }; }); });
+    return { n: p.athlete?.displayName || '', start: !!p.starter, out: !!p.subbedOut, inn: !!p.subbedIn, fc: st.foulsCommitted || 0, fs: st.foulsSuffered || 0, y: st.yellowCards || 0, r: st.redCards || 0 }; }); });
   const yc = { h: 0, a: 0 }, cards = [], fl = {}, P = {}, out = [];
   for (const e of j.keyEvents || []) {
     const ty = e.type?.text || ''; if (!/card/i.test(ty)) continue;
@@ -887,8 +960,20 @@ async function liveFetch(m) {
     const f = Math.pow(1.3, Math.min(4, x ? x.fc : 0)); P[p[0]] = q * f / (1 - q + q * f);
   }
   for (const s of ['h', 'a']) for (const x of es[s] || []) if (!x.used && (x.fc || x.fs)) { const w = x.n.split(' '); fl[w.length > 1 ? w[0][0] + '. ' + w.slice(1).join(' ') : x.n] = [x.fc, x.fs, s]; }
+  const sub = {}, appName = (nm, s) => { const ap = m.pl.find(p => p[1] === s && findPl(p[0], [{ n: nm }])), w = nm.split(' ');
+    return ap ? ap[0] : w.length > 1 ? w[0][0] + '. ' + w.slice(1).join(' ') : nm; };
+  for (const e of j.keyEvents || []) {      // sostituzioni: "X replaces Y" (X entra, Y esce)
+    if (!/substitut/i.test(e.type?.text || '')) continue;
+    const ps = (e.participants || []).map(x => x.athlete?.displayName || '').filter(Boolean); if (ps.length < 2) continue;
+    const s = ['h', 'a'].find(s => (es[s] || []).some(x => ps.includes(x.n))) || (e.team?.id === side.home?.team?.id ? 'h' : 'a');
+    const R = es[s] || [], f = n => R.find(x => x.n === n) || {}, t = (e.text || '').match(/([^.,]+?) replaces ([^.]+)/i);
+    let [i, o] = ps;
+    if (t && ps.includes(t[1].trim()) && ps.includes(t[2].trim())) [i, o] = [t[1].trim(), t[2].trim()];
+    else if ((f(i).out && !f(i).inn) || (f(o).inn && !f(o).out)) [i, o] = [o, i];
+    sub[appName(o, s)] = appName(i, s);
+  }
   cards.sort((a, b) => a[0] - b[0]);
-  m.live = { t: clock, sc: sc.h + ' - ' + sc.a, fin, agg: new Date().toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit', second: '2-digit' }), cards, fl, p: P, out, src: 'espn',
+  m.live = { t: clock, sc: sc.h + ' - ' + sc.a, fin, agg: new Date().toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit', second: '2-digit' }), cards, fl, p: P, out, sub, src: 'espn',
     m0, per: +cp.status?.period || 0, at: Date.now(), run: stt === 'in' && !ht && m0 > 0 };
   if (state.id === m.id && state.view !== 'storico' && state.view !== 'area') {
     const box = document.querySelector('.livebox');

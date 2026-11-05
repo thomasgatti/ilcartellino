@@ -40,7 +40,13 @@ def main(src, dpath=str(__import__('pathlib').Path(__file__).resolve().parent.pa
             hit = [p[0] for p in m['pl'] if p[1] == s and same(p[0], nm)]
             w = nm.split(); key = hit[0] if hit else (w[0][0] + '. ' + ' '.join(w[1:]) if len(w) > 1 else nm)
             fl[key] = [fc, fs, s]
-        out = {p[0] for mn, nm, s in L.get('subs', []) for p in m['pl'] if p[1] == s and same(p[0], nm)}
+        app = lambda nm, s: next((p[0] for p in m['pl'] if p[1] == s and same(p[0], nm)), None)
+        short = lambda nm: (lambda w: w[0][0] + '. ' + ' '.join(w[1:]) if len(w) > 1 else nm)(nm.split())
+        out, sub = set(), {}
+        for sb in L.get('subs', []):                      # [min, esce, lato, entra] (entra solo dai dati nuovi)
+            mn, nm, s = sb[:3]; o = app(nm, s)
+            if o: out.add(o)
+            if len(sb) > 3 and sb[3]: sub[o or short(nm)] = app(sb[3], s) or short(sb[3])
         P = {}
         for p in m['pl']:
             n, s, p0 = p[0], p[1], p[4]
@@ -52,7 +58,7 @@ def main(src, dpath=str(__import__('pathlib').Path(__file__).resolve().parent.pa
             P[n] = round(q, 3)
         m['live'] = {'t': L['t'].replace('‎', ''), 'sc': L['sc'], 'fin': bool(L.get('fin')), 'agg': now,
                      'cards': [[v[0], n, v[1]] for n, v in sorted(card.items(), key=lambda kv: kv[1][0])],
-                     'fl': fl, 'p': P, 'out': sorted(out)}
+                     'fl': fl, 'p': P, 'out': sorted(out), 'sub': sub}
         print(m['h'], m['a'], L['t'], L['sc'], 'cartellini:', m['live']['cards'],
               'rischio:', sorted(((v, k) for k, v in P.items() if 0 < v < 1), reverse=True)[:4])
     json.dump(d, open(dpath, 'w'), ensure_ascii=False)
