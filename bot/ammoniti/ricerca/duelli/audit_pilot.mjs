@@ -3,8 +3,9 @@ import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { normalizeMatch, compareApp, marketAudit, verifiedSubstitutions } from './duelli.mjs';
+import {accountFouls} from './accounting.mjs';
 
-const [cacheArg, appArg, quoteArg, outArg, commitArg] = process.argv.slice(2);
+const [cacheArg, appArg, quoteArg, outArg, commitArg, identitiesArg] = process.argv.slice(2);
 if (!outArg) throw new Error('Uso: node audit_pilot.mjs <cache> <data.json> <valutazione.jsonl> <uscita>');
 const cache=path.resolve(cacheArg), out=path.resolve(outArg);
 const fixtures=JSON.parse(await readFile(path.join(cache,'fixtures.json'),'utf8'));
@@ -12,6 +13,8 @@ const receipts=JSON.parse(await readFile(path.join(cache,'receipts.json'),'utf8'
 const appRaw=await readFile(appArg,'utf8'),quoteRaw=await readFile(quoteArg,'utf8');
 const app=JSON.parse(appRaw);
 const quoteRows=quoteRaw.trim().split(/\r?\n/).filter(Boolean).map(JSON.parse);
+const identitiesRaw=identitiesArg?await readFile(identitiesArg,'utf8'):null;
+const identities=identitiesRaw?JSON.parse(identitiesRaw):{};
 const matches=[];
 for(const fixture of fixtures){
   const filename=`summary-${fixture.id}.json`, raw=await readFile(path.join(cache,filename),'utf8');
@@ -19,7 +22,8 @@ for(const fixture of fixtures){
   if(!receipt||receipt.sha256!==createHash('sha256').update(raw).digest('hex'))throw new Error(`Fonte non verificata: ${filename}`);
   const j=JSON.parse(raw);
   if(String(j.header?.id)!==fixture.id)throw new Error(`Id partita discordante: ${fixture.id}`);
-  const match=normalizeMatch(j,fixture);
+  const match=normalizeMatch(j,fixture,identities);
+  match.accounting=accountFouls(j,match);
   match.substitutions=verifiedSubstitutions(match);
   match.appComparison=compareApp(match,app);
   matches.push(match);
@@ -44,11 +48,12 @@ const groups={};for(const m of matches)(groups[`${m.fixture.league}|${m.fixture.
 const allApp=[...(app.matches||[]),...Object.values(app.cups||{}).flatMap(c=>c.matches||[])];
 const appRows=allApp.map(m=>({id:m.id,partita:`${m.h} - ${m.a}`,comp:m.comp||'sa',official:!!m.uff,players:m.pl.length,missingVs:m.pl.filter(r=>!r[5]).length,substituteFallback:m.pl.filter(r=>r[7]==null).length,thinHistory:Object.values(m.tags||{}).flat().filter(t=>/Poca esperienza/.test(t)).length}));
 const report={
-  schema:1, baseCommit:commitArg??null,
-  inputHashes:{appData:createHash('sha256').update(appRaw).digest('hex'),marketLog:createHash('sha256').update(quoteRaw).digest('hex')},
+  schema:2, baseCommit:commitArg??null,
+  inputHashes:{appData:createHash('sha256').update(appRaw).digest('hex'),marketLog:createHash('sha256').update(quoteRaw).digest('hex'),identityRegistry:identitiesRaw?createHash('sha256').update(identitiesRaw).digest('hex'):null},
   purpose:'Audit di qualità e casi descrittivi. Nessuna stima del guadagno predittivo; nessuna modifica del modello.',
   totals:sums(matches),groups:Object.fromEntries(Object.entries(groups).map(([k,v])=>[k,sums(v)])),
-  matches:matches.map(m=>({fixture:m.fixture,audit:m.audit,appComparison:m.appComparison,substitutions:m.substitutions,untrustedFouls:m.events.filter(e=>e.type==='foul'&&!e.trusted),coordinateConflicts:m.events.filter(e=>e.coordinateConflict).map(e=>({id:e.id,sourceIds:e.sourceIds,minute:e.minute,people:e.people}))})),
+  accounting:{totals:Object.fromEntries(['structuredFouls','structuredHandballs','textHandballPenalties','textOnlyFouls','expected','residual','unknownSide'].map(k=>[k,matches.reduce((s,m)=>s+m.accounting[k],0)])),teamsWithResidual:matches.flatMap(m=>m.accounting.teams.filter(t=>t.residual!==0).map(t=>({match:m.fixture.id,...t})))},
+  matches:matches.map(m=>({fixture:m.fixture,audit:m.audit,accounting:m.accounting,appComparison:m.appComparison,substitutions:m.substitutions,untrustedFouls:m.events.filter(e=>e.type==='foul'&&!e.trusted),coordinateConflicts:m.events.filter(e=>e.coordinateConflict).map(e=>({id:e.id,sourceIds:e.sourceIds,minute:e.minute,people:e.people}))})),
   market:marketAudit(quoteRows),appDataQuality:appRows,
   caveats:[
     'Il numero di falli con coppia identificata diviso per il totale del tabellino è un riscontro contabile, non una misura di accuratezza: falli di mano e rigori possono avere struttura diversa.',

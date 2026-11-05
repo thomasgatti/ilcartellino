@@ -1,7 +1,10 @@
 // Strumenti di ricerca: estrazione prudente dei falli, non un modello di probabilità.
-export const norm = s => String(s ?? '').replace(/ø/g,'o').replace(/ł/g,'l').replace(/ß/g,'ss').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
+export const norm = s => String(s ?? '').replace(/[øØ]/g,'o').replace(/[łŁ]/g,'l').replace(/[æÆ]/g,'ae').replace(/[đĐðÐ]/g,'d').replace(/ı/g,'i').replace(/[þÞ]/g,'th').replace(/ß/g,'ss').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
 export function teamKey(s) {
   const k = norm(s);
+  if(['fc copenhagen','f c kobenhavn'].includes(k))return 'copenhagen';
+  if(['fk qarabag','qarabag'].includes(k))return 'qarabag';
+  if(['verona','hellas verona'].includes(k))return 'hellas verona';
   return ({'as roma':'roma','internazionale':'inter','inter milan':'inter','ac milan':'milan','fc barcelona':'barcelona','feyenoord rotterdam':'feyenoord','lask linz':'lask','bayern munich':'bayern munchen','sporting lisbon':'sporting cp','stuttgart':'vfb stuttgart','bodo glimt':'bodo glimt','fenerbahce':'fenerbahce','slovan bratislava':'slovan bratislava'})[k] || k;
 }
 const stat = (a, key) => { const x = (a || []).find(x => x.name === key); return x == null ? null : Number(x.value ?? x.displayValue); };
@@ -16,6 +19,15 @@ export function resolvePlayer(name, roster, side = null) {
   if (exact.length === 1) return { player: exact[0], method: 'nome_esatto' };
   if (exact.length > 1) return { player: null, method: 'ambiguo' };
   const tokens = key.split(' ');
+  // È ammessa l'omissione dei secondi nomi, mai la loro invenzione: primo nome e cognome devono coincidere.
+  if(tokens.length>=2&&tokens[0].length>1){
+    const candidates=pool.filter(p=>p.names.some(n=>{
+      const t=norm(n).split(' ');if(t[0]!==tokens[0]||t.at(-1)!==tokens.at(-1))return false;
+      let at=0;for(const token of t)if(token===tokens[at])at++;return at===tokens.length;
+    }));
+    if(candidates.length===1)return {player:candidates[0],method:'secondi_nomi_omessi'};
+    if(candidates.length>1)return {player:null,method:'ambiguo'};
+  }
   const abbreviated = tokens[0]?.length === 1;
   const candidates = abbreviated ? pool.filter(p => p.names.some(n => {
     const t = norm(n).split(' ');
@@ -23,18 +35,18 @@ export function resolvePlayer(name, roster, side = null) {
   })) : [];
   return candidates.length === 1 ? { player: candidates[0], method: 'iniziale_e_cognome' } : { player: null, method: candidates.length ? 'ambiguo' : 'non_trovato' };
 }
-export function getRoster(j) {
+export function getRoster(j, identityProfiles = {}) {
   return (j.rosters || []).flatMap(t => (t.roster || []).map(p => ({
     id: String(p.athlete?.id ?? ''), name: p.athlete?.displayName || p.athlete?.fullName || '',
-    names: [...new Set([p.athlete?.displayName,p.athlete?.fullName,p.athlete?.shortName].filter(Boolean))],
+    names: [...new Set([p.athlete?.displayName,p.athlete?.fullName,p.athlete?.shortName,...(identityProfiles.aliases?.[String(p.athlete?.id)]?.names||[])].filter(Boolean))],
     team: t.team?.displayName || '', side: t.homeAway, starter: !!p.starter,
     played: p.starter || p.subbedIn || stat(p.stats,'appearances') > 0,
     fc: stat(p.stats,'foulsCommitted'), fs: stat(p.stats,'foulsSuffered'),
     yc: stat(p.stats,'yellowCards'), rc: stat(p.stats,'redCards')
   })));
 }
-export function normalizeMatch(j, fixture) {
-  const roster = getRoster(j), commentary = j.commentary || [], teams = (j.header?.competitions?.[0]?.competitors || []).map(c => ({ side:c.homeAway, name:c.team?.displayName }));
+export function normalizeMatch(j, fixture, identityProfiles = {}) {
+  const roster = getRoster(j, identityProfiles), commentary = j.commentary || [], teams = (j.header?.competitions?.[0]?.competitors || []).map(c => ({ side:c.homeAway, name:c.team?.displayName }));
   const sideOf = name => teams.find(t => teamKey(t.name) === teamKey(name))?.side ?? null;
   const grouped = new Map(), unstructured = [];
   for (let i=0;i<commentary.length;i++) {
@@ -90,6 +102,11 @@ export function normalizeMatch(j, fixture) {
     });
   }
   events.sort((a,b)=>a.sequence-b.sequence);
+  // Un tipo mano e un tipo fallo per lo stesso autore/istante non provano due infrazioni distinte.
+  for(const e of events.filter(e=>e.type==='foul')){
+    const conflicts=commentary.filter(c=>c.play?.type?.type==='handball'&&c.play.period?.number===e.period&&c.play.clock?.value===e.sec&&resolvePlayer(c.play.participants?.[0]?.athlete?.displayName,roster,e.people[0]?.side).player?.id===e.people[0]?.id&&e.people[0]?.id);
+    if(conflicts.length){e.problems.push('tipo_mano_fallo_discordante');e.trusted=false;e.crossTypeSourceIds=[...new Set(conflicts.map(c=>String(c.play.id)))];}
+  }
   const fouls=events.filter(e=>e.type==='foul'), cards=events.filter(e=>/yellow/.test(e.type));
   const linkedCards=cards.map(card=>{
     const badFoul=card.texts.some(t=>/for (?:a )?bad foul|for a foul/i.test(t));

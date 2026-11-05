@@ -1,0 +1,455 @@
+{
+  "ref": "cdcd037ab30cc8e578b69b690dd11aa04c065b61",
+  "files": [
+    {
+      "path": "fotmob/10216_2023-2024.json.gz",
+      "sha": "f5f13fb2f11f86d26360519eea813ed263516d82",
+      "size": 125521
+    },
+    {
+      "path": "fotmob/10216_2024-2025.json.gz",
+      "sha": "65ed6f75443007a46d7bea2c788b214c2c15453e",
+      "size": 148455
+    },
+    {
+      "path": "fotmob/10216_2025-2026.json.gz",
+      "sha": "07af60782f55b51b514b781e27ae4e759c02c2d3",
+      "size": 148423
+    },
+    {
+      "path": "fotmob/10216_2026-2027.json.gz",
+      "sha": "84bdf53e1d173fef2eef372ab33964b59cdaf9c6",
+      "size": 39996
+    },
+    {
+      "path": "fotmob/122_2024-2025.json.gz",
+      "sha": "5507ead4bfab2e8a11cc2767523e9fbcd7534895",
+      "size": 84589
+    },
+    {
+      "path": "fotmob/122_2025-2026.json.gz",
+      "sha": "1c88529aa5cb8f731db94c38b0bb2400eaa01ab0",
+      "size": 242692
+    },
+    {
+      "path": "fotmob/122_2026-2027.json.gz",
+      "sha": "e2094c1ca17571e01f33848a69065bedc2e38e7a",
+      "size": 93312
+    },
+    {
+      "path": "fotmob/135_2024-2025.json.gz",
+      "sha": "0071ec8e380dcf330f4cac683c5c7a5e5d645c84",
+      "size": 199265
+    },
+    {
+      "path": "fotmob/135_2025-2026.json.gz",
+      "sha": "36bcd9044bda83d2caff4b52858e5466cd4a5fe1",
+      "size": 207165
+    },
+    {
+      "path": "fotmob/135_2026-2027.json.gz",
+      "sha": "e1bee876639e3df0283a6b62e02805dcf0b7723d",
+      "size": 59787
+    },
+    {
+      "path": "fotmob/176_2025-2026.json.gz",
+      "sha": "bef9781cde49690a8c958cae24ca8980621a26a3",
+      "size": 150662
+    },
+    {
+      "path": "fotmob/176_2026-2027.json.gz",
+      "sha": "44adabee0ee029b9e792976504146d48f09139d5",
+      "size": 65972
+    },
+    {
+      "path": "fotmob/38_2024-2025.json.gz",
+      "sha": "742b3086141c20517e7578e97214399baefe840b",
+      "size": 149458
+    },
+    {
+      "path": "fotmob/38_2025-2026.json.gz",
+      "sha": "5112255c82622b90a0218cbbc3f43bd98cc2e1f0",
+      "size": 148032
+    },
+    {
+      "path": "fotmob/38_2026-2027.json.gz",
+      "sha": "09a8f259c832725643753f9977c44ef7afe08204",
+      "size": 55024
+    },
+    {
+      "path": "fotmob/40_2023-2024.json.gz",
+      "sha": "371cc0587abf24a226aad1d1c419240cb039fcc4",
+      "size": 260281
+    },
+    {
+      "path": "fotmob/40_2024-2025.json.gz",
+      "sha": "611212a92d3afed0239ef7c4c70734cf15cd7b5d",
+      "size": 270066
+    },
+    {
+      "path": "fotmob/40_2025-2026.json.gz",
+      "sha": "f0c5cd145e073d77866500d3c8791c5aec36f7b5",
+      "size": 268438
+    },
+    {
+      "path": "fotmob/40_2026-2027.json.gz",
+      "sha": "5de3bc0bdd0d82f0b3751cfffe3f2155c727f976",
+      "size": 87681
+    },
+    {
+      "path": "fotmob/42_2021-2022.json.gz",
+      "sha": "32bbeb64f7c82586164c51a98613e2918a29a8bb",
+      "size": 100151
+    },
+    {
+      "path": "fotmob/42_2022-2023.json.gz",
+      "sha": "c23789d8756f9008dc5d685d680b689aa614e9ad",
+      "size": 105477
+    },
+    {
+      "path": "fotmob/42_2023-2024.json.gz",
+      "sha": "77ff13ac9673442e0b04c91b06cbfc3503a6255b",
+      "size": 99515
+    },
+    {
+      "path": "fotmob/42_2024-2025.json.gz",
+      "sha": "94df21be8effe4b8829721066cc0f511670ea823",
+      "size": 178468
+    },
+    {
+      "path": "fotmob/42_2025-2026.json.gz",
+      "sha": "189429bbd54cb6f9c896c72407300ac79af8d813",
+      "size": 179276
+    },
+    {
+      "path": "fotmob/42_2026-2027.json.gz",
+      "sha": "6106494a08df08b4d64597d6a440afb7f917af54",
+      "size": 67250
+    },
+    {
+      "path": "fotmob/441_2024-2025.json.gz",
+      "sha": "4fb4664c79bdc95e8e6427965a5d4fc17e376ebc",
+      "size": 70045
+    },
+    {
+      "path": "fotmob/441_2025-2026.json.gz",
+      "sha": "40321a028ee00350f0d3a69aca06bf78102e1920",
+      "size": 67612
+    },
+    {
+      "path": "fotmob/441_2026-2027.json.gz",
+      "sha": "5c17442d55e41727bfb4dfa07ab6ffbaf0fb7060",
+      "size": 25592
+    },
+    {
+      "path": "fotmob/46_2024-2025.json.gz",
+      "sha": "2311a461dc8cea9c70f9b10eb82b7245d85ce501",
+      "size": 151414
+    },
+    {
+      "path": "fotmob/46_2025-2026.json.gz",
+      "sha": "be39048f21647f8dcb4c0138464527f1733d74b6",
+      "size": 147710
+    },
+    {
+      "path": "fotmob/46_2026-2027.json.gz",
+      "sha": "b983db69e6496475797222a9a1c9d2494bf09686",
+      "size": 66728
+    },
+    {
+      "path": "fotmob/47_2021-2022.json.gz",
+      "sha": "ff73851466dda985b191fc585b761254d98ac675",
+      "size": 319288
+    },
+    {
+      "path": "fotmob/47_2022-2023.json.gz",
+      "sha": "d54a38a355f86e4efdae1fd9a789c32d383df441",
+      "size": 347252
+    },
+    {
+      "path": "fotmob/47_2023-2024.json.gz",
+      "sha": "c920bcf00001710c070a9c30eab18f295c8d0f87",
+      "size": 354236
+    },
+    {
+      "path": "fotmob/47_2024-2025.json.gz",
+      "sha": "ff23f36f192a849b7034b6c1c2669973381fa038",
+      "size": 372248
+    },
+    {
+      "path": "fotmob/47_2025-2026.json.gz",
+      "sha": "57ff0f215452e986e38c615f975b56276c8eaa1f",
+      "size": 361758
+    },
+    {
+      "path": "fotmob/47_2026-2027.json.gz",
+      "sha": "6fdf69e9acf6f14e512ed052b5d2de9c1d961274",
+      "size": 89888
+    },
+    {
+      "path": "fotmob/48_2025-2026.json.gz",
+      "sha": "79be6d820cfcb98fc14705908c22f33e9b0eeca8",
+      "size": 547950
+    },
+    {
+      "path": "fotmob/48_2026-2027.json.gz",
+      "sha": "346d84c86f375fc52dca09d985da324119392cce",
+      "size": 172665
+    },
+    {
+      "path": "fotmob/53_2021-2022.json.gz",
+      "sha": "1a5b840626f8f5ee137f4d5f6a928e8372e7d299",
+      "size": 362833
+    },
+    {
+      "path": "fotmob/53_2022-2023.json.gz",
+      "sha": "3852c4cc3eed0dd402bac51a06708b1198bac3f6",
+      "size": 361923
+    },
+    {
+      "path": "fotmob/53_2023-2024.json.gz",
+      "sha": "351db2a8bd7fa8b7a6e4339d45e3728bf2ac258c",
+      "size": 287657
+    },
+    {
+      "path": "fotmob/53_2024-2025.json.gz",
+      "sha": "f630b341f0fbf0bc62fc2bdf73da0fd2c0093d6f",
+      "size": 292360
+    },
+    {
+      "path": "fotmob/53_2025-2026.json.gz",
+      "sha": "ea42f7d67fbbbabad71f4c7e374b6d911b78ef17",
+      "size": 289312
+    },
+    {
+      "path": "fotmob/53_2026-2027.json.gz",
+      "sha": "b648e862b9fa25ce8a9c72796257b51cc9b194cb",
+      "size": 79446
+    },
+    {
+      "path": "fotmob/54_2021-2022.json.gz",
+      "sha": "33f28b6419a5ee5a97adeab22c0a5b64df8282a1",
+      "size": 283958
+    },
+    {
+      "path": "fotmob/54_2022-2023.json.gz",
+      "sha": "1ca5d0c0c917ddac13b3894dc0093ad9752e4c38",
+      "size": 285609
+    },
+    {
+      "path": "fotmob/54_2023-2024.json.gz",
+      "sha": "a24122809e12906113a73cde450a9fbb3b120f29",
+      "size": 286428
+    },
+    {
+      "path": "fotmob/54_2024-2025.json.gz",
+      "sha": "a429a7e0ae2da7c29b9bb411640459979cad4e81",
+      "size": 285433
+    },
+    {
+      "path": "fotmob/54_2025-2026.json.gz",
+      "sha": "b33185d0a1287ea96f8b833e27e7fea35d19dbb0",
+      "size": 291361
+    },
+    {
+      "path": "fotmob/54_2026-2027.json.gz",
+      "sha": "6fe1ece8cae6bf93e385ef60619ef13e92315893",
+      "size": 73083
+    },
+    {
+      "path": "fotmob/55_2020-2021.json.gz",
+      "sha": "5312f965b4b52f6b44cd952b559e5e6642f08f85",
+      "size": 397120
+    },
+    {
+      "path": "fotmob/55_2021-2022.json.gz",
+      "sha": "115ba21f6fed59cd4201dfaa995cb119f0a368f4",
+      "size": 380590
+    },
+    {
+      "path": "fotmob/55_2022-2023.json.gz",
+      "sha": "ebd723bac49d8090111c99d7308137190fe4e923",
+      "size": 394851
+    },
+    {
+      "path": "fotmob/55_2023-2024.json.gz",
+      "sha": "08b8eb40af95ba25398ff792c5a01e8103a7ad3e",
+      "size": 393876
+    },
+    {
+      "path": "fotmob/55_2024-2025.json.gz",
+      "sha": "b80823becbea3ad087b2e6bab3f05ba62b852dfa",
+      "size": 393238
+    },
+    {
+      "path": "fotmob/55_2025-2026.json.gz",
+      "sha": "05d6a07b4620815cc59c2c56b1c85c6c3ae49d32",
+      "size": 392706
+    },
+    {
+      "path": "fotmob/55_2026-2027.json.gz",
+      "sha": "f36553dd368e7833597c751f9855c7576059b5bc",
+      "size": 109389
+    },
+    {
+      "path": "fotmob/57_2022-2023.json.gz",
+      "sha": "d0671e67a6dae1f86b7a596a033d6f2d6a07b006",
+      "size": 287001
+    },
+    {
+      "path": "fotmob/57_2023-2024.json.gz",
+      "sha": "43af30e166af0e33c309f8167f8cbc2101402c7c",
+      "size": 290984
+    },
+    {
+      "path": "fotmob/57_2024-2025.json.gz",
+      "sha": "ea44b7863e5fc1240bd812aee01fe76d1ede3239",
+      "size": 293831
+    },
+    {
+      "path": "fotmob/57_2025-2026.json.gz",
+      "sha": "60526400596dfabc165f35ac89ea4905bbdfa0e4",
+      "size": 295196
+    },
+    {
+      "path": "fotmob/57_2026-2027.json.gz",
+      "sha": "4d8d8bec984c6cea835b5a9e410a23b6961015f5",
+      "size": 99991
+    },
+    {
+      "path": "fotmob/59_2025.json.gz",
+      "sha": "596387dea69f7df31eb4819e87e4a7d65e8ca935",
+      "size": 211005
+    },
+    {
+      "path": "fotmob/59_2026.json.gz",
+      "sha": "4b13c869dcf2d1dc3591a4eeb5ada8abdf1437fe",
+      "size": 179918
+    },
+    {
+      "path": "fotmob/61_2022-2023.json.gz",
+      "sha": "9e814cfc0dcc4bd8f2ee0f922bc24361bb65637e",
+      "size": 275306
+    },
+    {
+      "path": "fotmob/61_2023-2024.json.gz",
+      "sha": "7ea0db66b32e7531dafe7dba9cfef9e1f2b6e4e4",
+      "size": 272872
+    },
+    {
+      "path": "fotmob/61_2024-2025.json.gz",
+      "sha": "ce5405dfd52dacf674e12a823f5085e3ee0ccca2",
+      "size": 288760
+    },
+    {
+      "path": "fotmob/61_2025-2026.json.gz",
+      "sha": "4edce0b9b9ad5e25b84a53132f079e70541f7876",
+      "size": 287654
+    },
+    {
+      "path": "fotmob/61_2026-2027.json.gz",
+      "sha": "96102163e29b9dc135fc12bff0184962759b637c",
+      "size": 90113
+    },
+    {
+      "path": "fotmob/64_2024-2025.json.gz",
+      "sha": "e6cf8bd274f1f1af58d8bb685f52dd0d7849f406",
+      "size": 180839
+    },
+    {
+      "path": "fotmob/64_2025-2026.json.gz",
+      "sha": "2904e321c88ae1e91d817a4651e52efd1950fee5",
+      "size": 178514
+    },
+    {
+      "path": "fotmob/64_2026-2027.json.gz",
+      "sha": "775409edeaf630e4f7eabb6a41262c2ac34baf26",
+      "size": 56529
+    },
+    {
+      "path": "fotmob/69_2024-2025.json.gz",
+      "sha": "e309ab1fa516b3dd08574e2614b204aa83eaa56e",
+      "size": 187341
+    },
+    {
+      "path": "fotmob/69_2025-2026.json.gz",
+      "sha": "a2b71c9a5b19acfe15dc71a1b972745cd93ff77b",
+      "size": 186529
+    },
+    {
+      "path": "fotmob/69_2026-2027.json.gz",
+      "sha": "a19e5e06e30eb5b1c077c224ac098b73a34654eb",
+      "size": 60689
+    },
+    {
+      "path": "fotmob/71_2023-2024.json.gz",
+      "sha": "f9b67b8ab6c7f704d0fe982ad57dc833a37433cd",
+      "size": 360542
+    },
+    {
+      "path": "fotmob/71_2024-2025.json.gz",
+      "sha": "3159d80e79f4da9f461ce6a7d88e56adecbad2c9",
+      "size": 325617
+    },
+    {
+      "path": "fotmob/71_2025-2026.json.gz",
+      "sha": "38b6d521800d1f9cf70d9edf4d5abe33f5bc7c39",
+      "size": 291202
+    },
+    {
+      "path": "fotmob/71_2026-2027.json.gz",
+      "sha": "ad8174af938d980c20aa962de8d82ccaaaf31fd2",
+      "size": 89991
+    },
+    {
+      "path": "fotmob/73_2023-2024.json.gz",
+      "sha": "9289cbcdd73862906921899c93d7afc3dafb8049",
+      "size": 118231
+    },
+    {
+      "path": "fotmob/73_2024-2025.json.gz",
+      "sha": "8330612496590a5f09d9b186b9240e22347c1be6",
+      "size": 182523
+    },
+    {
+      "path": "fotmob/73_2025-2026.json.gz",
+      "sha": "eea7454dea651be7d5955e5acac64b6bb851bc06",
+      "size": 181949
+    },
+    {
+      "path": "fotmob/73_2026-2027.json.gz",
+      "sha": "1abd9b0f5d62222dc65c03a40c85d5ce878d5625",
+      "size": 59320
+    },
+    {
+      "path": "fotmob/87_2021-2022.json.gz",
+      "sha": "44fdaefd2207a9fcd516ddd9e0936f8a280ebea9",
+      "size": 374517
+    },
+    {
+      "path": "fotmob/87_2022-2023.json.gz",
+      "sha": "2585372530309668dfacaeff515b4dab58a9c7e9",
+      "size": 373492
+    },
+    {
+      "path": "fotmob/87_2023-2024.json.gz",
+      "sha": "6df0b5d14c0fdf098ebc53e9eb3d04c59eaab798",
+      "size": 376854
+    },
+    {
+      "path": "fotmob/87_2024-2025.json.gz",
+      "sha": "41fbb72f5d2e117e524d52c7011855a480683fcd",
+      "size": 379913
+    },
+    {
+      "path": "fotmob/87_2025-2026.json.gz",
+      "sha": "2301124d73c178c8394f86829aee02aed4dd6464",
+      "size": 384386
+    },
+    {
+      "path": "fotmob/87_2026-2027.json.gz",
+      "sha": "099a68f86e3eab0452f9ef7bb62afbb2a09360a1",
+      "size": 117082
+    }
+  ]
+}

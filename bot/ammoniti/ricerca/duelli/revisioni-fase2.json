@@ -1,0 +1,1341 @@
+{
+  "schema": 2,
+  "excludedFouls": [
+    {
+      "match": "401915310",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915310",
+      "id": "54761630",
+      "sourceIds": [
+        "54761630"
+      ],
+      "type": "foul",
+      "sec": 1919,
+      "period": 1,
+      "minute": "32'",
+      "sequence": 28,
+      "people": [
+        {
+          "id": "272722",
+          "name": "Luis Suárez",
+          "side": "away"
+        },
+        {
+          "id": "226181",
+          "name": "Mykola Matviyenko",
+          "side": "home"
+        }
+      ],
+      "texts": [
+        "Foul by Luis Suárez (Sporting Lisbon).",
+        "Mykola Matviienko (Shakhtar Donetsk) wins a free kick in the defensive half."
+      ],
+      "rawRows": 2,
+      "duplicateIds": false,
+      "coordinateConflict": false,
+      "xy": [
+        70.7,
+        14.1
+      ],
+      "problems": [
+        "grafia_o_alias_non_verificato"
+      ],
+      "trusted": false
+    },
+    {
+      "match": "401915310",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915310",
+      "id": "54763246",
+      "sourceIds": [
+        "54763246"
+      ],
+      "type": "foul",
+      "sec": 3820,
+      "period": 2,
+      "minute": "64'",
+      "sequence": 58,
+      "people": [
+        {
+          "id": "287025",
+          "name": "Maxi Araújo",
+          "side": "away"
+        },
+        {
+          "id": "359420",
+          "name": "Alisson Santana",
+          "side": "home"
+        }
+      ],
+      "texts": [
+        "Alisson Santana (Shakhtar Donetsk) wins a free kick on the right wing.",
+        "Foul by Gonçalo Inácio (Sporting Lisbon)."
+      ],
+      "rawRows": 2,
+      "duplicateIds": false,
+      "coordinateConflict": false,
+      "xy": [
+        42.7,
+        90.4
+      ],
+      "problems": [
+        "testo_indica_altro_giocatore"
+      ],
+      "trusted": false
+    },
+    {
+      "match": "401915311",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915311",
+      "id": "54763469",
+      "sourceIds": [
+        "54763469"
+      ],
+      "type": "foul",
+      "sec": 3566,
+      "period": 2,
+      "minute": "60'",
+      "sequence": 82,
+      "people": [
+        {
+          "id": "216225",
+          "name": "Maximilian Mittelstädt",
+          "side": "away"
+        },
+        {
+          "id": "219444",
+          "name": "Roland Sallai",
+          "side": "home"
+        }
+      ],
+      "texts": [
+        "Roland Sallai (Galatasaray) wins a free kick in the defensive half."
+      ],
+      "rawRows": 1,
+      "duplicateIds": false,
+      "coordinateConflict": false,
+      "xy": [
+        4.6,
+        29.2
+      ],
+      "problems": [
+        "tipo_mano_fallo_discordante"
+      ],
+      "trusted": false,
+      "crossTypeSourceIds": [
+        "54763221"
+      ]
+    },
+    {
+      "match": "401915307",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915307",
+      "id": "54780454",
+      "sourceIds": [
+        "54780454"
+      ],
+      "type": "foul",
+      "sec": 2864,
+      "period": 2,
+      "minute": "48'",
+      "sequence": 58,
+      "people": [
+        {
+          "id": "170785",
+          "name": "Hakan Çalhanoglu",
+          "side": "away"
+        },
+        {
+          "id": "313354",
+          "name": "Oussama Targhaline",
+          "side": "home"
+        }
+      ],
+      "texts": [
+        "Foul by Nicolò Barella (Inter Milan).",
+        "Oussama Targhalline (Feyenoord) wins a free kick in the defensive half."
+      ],
+      "rawRows": 2,
+      "duplicateIds": false,
+      "coordinateConflict": false,
+      "xy": [
+        63.4,
+        19.6
+      ],
+      "problems": [
+        "testo_indica_altro_giocatore"
+      ],
+      "trusted": false
+    },
+    {
+      "match": "401915385",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915385",
+      "id": "54784246",
+      "sourceIds": [
+        "54784246"
+      ],
+      "type": "foul",
+      "sec": 3893,
+      "period": 2,
+      "minute": "65'",
+      "sequence": 67,
+      "people": [
+        {
+          "id": "340760",
+          "name": "Moses Usor",
+          "side": "home"
+        },
+        {
+          "id": "340556",
+          "name": "Sandro Cruz",
+          "side": "away"
+        }
+      ],
+      "texts": [
+        "Sandro Cruz (Slovan Bratislava) wins a free kick in the defensive half.",
+        "Foul by Krystof Danek (LASK)."
+      ],
+      "rawRows": 2,
+      "duplicateIds": false,
+      "coordinateConflict": false,
+      "xy": [
+        64.8,
+        29.2
+      ],
+      "problems": [
+        "testo_indica_altro_giocatore"
+      ],
+      "trusted": false
+    },
+    {
+      "match": "401915382",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915382",
+      "id": "54800339",
+      "sourceIds": [
+        "54800339"
+      ],
+      "type": "foul",
+      "sec": 495,
+      "period": 1,
+      "minute": "9'",
+      "sequence": 11,
+      "people": [
+        {
+          "id": "305629",
+          "name": "Ismail Yüksek",
+          "side": "home"
+        },
+        {
+          "id": "249299",
+          "name": "Alexis Mac Allister",
+          "side": "away"
+        }
+      ],
+      "texts": [
+        "Foul by Mason Greenwood (Fenerbahce).",
+        "Alexis Mac Allister (Liverpool) wins a free kick in the defensive half."
+      ],
+      "rawRows": 2,
+      "duplicateIds": false,
+      "coordinateConflict": false,
+      "xy": [
+        39.5,
+        78.6
+      ],
+      "problems": [
+        "testo_indica_altro_giocatore"
+      ],
+      "trusted": false
+    },
+    {
+      "match": "401915382",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915382",
+      "id": "54800538",
+      "sourceIds": [
+        "54800538"
+      ],
+      "type": "foul",
+      "sec": 956,
+      "period": 1,
+      "minute": "16'",
+      "sequence": 18,
+      "people": [
+        {
+          "id": "222670",
+          "name": "Nélson Semedo",
+          "side": "home"
+        },
+        {
+          "id": "226177",
+          "name": "Kostas Tsimikas",
+          "side": "away"
+        }
+      ],
+      "texts": [
+        "Foul by Mason Greenwood (Fenerbahce).",
+        "Kostas Tsimikas (Liverpool) wins a free kick in the defensive half."
+      ],
+      "rawRows": 2,
+      "duplicateIds": false,
+      "coordinateConflict": false,
+      "xy": [
+        38.8,
+        94
+      ],
+      "problems": [
+        "testo_indica_altro_giocatore"
+      ],
+      "trusted": false
+    },
+    {
+      "match": "757707",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757707",
+      "id": "46327897",
+      "sourceIds": [
+        "46327897"
+      ],
+      "type": "foul",
+      "sec": 4597,
+      "period": 2,
+      "minute": "77'",
+      "sequence": 116,
+      "people": [
+        {
+          "id": "293919",
+          "name": "Muhammed-Cham Saracevic",
+          "side": "home"
+        },
+        {
+          "id": "397263",
+          "name": "Max Dowman",
+          "side": "away"
+        }
+      ],
+      "texts": [
+        "Foul by Muhammed Cham (Slavia Prague).",
+        "Max Dowman (Arsenal) wins a free kick on the right wing."
+      ],
+      "rawRows": 2,
+      "duplicateIds": false,
+      "coordinateConflict": false,
+      "xy": [
+        0.786,
+        0.906
+      ],
+      "problems": [
+        "grafia_o_alias_non_verificato"
+      ],
+      "trusted": false
+    },
+    {
+      "match": "757707",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757707",
+      "id": "46327986",
+      "sourceIds": [
+        "46327986"
+      ],
+      "type": "foul",
+      "sec": 5400,
+      "period": 2,
+      "minute": "90'+3'",
+      "sequence": 130,
+      "people": [
+        {
+          "id": "343937",
+          "name": "David Doudera",
+          "side": "home"
+        },
+        {
+          "id": "390975",
+          "name": "Andre Annous",
+          "side": "away"
+        }
+      ],
+      "texts": [
+        "Andre Harriman-Annous (Arsenal) wins a free kick on the left wing.",
+        "Foul by David Doudera (Slavia Prague)."
+      ],
+      "rawRows": 2,
+      "duplicateIds": false,
+      "coordinateConflict": false,
+      "xy": [
+        0.828,
+        0.042
+      ],
+      "problems": [
+        "grafia_o_alias_non_verificato"
+      ],
+      "trusted": false
+    },
+    {
+      "match": "757710",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757710",
+      "id": "46330167",
+      "sourceIds": [
+        "46330167"
+      ],
+      "type": "foul",
+      "sec": 3523,
+      "period": 2,
+      "minute": "59'",
+      "sequence": 70,
+      "people": [
+        {
+          "id": "274159",
+          "name": "Francisco Trincão",
+          "side": "away"
+        },
+        {
+          "id": "308029",
+          "name": "Andrea Cambiaso",
+          "side": "home"
+        }
+      ],
+      "texts": [
+        "Andrea Cambiaso (Juventus) wins a free kick on the left wing.",
+        "Foul by Trincão (Sporting Lisbon)."
+      ],
+      "rawRows": 2,
+      "duplicateIds": false,
+      "coordinateConflict": false,
+      "xy": [
+        0.872,
+        0.084
+      ],
+      "problems": [
+        "grafia_o_alias_non_verificato"
+      ],
+      "trusted": false
+    },
+    {
+      "match": "757716",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757716",
+      "id": "46332293",
+      "sourceIds": [
+        "46332293"
+      ],
+      "type": "foul",
+      "sec": 534,
+      "period": 1,
+      "minute": "9'",
+      "sequence": 10,
+      "people": [
+        {
+          "id": "339879",
+          "name": "Jamie Gittens",
+          "side": "away"
+        },
+        {
+          "id": "238827",
+          "name": "Kady",
+          "side": "home"
+        }
+      ],
+      "texts": [
+        "Foul by Jamie Gittens (Chelsea).",
+        "Kady Borges (Qarabag) wins a free kick in the defensive half."
+      ],
+      "rawRows": 2,
+      "duplicateIds": false,
+      "coordinateConflict": false,
+      "xy": [
+        0.632,
+        0.096
+      ],
+      "problems": [
+        "grafia_o_alias_non_verificato"
+      ],
+      "trusted": false
+    },
+    {
+      "match": "757716",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757716",
+      "id": "46332313",
+      "sourceIds": [
+        "46332313"
+      ],
+      "type": "foul",
+      "sec": 691,
+      "period": 1,
+      "minute": "12'",
+      "sequence": 14,
+      "people": [
+        {
+          "id": "259910",
+          "name": "Marc Cucurella",
+          "side": "away"
+        },
+        {
+          "id": "238827",
+          "name": "Kady",
+          "side": "home"
+        }
+      ],
+      "texts": [
+        "Foul by Marc Cucurella (Chelsea).",
+        "Kady Borges (Qarabag) wins a free kick in the defensive half."
+      ],
+      "rawRows": 2,
+      "duplicateIds": false,
+      "coordinateConflict": false,
+      "xy": [
+        0.596,
+        0.202
+      ],
+      "problems": [
+        "grafia_o_alias_non_verificato"
+      ],
+      "trusted": false
+    },
+    {
+      "match": "757716",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757716",
+      "id": "46332347",
+      "sourceIds": [
+        "46332347"
+      ],
+      "type": "foul",
+      "sec": 1522,
+      "period": 1,
+      "minute": "26'",
+      "sequence": 24,
+      "people": [
+        {
+          "id": "259910",
+          "name": "Marc Cucurella",
+          "side": "away"
+        },
+        {
+          "id": "238827",
+          "name": "Kady",
+          "side": "home"
+        }
+      ],
+      "texts": [
+        "Foul by Marc Cucurella (Chelsea).",
+        "Kady Borges (Qarabag) wins a free kick in the defensive half."
+      ],
+      "rawRows": 2,
+      "duplicateIds": false,
+      "coordinateConflict": false,
+      "xy": [
+        0.612,
+        0.054
+      ],
+      "problems": [
+        "grafia_o_alias_non_verificato"
+      ],
+      "trusted": false
+    },
+    {
+      "match": "757716",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757716",
+      "id": "46332614",
+      "sourceIds": [
+        "46332614"
+      ],
+      "type": "foul",
+      "sec": 4485,
+      "period": 2,
+      "minute": "75'",
+      "sequence": 91,
+      "people": [
+        {
+          "id": "231198",
+          "name": "Tosin Adarabioyo",
+          "side": "away"
+        },
+        {
+          "id": "346634",
+          "name": "Nariman Akhundzade",
+          "side": "home"
+        }
+      ],
+      "texts": [
+        "Foul by Tosin Adarabioyo (Chelsea).",
+        "Nariman Akhundzada (Qarabag) wins a free kick in the defensive half."
+      ],
+      "rawRows": 2,
+      "duplicateIds": false,
+      "coordinateConflict": false,
+      "xy": [
+        0.486,
+        0.579
+      ],
+      "problems": [
+        "grafia_o_alias_non_verificato"
+      ],
+      "trusted": false
+    },
+    {
+      "match": "757716",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757716",
+      "id": "46332696",
+      "sourceIds": [
+        "46332696"
+      ],
+      "type": "foul",
+      "sec": 5400,
+      "period": 2,
+      "minute": "90'",
+      "sequence": 112,
+      "people": [
+        {
+          "id": "289877",
+          "name": "Moisés Caicedo",
+          "side": "away"
+        },
+        {
+          "id": "346634",
+          "name": "Nariman Akhundzade",
+          "side": "home"
+        }
+      ],
+      "texts": [
+        "Foul by Moisés Caicedo (Chelsea).",
+        "Nariman Akhundzada (Qarabag) wins a free kick in the defensive half."
+      ],
+      "rawRows": 2,
+      "duplicateIds": false,
+      "coordinateConflict": false,
+      "xy": [
+        0.574,
+        0.569
+      ],
+      "problems": [
+        "grafia_o_alias_non_verificato"
+      ],
+      "trusted": false
+    },
+    {
+      "match": "401874798",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874798",
+      "id": "54542320",
+      "sourceIds": [
+        "54542320"
+      ],
+      "type": "foul",
+      "sec": 2713,
+      "period": 2,
+      "minute": "46'",
+      "sequence": 56,
+      "people": [
+        {
+          "id": "376261",
+          "name": "Manga Foe Ondoa",
+          "side": "away"
+        },
+        {
+          "id": "287790",
+          "name": "Nicolò Cambiaghi",
+          "side": "home"
+        }
+      ],
+      "texts": [
+        "Foul by Manga Foe Ondoa (Monza).",
+        "Lewis Ferguson (Bologna) wins a free kick in the defensive half."
+      ],
+      "rawRows": 2,
+      "duplicateIds": false,
+      "coordinateConflict": false,
+      "xy": [
+        67.2,
+        31.8
+      ],
+      "problems": [
+        "testo_indica_altro_giocatore"
+      ],
+      "trusted": false
+    },
+    {
+      "match": "401874798",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874798",
+      "id": "54549551",
+      "sourceIds": [
+        "54549551"
+      ],
+      "type": "foul",
+      "sec": 4472,
+      "period": 2,
+      "minute": "75'",
+      "sequence": 85,
+      "people": [
+        {
+          "id": "238885",
+          "name": "Patrick Cutrone",
+          "side": "away"
+        },
+        {
+          "id": "304222",
+          "name": "Arthur Theate",
+          "side": "home"
+        }
+      ],
+      "texts": [
+        "Foul by Saba Goglichidze (Monza).",
+        "Arthur Theate (Bologna) wins a free kick in the defensive half."
+      ],
+      "rawRows": 2,
+      "duplicateIds": false,
+      "coordinateConflict": false,
+      "xy": [
+        86.4,
+        48.4
+      ],
+      "problems": [
+        "testo_indica_altro_giocatore"
+      ],
+      "trusted": false
+    },
+    {
+      "match": "401874990",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874990",
+      "id": "54571284",
+      "sourceIds": [
+        "54571284"
+      ],
+      "type": "foul",
+      "sec": 1352,
+      "period": 1,
+      "minute": "23'",
+      "sequence": 23,
+      "people": [
+        {
+          "id": "150081",
+          "name": "Christian Kabasele",
+          "side": "home"
+        },
+        {
+          "id": "259481",
+          "name": "Donyell Malen",
+          "side": "away"
+        }
+      ],
+      "texts": [
+        "Foul by Lennon Miller (Udinese).",
+        "Donyell Malen (Roma) wins a free kick on the left wing."
+      ],
+      "rawRows": 2,
+      "duplicateIds": false,
+      "coordinateConflict": false,
+      "xy": [
+        60.6,
+        85
+      ],
+      "problems": [
+        "testo_indica_altro_giocatore"
+      ],
+      "trusted": false
+    },
+    {
+      "match": "401874782",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874782",
+      "id": "54651130",
+      "sourceIds": [
+        "54651130"
+      ],
+      "type": "foul",
+      "sec": 4714,
+      "period": 2,
+      "minute": "79'",
+      "sequence": 103,
+      "people": [
+        {
+          "id": "364685",
+          "name": "Luis Hasa",
+          "side": "home"
+        },
+        {
+          "id": "330707",
+          "name": "Emirhan Ilkhan",
+          "side": "away"
+        }
+      ],
+      "texts": [
+        "Foul by Daniel Bîrligea (Frosinone).",
+        "Emirhan Ilkhan (Torino) wins a free kick in the defensive half."
+      ],
+      "rawRows": 2,
+      "duplicateIds": false,
+      "coordinateConflict": false,
+      "xy": [
+        60.8,
+        63.8
+      ],
+      "problems": [
+        "testo_indica_altro_giocatore"
+      ],
+      "trusted": false
+    },
+    {
+      "match": "401874782",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874782",
+      "id": "54653457",
+      "sourceIds": [
+        "54653457"
+      ],
+      "type": "foul",
+      "sec": 5400,
+      "period": 2,
+      "minute": "90'+4'",
+      "sequence": 124,
+      "people": [
+        {
+          "id": "364685",
+          "name": "Luis Hasa",
+          "side": "home"
+        },
+        {
+          "id": "330707",
+          "name": "Emirhan Ilkhan",
+          "side": "away"
+        }
+      ],
+      "texts": [
+        "Foul by Luis Hasa (Frosinone).",
+        "Nathan Patterson (Torino) wins a free kick in the defensive half."
+      ],
+      "rawRows": 2,
+      "duplicateIds": false,
+      "coordinateConflict": false,
+      "xy": [
+        61.4,
+        15.1
+      ],
+      "problems": [
+        "testo_indica_altro_giocatore"
+      ],
+      "trusted": false
+    },
+    {
+      "match": "401874968",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874968",
+      "id": "54669596",
+      "sourceIds": [
+        "54669596"
+      ],
+      "type": "foul",
+      "sec": 4043,
+      "period": 2,
+      "minute": "68'",
+      "sequence": 85,
+      "people": [
+        {
+          "id": "212476",
+          "name": "Kingsley Ehizibue",
+          "side": "away"
+        },
+        {
+          "id": "330550",
+          "name": "Amar Ahmed",
+          "side": "home"
+        }
+      ],
+      "texts": [
+        "Amar Fatah (Lecce) wins a free kick on the left wing.",
+        "Foul by Kingsley Ehizibue (Genoa)."
+      ],
+      "rawRows": 2,
+      "duplicateIds": false,
+      "coordinateConflict": false,
+      "xy": [
+        37.8,
+        17.7
+      ],
+      "problems": [
+        "grafia_o_alias_non_verificato"
+      ],
+      "trusted": false
+    },
+    {
+      "match": "401874968",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874968",
+      "id": "54670375",
+      "sourceIds": [
+        "54670375"
+      ],
+      "type": "foul",
+      "sec": 4660,
+      "period": 2,
+      "minute": "78'",
+      "sequence": 96,
+      "people": [
+        {
+          "id": "364761",
+          "name": "Alessandro Marcandalli",
+          "side": "away"
+        },
+        {
+          "id": "3123406",
+          "name": "Francisco Esteban Sánchez",
+          "side": "home"
+        }
+      ],
+      "texts": [
+        "Foul by Alessandro Marcandalli (Genoa).",
+        "Paco Esteban (Lecce) wins a free kick on the left wing."
+      ],
+      "rawRows": 2,
+      "duplicateIds": false,
+      "coordinateConflict": false,
+      "xy": [
+        8,
+        8.2
+      ],
+      "problems": [
+        "grafia_o_alias_non_verificato"
+      ],
+      "trusted": false
+    },
+    {
+      "match": "401874968",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874968",
+      "id": "54671195",
+      "sourceIds": [
+        "54671195"
+      ],
+      "type": "foul",
+      "sec": 5264,
+      "period": 2,
+      "minute": "88'",
+      "sequence": 112,
+      "people": [
+        {
+          "id": "330550",
+          "name": "Amar Ahmed",
+          "side": "home"
+        },
+        {
+          "id": "324256",
+          "name": "Mikael Ellertsson",
+          "side": "away"
+        }
+      ],
+      "texts": [
+        "Mikael Ellertsson (Genoa) wins a free kick in the defensive half.",
+        "Foul by Amar Fatah (Lecce)."
+      ],
+      "rawRows": 2,
+      "duplicateIds": false,
+      "coordinateConflict": false,
+      "xy": [
+        33.8,
+        12.6
+      ],
+      "problems": [
+        "grafia_o_alias_non_verificato"
+      ],
+      "trusted": false
+    },
+    {
+      "match": "401874968",
+      "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874968",
+      "id": "54671358",
+      "sourceIds": [
+        "54671358"
+      ],
+      "type": "foul",
+      "sec": 5400,
+      "period": 2,
+      "minute": "90'+4'",
+      "sequence": 121,
+      "people": [
+        {
+          "id": "222446",
+          "name": "Djibril Sow",
+          "side": "away"
+        },
+        {
+          "id": "330550",
+          "name": "Amar Ahmed",
+          "side": "home"
+        }
+      ],
+      "texts": [
+        "Foul by Djibril Sow (Genoa).",
+        "Amar Fatah (Lecce) wins a free kick in the defensive half."
+      ],
+      "rawRows": 2,
+      "duplicateIds": false,
+      "coordinateConflict": false,
+      "xy": [
+        54.2,
+        11.2
+      ],
+      "problems": [
+        "grafia_o_alias_non_verificato"
+      ],
+      "trusted": false
+    }
+  ],
+  "unverifiedSubstitutions": [
+    {
+      "match": "401915310",
+      "id": "54764138",
+      "minute": "90'",
+      "sec": 5358,
+      "period": 2,
+      "sequence": 101,
+      "on": {
+        "id": "383068",
+        "name": "Lucas Ferreira",
+        "side": "home"
+      },
+      "off": {
+        "id": "226181",
+        "name": "Mykola Matviyenko",
+        "side": "home"
+      },
+      "valid": false
+    },
+    {
+      "match": "401915311",
+      "id": "54763892",
+      "minute": "83'",
+      "sec": 4952,
+      "period": 2,
+      "sequence": 111,
+      "on": {
+        "id": "268478",
+        "name": "Gabriel Gomes",
+        "side": "home"
+      },
+      "off": {
+        "id": "181729",
+        "name": "Mario Lemina",
+        "side": "home"
+      },
+      "valid": false
+    },
+    {
+      "match": "401915309",
+      "id": "54786718",
+      "minute": "74'",
+      "sec": 4408,
+      "period": 2,
+      "sequence": 97,
+      "on": {
+        "id": "316128",
+        "name": "Lucas Beraldo",
+        "side": "away"
+      },
+      "off": {
+        "id": "288897",
+        "name": "Vitinha",
+        "side": "away"
+      },
+      "valid": false
+    },
+    {
+      "match": "757707",
+      "id": "46327842",
+      "minute": "70'",
+      "sec": 4187,
+      "period": 2,
+      "sequence": 102,
+      "on": {
+        "id": "293919",
+        "name": "Muhammed-Cham Saracevic",
+        "side": "home"
+      },
+      "off": {
+        "id": "333780",
+        "name": "Christos Zafeiris",
+        "side": "home"
+      },
+      "valid": false
+    },
+    {
+      "match": "757707",
+      "id": "46327918",
+      "minute": "81'",
+      "sec": 4846,
+      "period": 2,
+      "sequence": 123,
+      "on": {
+        "id": "390975",
+        "name": "Andre Annous",
+        "side": "away"
+      },
+      "off": {
+        "id": "238262",
+        "name": "Declan Rice",
+        "side": "away"
+      },
+      "valid": false
+    },
+    {
+      "match": "757709",
+      "id": "46331357",
+      "minute": "81'",
+      "sec": 4802,
+      "period": 2,
+      "sequence": 89,
+      "on": {
+        "id": "157688",
+        "name": "Kim Min-Jae",
+        "side": "away"
+      },
+      "off": {
+        "id": "286831",
+        "name": "Michael Olise",
+        "side": "away"
+      },
+      "valid": false
+    },
+    {
+      "match": "757715",
+      "id": "46330581",
+      "minute": "72'",
+      "sec": 4285,
+      "period": 2,
+      "sequence": 73,
+      "on": {
+        "id": "359245",
+        "name": "Munashe Garananga",
+        "side": "away"
+      },
+      "off": {
+        "id": "285142",
+        "name": "Gabriel Pereira",
+        "side": "away"
+      },
+      "valid": false
+    },
+    {
+      "match": "757715",
+      "id": "46330708",
+      "minute": "76'",
+      "sec": 4509,
+      "period": 2,
+      "sequence": 82,
+      "on": {
+        "id": "363213",
+        "name": "Robert",
+        "side": "away"
+      },
+      "off": {
+        "id": "324510",
+        "name": "Elias Achouri",
+        "side": "away"
+      },
+      "valid": false
+    },
+    {
+      "match": "757716",
+      "id": "46332366",
+      "minute": "31'",
+      "sec": 1808,
+      "period": 1,
+      "sequence": 32,
+      "on": {
+        "id": "353471",
+        "name": "Emmanuel Addai",
+        "side": "home"
+      },
+      "off": {
+        "id": "238827",
+        "name": "Kady",
+        "side": "home"
+      },
+      "valid": false
+    },
+    {
+      "match": "757716",
+      "id": "46332539",
+      "minute": "61'",
+      "sec": 3656,
+      "period": 2,
+      "sequence": 79,
+      "on": {
+        "id": "346634",
+        "name": "Nariman Akhundzade",
+        "side": "home"
+      },
+      "off": {
+        "id": "367591",
+        "name": "Camilo Durán",
+        "side": "home"
+      },
+      "valid": false
+    },
+    {
+      "match": "757716",
+      "id": "46332612",
+      "minute": "75'",
+      "sec": 4441,
+      "period": 2,
+      "sequence": 89,
+      "on": {
+        "id": "304700",
+        "name": "Daniel",
+        "side": "home"
+      },
+      "off": {
+        "id": "305343",
+        "name": "Elvin Cafarquliyev",
+        "side": "home"
+      },
+      "valid": false
+    },
+    {
+      "match": "757716",
+      "id": "46332611",
+      "minute": "75'",
+      "sec": 4447,
+      "period": 2,
+      "sequence": 90,
+      "on": {
+        "id": "288460",
+        "name": "Oleksiy Kashchuk",
+        "side": "home"
+      },
+      "off": {
+        "id": "182528",
+        "name": "Abdellah Zoubir",
+        "side": "home"
+      },
+      "valid": false
+    },
+    {
+      "match": "401875002",
+      "id": "54633139",
+      "minute": "55'",
+      "sec": 3267,
+      "period": 2,
+      "sequence": 61,
+      "on": {
+        "id": "276636",
+        "name": "Enrique Perez",
+        "side": "away"
+      },
+      "off": {
+        "id": "263705",
+        "name": "Gianluca Busio",
+        "side": "away"
+      },
+      "valid": false
+    },
+    {
+      "match": "401874968",
+      "id": "54668772",
+      "minute": "59'",
+      "sec": 3535,
+      "period": 2,
+      "sequence": 74,
+      "on": {
+        "id": "330550",
+        "name": "Amar Ahmed",
+        "side": "home"
+      },
+      "off": {
+        "id": "307893",
+        "name": "Joel Monteiro",
+        "side": "home"
+      },
+      "valid": false
+    },
+    {
+      "match": "401874968",
+      "id": "54670235",
+      "minute": "75'",
+      "sec": 4475,
+      "period": 2,
+      "sequence": 95,
+      "on": {
+        "id": "3123406",
+        "name": "Francisco Esteban Sánchez",
+        "side": "home"
+      },
+      "off": {
+        "id": "286582",
+        "name": "Konan N’Dri",
+        "side": "home"
+      },
+      "valid": false
+    },
+    {
+      "match": "401874963",
+      "id": "54723209",
+      "minute": "77'",
+      "sec": 4620,
+      "period": 2,
+      "sequence": 85,
+      "on": {
+        "id": "304217",
+        "name": "Rafael Obrador",
+        "side": "home"
+      },
+      "off": {
+        "id": "290418",
+        "name": "Josh Doig",
+        "side": "home"
+      },
+      "valid": false
+    },
+    {
+      "match": "401874963",
+      "id": "54723591",
+      "minute": "89'",
+      "sec": 5315,
+      "period": 2,
+      "sequence": 97,
+      "on": {
+        "id": "401558",
+        "name": "Víctor Valdepeñas",
+        "side": "away"
+      },
+      "off": {
+        "id": "376473",
+        "name": "Franco Mastantuono",
+        "side": "away"
+      },
+      "valid": false
+    },
+    {
+      "match": "736881",
+      "id": "46291334",
+      "minute": "69'",
+      "sec": 4137,
+      "period": 2,
+      "sequence": 71,
+      "on": {
+        "id": "263508",
+        "name": "Bayo Youssouf",
+        "side": "home"
+      },
+      "off": {
+        "id": "251388",
+        "name": "Nicolò Zaniolo",
+        "side": "home"
+      },
+      "valid": false
+    }
+  ],
+  "accounting": {
+    "totals": {
+      "structuredFouls": 922,
+      "structuredHandballs": 41,
+      "textHandballPenalties": 5,
+      "textOnlyFouls": 1,
+      "expected": 970,
+      "residual": 1,
+      "unknownSide": 0
+    },
+    "teamsWithResidual": [
+      {
+        "match": "401875002",
+        "team": "Como",
+        "expected": 5,
+        "structured": 4,
+        "additional": 0,
+        "residual": 1
+      }
+    ]
+  },
+  "categoryConflicts": [
+    {
+      "match": "401915311",
+      "sourceId": "54763221",
+      "sec": 3566,
+      "text": "Foul by Maximilian Mittelstädt (Stuttgart).",
+      "reason": "tipo_mano_fallo_discordante"
+    }
+  ]
+}

@@ -1,0 +1,615 @@
+{
+  "schema": 2,
+  "modelRef": "8824f5e94d1198fb88f93493e171e1d401a21b1a",
+  "dataRef": "cdcd037ab30cc8e578b69b690dd11aa04c065b61",
+  "matches": 21559,
+  "definitions": {
+    "base": "Variabili e fit logistico della componente FotMob usata in produzione; esclusa la fusione con Sofascore e quote.",
+    "formazione": "Sostituisce facing con la stessa propensione a subire falli, pesata sulle posizioni della formazione della partita.",
+    "due_avversari": "Sostituisce facing con la media pesata dei due avversari più vicini nella formazione della partita.",
+    "interazione": "Aggiunge log dribbling tentati degli avversari di zona e la sua interazione con log vulnerabilità individuale al dribbling."
+  },
+  "protocol": {
+    "development": [
+      "2022/2023",
+      "2023/2024",
+      "2024/2025"
+    ],
+    "holdout": [
+      "2025/2026",
+      "2026/2027"
+    ],
+    "threshold": 0.0002,
+    "selection": "Un solo candidato selezionato sullo sviluppo se deltaLL <= -0.0002 e deltaTop3 >= 0; holdout consultato dopo aver fissato tale scelta.",
+    "limitations": [
+      "Le medie di lega già presenti nella produzione sono ricostruite con la stessa procedura originale; questo non corregge retroattivamente eventuali limiti del baseline.",
+      "Le posizioni storiche della formazione non hanno un timestamp certificato prima del calcio d’inizio.",
+      "Il confronto riguarda la componente FotMob e non il modello finale con quote e Sofascore.",
+      "Test temporale retrospettivo; non è un esperimento prospettico su partite future."
+    ]
+  },
+  "positionCoverage": {
+    "computed": 63940,
+    "fallback": 0
+  },
+  "competitions": {
+    "sa": {
+      "rows": 47620,
+      "features": 19,
+      "development": {
+        "base": {
+          "n": 22820,
+          "matches": 1141,
+          "logloss": 0.4373059091272695,
+          "baselineLogloss": 0.4373059091272695,
+          "deltaLL": 0,
+          "deltaLLse": 0,
+          "top3": 0.7361963190184049,
+          "deltaTop3": 0,
+          "deltaTop3se": 0
+        },
+        "formazione": {
+          "n": 22820,
+          "matches": 1141,
+          "logloss": 0.437369075176703,
+          "baselineLogloss": 0.4373059091272695,
+          "deltaLL": 0.00006316604943349392,
+          "deltaLLse": 0.00017121839262498645,
+          "top3": 0.7467134092900964,
+          "deltaTop3": 0.010517090271691499,
+          "deltaTop3se": 0.01073414862362176
+        },
+        "due_avversari": {
+          "n": 22820,
+          "matches": 1141,
+          "logloss": 0.43736650032507257,
+          "baselineLogloss": 0.4373059091272695,
+          "deltaLL": 0.00006059119780312931,
+          "deltaLLse": 0.00018078319934635508,
+          "top3": 0.7467134092900964,
+          "deltaTop3": 0.010517090271691499,
+          "deltaTop3se": 0.011086472755532067
+        },
+        "interazione": {
+          "n": 22820,
+          "matches": 1141,
+          "logloss": 0.4374750692117276,
+          "baselineLogloss": 0.4373059091272695,
+          "deltaLL": 0.00016916008445809315,
+          "deltaLLse": 0.00008444791526731766,
+          "top3": 0.7388255915863278,
+          "deltaTop3": 0.0026292725679228747,
+          "deltaTop3se": 0.0068476505430137375
+        }
+      },
+      "selected": null,
+      "holdout": {
+        "base": {
+          "n": 9600,
+          "matches": 480,
+          "logloss": 0.3941900468596478,
+          "baselineLogloss": 0.3941900468596478,
+          "deltaLL": 0,
+          "deltaLLse": 0,
+          "top3": 0.6541666666666667,
+          "deltaTop3": 0,
+          "deltaTop3se": 0
+        },
+        "formazione": {
+          "n": 9600,
+          "matches": 480,
+          "logloss": 0.39411400102871036,
+          "baselineLogloss": 0.3941900468596478,
+          "deltaLL": -0.00007604583093749303,
+          "deltaLLse": 0.00019613124594293328,
+          "top3": 0.63125,
+          "deltaTop3": -0.022916666666666665,
+          "deltaTop3se": 0.015710376236103756
+        },
+        "due_avversari": {
+          "n": 9600,
+          "matches": 480,
+          "logloss": 0.3941276178326084,
+          "baselineLogloss": 0.3941900468596478,
+          "deltaLL": -0.00006242902703943305,
+          "deltaLLse": 0.0002123026129035586,
+          "top3": 0.63125,
+          "deltaTop3": -0.022916666666666665,
+          "deltaTop3se": 0.01598482403033914
+        },
+        "interazione": {
+          "n": 9600,
+          "matches": 480,
+          "logloss": 0.3941529544251155,
+          "baselineLogloss": 0.3941900468596478,
+          "deltaLL": -0.00003709243453234497,
+          "deltaLLse": 0.00004883489276792984,
+          "top3": 0.6604166666666667,
+          "deltaTop3": 0.00625,
+          "deltaTop3se": 0.006250000000000019
+        }
+      },
+      "folds": {
+        "2022/2023": {
+          "base": {
+            "n": 7620,
+            "matches": 381,
+            "logloss": 0.45319327082830224,
+            "baselineLogloss": 0.45319327082830224,
+            "deltaLL": 0,
+            "top3": 0.7716535433070866,
+            "baselineTop3": 0.7716535433070866
+          },
+          "formazione": {
+            "n": 7620,
+            "matches": 381,
+            "logloss": 0.45266664554605596,
+            "baselineLogloss": 0.45319327082830224,
+            "deltaLL": -0.0005266252822463047,
+            "top3": 0.7795275590551181,
+            "baselineTop3": 0.7716535433070866
+          },
+          "due_avversari": {
+            "n": 7620,
+            "matches": 381,
+            "logloss": 0.4527092373298979,
+            "baselineLogloss": 0.45319327082830224,
+            "deltaLL": -0.00048403349840440583,
+            "top3": 0.7900262467191601,
+            "baselineTop3": 0.7716535433070866
+          },
+          "interazione": {
+            "n": 7620,
+            "matches": 381,
+            "logloss": 0.45298159084246864,
+            "baselineLogloss": 0.45319327082830224,
+            "deltaLL": -0.00021167998583363027,
+            "top3": 0.7952755905511811,
+            "baselineTop3": 0.7716535433070866
+          }
+        },
+        "2023/2024": {
+          "base": {
+            "n": 7600,
+            "matches": 380,
+            "logloss": 0.44590525535104064,
+            "baselineLogloss": 0.44590525535104064,
+            "deltaLL": 0,
+            "top3": 0.7342105263157894,
+            "baselineTop3": 0.7342105263157894
+          },
+          "formazione": {
+            "n": 7600,
+            "matches": 380,
+            "logloss": 0.44648538546273503,
+            "baselineLogloss": 0.44590525535104064,
+            "deltaLL": 0.0005801301116943442,
+            "top3": 0.7578947368421053,
+            "baselineTop3": 0.7342105263157894
+          },
+          "due_avversari": {
+            "n": 7600,
+            "matches": 380,
+            "logloss": 0.4462929086089038,
+            "baselineLogloss": 0.44590525535104064,
+            "deltaLL": 0.0003876532578631572,
+            "top3": 0.7578947368421053,
+            "baselineTop3": 0.7342105263157894
+          },
+          "interazione": {
+            "n": 7600,
+            "matches": 380,
+            "logloss": 0.4466171068409845,
+            "baselineLogloss": 0.44590525535104064,
+            "deltaLL": 0.0007118514899438148,
+            "top3": 0.718421052631579,
+            "baselineTop3": 0.7342105263157894
+          }
+        },
+        "2024/2025": {
+          "base": {
+            "n": 7600,
+            "matches": 380,
+            "logloss": 0.41277739235588384,
+            "baselineLogloss": 0.41277739235588384,
+            "deltaLL": 0,
+            "top3": 0.7026315789473684,
+            "baselineTop3": 0.7026315789473684
+          },
+          "formazione": {
+            "n": 7600,
+            "matches": 380,
+            "logloss": 0.41291493775718807,
+            "baselineLogloss": 0.41277739235588384,
+            "deltaLL": 0.00013754540130423123,
+            "top3": 0.7026315789473684,
+            "baselineTop3": 0.7026315789473684
+          },
+          "due_avversari": {
+            "n": 7600,
+            "matches": 380,
+            "logloss": 0.41305697941271924,
+            "baselineLogloss": 0.41277739235588384,
+            "deltaLL": 0.0002795870568353932,
+            "top3": 0.6921052631578948,
+            "baselineTop3": 0.7026315789473684
+          },
+          "interazione": {
+            "n": 7600,
+            "matches": 380,
+            "logloss": 0.41278570331585923,
+            "baselineLogloss": 0.41277739235588384,
+            "deltaLL": 0.000008310959975388917,
+            "top3": 0.7026315789473684,
+            "baselineTop3": 0.7026315789473684
+          }
+        },
+        "2025/2026": {
+          "base": {
+            "n": 7600,
+            "matches": 380,
+            "logloss": 0.4009361576604788,
+            "baselineLogloss": 0.4009361576604788,
+            "deltaLL": 0,
+            "top3": 0.6578947368421053,
+            "baselineTop3": 0.6578947368421053
+          },
+          "formazione": {
+            "n": 7600,
+            "matches": 380,
+            "logloss": 0.40089653682250126,
+            "baselineLogloss": 0.4009361576604788,
+            "deltaLL": -0.000039620837977556794,
+            "top3": 0.6236842105263158,
+            "baselineTop3": 0.6578947368421053
+          },
+          "due_avversari": {
+            "n": 7600,
+            "matches": 380,
+            "logloss": 0.4008933648139766,
+            "baselineLogloss": 0.4009361576604788,
+            "deltaLL": -0.000042792846502200184,
+            "top3": 0.6289473684210526,
+            "baselineTop3": 0.6578947368421053
+          },
+          "interazione": {
+            "n": 7600,
+            "matches": 380,
+            "logloss": 0.40088226345592576,
+            "baselineLogloss": 0.4009361576604788,
+            "deltaLL": -0.000053894204553025223,
+            "top3": 0.6631578947368421,
+            "baselineTop3": 0.6578947368421053
+          }
+        },
+        "2026/2027": {
+          "base": {
+            "n": 2000,
+            "matches": 100,
+            "logloss": 0.36855482581649024,
+            "baselineLogloss": 0.36855482581649024,
+            "deltaLL": 0,
+            "top3": 0.64,
+            "baselineTop3": 0.64
+          },
+          "formazione": {
+            "n": 2000,
+            "matches": 100,
+            "logloss": 0.368340365012305,
+            "baselineLogloss": 0.36855482581649024,
+            "deltaLL": -0.0002144608041852507,
+            "top3": 0.66,
+            "baselineTop3": 0.64
+          },
+          "due_avversari": {
+            "n": 2000,
+            "matches": 100,
+            "logloss": 0.3684177793034093,
+            "baselineLogloss": 0.36855482581649024,
+            "deltaLL": -0.00013704651308091796,
+            "top3": 0.64,
+            "baselineTop3": 0.64
+          },
+          "interazione": {
+            "n": 2000,
+            "matches": 100,
+            "logloss": 0.3685815801080365,
+            "baselineLogloss": 0.36855482581649024,
+            "deltaLL": 0.00002675429154623998,
+            "top3": 0.65,
+            "baselineTop3": 0.64
+          }
+        }
+      }
+    },
+    "ucl": {
+      "rows": 16320,
+      "features": 16,
+      "development": {
+        "base": {
+          "n": 8780,
+          "matches": 439,
+          "logloss": 0.4279803058347029,
+          "baselineLogloss": 0.4279803058347029,
+          "deltaLL": 0,
+          "deltaLLse": 0,
+          "top3": 0.7744874715261959,
+          "deltaTop3": 0,
+          "deltaTop3se": 0
+        },
+        "formazione": {
+          "n": 8780,
+          "matches": 439,
+          "logloss": 0.42800444461254983,
+          "baselineLogloss": 0.4279803058347029,
+          "deltaLL": 0.000024138777846935075,
+          "deltaLLse": 0.00037076123529935297,
+          "top3": 0.7494305239179955,
+          "deltaTop3": -0.025056947608200455,
+          "deltaTop3se": 0.018061293538839777
+        },
+        "due_avversari": {
+          "n": 8780,
+          "matches": 439,
+          "logloss": 0.4281498888310102,
+          "baselineLogloss": 0.4279803058347029,
+          "deltaLL": 0.00016958299630731203,
+          "deltaLLse": 0.00039730869079335576,
+          "top3": 0.7334851936218679,
+          "deltaTop3": -0.04100227790432802,
+          "deltaTop3se": 0.01842301635548261
+        },
+        "interazione": {
+          "n": 8780,
+          "matches": 439,
+          "logloss": 0.4281361088273141,
+          "baselineLogloss": 0.4279803058347029,
+          "deltaLL": 0.00015580299261124818,
+          "deltaLLse": 0.00011849794700029356,
+          "top3": 0.7630979498861048,
+          "deltaTop3": -0.011389521640091117,
+          "deltaTop3se": 0.009386993378472624
+        }
+      },
+      "selected": null,
+      "holdout": {
+        "base": {
+          "n": 5040,
+          "matches": 252,
+          "logloss": 0.39296057760721925,
+          "baselineLogloss": 0.39296057760721925,
+          "deltaLL": 0,
+          "deltaLLse": 0,
+          "top3": 0.6825396825396826,
+          "deltaTop3": 0,
+          "deltaTop3se": 0
+        },
+        "formazione": {
+          "n": 5040,
+          "matches": 252,
+          "logloss": 0.39251624085428316,
+          "baselineLogloss": 0.39296057760721925,
+          "deltaLL": -0.000444336752936068,
+          "deltaLLse": 0.00034607004775260664,
+          "top3": 0.6626984126984127,
+          "deltaTop3": -0.01984126984126984,
+          "deltaTop3se": 0.02062269483956904
+        },
+        "due_avversari": {
+          "n": 5040,
+          "matches": 252,
+          "logloss": 0.39271017148147885,
+          "baselineLogloss": 0.39296057760721925,
+          "deltaLL": -0.00025040612574037547,
+          "deltaLLse": 0.00037746247991120204,
+          "top3": 0.6547619047619048,
+          "deltaTop3": -0.027777777777777776,
+          "deltaTop3se": 0.024769076902704416
+        },
+        "interazione": {
+          "n": 5040,
+          "matches": 252,
+          "logloss": 0.3929707804581468,
+          "baselineLogloss": 0.39296057760721925,
+          "deltaLL": 0.000010202850927588957,
+          "deltaLLse": 0.000041675165712100404,
+          "top3": 0.6825396825396826,
+          "deltaTop3": 0,
+          "deltaTop3se": 0.005623126668669676
+        }
+      },
+      "folds": {
+        "2022/2023": {
+          "base": {
+            "n": 2500,
+            "matches": 125,
+            "logloss": 0.4353942673130755,
+            "baselineLogloss": 0.4353942673130755,
+            "deltaLL": 0,
+            "top3": 0.808,
+            "baselineTop3": 0.808
+          },
+          "formazione": {
+            "n": 2500,
+            "matches": 125,
+            "logloss": 0.4353152434489467,
+            "baselineLogloss": 0.4353942673130755,
+            "deltaLL": -0.00007902386412879423,
+            "top3": 0.816,
+            "baselineTop3": 0.808
+          },
+          "due_avversari": {
+            "n": 2500,
+            "matches": 125,
+            "logloss": 0.4352854160629944,
+            "baselineLogloss": 0.4353942673130755,
+            "deltaLL": -0.00010885125008107934,
+            "top3": 0.8,
+            "baselineTop3": 0.808
+          },
+          "interazione": {
+            "n": 2500,
+            "matches": 125,
+            "logloss": 0.4355394815032054,
+            "baselineLogloss": 0.4353942673130755,
+            "deltaLL": 0.0001452141901299001,
+            "top3": 0.808,
+            "baselineTop3": 0.808
+          }
+        },
+        "2023/2024": {
+          "base": {
+            "n": 2500,
+            "matches": 125,
+            "logloss": 0.4504277614730204,
+            "baselineLogloss": 0.4504277614730204,
+            "deltaLL": 0,
+            "top3": 0.88,
+            "baselineTop3": 0.88
+          },
+          "formazione": {
+            "n": 2500,
+            "matches": 125,
+            "logloss": 0.4506634295465378,
+            "baselineLogloss": 0.4504277614730204,
+            "deltaLL": 0.000235668073517445,
+            "top3": 0.864,
+            "baselineTop3": 0.88
+          },
+          "due_avversari": {
+            "n": 2500,
+            "matches": 125,
+            "logloss": 0.4517050001535391,
+            "baselineLogloss": 0.4504277614730204,
+            "deltaLL": 0.0012772386805187125,
+            "top3": 0.84,
+            "baselineTop3": 0.88
+          },
+          "interazione": {
+            "n": 2500,
+            "matches": 125,
+            "logloss": 0.45031249001167734,
+            "baselineLogloss": 0.4504277614730204,
+            "deltaLL": -0.0001152714613430362,
+            "top3": 0.856,
+            "baselineTop3": 0.88
+          }
+        },
+        "2024/2025": {
+          "base": {
+            "n": 3780,
+            "matches": 189,
+            "logloss": 0.4082306913395375,
+            "baselineLogloss": 0.4082306913395375,
+            "deltaLL": 0,
+            "top3": 0.6825396825396826,
+            "baselineTop3": 0.6825396825396826
+          },
+          "formazione": {
+            "n": 3780,
+            "matches": 189,
+            "logloss": 0.408183159050126,
+            "baselineLogloss": 0.4082306913395375,
+            "deltaLL": -0.00004753228941151772,
+            "top3": 0.6296296296296297,
+            "baselineTop3": 0.6825396825396826
+          },
+          "due_avversari": {
+            "n": 3780,
+            "matches": 189,
+            "logloss": 0.40785184745897773,
+            "baselineLogloss": 0.4082306913395375,
+            "deltaLL": -0.00037884388055975745,
+            "top3": 0.6190476190476191,
+            "baselineTop3": 0.6825396825396826
+          },
+          "interazione": {
+            "n": 3780,
+            "matches": 189,
+            "logloss": 0.4085727795546591,
+            "baselineLogloss": 0.4082306913395375,
+            "deltaLL": 0.00034208821512158715,
+            "top3": 0.671957671957672,
+            "baselineTop3": 0.6825396825396826
+          }
+        },
+        "2025/2026": {
+          "base": {
+            "n": 3780,
+            "matches": 189,
+            "logloss": 0.38767969508612915,
+            "baselineLogloss": 0.38767969508612915,
+            "deltaLL": 0,
+            "top3": 0.7248677248677249,
+            "baselineTop3": 0.7248677248677249
+          },
+          "formazione": {
+            "n": 3780,
+            "matches": 189,
+            "logloss": 0.3872585065399149,
+            "baselineLogloss": 0.38767969508612915,
+            "deltaLL": -0.0004211885462142866,
+            "top3": 0.708994708994709,
+            "baselineTop3": 0.7248677248677249
+          },
+          "due_avversari": {
+            "n": 3780,
+            "matches": 189,
+            "logloss": 0.38771066348782574,
+            "baselineLogloss": 0.38767969508612915,
+            "deltaLL": 0.00003096840169654998,
+            "top3": 0.6931216931216931,
+            "baselineTop3": 0.7248677248677249
+          },
+          "interazione": {
+            "n": 3780,
+            "matches": 189,
+            "logloss": 0.3876802299548396,
+            "baselineLogloss": 0.38767969508612915,
+            "deltaLL": 5.34868710385232e-7,
+            "top3": 0.7195767195767195,
+            "baselineTop3": 0.7248677248677249
+          }
+        },
+        "2026/2027": {
+          "base": {
+            "n": 1260,
+            "matches": 63,
+            "logloss": 0.4088032251704894,
+            "baselineLogloss": 0.4088032251704894,
+            "deltaLL": 0,
+            "top3": 0.5555555555555556,
+            "baselineTop3": 0.5555555555555556
+          },
+          "formazione": {
+            "n": 1260,
+            "matches": 63,
+            "logloss": 0.40828944379738796,
+            "baselineLogloss": 0.4088032251704894,
+            "deltaLL": -0.0005137813731014123,
+            "top3": 0.5238095238095238,
+            "baselineTop3": 0.5555555555555556
+          },
+          "due_avversari": {
+            "n": 1260,
+            "matches": 63,
+            "logloss": 0.4077086954624382,
+            "baselineLogloss": 0.4088032251704894,
+            "deltaLL": -0.0010945297080511517,
+            "top3": 0.5396825396825397,
+            "baselineTop3": 0.5555555555555556
+          },
+          "interazione": {
+            "n": 1260,
+            "matches": 63,
+            "logloss": 0.4088424319680686,
+            "baselineLogloss": 0.4088032251704894,
+            "deltaLL": 0.00003920679757920014,
+            "top3": 0.5714285714285714,
+            "baselineTop3": 0.5555555555555556
+          }
+        }
+      }
+    }
+  }
+}
