@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta name="build" content="2026-11-06T16:34:04Z">
+<meta name="build" content="2026-11-06T16:39:02Z">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -641,7 +641,9 @@ function campoHtml(m, trio) {
   const lu = m.lu;
   if (!lu || !lu.h.length) return `<p class="note">La formazione non è ancora disponibile: compare appena FotMob pubblica i possibili titolari (di solito 1-2 giorni prima della partita).</p>`;
   const uff = lu.t === 'standard' || m.uff;
-  const titolo = uff ? 'Formazioni ufficiali' : 'Possibili 11 titolari';
+  const prob = lu.t === 'predicted';
+  const titolo = uff ? 'Formazioni ufficiali' : prob ? 'Formazioni probabili' : 'Possibili 11 titolari';
+  const etichetta = uff ? 'Ufficiali' : prob ? '⚠ Probabili' : '⚠ Possibili titolari';
   const nota = uff ? 'Titolari confermati.' : lu.t === 'lastStarting11' ? "Per ora è l'ultima formazione schierata da ciascuna squadra: diventerà quella probabile e poi quella ufficiale, circa un'ora prima del calcio d'inizio." : "Formazione probabile di FotMob: le ufficiali arrivano circa un'ora prima del calcio d'inizio.";
   const ps = players(m), last = s => String(s).normalize('NFD').replace(/[^\p{L} ]/gu, '').toLowerCase().trim().split(' ').pop();
   const tri = new Set(trio.map(x => x.n));
@@ -656,7 +658,7 @@ function campoHtml(m, trio) {
     const row = gk ? null : find(name, side), inT = row && tri.has(row.n);
     const w = String(name).split(' '), short = w.length > 1 ? (w.length > 2 && /^(de|di|da|van|von|der|den|dos|del|la|le|el|ten|ter|mac)$/i.test(w[w.length - 2]) ? w.slice(-2).join(' ') : w[w.length - 1]) : name;
     return `<div class="pl ${inT ? 'trio' : ''}" style="left:${left.toFixed(1)}%;top:${top.toFixed(1)}%"><div class="dot" style="${dot(home ? m.hc : m.ac)}">${num}</div><div class="nm">${short}</div>${row ? `<div class="pp">${pct(row.p)}</div>` : ''}</div>`; };
-  return `<div class="pitchwrap"><div class="pitchhead"><h3>${titolo}</h3><span class="pill ${uff ? 'uff' : 'prob'}">${uff ? 'Ufficiali' : '⚠ Possibili titolari'}</span></div>
+  return `<div class="pitchwrap"><div class="pitchhead"><h3>${titolo}</h3><span class="pill ${uff ? 'uff' : 'prob'}">${etichetta}</span></div>
     <div class="pitch"><span class="ln mid"></span><span class="ln circ"></span><span class="ln box1"></span><span class="ln box2"></span><span class="ln sm1"></span><span class="ln sm2"></span>
       <span class="tm t1">${m.a} ${lu.f[1] || ''}</span><span class="tm t2">${m.h} ${lu.f[0] || ''}</span>
       ${lu.a.map(r => P(r, 'a')).join('')}${lu.h.map(r => P(r, 'h')).join('')}</div>
