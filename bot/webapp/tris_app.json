@@ -5,21 +5,21 @@
   "ko": 1793994300,
   "partita": "Venezia - Udinese",
   "uff": false,
-  "p3": 0.010823890679650094,
+  "p3": 0.009655895153627645,
   "trio": [
    {
     "n": "M. Moreno",
-    "p": 0.2358,
+    "p": 0.2338,
     "team": "Venezia"
    },
    {
     "n": "K. Pérez",
-    "p": 0.2077,
+    "p": 0.2125,
     "team": "Venezia"
    },
    {
     "n": "J. Karlström",
-    "p": 0.1905,
+    "p": 0.1675,
     "team": "Udinese"
    }
   ]
