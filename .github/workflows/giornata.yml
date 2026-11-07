@@ -1,0 +1,81 @@
+name: Giornata automatica
+on:
+  schedule:
+    - cron: '7,22,37,52 9-23 * * 0,1,5,6'
+    - cron: '7,22,37,52 15-23 * * 2,3,4'
+  workflow_dispatch:
+    inputs:
+      prova:
+        description: Solo prova, senza pubblicare
+        type: boolean
+        default: true
+
+concurrency:
+  group: pubblicazione-cartellino
+  cancel-in-progress: false
+
+jobs:
+  giornata:
+    if: github.event_name == 'workflow_dispatch' || vars.CARTELLINO_AUTO == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - uses: actions/checkout@v4
+        with:
+          ref: dati
+          path: dati
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Controlla formazioni ed esiti
+        id: partite
+        run: node cloud/giornata.mjs
+      - name: Rigenera il sito
+        run: |
+          if git diff --quiet -- bot/webapp/data.json bot/webapp/vercel/risultati.json; then exit 0; fi
+          cd bot/webapp
+          python3 build.py
+          python3 build_vercel.py
+          cp vercel/sito/index.html ../../index.html
+      - name: Registra i tris aggiornati
+        if: steps.partite.outputs.previsioni != ''
+        env:
+          PARTITE: ${{ steps.partite.outputs.previsioni }}
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+          node bot/webapp/tris_app.js "$PARTITE"
+      - name: Salva la prova
+        if: github.event_name == 'workflow_dispatch' && inputs.prova
+        uses: actions/upload-artifact@v4
+        with:
+          name: giornata-prova
+          path: |
+            index.html
+            bot/webapp/data.json
+            bot/webapp/lineups.txt
+            bot/webapp/tris_app.json
+            bot/webapp/vercel/risultati.json
+      - name: Pubblica gli aggiornamenti
+        if: github.ref == 'refs/heads/main' && vars.CARTELLINO_AUTO == 'true' && (github.event_name == 'schedule' || !inputs.prova)
+        env:
+          VERCEL_DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: |
+          git add -- index.html bot/webapp/index.html bot/webapp/data.json bot/webapp/lineups.txt bot/webapp/tris_app.json bot/webapp/vercel/risultati.json
+          if ! git diff --cached --quiet; then
+            git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Aggiorna formazioni ed esiti'
+            git push origin HEAD:main
+          fi
+          if [ -n "$VERCEL_DEPLOY_HOOK" ]; then
+            stamp=$(sed -n 's/^<meta name="build" content="\([^"]*\)">$/\1/p' index.html)
+            site=$(curl -fsS --max-time 15 https://ilcartellino.vercel.app/ || true)
+            if [ -n "$stamp" ] && ! printf '%s' "$site" | grep -Fq "<meta name=\"build\" content=\"$stamp\">"; then
+              curl -fsS --max-time 20 --retry 2 -o /dev/null -X POST "$VERCEL_DEPLOY_HOOK"
+            fi
+          fi
