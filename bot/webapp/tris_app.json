@@ -29,23 +29,23 @@
   "id": 5749741,
   "ko": 1794060000,
   "partita": "Cagliari - Frosinone",
-  "uff": false,
-  "p3": 0.013213856992258934,
+  "uff": true,
+  "p3": 0.022534654835769285,
   "trio": [
    {
-    "n": "P. Masini",
-    "p": 0.2384,
-    "team": "Frosinone"
-   },
-   {
     "n": "A. Deiola",
-    "p": 0.2231,
+    "p": 0.3122,
     "team": "Cagliari"
    },
    {
     "n": "Z. Pedro",
-    "p": 0.2142,
+    "p": 0.2554,
     "team": "Cagliari"
+   },
+   {
+    "n": "G. Bracaglia",
+    "p": 0.2436,
+    "team": "Frosinone"
    }
   ]
  },
@@ -54,22 +54,22 @@
   "id": 5749748,
   "ko": 1794060000,
   "partita": "Torino - Lecce",
-  "uff": false,
-  "p3": 0.007368582863410081,
+  "uff": true,
+  "p3": 0.007702038121554553,
   "trio": [
    {
     "n": "Y. Maleh",
-    "p": 0.2288,
+    "p": 0.2154,
     "team": "Lecce"
    },
    {
-    "n": "D. Veiga",
-    "p": 0.2015,
+    "n": "A. Dembélé",
+    "p": 0.1848,
     "team": "Lecce"
    },
    {
-    "n": "R. Belghali",
-    "p": 0.1378,
+    "n": "S. Kulenović",
+    "p": 0.1668,
     "team": "Torino"
    }
   ]
@@ -80,22 +80,22 @@
   "ko": 1794070800,
   "partita": "Parma - Bologna",
   "uff": false,
-  "p3": 0.017796013737583573,
+  "p3": 0.008538318212641262,
   "trio": [
    {
     "n": "T. Pobega",
-    "p": 0.2892,
+    "p": 0.2202,
     "team": "Bologna"
    },
    {
     "n": "M. Troilo",
-    "p": 0.2348,
+    "p": 0.1838,
     "team": "Parma"
    },
    {
-    "n": "L. Ferguson",
-    "p": 0.2259,
-    "team": "Bologna"
+    "n": "V. Sierro",
+    "p": 0.1819,
+    "team": "Parma"
    }
   ]
  },
@@ -105,22 +105,22 @@
   "ko": 1794080700,
   "partita": "Roma - Sassuolo",
   "uff": false,
-  "p3": 0.003209503427634071,
+  "p3": 0.003299340671955225,
   "trio": [
    {
     "n": "D. Berardi",
-    "p": 0.1476,
+    "p": 0.1437,
+    "team": "Sassuolo"
+   },
+   {
+    "n": "D. Ćaleta-Car",
+    "p": 0.1436,
     "team": "Sassuolo"
    },
    {
     "n": "M. de Roon",
-    "p": 0.1455,
+    "p": 0.1378,
     "team": "Roma"
-   },
-   {
-    "n": "D. Ćaleta-Car",
-    "p": 0.1289,
-    "team": "Sassuolo"
    }
   ]
  },
@@ -130,21 +130,21 @@
   "ko": 1794137400,
   "partita": "Napoli - Lazio",
   "uff": false,
-  "p3": 0.006575884907963178,
+  "p3": 0.0074376034261913375,
   "trio": [
    {
-    "n": "K. Taylor",
-    "p": 0.1962,
+    "n": "R. Floriani",
+    "p": 0.2097,
     "team": "Lazio"
    },
    {
-    "n": "R. Belahyane",
-    "p": 0.1895,
+    "n": "O. Provstgaard",
+    "p": 0.1809,
     "team": "Lazio"
    },
    {
     "n": "R. Marín",
-    "p": 0.1524,
+    "p": 0.1691,
     "team": "Napoli"
    }
   ]
@@ -155,21 +155,21 @@
   "ko": 1794146400,
   "partita": "Genoa - Milan",
   "uff": false,
-  "p3": 0.006979961497064992,
+  "p3": 0.008271584099101864,
   "trio": [
    {
-    "n": "G. Ramos",
-    "p": 0.2043,
+    "n": "K. De Winter",
+    "p": 0.1966,
     "team": "Milan"
    },
    {
     "n": "Y. Musah",
-    "p": 0.1838,
+    "p": 0.1953,
     "team": "Milan"
    },
    {
     "n": "L. Østigard",
-    "p": 0.1603,
+    "p": 0.1858,
     "team": "Genoa"
    }
   ]
@@ -180,22 +180,22 @@
   "ko": 1794146400,
   "partita": "Monza - Atalanta",
   "uff": false,
-  "p3": 0.005195336991548165,
+  "p3": 0.005204049425796667,
   "trio": [
    {
-    "n": "N. Krstović",
-    "p": 0.1755,
-    "team": "Atalanta"
-   },
-   {
     "n": "L. Lucchesi",
-    "p": 0.1612,
+    "p": 0.1877,
     "team": "Monza"
    },
    {
-    "n": "S. Birindelli",
-    "p": 0.1583,
+    "n": "E. Kouadio",
+    "p": 0.1632,
     "team": "Monza"
+   },
+   {
+    "n": "Éderson",
+    "p": 0.1464,
+    "team": "Atalanta"
    }
   ]
  },
@@ -205,21 +205,21 @@
   "ko": 1794157200,
   "partita": "Inter - Como",
   "uff": false,
-  "p3": 0.006278303185121409,
+  "p3": 0.004507728368037025,
   "trio": [
    {
     "n": "Y. Couto",
-    "p": 0.2068,
+    "p": 0.225,
     "team": "Como"
    },
    {
-    "n": "M. Caqueret",
-    "p": 0.1742,
+    "n": "N. Paz",
+    "p": 0.1378,
     "team": "Como"
    },
    {
     "n": "P. Sučić",
-    "p": 0.1503,
+    "p": 0.1253,
     "team": "Inter"
    }
   ]
@@ -230,21 +230,21 @@
   "ko": 1794167100,
   "partita": "Fiorentina - Juventus",
   "uff": false,
-  "p3": 0.010108183064208139,
+  "p3": 0.010447898421512988,
   "trio": [
    {
     "n": "D. Luiz",
-    "p": 0.2336,
+    "p": 0.2355,
     "team": "Juventus"
    },
    {
-    "n": "F. Mastantuono",
-    "p": 0.1995,
-    "team": "Fiorentina"
+    "n": "G. Bremer",
+    "p": 0.1985,
+    "team": "Juventus"
    },
    {
-    "n": "A. Njie",
-    "p": 0.187,
+    "n": "Á. Jiménez",
+    "p": 0.1926,
     "team": "Fiorentina"
    }
   ]
