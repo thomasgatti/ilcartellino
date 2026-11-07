@@ -130,22 +130,22 @@
   "ko": 1794137400,
   "partita": "Napoli - Lazio",
   "uff": false,
-  "p3": 0.0074376034261913375,
+  "p3": 0.008289366335997828,
   "trio": [
    {
     "n": "R. Floriani",
-    "p": 0.2097,
+    "p": 0.2116,
     "team": "Lazio"
+   },
+   {
+    "n": "R. Marín",
+    "p": 0.1868,
+    "team": "Napoli"
    },
    {
     "n": "O. Provstgaard",
     "p": 0.1809,
     "team": "Lazio"
-   },
-   {
-    "n": "R. Marín",
-    "p": 0.1691,
-    "team": "Napoli"
    }
   ]
  },
@@ -155,16 +155,16 @@
   "ko": 1794146400,
   "partita": "Genoa - Milan",
   "uff": false,
-  "p3": 0.008271584099101864,
+  "p3": 0.0101255009390188,
   "trio": [
    {
     "n": "K. De Winter",
-    "p": 0.1966,
+    "p": 0.2181,
     "team": "Milan"
    },
    {
     "n": "Y. Musah",
-    "p": 0.1953,
+    "p": 0.2154,
     "team": "Milan"
    },
    {
@@ -180,21 +180,21 @@
   "ko": 1794146400,
   "partita": "Monza - Atalanta",
   "uff": false,
-  "p3": 0.005204049425796667,
+  "p3": 0.006022002947747564,
   "trio": [
    {
     "n": "L. Lucchesi",
-    "p": 0.1877,
+    "p": 0.1926,
     "team": "Monza"
    },
    {
     "n": "E. Kouadio",
-    "p": 0.1632,
+    "p": 0.1671,
     "team": "Monza"
    },
    {
-    "n": "Éderson",
-    "p": 0.1464,
+    "n": "R. Obrić",
+    "p": 0.1612,
     "team": "Atalanta"
    }
   ]
@@ -205,21 +205,21 @@
   "ko": 1794157200,
   "partita": "Inter - Como",
   "uff": false,
-  "p3": 0.004507728368037025,
+  "p3": 0.004876379281588755,
   "trio": [
    {
     "n": "Y. Couto",
-    "p": 0.225,
+    "p": 0.2298,
     "team": "Como"
    },
    {
     "n": "N. Paz",
-    "p": 0.1378,
+    "p": 0.1416,
     "team": "Como"
    },
    {
     "n": "P. Sučić",
-    "p": 0.1253,
+    "p": 0.1292,
     "team": "Inter"
    }
   ]
@@ -230,21 +230,21 @@
   "ko": 1794167100,
   "partita": "Fiorentina - Juventus",
   "uff": false,
-  "p3": 0.010447898421512988,
+  "p3": 0.01017710378351103,
   "trio": [
    {
     "n": "D. Luiz",
-    "p": 0.2355,
+    "p": 0.2317,
     "team": "Juventus"
    },
    {
     "n": "G. Bremer",
-    "p": 0.1985,
+    "p": 0.1956,
     "team": "Juventus"
    },
    {
     "n": "Á. Jiménez",
-    "p": 0.1926,
+    "p": 0.1936,
     "team": "Fiorentina"
    }
   ]
