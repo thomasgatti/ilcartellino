@@ -199,6 +199,7 @@ function archiveResult(round, m, j) {
     matchId:m.id,comp:round.comp,partita:`${m.h} - ${m.a}`,giornata:round.section.round,ko:m.ko,
     finale:rawScore.replace(/\s/g,''),p3_app:prior.p3,ammoniti:[...ammoniti],
     falli:Object.fromEntries(Object.entries(fl).map(([p,row]) => [p,row[0]])),
+    falli_subiti:Object.fromEntries(Object.entries(fl).map(([p,row]) => [p,row[1]])),
     sostituzioni:sub,tris_app:prior.trio.map(({n,p}) => ({n,p})),aggiornato:new Date().toISOString(),
   });
   seen.add(m.id);
