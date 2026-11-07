@@ -229,7 +229,7 @@ function archiveResult(round, m, j) {
     const side = e.isHome ? 'h' : 'a';
     if (e.type === 'Card' && e.player?.name && ['Yellow','YellowRed','Red'].includes(e.card)) {
       const name = n(e.player.name,side);
-      if (Object.hasOwn(fl,name)) ammoniti.add(name);
+      if (e.card !== 'Red' && Object.hasOwn(fl,name)) ammoniti.add(name);
       cards.push([e.overloadTime > 0 ? `${e.time}+${e.overloadTime}` : e.time,name,e.card === 'Yellow' ? 'G' : 'R']);
     }
     if (e.type === 'Substitution' && e.swap?.[0]?.name && e.swap?.[1]?.name) sub[n(e.swap[1].name,side)] = n(e.swap[0].name,side);
