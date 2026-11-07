@@ -579,7 +579,7 @@ const jointK = t => (new Set(t.map(x => x.side)).size > 1 ? 1.16 : 1.04);
 function pick(m, mode, idx = 0, raw = false) { const c = combos(m, mode, raw); return { ...c[Math.min(idx, c.length - 1)], rank: Math.min(idx, c.length - 1) + 1, n: c.length }; }
 function probNote(m) {
   const tipo = m.src === 'provv' ? 'PROVVISORIE' : 'PROBABILI';
-  const fonte = m.probableSource || (m.src === 'provv' ? 'ultima formazione e presenze da titolare nelle ultime giornate' : m.src === 'fotmob' ? 'FotMob' : 'consenso di 4 giornali');
+  const fonte = m.src === 'provv' ? 'ultima formazione e presenze da titolare nelle ultime giornate' : m.src === 'fotmob' ? 'FotMob' : 'consenso di 4 giornali';
   const poi = m.src === 'provv' ? "le probabili dei giornali arrivano verso fine settimana e le ufficiali circa un'ora prima del calcio d'inizio" : "le ufficiali arrivano circa un'ora prima del calcio d'inizio";
   return `<p class="probnote"><b>Formazioni ${tipo}</b> (${fonte}): ${poi}, quindi probabilità e tris cambieranno.</p>`;
 }
@@ -628,7 +628,7 @@ function campoHtml(m, trio) {
   const prob = lu.t === 'predicted';
   const titolo = uff ? 'Formazioni ufficiali' : prob ? 'Formazioni probabili' : 'Possibili 11 titolari';
   const etichetta = uff ? 'Ufficiali' : prob ? '⚠ Probabili' : '⚠ Possibili titolari';
-  const nota = uff ? 'Titolari confermati.' : lu.t === 'lastStarting11' ? "Per ora è l'ultima formazione schierata da ciascuna squadra: diventerà quella probabile e poi quella ufficiale, circa un'ora prima del calcio d'inizio." : `Formazione probabile di ${m.probableSource || 'FotMob'}. Le ufficiali arrivano circa un'ora prima del calcio d'inizio.`;
+  const nota = uff ? 'Titolari confermati.' : lu.t === 'lastStarting11' ? "Per ora è l'ultima formazione schierata da ciascuna squadra: diventerà quella probabile e poi quella ufficiale, circa un'ora prima del calcio d'inizio." : "Formazione probabile di FotMob: le ufficiali arrivano circa un'ora prima del calcio d'inizio.";
   const ps = players(m), last = s => String(s).normalize('NFD').replace(/[^\p{L} ]/gu, '').toLowerCase().trim().split(' ').pop();
   const tri = new Set(trio.map(x => x.n));
   const find = (name, side) => ps.find(x => x.side === side && last(x.n) === last(name));

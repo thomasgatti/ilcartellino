@@ -104,23 +104,23 @@
   "id": 5749740,
   "ko": 1794080700,
   "partita": "Roma - Sassuolo",
-  "uff": false,
-  "p3": 0.003385442293768307,
+  "uff": true,
+  "p3": 0.006425449565605569,
   "trio": [
    {
-    "n": "M. de Roon",
-    "p": 0.1512,
-    "team": "Roma"
-   },
-   {
-    "n": "B. Cristante",
-    "p": 0.1464,
-    "team": "Roma"
-   },
-   {
-    "n": "J. Doig",
-    "p": 0.1318,
+    "n": "S. Walukiewicz",
+    "p": 0.1789,
     "team": "Sassuolo"
+   },
+   {
+    "n": "D. Ćaleta-Car",
+    "p": 0.176,
+    "team": "Sassuolo"
+   },
+   {
+    "n": "L. Balerdi",
+    "p": 0.176,
+    "team": "Roma"
    }
   ]
  },
