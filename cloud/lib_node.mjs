@@ -1,7 +1,7 @@
 // Carica i file della cartella lib/ (scritti per la scheda del browser) dentro Node: window = globalThis,
 // fetch con indirizzi relativi → https://www.fotmob.com, localStorage finto. Usato da scrape.mjs e dagli script del bot nel cloud.
-import fs from 'node:fs'; import path from 'node:path'; import vm from 'node:vm';
-const LIB = path.join(path.dirname(new URL(import.meta.url).pathname), '..', 'lib');
+import fs from 'node:fs'; import path from 'node:path'; import vm from 'node:vm'; import { fileURLToPath } from 'node:url';
+const LIB = fileURLToPath(new URL('../lib/', import.meta.url));
 const UA = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36';
 const _fetch = globalThis.fetch;
 globalThis.window = globalThis;

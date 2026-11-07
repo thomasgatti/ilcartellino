@@ -79,3 +79,13 @@ Controllare sempre **computer e telefono** (390 px di larghezza) e i due temi: S
 - Sofascore e FotMob rispondono 403 a molti server: lo scraping completo gira nella scheda del browser (fotmob.com) oppure su GitHub Actions (FotMob lì funziona).
 - `lib/` e `bot/ammoniti/` contengono gli stessi `.js`: se ne modifichi uno, copialo anche nell'altro.
 - La sostituzione "chi entra al posto di chi" nel live ESPN è nuova (5/11) e non ancora vista su una partita vera; a partita finita arriva comunque da `risultati.json`.
+
+## Aggiornamento automatico delle partite
+
+`Giornata automatica` in GitHub Actions controlla le partite ogni 15 minuti nelle fasce delle gare. Pubblica le formazioni confermate, aggiorna il tris e registra risultato, cartellini, falli e sostituzioni nello Storico a fine gara. Il live continua ad aggiornarsi dal browser. La Serie A passa al turno successivo quando quello corrente è archiviato e il nuovo è vicino. Per la Champions controlla il turno già caricato nell’app.
+
+1. Unisci la richiesta di modifica. In **Actions → Giornata automatica** puoi fare una prima esecuzione con **Solo prova**, che rende i file scaricabili dalla pagina dell'esecuzione.
+2. In **Settings → Secrets and variables → Actions → Variables** aggiungi `CARTELLINO_AUTO` con valore `true` per attivare i controlli e la pubblicazione programmata.
+3. Vercel usa il collegamento Git già esistente. Se serve un Deploy Hook per i commit del bot, crealo in Vercel per il ramo `main` e salvalo come secret GitHub Actions `VERCEL_DEPLOY_HOOK`.
+
+Puoi sospendere il bot impostando `CARTELLINO_AUTO` a `false`. GitHub può ritardare un controllo rispetto all'orario programmato.
