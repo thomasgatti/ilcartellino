@@ -659,7 +659,13 @@ function needRis(m) {            // a partita finita le sostituzioni si leggono 
   }).catch(() => {});
 }
 function liveHtml(m) {
-  const L = m.live; if (!L) return '';
+  const L = m.live;
+  if (!L) {
+    const now = Date.now() / 1000;
+    if (now < m.ko || now >= m.ko + 9000) return '';
+    return `<div class="livebox" role="status"><div class="lh"><span class="pill lmin still">In attesa del live</span><span class="lscore">${m.h} <b>–</b> ${m.a}</span></div>
+      <p class="note">Punteggio, ammoniti e falli fatti e subiti compariranno appena disponibili.</p></div>`;
+  }
   setTimeout(() => needRis(m), 0);
   const app = pick(m, '21', 0).trio.map(t => t.n), mine = current(m), bk = new Set(L.cards.map(c => c[1]));
   const sub = { ...((results[m.id] || {}).sostituzioni || {}), ...(L.sub || {}) }, inFor = {};   // sub: uscito → entrato
@@ -741,7 +747,7 @@ function select(id) {
       <div class="stat"><span class="k">Pronostico 1X2</span>${m.odds ? `<div class="odds" aria-hidden="true"><span style="width:${oh}%;background:${strong(m.hc)}"></span><span style="width:${od}%;background:var(--line)"></span><span style="width:${oa}%;background:${strong(m.ac)}"></span></div><span class="v">${oh}% · X ${od}% · ${oa}%</span>` : '<span class="v">–</span>'}</div>
       <div class="stat"><span class="k">Linea cartellini</span><span class="v">${m.line ?? '–'}</span></div>
       <div class="stat"><span class="k">Il mio tris</span><span class="v">${saved ? 'Salvato ✓' : locked(m) ? 'Non creato' : 'Da creare'}</span></div>
-    </div>${m.ctx?.length ? `<ul class="note ctx">${m.ctx.map(x => `<li>${x}</li>`).join('')}</ul>` : ''}${liveHtml(m)}
+    </div>${m.ctx?.length ? `<ul class="note ctx">${m.ctx.map(x => `<li>${x}</li>`).join('')}</ul>` : ''}<div id="live-slot">${liveHtml(m)}</div>
     <div class="sectabs" role="tablist" aria-label="Sezioni della partita">
       <button type="button" role="tab" data-sec="app" aria-selected="${sec === 'app'}">Tris dell'app</button>
       <button type="button" role="tab" data-sec="mio" aria-selected="${sec === 'mio'}">Il mio tris${saved ? ' ✓' : ''}</button>
@@ -994,10 +1000,7 @@ async function liveFetch(m) {
   cards.sort((a, b) => a[0] - b[0]);
   m.live = { t: clock, sc: sc.h + ' - ' + sc.a, fin, agg: new Date().toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit', second: '2-digit' }), cards, fl, p: P, out, sub, src: 'espn',
     m0, per: +cp.status?.period || 0, at: Date.now(), run: stt === 'in' && !ht && m0 > 0 };
-  if (state.id === m.id && state.view !== 'storico' && state.view !== 'area') {
-    const box = document.querySelector('.livebox');
-    if (box) box.outerHTML = liveHtml(m); else select(m.id);
-  }
+  if (state.id === m.id && state.view === 'partite') document.getElementById('live-slot').innerHTML = liveHtml(m);
 }
 // minuto che scorre da solo tra un aggiornamento e l'altro (stile 41'... 42'... 45'+1')
 const liveMin = L => { if (!L.run) return L.t; const mn = L.m0 + Math.floor((Date.now() - L.at) / 60000), cap = L.per >= 2 ? 90 : 45;
@@ -1007,6 +1010,12 @@ setInterval(() => { const m = (typeof DATA !== 'undefined' && DATA) ? DATA.match
 async function liveLoop() {
   if (!document.hidden) {
     const now = Date.now() / 1000, all = [...ALL.matches, ...(CUP ? CUP.matches : [])];
+    const currentMatch = DATA.matches.find(m => m.id === state.id);
+    const slot = state.view === 'partite' && document.getElementById('live-slot');
+    if (slot && currentMatch && !currentMatch.live) {
+      const waiting = now >= currentMatch.ko && now < currentMatch.ko + 9000;
+      if (waiting !== !!slot.firstElementChild) slot.innerHTML = liveHtml(currentMatch);
+    }
     await Promise.all(all.filter(m => now > m.ko - 120 && now < m.ko + 9000 && !(m.live?.fin && m.live?.src === 'espn')).map(m => liveFetch(m).catch(() => {})));
   }
   setTimeout(liveLoop, 30000);
