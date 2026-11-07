@@ -646,7 +646,7 @@ function campoHtml(m, trio) {
     <div class="pitch"><span class="ln mid"></span><span class="ln circ"></span><span class="ln box1"></span><span class="ln box2"></span><span class="ln sm1"></span><span class="ln sm2"></span>
       <span class="tm t1">${m.a} ${lu.f[1] || ''}</span><span class="tm t2">${m.h} ${lu.f[0] || ''}</span>
       ${lu.a.map(r => P(r, 'a')).join('')}${lu.h.map(r => P(r, 'h')).join('')}</div>
-    <p class="note">${nota} Sotto ogni nome la probabilità di giallo; il cartellino giallo indica i giocatori del tris dell'app.</p></div>`;
+    <p class="note">${nota}${!uff && (lu.h.length < 11 || lu.a.length < 11) ? ' Uno o più posti sono da confermare.' : ''} Sotto ogni nome la probabilità di giallo; il cartellino giallo indica i giocatori del tris dell'app.</p></div>`;
 }
 // riquadro live: ammoniti, tris dell'app e tuo, falli fatti/subiti (casa | ospite), sostituzioni dei giocatori dei tris
 let risLoad = null;

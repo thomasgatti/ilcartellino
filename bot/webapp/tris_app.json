@@ -105,21 +105,21 @@
   "ko": 1794080700,
   "partita": "Roma - Sassuolo",
   "uff": false,
-  "p3": 0.003299340671955225,
+  "p3": 0.003712056498038557,
   "trio": [
    {
-    "n": "D. Berardi",
-    "p": 0.1437,
-    "team": "Sassuolo"
-   },
-   {
     "n": "D. Ćaleta-Car",
-    "p": 0.1436,
+    "p": 0.1554,
     "team": "Sassuolo"
    },
    {
     "n": "M. de Roon",
-    "p": 0.1378,
+    "p": 0.1464,
+    "team": "Roma"
+   },
+   {
+    "n": "B. Cristante",
+    "p": 0.1407,
     "team": "Roma"
    }
   ]

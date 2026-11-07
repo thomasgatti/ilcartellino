@@ -32,11 +32,15 @@ if (data.cups?.ucl?.matches?.length) {
 }
 const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'cartellino-'));
 const cache = new Map();
+const prepared = new Map();
+const field = new Map(fs.readFileSync(files.lineups,'utf8').trim().split(/\r?\n/).filter(Boolean).map(l => [+l.split('|')[0],l]));
 const request = globalThis.fetch;
 // Modello, campo e statistiche leggono lo stesso tabellino per tutta l'esecuzione.
 globalThis.fetch = (url, opts) => {
   const key = String(url);
   if (!key.startsWith('/api/data/matchDetails?')) return request(url, {...opts, signal:AbortSignal.timeout(15000)});
+  const id = Number(key.split('=')[1]);
+  if (prepared.has(id)) return Promise.resolve({json:async () => structuredClone(prepared.get(id).j)});
   if (!cache.has(key)) cache.set(key, request(url, {...opts, signal:AbortSignal.timeout(15000)}).then(async response => {
     if (!response.ok) throw new Error(`FotMob ${response.status}: ${key}`);
     const value = await response.json();
@@ -52,10 +56,38 @@ const validLineup = (lineup, type) => lineup?.lineupType === type && [lineup.hom
 const warn = (m, e) => console.warn(`Partita ${m.id}: ${e.message}`);
 const short = n => n.includes(' ') ? n[0] + '. ' + n.slice(n.indexOf(' ') + 1) : n;
 const norm = n => n.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/[^\p{L}]/gu, '');
+loadLib(['field_lineups.js']);
+
+async function prepareLineup(id, raw, verifiedOut = []) {
+  const j = structuredClone(raw);
+  const lineup = j.content.lineup;
+  const excluded = new Set();
+  if (lineup.lineupType !== 'standard') {
+    for (const id of verifiedOut) excluded.add(id);
+    for (const team of [lineup.homeTeam, lineup.awayTeam]) {
+      for (const player of team.unavailable || []) {
+        const reason = player.unavailability;
+        const id = Number(player.id);
+        if (!id || !/^(injury|suspension)$/i.test(reason?.type || '') || /doubtful|back in training/i.test(reason.expectedReturn || '')) continue;
+        excluded.add(id);
+      }
+    }
+    for (const team of [lineup.homeTeam, lineup.awayTeam]) {
+      team.starters = team.starters.filter(player => !excluded.has(+player.id));
+      if (team.subs) team.subs = team.subs.filter(player => !excluded.has(+player.id));
+    }
+  }
+  const abs = [...excluded].sort((a,b) => a-b);
+  const item = {id,j,excluded,abs};
+  prepared.set(id,item);
+  item.line = globalThis.fieldExport(await globalThis.fieldLineups([id]));
+  if (!item.line) throw new Error('Formazione in campo mancante');
+  return item;
+}
 
 function startModel(cutoff) {
   loadLib(['fotmob_scrape.js', 'fm_model.js', 'cup_model.js', 'cup_model2.js', 'ext_model.js', 'cup_x2.js',
-    'deep_feats.js', 'cup_x3.js', 'field_lineups.js', 'sa_export.js', 'amm_boot.js']);
+    'deep_feats.js', 'cup_x3.js', 'sa_export.js', 'amm_boot.js']);
   const all = fs.readdirSync(historic).filter(f => f.endsWith('.json.gz')).flatMap(f =>
     Object.values(JSON.parse(zlib.gunzipSync(fs.readFileSync(path.join(historic, f))))));
   const before = all.filter(m => m.ts && m.ts < cutoff && m.pl?.length > 20);
@@ -89,25 +121,32 @@ async function advanceSerieA(round, archived) {
     return ['lastStarting11','predicted','standard'].some(t => validLineup(lu,t)) ? [{id:+fixtures[i].id, j}] : [];
   });
   if (ready.length === fixtures.length) {
+    round.pending = await Promise.all(ready.map(({id,j}) => prepareLineup(id,j)));
     round.advance = next;
-    round.pending = ready;
   }
 }
 
 async function inspect(round) {
-  const preMatch = m => !m.uff && now < m.ko + 30 * 60;
-  const window = round.matches.filter(m =>
-    (preMatch(m) && now >= m.ko - (m.src === 'provv' ? 36 * hour : 100 * 60)) ||
-    (now >= m.ko + 75 * 60 && !seen.has(m.id) && now < m.ko + 7 * 24 * hour));
+  const window = round.matches.filter(m => now < m.ko + 7 * 24 * hour && (
+    (!m.uff && now >= m.ko - 36 * hour) || (now >= m.ko + 75 * 60 && !seen.has(m.id))));
   round.pending = [];
   round.finished = [];
   for (const m of window) {
     try {
       const j = await matchDetails(m.id), status = j.header.status;
-      if (status.finished && !status.cancelled && !status.awarded && !seen.has(m.id)) round.finished.push({m,j});
-      else if (!status.started && !status.cancelled && preMatch(m)) {
-        const lineup = j.content?.lineup;
-        if (validLineup(lineup,'standard') || (m.src === 'provv' && validLineup(lineup,'predicted'))) round.pending.push({id:m.id,j});
+      if (status.cancelled || status.awarded) continue;
+      if (status.finished && !seen.has(m.id)) round.finished.push({m,j});
+      if (m.uff) continue;
+      const lineup = j.content?.lineup;
+      const beforeKickoff = !status.started && !status.finished && now < m.ko;
+      if (!validLineup(lineup,'standard') && !(beforeKickoff && (
+        validLineup(lineup,'predicted') || (m.src === 'provv' && validLineup(lineup,'lastStarting11'))))) {
+        if (now >= m.ko - hour) console.warn(`Partita ${m.id}: formazione ufficiale in attesa (${lineup?.lineupType || 'assente'})`);
+        continue;
+      }
+      const item = await prepareLineup(m.id,j,m.forfait);
+      if (validLineup(lineup,'standard') || item.line !== field.get(m.id) || item.abs.join(',') !== (m.abs || []).join(',')) {
+        round.pending.push({...item,beforeKickoff});
       }
     } catch (e) { warn(m,e); }
   }
@@ -136,13 +175,16 @@ function applyForecast(round, exportRows) {
   for (const m of newMatches) {
     const e = exportRows.find(e => e.id === m.id);
     const old = former.get(m.id);
+    const {abs} = prepared.get(m.id);
     m.uff = Number(e.lt === 'standard');
     m.src = e.lt === 'lastStarting11' ? 'provv' : 'fotmob';
+    if (abs.length) m.abs = abs;
     if (m.uff && (m.pl.filter(p => p[1] === 'h' && p[6] === 100).length !== 10 ||
         m.pl.filter(p => p[1] === 'a' && p[6] === 100).length !== 10)) {
       throw new Error(`Pronostico incompleto per la formazione ufficiale: ${m.id}`);
     }
     if (!old) continue;
+    if (!m.uff && old.forfait?.length) m.forfait = old.forfait;
     for (const key of ['line','derby','hc','ac']) if (old[key] != null) m[key] = old[key];
     if (!m.odds) m.odds = old.odds;
     if (m.ref === '–') m.ref = old.ref;
@@ -208,6 +250,7 @@ function archiveResult(round, m, j) {
 
 try {
   const changedIds = [];
+  const trisIds = [];
   let finished = 0;
   for (const round of rounds) {
     await inspect(round);
@@ -215,16 +258,17 @@ try {
       try { archiveResult(round,m,j); finished++; } catch (e) { warn(m,e); }
     }
   }
-  await advanceSerieA(rounds[0],seen).catch(e => console.warn(e.message));
+  if (!rounds[0].pending.length) await advanceSerieA(rounds[0],seen).catch(e => console.warn(e.message));
   const all = rounds.flatMap(r => r.pending);
   if (all.length) {
     await startModel(Math.min(now,...all.map(({j}) => Date.parse(j.general.matchTimeUTCDate) / 1000)));
-    const field = new Map(fs.readFileSync(files.lineups,'utf8').trim().split('\n').filter(Boolean).map(l => [+l.split('|')[0],l]));
+    globalThis.saPatchVs();
+    const predict = globalThis.fmPredict3;
+    globalThis.fmPredict3 = (id,model,extra = []) => predict(id,model,extra.filter(p => !prepared.get(id).excluded.has(+p.id)));
     for (const round of rounds.filter(r => r.pending.length)) {
       const ids = round.pending.map(x => x.id);
       let exported;
       if (round.comp === 'sa') {
-        globalThis.saPatchVs();
         globalThis.__SAX = await globalThis.saExport(ids);
         exported = globalThis.saFinal();
       } else {
@@ -232,10 +276,9 @@ try {
       }
       if (exported.length !== ids.length || exported.some(m => !m.pl?.length)) throw new Error('Il modello non ha prodotto tutte le stime');
       changedIds.push(...applyForecast(round,exported));
-      const lines = globalThis.fieldExport(await globalThis.fieldLineups(ids)).split('\n').filter(Boolean);
-      if (lines.length !== ids.length) throw new Error('Formazione in campo mancante');
-      for (const line of lines) {
-        field.set(+line.split('|')[0],line);
+      for (const item of round.pending) {
+        field.set(item.id,item.line);
+        if (item.beforeKickoff || round.advance) trisIds.push(item.id);
       }
     }
     const currentIds = new Set(rounds.flatMap(r => r.section.matches.map(m => m.id)));
@@ -245,7 +288,7 @@ try {
     write(files.data,data);
     if (finished) write(files.results,results);
   }
-  if (process.env.GITHUB_OUTPUT) fs.appendFileSync(process.env.GITHUB_OUTPUT,`previsioni=${changedIds.join(',')}\n`);
+  if (process.env.GITHUB_OUTPUT) fs.appendFileSync(process.env.GITHUB_OUTPUT,`previsioni=${trisIds.join(',')}\n`);
   console.log(`${changedIds.length} formazioni aggiornate, ${finished} esiti archiviati`);
 } finally {
   fs.rmSync(temp,{recursive:true,force:true});

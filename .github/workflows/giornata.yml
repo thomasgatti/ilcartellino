@@ -1,8 +1,13 @@
 name: Giornata automatica
 on:
   schedule:
-    - cron: '7,22,37,52 9-23 * * 0,1,5,6'
-    - cron: '7,22,37,52 15-23 * * 2,3,4'
+    - cron: '8,23,38,53 9-23 * * 0,1,5,6'
+    - cron: '8,23,38,53 15-23 * * 2,3,4'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/giornata.yml'
+      - 'cloud/giornata.mjs'
   workflow_dispatch:
     inputs:
       prova:
@@ -17,7 +22,7 @@ concurrency:
 jobs:
   giornata:
     if: github.event_name == 'workflow_dispatch' || vars.CARTELLINO_AUTO == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 12
     permissions:
       contents: write
@@ -63,7 +68,7 @@ jobs:
             bot/webapp/tris_app.json
             bot/webapp/vercel/risultati.json
       - name: Pubblica gli aggiornamenti
-        if: github.ref == 'refs/heads/main' && vars.CARTELLINO_AUTO == 'true' && (github.event_name == 'schedule' || !inputs.prova)
+        if: github.ref == 'refs/heads/main' && vars.CARTELLINO_AUTO == 'true' && (github.event_name != 'workflow_dispatch' || !inputs.prova)
         env:
           VERCEL_DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
         run: |
