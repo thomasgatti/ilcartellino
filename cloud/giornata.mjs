@@ -58,12 +58,13 @@ const short = n => n.includes(' ') ? n[0] + '. ' + n.slice(n.indexOf(' ') + 1) :
 const norm = n => n.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/[^\p{L}]/gu, '');
 loadLib(['field_lineups.js']);
 
-async function prepareLineup(id, raw, verifiedOut = []) {
+async function prepareLineup(id, raw, match = {}) {
   const j = structuredClone(raw);
   const lineup = j.content.lineup;
   const excluded = new Set();
+  let probableSource;
   if (lineup.lineupType !== 'standard') {
-    for (const id of verifiedOut) excluded.add(id);
+    for (const id of match.forfait || []) excluded.add(id);
     for (const team of [lineup.homeTeam, lineup.awayTeam]) {
       for (const player of team.unavailable || []) {
         const reason = player.unavailability;
@@ -72,13 +73,21 @@ async function prepareLineup(id, raw, verifiedOut = []) {
         excluded.add(id);
       }
     }
+    const second = match.probable;
+    const sides = ['homeTeam','awayTeam'];
+    const hasUnavailableStarter = sides.some(side => lineup[side].starters.some(p => excluded.has(+p.id)));
+    if (lineup.lineupType === 'predicted' && hasUnavailableStarter && validLineup(second,'predicted') &&
+        sides.every(side => second[side].starters.every(p => !excluded.has(+p.id)))) {
+      for (const side of sides) Object.assign(lineup[side], second[side]);
+      probableSource = second.source;
+    }
     for (const team of [lineup.homeTeam, lineup.awayTeam]) {
       team.starters = team.starters.filter(player => !excluded.has(+player.id));
       if (team.subs) team.subs = team.subs.filter(player => !excluded.has(+player.id));
     }
   }
   const abs = [...excluded].sort((a,b) => a-b);
-  const item = {id,j,excluded,abs};
+  const item = {id,j,excluded,abs,probableSource};
   prepared.set(id,item);
   item.line = globalThis.fieldExport(await globalThis.fieldLineups([id]));
   if (!item.line) throw new Error('Formazione in campo mancante');
@@ -144,8 +153,9 @@ async function inspect(round) {
         if (now >= m.ko - hour) console.warn(`Partita ${m.id}: formazione ufficiale in attesa (${lineup?.lineupType || 'assente'})`);
         continue;
       }
-      const item = await prepareLineup(m.id,j,m.forfait);
-      if (validLineup(lineup,'standard') || item.line !== field.get(m.id) || item.abs.join(',') !== (m.abs || []).join(',')) {
+      const item = await prepareLineup(m.id,j,m);
+      if (validLineup(lineup,'standard') || item.line !== field.get(m.id) || item.abs.join(',') !== (m.abs || []).join(',') ||
+          item.probableSource !== m.probableSource) {
         round.pending.push({...item,beforeKickoff});
       }
     } catch (e) { warn(m,e); }
@@ -175,16 +185,18 @@ function applyForecast(round, exportRows) {
   for (const m of newMatches) {
     const e = exportRows.find(e => e.id === m.id);
     const old = former.get(m.id);
-    const {abs} = prepared.get(m.id);
+    const {abs,probableSource} = prepared.get(m.id);
     m.uff = Number(e.lt === 'standard');
     m.src = e.lt === 'lastStarting11' ? 'provv' : 'fotmob';
     if (abs.length) m.abs = abs;
+    if (probableSource) m.probableSource = probableSource;
     if (m.uff && (m.pl.filter(p => p[1] === 'h' && p[6] === 100).length !== 10 ||
         m.pl.filter(p => p[1] === 'a' && p[6] === 100).length !== 10)) {
       throw new Error(`Pronostico incompleto per la formazione ufficiale: ${m.id}`);
     }
     if (!old) continue;
     if (!m.uff && old.forfait?.length) m.forfait = old.forfait;
+    if (!m.uff && old.probable) m.probable = old.probable;
     for (const key of ['line','derby','hc','ac']) if (old[key] != null) m[key] = old[key];
     if (!m.odds) m.odds = old.odds;
     if (m.ref === '–') m.ref = old.ref;

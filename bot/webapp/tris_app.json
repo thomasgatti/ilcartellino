@@ -105,22 +105,22 @@
   "ko": 1794080700,
   "partita": "Roma - Sassuolo",
   "uff": false,
-  "p3": 0.003712056498038557,
+  "p3": 0.003385442293768307,
   "trio": [
    {
-    "n": "D. Ćaleta-Car",
-    "p": 0.1554,
-    "team": "Sassuolo"
-   },
-   {
     "n": "M. de Roon",
-    "p": 0.1464,
+    "p": 0.1512,
     "team": "Roma"
    },
    {
     "n": "B. Cristante",
-    "p": 0.1407,
+    "p": 0.1464,
     "team": "Roma"
+   },
+   {
+    "n": "J. Doig",
+    "p": 0.1318,
+    "team": "Sassuolo"
    }
   ]
  },
