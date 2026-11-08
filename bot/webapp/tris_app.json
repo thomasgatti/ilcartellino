@@ -251,23 +251,23 @@
   "id": 5749742,
   "ko": 1794167100,
   "partita": "Fiorentina - Juventus",
-  "uff": false,
-  "p3": 0.01017710378351103,
+  "uff": true,
+  "p3": 0.021324406489909555,
   "trio": [
    {
-    "n": "D. Luiz",
-    "p": 0.2317,
-    "team": "Juventus"
-   },
-   {
-    "n": "G. Bremer",
-    "p": 0.1956,
-    "team": "Juventus"
-   },
-   {
-    "n": "Á. Jiménez",
-    "p": 0.1936,
+    "n": "C. Inao Oulaï",
+    "p": 0.2786,
     "team": "Fiorentina"
+   },
+   {
+    "n": "D. Luiz",
+    "p": 0.2623,
+    "team": "Juventus"
+   },
+   {
+    "n": "J. Cabal",
+    "p": 0.2515,
+    "team": "Juventus"
    }
   ]
  },
