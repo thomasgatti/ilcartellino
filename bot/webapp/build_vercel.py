@@ -8,6 +8,7 @@ ris = json.loads((here / 'vercel' / 'risultati.json').read_text(encoding='utf-8'
 tris = json.loads((here / 'tris_app.json').read_text(encoding='utf-8'))
 shim = """<script>
 (() => { const RIS = %s; const K = 'ammoniti_tris_v1';
+  window.cartellinoRisultati = RIS;
   window.cartellinoTris = %s;
   const load = () => { try { return JSON.parse(localStorage.getItem(K) || '{}'); } catch (e) { return {}; } };
   const save = o => { try { localStorage.setItem(K, JSON.stringify(o)); } catch (e) {} };

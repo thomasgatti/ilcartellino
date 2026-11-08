@@ -523,7 +523,7 @@ const strong = cols => cols.find(c => c && lum(c) < .6) || '#13202d';      // co
 const initials = n => { const m = n.match(/^(\S)\.\s+(.+)$/u); const t = (m ? m[2] : n).split(/\s+/).filter(t => !/^\S\.$/.test(t)); const last = t[t.length - 1] || n; return ((m ? m[1] : (t.length > 1 ? t[0][0] : last[0])) + (m || t.length > 1 ? last[0] : (last[1] || ''))).toUpperCase(); };
 const state = { comp: 'sa', id: null, mode: '21', revealed: {}, idx: {}, boost: {}, view: 'partite', sec: 'app', subRule: true };
 let DB = null, USER = null, UID = null, MYNAME = '', loaded = false;
-const myTris = {}, pickNow = {}, results = {};
+const myTris = {}, pickNow = {}, results = Object.fromEntries((window.cartellinoRisultati || []).map(r => [r.matchId, r]));
 const savedAppTris = new Map((window.cartellinoTris || []).map(t => [t.id, t]));
 const esc = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const withTimeout = (pr, ms = 10000) => Promise.race([pr, new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), ms))]);
@@ -579,6 +579,16 @@ function combos(m, mode, raw = false) {
 // il 16% più spesso del prodotto delle probabilità, quelli tutti della stessa squadra solo il 4% (coppie di avversari +8%, compagni +2%, stesso reparto nessuna penalità)
 const jointK = t => (new Set(t.map(x => x.side)).size > 1 ? 1.16 : 1.04);
 function pick(m, mode, idx = 0, raw = false) { const c = combos(m, mode, raw); return { ...c[Math.min(idx, c.length - 1)], rank: Math.min(idx, c.length - 1) + 1, n: c.length }; }
+function appTrisAtKickoff(m) {
+  if (!m.live && Date.now() / 1000 < m.ko) return null;
+  const saved = savedAppTris.get(m.id), archived = results[m.id];
+  if (archived?.tris_app?.length === 3) {
+    const same = saved?.trio?.length === 3 && archived.tris_app.every(t => saved.trio.some(s => s.n === t.n));
+    return {trio:archived.tris_app, p3:archived.p3_app, uff:same ? saved.uff : undefined};
+  }
+  return saved?.trio?.length === 3 ? saved : null;
+}
+const trioPct = p => Number.isFinite(p) ? (p * 100).toFixed(1) + '%' : '–';
 function probNote(m) {
   const tipo = m.src === 'provv' ? 'PROVVISORIE' : 'PROBABILI';
   const fonte = m.src === 'provv' ? 'ultima formazione e presenze da titolare nelle ultime giornate' : m.src === 'fotmob' ? 'FotMob' : 'consenso di 4 giornali';
@@ -586,7 +596,10 @@ function probNote(m) {
   return `<p class="probnote"><b>Formazioni ${tipo}</b> (${fonte}): ${poi}, quindi probabilità e tris cambieranno.</p>`;
 }
 function statusPill(m) {
-  const now = Date.now() / 1000, base = `<span class="basis">Tris calcolato sulle formazioni ${m.uff ? 'ufficiali' : m.src === 'provv' ? 'provvisorie' : 'probabili'}</span>`;
+  const now = Date.now() / 1000, recorded = appTrisAtKickoff(m);
+  const label = recorded ? recorded.uff == null ? 'Tris registrato al calcio d’inizio' : `Tris registrato sulle formazioni ${recorded.uff ? 'ufficiali' : 'previste'}`
+    : `Tris calcolato sulle formazioni ${m.uff ? 'ufficiali' : m.src === 'provv' ? 'provvisorie' : 'probabili'}`;
+  const base = `<span class="basis">${label}</span>`;
   if (m.live?.fin || (!m.live && now > m.ko + 115 * 60)) return '<span class="pill done">Finita</span>' + base;
   if (m.live || now > m.ko) return '<span class="pill live">In corso</span>' + base;
   return m.uff || m.espnXI ? '<span class="pill uff">Formazioni ufficiali</span>' : `<span class="pill prob">⚠ Formazioni ${m.src === 'provv' ? 'provvisorie' : 'probabili'}</span>`;
@@ -602,12 +615,12 @@ function renderList() {
   const el = document.getElementById('list'); el.innerHTML = ''; let lastDay = '';
   for (const m of DATA.matches) {
     const d = fmtDay(m.ko); if (d !== lastDay) { const h = document.createElement('div'); h.className = 'day'; h.textContent = d; el.appendChild(h); lastDay = d; }
-    const best = pick(m, state.mode);
+    const best = appTrisAtKickoff(m) || pick(m, state.mode);
     const b = document.createElement('button'); b.className = 'match'; b.type = 'button'; b.id = 'b' + m.id;
     b.setAttribute('aria-current', String(m.id === state.id));
     b.innerHTML = `<span class="time"><span class="wd">${fmtWd(m.ko)}</span>${fmtTime(m.ko)}</span>
       <span class="teams"><span class="team"><i class="chip" style="background:${m.hc[0]}"></i>${m.h}</span><span class="team"><i class="chip" style="background:${m.ac[0]}"></i>${m.a}</span></span>
-      <span class="p3"><b>${(best.p3 * 100).toFixed(1)}%</b>trio${statusTag(m)}${myTris[m.id] ? '<span class="mysaved">✓ tuo tris</span>' : ''}</span>`;
+      <span class="p3"><b>${trioPct(best.p3)}</b>trio${statusTag(m)}${myTris[m.id] ? '<span class="mysaved">✓ tuo tris</span>' : ''}</span>`;
     b.addEventListener('click', () => { history.replaceState(null, '', '#m' + m.id); select(m.id); focusPanel(b); });
     el.appendChild(b);
   }
@@ -661,14 +674,15 @@ function needRis(m) {            // a partita finita le sostituzioni si leggono 
   if (!m.live || !m.live.fin || results[m.id] || !DB || risLoad) return;
   risLoad = withTimeout(DB.collection('risultati').get()).then(snap => {
     snap.docs.forEach(d => { const r = d.data(); if (r && r.matchId) results[r.matchId] = r; });
-    const cur = DATA.matches.find(x => x.id === state.id), box = document.querySelector('.livebox');
-    if (cur && cur.live && box && results[cur.id] && results[cur.id].sostituzioni) box.outerHTML = liveHtml(cur);
+    const cur = DATA.matches.find(x => x.id === state.id);
+    if (cur?.live && results[cur.id] && state.view === 'partite') { renderList(); select(cur.id); }
   }).catch(() => {});
 }
 function liveHtml(m) {
   const L = m.live; if (!L) return '';
   setTimeout(() => needRis(m), 0);
-  const app = pick(m, '21', 0).trio.map(t => t.n), mine = current(m), bk = new Set(L.cards.filter(c => c[2] !== 'R').map(c => c[1]));
+  const app = (appTrisAtKickoff(m) || pick(m, '21', 0)).trio.map(t => t.n), mine = current(m), bk = new Set(L.cards.filter(c => c[2] !== 'R').map(c => c[1]));
+  const mineRule = myTris[m.id]?.regolaSostituto ?? state.subRule;
   const sub = { ...((results[m.id] || {}).sostituzioni || {}), ...(L.sub || {}) }, inFor = {};   // sub: uscito → entrato
   Object.entries(sub).forEach(([o, i]) => { if (i) inFor[i] = o; });
   const pc = v => Math.round(v * 100) + '%', side = {}; m.pl.forEach(p => side[p[0]] = p[1]);
@@ -677,10 +691,10 @@ function liveHtml(m) {
     return !A && !M ? '' : (A && M ? 'both' : A ? 'app' : 'mine') + (app.includes(n) || mine.includes(n) ? '' : ' via'); };
   const nm = n => { const t = tone(n); return t ? `<span class="pn ${t}">${esc(n)}</span>` : esc(n); };
   const swap = n => sub[n] ? `<span class="sw"><span class="so">${esc(n)}</span><span class="arr" aria-label="sostituito da">➜</span><span class="si">${esc(sub[n])}</span></span>` : esc(n);
-  const trioChip = n => {
-    const s = sub[n], viaSub = state.subRule && s && bk.has(s), out = !!s || (L.out || []).includes(n);
-    const [v, cls] = bk.has(n) || viaSub ? ['✓', 'ok'] : L.fin ? ['no', 'off'] : !out ? [pc(L.p[n] ?? 0), '']
-      : state.subRule && s ? [L.p[s] != null ? pc(L.p[s]) : '·', 'subbed'] : ['uscito', 'off'];
+  const trioChip = (n, subRule) => {
+    const s = sub[n], viaSub = subRule && s && bk.has(s), out = !!s || (L.out || []).includes(n);
+    const [v, cls] = bk.has(n) || viaSub ? ['✓', 'ok'] : L.fin ? ['no', 'off'] : !out ? [L.p[n] != null ? pc(L.p[n]) : '·', '']
+      : subRule && s ? [L.p[s] != null ? pc(L.p[s]) : '·', 'subbed'] : ['uscito', 'off'];
     return `<span class="lchip ${cls}">${swap(n)}<b>${v}</b></span>`;
   };
   const risk = Object.entries(L.p).filter(([, v]) => v > 0 && v < 1).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([n, v]) => `<span class="lchip">${nm(n)}<b>${pc(v)}</b></span>`).join('');
@@ -694,8 +708,8 @@ function liveHtml(m) {
   return `<div class="livebox"><div class="lh"><span class="pill live lmin${L.fin || L.t === 'Intervallo' ? ' still' : ''}">${L.fin ? 'Finita' : L.t === 'Intervallo' ? 'Intervallo' : L.src === 'espn' ? liveMin(L) : L.t}</span><span class="lscore">${m.h} <b>${L.sc}</b> ${m.a}</span></div>
     <div class="lr amm"><span class="lk">Ammoniti</span><div class="lchips">${cards}</div></div>
     <div class="ltris">
-      <div class="lr app"><span class="lk">Tris dell'app</span><div class="lchips">${app.map(trioChip).join('')}</div></div>
-      ${mine.length ? `<div class="lr mine"><span class="lk">Il tuo tris</span><div class="lchips">${mine.map(trioChip).join('')}</div></div>` : ''}
+      <div class="lr app"><span class="lk">Tris dell'app</span><div class="lchips">${app.map(n => trioChip(n, true)).join('')}</div></div>
+      ${mine.length ? `<div class="lr mine"><span class="lk">Il tuo tris</span><div class="lchips">${mine.map(n => trioChip(n, mineRule)).join('')}</div></div>` : ''}
     </div>
     ${L.fin ? '' : `<div class="lr risk"><span class="lk">Rischio da qui alla fine</span><div class="lchips">${risk}</div></div>`}
     <div class="lr fl"><span class="lk">Falli</span><div class="ltabs">${team('h')}${team('a')}</div></div>
@@ -705,10 +719,13 @@ function liveHtml(m) {
 function select(id) {
   const m = DATA.matches.find(x => x.id === id) || DATA.matches[0]; state.id = m.id;
   document.querySelectorAll('.match').forEach(b => b.setAttribute('aria-current', String(b.id === 'b' + m.id)));
-  const key = m.id + state.mode, best = pick(m, state.mode, state.idx[key] || 0), shown = !!state.revealed[key], sec = state.sec;
+  const recorded = appTrisAtKickoff(m);
+  const key = m.id + state.mode, best = recorded || pick(m, state.mode, state.idx[key] || 0), shown = !!state.revealed[key], sec = state.sec;
   const [oh, oa] = (m.odds || '').split('/').map(Number), od = Math.max(0, 100 - (oh || 0) - (oa || 0)), saved = myTris[m.id];
   const tagsHtml = x => x.tags.length ? `<div class="tags">${x.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>` : '';
-  const appSec = `
+  const appSec = recorded ? `<p class="note">Tris registrato al calcio d’inizio con la regola del sostituto.</p>
+    <div class="slots">${recorded.trio.map(t => `<span class="slot full">${esc(t.n)} · ${Number.isFinite(t.p) ? pct(t.p) : '–'}</span>`).join('')}</div>
+    <div class="summary"><span>Tutti e tre ammoniti</span><span class="big">${trioPct(recorded.p3)}</span></div>` : `
     <div class="controls">
       <button class="yellow" id="go" type="button">${shown ? 'Un altro trio' : 'I miei ammoniti'}</button>
       ${shown ? `<button class="reset" id="reset" type="button" ${best.rank === 1 ? 'disabled' : ''}>↺ Torna al trio migliore</button>
@@ -755,10 +772,10 @@ function select(id) {
       <button type="button" role="tab" data-sec="tutti" aria-selected="${sec === 'tutti'}">${m.espnXI && !m.uff ? 'Stime del modello' : 'Tutti i titolari'}</button>
       <button type="button" role="tab" data-sec="campo" aria-selected="${sec === 'campo'}">Formazioni</button>
     </div>
-    <div class="sec" role="tabpanel">${sec === 'app' ? appSec : sec === 'mio' ? mioSec : sec === 'campo' ? campoHtml(m, pick(m, '21', 0).trio) : tuttiSec}</div>`;
+    <div class="sec" role="tabpanel">${sec === 'app' ? appSec : sec === 'mio' ? mioSec : sec === 'campo' ? campoHtml(m, (recorded || pick(m, '21', 0)).trio) : tuttiSec}</div>`;
   panel.querySelectorAll('[data-sec]').forEach(b => b.addEventListener('click', () => { state.sec = b.dataset.sec; select(m.id); }));
   panel.querySelectorAll('.subrule').forEach(b => b.addEventListener('click', () => { state.subRule = b.dataset.sub === '1'; saveUi(); renderList(); select(m.id); }));
-  if (sec === 'app') {
+  if (sec === 'app' && !recorded) {
     document.getElementById('go').addEventListener('click', () => {
       if (state.revealed[key]) state.idx[key] = ((state.idx[key] || 0) + 1) % best.n; state.revealed[key] = true; select(m.id);
       document.querySelectorAll('.sticker').forEach(s => { s.classList.remove('reveal'); void s.offsetWidth; s.classList.add('reveal'); });
@@ -770,7 +787,7 @@ function select(id) {
     document.getElementById('mode21').addEventListener('click', () => setMode('21'));
     document.getElementById('modefree').addEventListener('click', () => setMode('free'));
     const tm = document.getElementById('tomine'); if (tm) tm.addEventListener('click', () => { pickNow[m.id] = best.trio.map(t => t.n); state.sec = 'mio'; select(m.id); });
-  } else wireBuilder(m);
+  } else if (sec !== 'app') wireBuilder(m);
 }
 const slugT = t => String(t).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 const sisalUrl = m => m.comp === 'ucl' ? 'https://www.sisal.it/scommesse-matchpoint/quote/calcio/champions-league' : `https://www.sisal.it/scommesse-matchpoint/evento/calcio/serie-a/${slugT(m.h)}-${slugT(m.a)}`;
@@ -790,16 +807,16 @@ function addBtn(m, x) {
   return `<button type="button" class="add" data-add="${x.n.replace(/"/g, '&quot;')}" aria-pressed="${on}" ${dis ? 'disabled' : ''} aria-label="${on ? 'Togli' : 'Aggiungi'} ${x.n.replace(/"/g, '&quot;')} ${on ? 'dal' : 'al'} mio tris">${on ? '✓' : '+'}</button>`;
 }
 function builderHtml(m) {
-  const mine = current(m), ps = players(m), app = pick(m, state.mode, 0, true), saved = myTris[m.id];
+  const mine = current(m), ps = players(m), app = appTrisAtKickoff(m) || pick(m, state.mode, 0, true), saved = myTris[m.id];
   const mineP = mine.map(n => ps.find(x => x.n === n) || {}); const prod = mine.length === 3 ? mineP.reduce((a, x) => a * (x.p || 0), 1) * jointK(mineP) : null;
   const same = saved && saved.mio.map(t => t.n).sort().join('|') === [...mine].sort().join('|');
   return `<section class="builder" aria-label="Il mio tris">
     <div class="b-head"><h3>Il mio tris</h3><span class="note">${locked(m) ? 'Partita iniziata: il tris è bloccato.' : 'Tocca + accanto ai giocatori qui sotto (fino a 3), oppure parti dal tris dell\'app.'}</span></div>
     <div class="slots">${[0, 1, 2].map(i => mine[i] ? `<span class="slot full">${mine[i]}${locked(m) ? '' : `<button type="button" class="x" data-rm="${i}" aria-label="Togli ${mine[i]}">×</button>`}</span>` : `<span class="slot">Scelta ${i + 1}</span>`).join('')}</div>
     <div class="b-foot">
-      <span>Tutti e tre ammoniti: <b>${prod != null ? (prod * 100).toFixed(1) + '%' : '–'}</b> <span class="note">(tris dell'app ${(app.p3 * 100).toFixed(1)}%)</span></span>
+      <span>Tutti e tre ammoniti: <b>${trioPct(prod)}</b> <span class="note">(tris dell'app ${trioPct(app.p3)})</span></span>
       ${locked(m) ? '' : `<button type="button" class="save" id="savemine" ${mine.length === 3 && DB && UID && !same ? '' : 'disabled'}>${same ? 'Salvato ✓' : 'Salva il mio tris'}</button>
-      <button type="button" class="reset" id="useapp">Parti dal tris dell'app</button>`}
+      ${locked(m) ? '' : '<button type="button" class="reset" id="useapp">Parti dal tris dell’app</button>'}`}
       <span class="saved" id="savedmsg">${saved ? `Salvato il ${hm(saved.savedAt)}: <b>${saved.mio.map(t => t.n).join(', ')}</b>` : ''}</span>
     </div>
     ${playHtml(m, mine)}
@@ -842,11 +859,11 @@ async function renderArea() {
     const res = results[t.matchId];
     // tris dell'app aggiornato: quello registrato al calcio d'inizio (risultati.tris_app) o, prima della partita, quello attuale dell'app; il tris salvato insieme al tuo era una fotografia del momento
     const mm = allMatches().find(x => x.id === t.matchId);
-    const appTrio = (res && res.tris_app && res.tris_app.length) ? res.tris_app : mm ? pick(mm, '21', 0).trio.map(x => ({ n: x.n, p: x.p })) : t.app;
+    const appTrio = res?.tris_app?.length ? res.tris_app : mm ? (appTrisAtKickoff(mm) || pick(mm, '21', 0)).trio : t.app;
     if (!res) return `<article class="duel-card"><h3>${t.partita}</h3><span class="note">Salvato il ${hm(t.savedAt)} · in attesa del risultato</span>
       <div class="cols2"><div class="side"><h4>Il tuo tris</h4><ul>${t.mio.map(x => `<li><span class="nm">${x.n}</span><span class="lead"></span><span class="val">${Math.round(x.p * 100)}%</span></li>`).join('')}</ul></div>
       <div class="side app"><h4>Tris dell'app</h4><ul>${appTrio.map(x => `<li><span class="nm">${x.n}</span><span class="lead"></span><span class="val">${Math.round(x.p * 100)}%</span></li>`).join('')}</ul></div></div></article>`;
-    const rule = t.regolaSostituto !== false, a = score(t.mio, res, rule), b = score(appTrio, res, rule); judged++;
+    const rule = t.regolaSostituto !== false, a = score(t.mio, res, rule), b = score(appTrio, res); judged++;
     me.p += a.punti; me.h += a.hits; me.full += a.hits === 3; ap.p += b.punti; ap.h += b.hits; ap.full += b.hits === 3; if (a.punti > b.punti) wins++;
     const li = r => `<li class="${r.hit ? 'ok' : ''}"><span class="nm">${esc(r.n)}${r.sub ? `<small class="note">→ entrato ${esc(r.sub)}</small>` : ''}</span><span class="lead"></span><span class="val">${r.hit ? `<span class="hit">${r.viaSub ? 'giallo al sostituto ✓' : 'ammonito ✓'}</span> · ` : ''}${r.f != null ? r.f + (r.f === 1 ? ' fallo' : ' falli') : (res.falli && Object.keys(res.falli).length ? 'non ha giocato' : 'falli in arrivo')}</span></li>`;
     const v = a.punti > b.punti ? '<span class="verdict win">Hai battuto l\'app</span>' : a.punti < b.punti ? '<span class="verdict">Vince l\'app</span>' : '<span class="verdict">Pareggio</span>';
