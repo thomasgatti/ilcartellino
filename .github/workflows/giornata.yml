@@ -53,13 +53,14 @@ jobs:
           cd bot/webapp
           python3 build.py
       - name: Registra i tris aggiornati
-        if: steps.partite.outputs.previsioni != ''
+        if: steps.partite.outputs.previsioni != '' || steps.partite.outputs.revisioni != ''
         env:
           PARTITE: ${{ steps.partite.outputs.previsioni }}
+          REVISIONI: ${{ steps.partite.outputs.revisioni }}
         run: |
           npm install --no-save --package-lock=false playwright@1.56.1
           npx playwright install --with-deps chromium
-          node bot/webapp/tris_app.js "$PARTITE"
+          node bot/webapp/tris_app.js "$PARTITE" "$REVISIONI"
       - name: Rigenera il sito Vercel
         run: |
           if git diff --quiet -- bot/webapp/index.html bot/webapp/tris_app.json bot/webapp/vercel/risultati.json; then exit 0; fi

@@ -197,7 +197,29 @@
     "p": 0.1612,
     "team": "Atalanta"
    }
-  ]
+  ],
+  "revised": {
+   "uff": true,
+   "late": true,
+   "p3": 0.008052970338713942,
+   "trio": [
+    {
+     "n": "E. Kouadio",
+     "p": 0.2034,
+     "team": "Monza"
+    },
+    {
+     "n": "L. Lucchesi",
+     "p": 0.1995,
+     "team": "Monza"
+    },
+    {
+     "n": "G. Scalvini",
+     "p": 0.1711,
+     "team": "Atalanta"
+    }
+   ]
+  }
  },
  {
   "comp": "sa",

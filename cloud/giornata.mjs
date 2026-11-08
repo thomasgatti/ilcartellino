@@ -25,6 +25,12 @@ const python = process.env.PYTHON || 'python3';
 const data = read(files.data);
 const results = read(files.results);
 const tris = read(files.tris);
+const savedTris = new Map(tris.map(t => [t.id,t]));
+function needsTrisRevision(m) {
+  const prior = savedTris.get(m.id);
+  return m.uff && m.ko <= now && prior?.trio?.length === 3 && !prior.revised &&
+    prior.trio.some(t => !m.pl.some(p => p[0] === t.n && (p[6] ?? 100) === 100));
+}
 const seen = new Set(results.map(r => r.matchId));
 const rounds = [{comp:'sa', section:data, matches:data.matches}];
 if (data.cups?.ucl?.matches?.length) {
@@ -234,7 +240,7 @@ function archiveResult(round, m, j) {
     }
     if (e.type === 'Substitution' && e.swap?.[0]?.name && e.swap?.[1]?.name) sub[n(e.swap[1].name,side)] = n(e.swap[0].name,side);
   }
-  const prior = tris.find(t => t.id === m.id);
+  const prior = savedTris.get(m.id);
   if (!prior?.trio?.length) throw new Error('Tris prepartita assente');
   m.live = {t:'FT',sc:rawScore,fin:true,cards,fl,p:{},out:Object.keys(sub),sub,src:'fotmob'};
   results.push({
@@ -242,7 +248,7 @@ function archiveResult(round, m, j) {
     finale:rawScore.replace(/\s/g,''),p3_app:prior.p3,ammoniti:[...ammoniti],
     falli:Object.fromEntries(Object.entries(fl).map(([p,row]) => [p,row[0]])),
     falli_subiti:Object.fromEntries(Object.entries(fl).map(([p,row]) => [p,row[1]])),
-    sostituzioni:sub,tris_app:prior.trio.map(({n,p}) => ({n,p})),aggiornato:new Date().toISOString(),
+    sostituzioni:sub,tris_app:prior.trio.map(({n,p}) => ({n,p})),tris_app_revisione:prior.revised,aggiornato:new Date().toISOString(),
   });
   seen.add(m.id);
   console.log('Archiviata',m.h,m.a,rawScore);
@@ -258,7 +264,9 @@ try {
       try { archiveResult(round,m,j); finished++; } catch (e) { warn(m,e); }
     }
   }
-  if (!rounds[0].pending.length) await advanceSerieA(rounds[0],seen).catch(e => console.warn(e.message));
+  if (!rounds[0].pending.length && !rounds[0].matches.some(needsTrisRevision)) {
+    await advanceSerieA(rounds[0],seen).catch(e => console.warn(e.message));
+  }
   const all = rounds.flatMap(r => r.pending);
   if (all.length) {
     await startModel(Math.min(now,...all.map(({j}) => Date.parse(j.general.matchTimeUTCDate) / 1000)));
@@ -288,7 +296,10 @@ try {
     write(files.data,data);
     if (finished) write(files.results,results);
   }
-  if (process.env.GITHUB_OUTPUT) fs.appendFileSync(process.env.GITHUB_OUTPUT,`previsioni=${trisIds.join(',')}\n`);
+  const revisedIds = rounds.flatMap(r => r.section.matches.filter(needsTrisRevision).map(m => m.id));
+  if (process.env.GITHUB_OUTPUT) {
+    fs.appendFileSync(process.env.GITHUB_OUTPUT,`previsioni=${trisIds.join(',')}\nrevisioni=${revisedIds.join(',')}\n`);
+  }
   console.log(`${changedIds.length} formazioni aggiornate, ${finished} esiti archiviati`);
 } finally {
   fs.rmSync(temp,{recursive:true,force:true});
