@@ -8,6 +8,10 @@ on:
     paths:
       - '.github/workflows/giornata.yml'
       - 'cloud/giornata.mjs'
+  workflow_run:
+    workflows: ['Aggiorna dati FotMob']
+    branches: [main]
+    types: [completed]
   workflow_dispatch:
     inputs:
       prova:
@@ -21,7 +25,9 @@ concurrency:
 
 jobs:
   giornata:
-    if: github.event_name == 'workflow_dispatch' || vars.CARTELLINO_AUTO == 'true'
+    if: >-
+      (github.event_name == 'workflow_dispatch' || vars.CARTELLINO_AUTO == 'true') &&
+      (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success')
     runs-on: ubuntu-24.04
     timeout-minutes: 12
     permissions:
@@ -41,13 +47,11 @@ jobs:
       - name: Controlla formazioni ed esiti
         id: partite
         run: node cloud/giornata.mjs
-      - name: Rigenera il sito
+      - name: Rigenera l'interfaccia
         run: |
-          if git diff --quiet -- bot/webapp/data.json bot/webapp/vercel/risultati.json; then exit 0; fi
+          if git diff --quiet -- bot/webapp/data.json bot/webapp/lineups.txt bot/webapp/vercel/risultati.json; then exit 0; fi
           cd bot/webapp
           python3 build.py
-          python3 build_vercel.py
-          cp vercel/sito/index.html ../../index.html
       - name: Registra i tris aggiornati
         if: steps.partite.outputs.previsioni != ''
         env:
@@ -56,6 +60,12 @@ jobs:
           npm install --no-save --package-lock=false playwright@1.56.1
           npx playwright install --with-deps chromium
           node bot/webapp/tris_app.js "$PARTITE"
+      - name: Rigenera il sito Vercel
+        run: |
+          if git diff --quiet -- bot/webapp/index.html bot/webapp/tris_app.json bot/webapp/vercel/risultati.json; then exit 0; fi
+          cd bot/webapp
+          python3 build_vercel.py
+          cp vercel/sito/index.html ../../index.html
       - name: Salva la prova
         if: github.event_name == 'workflow_dispatch' && inputs.prova
         uses: actions/upload-artifact@v4

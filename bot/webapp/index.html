@@ -524,6 +524,8 @@ const initials = n => { const m = n.match(/^(\S)\.\s+(.+)$/u); const t = (m ? m[
 const state = { comp: 'sa', id: null, mode: '21', revealed: {}, idx: {}, boost: {}, view: 'partite', sec: 'app', subRule: true };
 let DB = null, USER = null, UID = null, MYNAME = '', loaded = false;
 const myTris = {}, pickNow = {}, results = {};
+const savedAppTris = new Map((window.cartellinoTris || []).map(t => [t.id, t]));
+const esc = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const withTimeout = (pr, ms = 10000) => Promise.race([pr, new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), ms))]);
 const hm = iso => new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }).format(new Date(iso));
 function renderWho() {
@@ -585,15 +587,16 @@ function probNote(m) {
 }
 function statusPill(m) {
   const now = Date.now() / 1000, base = `<span class="basis">Tris calcolato sulle formazioni ${m.uff ? 'ufficiali' : m.src === 'provv' ? 'provvisorie' : 'probabili'}</span>`;
-  if (now > m.ko + 115 * 60) return '<span class="pill done">Finita</span>' + base;
-  if (now > m.ko) return '<span class="pill live">In corso</span>' + base;
-  return m.uff ? '<span class="pill uff">Formazioni ufficiali</span>' : `<span class="pill prob">⚠ Formazioni ${m.src === 'provv' ? 'provvisorie' : 'probabili'}</span>`;
+  if (m.live?.fin || (!m.live && now > m.ko + 115 * 60)) return '<span class="pill done">Finita</span>' + base;
+  if (m.live || now > m.ko) return '<span class="pill live">In corso</span>' + base;
+  return m.uff || m.espnXI ? '<span class="pill uff">Formazioni ufficiali</span>' : `<span class="pill prob">⚠ Formazioni ${m.src === 'provv' ? 'provvisorie' : 'probabili'}</span>`;
 }
 function statusTag(m) {
   const now = Date.now() / 1000;
-  if (now > m.ko + 115 * 60) return '<span class="ltag done">Finita</span>';
-  if (now > m.ko) return '<span class="ltag live">In corso</span>';
-  return `<span class="ltag ${m.uff ? 'uff' : 'prob'}">${m.uff ? 'Ufficiali' : m.src === 'provv' ? 'Provvisorie' : 'Probabili'}</span>`;
+  if (m.live?.fin || (!m.live && now > m.ko + 115 * 60)) return '<span class="ltag done">Finita</span>';
+  if (m.live || now > m.ko) return '<span class="ltag live">In corso</span>';
+  const uff = m.uff || m.espnXI;
+  return `<span class="ltag ${uff ? 'uff' : 'prob'}">${uff ? 'Ufficiali' : m.src === 'provv' ? 'Provvisorie' : 'Probabili'}</span>`;
 }
 function renderList() {
   const el = document.getElementById('list'); el.innerHTML = ''; let lastDay = '';
@@ -622,6 +625,10 @@ function sticker(x, hidden) {
   </article>`;
 }
 function campoHtml(m, trio) {
+  if (m.espnXI && !m.uff) {
+    const team = (xi, name, colors) => `<div class="pcol"><h4><i class="chip big" style="background:${colors[0]}"></i>${esc(name)} · ${esc(xi.formation)}</h4><ol>${xi.players.map(p => `<li value="${p.jersey}">${esc(p.name)}</li>`).join('')}</ol></div>`;
+    return `<div class="pitchwrap"><div class="pitchhead"><h3>Formazioni ufficiali</h3><span class="pill uff">Ufficiali</span></div><div class="picker">${team(m.espnXI[0], m.h, m.hc)}${team(m.espnXI[1], m.a, m.ac)}</div><p class="note">Titolari confermati da ESPN. Il campo con le percentuali compare al prossimo aggiornamento del modello.</p></div>`;
+  }
   const lu = m.lu;
   if (!lu || !lu.h.length) return `<p class="note">La formazione non è ancora disponibile: compare appena FotMob pubblica i possibili titolari (di solito 1-2 giorni prima della partita).</p>`;
   const uff = lu.t === 'standard' || m.uff;
@@ -661,15 +668,15 @@ function needRis(m) {            // a partita finita le sostituzioni si leggono 
 function liveHtml(m) {
   const L = m.live; if (!L) return '';
   setTimeout(() => needRis(m), 0);
-  const app = pick(m, '21', 0).trio.map(t => t.n), mine = current(m), bk = new Set(L.cards.map(c => c[1]));
+  const app = pick(m, '21', 0).trio.map(t => t.n), mine = current(m), bk = new Set(L.cards.filter(c => c[2] !== 'R').map(c => c[1]));
   const sub = { ...((results[m.id] || {}).sostituzioni || {}), ...(L.sub || {}) }, inFor = {};   // sub: uscito → entrato
   Object.entries(sub).forEach(([o, i]) => { if (i) inFor[i] = o; });
   const pc = v => Math.round(v * 100) + '%', side = {}; m.pl.forEach(p => side[p[0]] = p[1]);
   // colore del nome: arancione tris dell'app, blu il tuo; in corsivo chi è entrato al posto di uno di loro
   const tone = n => { const o = inFor[n], A = app.includes(n) || (!!o && app.includes(o)), M = mine.includes(n) || (!!o && mine.includes(o));
     return !A && !M ? '' : (A && M ? 'both' : A ? 'app' : 'mine') + (app.includes(n) || mine.includes(n) ? '' : ' via'); };
-  const nm = n => { const t = tone(n); return t ? `<span class="pn ${t}">${n}</span>` : n; };
-  const swap = n => sub[n] ? `<span class="sw"><span class="so">${n}</span><span class="arr" aria-label="sostituito da">➜</span><span class="si">${sub[n]}</span></span>` : n;
+  const nm = n => { const t = tone(n); return t ? `<span class="pn ${t}">${esc(n)}</span>` : esc(n); };
+  const swap = n => sub[n] ? `<span class="sw"><span class="so">${esc(n)}</span><span class="arr" aria-label="sostituito da">➜</span><span class="si">${esc(sub[n])}</span></span>` : esc(n);
   const trioChip = n => {
     const s = sub[n], viaSub = state.subRule && s && bk.has(s), out = !!s || (L.out || []).includes(n);
     const [v, cls] = bk.has(n) || viaSub ? ['✓', 'ok'] : L.fin ? ['no', 'off'] : !out ? [pc(L.p[n] ?? 0), '']
@@ -677,7 +684,7 @@ function liveHtml(m) {
     return `<span class="lchip ${cls}">${swap(n)}<b>${v}</b></span>`;
   };
   const risk = Object.entries(L.p).filter(([, v]) => v > 0 && v < 1).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([n, v]) => `<span class="lchip">${nm(n)}<b>${pc(v)}</b></span>`).join('');
-  const cards = L.cards.length ? L.cards.map(c => `<span class="lchip card"><span class="yc${c[2] === 'R' ? ' rc' : ''}"></span>${nm(c[1])}<b>${c[0]}'</b></span>`).join('') : '<span class="note">nessuno</span>';
+  const cards = L.cards.length ? L.cards.map(c => `<span class="lchip card"><span class="yc${c[2] === 'G' ? '' : ' rc'}"></span>${nm(c[1])}<b>${esc(c[0])}'</b></span>`).join('') : '<span class="note">nessuno</span>';
   const rows = Object.entries(L.fl).map(([n, v]) => ({ n, f: v[0] || 0, s: v[1] || 0, side: v[2] || side[n] })).filter(r => r.f || r.s);
   const team = sd => { const R = rows.filter(r => r.side === sd).sort((a, b) => b.f - a.f || b.s - a.s);
     return `<div class="lteam" style="--tc:${[].concat(sd === 'h' ? m.hc : m.ac)[0] || 'var(--line)'}"><table class="ltab"><thead><tr><th class="tn"><span class="tchip"></span>${sd === 'h' ? m.h : m.a}</th><th class="cf">Fatti</th><th class="cs">Subiti</th></tr></thead>
@@ -734,7 +741,7 @@ function select(id) {
   panel.innerHTML = `
     <div class="mhead">
       <div class="mteams"><span class="mt"><i class="chip big" style="background:${m.hc[0]}"></i>${m.h}</span><span class="mvs">–</span><span class="mt"><i class="chip big" style="background:${m.ac[0]}"></i>${m.a}</span></div>
-      <div class="mwhen"><span>${fmtDay(m.ko)}, <b>${fmtTime(m.ko)}</b></span>${statusPill(m)}${m.derby ? '<span class="tag">Derby</span>' : ''}</div>${m.uff || locked(m) ? '' : probNote(m)}
+      <div class="mwhen"><span>${fmtDay(m.ko)}, <b>${fmtTime(m.ko)}</b></span>${statusPill(m)}${m.derby ? '<span class="tag">Derby</span>' : ''}</div>${m.uff ? '' : m.espnXI ? '<p class="note">Undici ufficiali disponibili. Le percentuali e il tris in questa scheda sono ancora calcolati sulle formazioni precedenti.</p>' : locked(m) ? '' : probNote(m)}
     </div>
     <div class="stats">
       <div class="stat"><span class="k">Arbitro</span><span class="v">${m.ref}</span>${m.refnote ? `<span class="k2">${m.refnote}</span>` : ''}</div>
@@ -745,7 +752,7 @@ function select(id) {
     <div class="sectabs" role="tablist" aria-label="Sezioni della partita">
       <button type="button" role="tab" data-sec="app" aria-selected="${sec === 'app'}">Tris dell'app</button>
       <button type="button" role="tab" data-sec="mio" aria-selected="${sec === 'mio'}">Il mio tris${saved ? ' ✓' : ''}</button>
-      <button type="button" role="tab" data-sec="tutti" aria-selected="${sec === 'tutti'}">Tutti i titolari</button>
+      <button type="button" role="tab" data-sec="tutti" aria-selected="${sec === 'tutti'}">${m.espnXI && !m.uff ? 'Stime del modello' : 'Tutti i titolari'}</button>
       <button type="button" role="tab" data-sec="campo" aria-selected="${sec === 'campo'}">Formazioni</button>
     </div>
     <div class="sec" role="tabpanel">${sec === 'app' ? appSec : sec === 'mio' ? mioSec : sec === 'campo' ? campoHtml(m, pick(m, '21', 0).trio) : tuttiSec}</div>`;
@@ -829,7 +836,7 @@ async function renderArea() {
   if (!UID) { el.innerHTML = `<h2>La mia area</h2><p class="note">${loaded ? 'Collegati con il tuo account Claude per avere la tua area personale con i tuoi tris.' : 'Collegamento al tuo account…'}</p>`; return; }
   const list = Object.values(myTris).filter(t => (t.comp || (results[t.matchId] && results[t.matchId].comp) || (CUP && CUP.matches.some(x => x.id === t.matchId) ? 'ucl' : 'sa')) === state.comp).sort((a, b) => b.ko - a.ko);
   el.innerHTML = `<h2>La mia area</h2><p class="note">Caricamento dei risultati…</p>`;
-  await Promise.all(list.map(async t => { if (results[t.matchId] === undefined) { try { const s = await withTimeout(DB.doc('risultati/' + t.matchId).get()); results[t.matchId] = s.exists ? s.data() : null; } catch (e) { results[t.matchId] = null; } } }));
+  await Promise.all(list.map(async t => { if (results[t.matchId] === undefined) { try { const s = await withTimeout(DB.doc('risultati/' + t.matchId).get()); if (s.exists) results[t.matchId] = s.data(); else results[t.matchId] ??= null; } catch (e) { results[t.matchId] ??= null; } } }));
   let me = { p: 0, h: 0, full: 0 }, ap = { p: 0, h: 0, full: 0 }, judged = 0, wins = 0;
   const cards = list.map(t => {
     const res = results[t.matchId];
@@ -841,7 +848,7 @@ async function renderArea() {
       <div class="side app"><h4>Tris dell'app</h4><ul>${appTrio.map(x => `<li><span class="nm">${x.n}</span><span class="lead"></span><span class="val">${Math.round(x.p * 100)}%</span></li>`).join('')}</ul></div></div></article>`;
     const rule = t.regolaSostituto !== false, a = score(t.mio, res, rule), b = score(appTrio, res, rule); judged++;
     me.p += a.punti; me.h += a.hits; me.full += a.hits === 3; ap.p += b.punti; ap.h += b.hits; ap.full += b.hits === 3; if (a.punti > b.punti) wins++;
-    const li = r => `<li class="${r.hit ? 'ok' : ''}"><span class="nm">${r.n}${r.sub ? `<small class="note">→ entrato ${r.sub}</small>` : ''}</span><span class="lead"></span><span class="val">${r.hit ? `<span class="hit">${r.viaSub ? 'giallo al sostituto ✓' : 'ammonito ✓'}</span> · ` : ''}${r.f != null ? r.f + (r.f === 1 ? ' fallo' : ' falli') : (res.falli && Object.keys(res.falli).length ? 'non ha giocato' : 'falli in arrivo')}</span></li>`;
+    const li = r => `<li class="${r.hit ? 'ok' : ''}"><span class="nm">${esc(r.n)}${r.sub ? `<small class="note">→ entrato ${esc(r.sub)}</small>` : ''}</span><span class="lead"></span><span class="val">${r.hit ? `<span class="hit">${r.viaSub ? 'giallo al sostituto ✓' : 'ammonito ✓'}</span> · ` : ''}${r.f != null ? r.f + (r.f === 1 ? ' fallo' : ' falli') : (res.falli && Object.keys(res.falli).length ? 'non ha giocato' : 'falli in arrivo')}</span></li>`;
     const v = a.punti > b.punti ? '<span class="verdict win">Hai battuto l\'app</span>' : a.punti < b.punti ? '<span class="verdict">Vince l\'app</span>' : '<span class="verdict">Pareggio</span>';
     return `<article class="duel-card"><h3>${t.partita} ${res.finale ? '· ' + res.finale : ''}</h3>${v}
       <div class="cols2"><div class="side"><h4>Il tuo tris</h4><ul>${a.rows.map(li).join('')}</ul><div class="score">${a.hits}/3 ammoniti · ${a.falli} ${a.falli === 1 ? 'fallo' : 'falli'} · ${a.punti} punti</div></div>
@@ -871,12 +878,12 @@ async function renderStorico() {
   const el = document.getElementById('storico');
   if (!DB) { el.innerHTML = `<h2>Storico tris dell'app</h2><p class="note">${loaded ? 'Lo storico si legge dal database dell\'app: aprila dal link di Claude per vederlo.' : 'Caricamento…'}</p>`; return; }
   el.innerHTML = `<h2>Storico tris dell'app</h2><p class="note">Caricamento…</p>`;
-  let docs = [];
-  try { const snap = await withTimeout(DB.collection('risultati').get()); docs = snap.docs.map(d => d.data()).filter(r => r && r.tris_app && r.tris_app.length && (r.comp || 'sa') === state.comp); docs.forEach(r => { results[r.matchId] = r; }); }
+  try { const snap = await withTimeout(DB.collection('risultati').get()); snap.docs.forEach(d => { const r = d.data(); if (r?.matchId) results[r.matchId] = r; }); }
   catch (e) { el.innerHTML = `<h2>Storico tris dell'app</h2><p class="note">Non riesco a leggere lo storico in questo momento: riprova tra poco.</p>`; return; }
+  const docs = Object.values(results).filter(r => r?.tris_app?.length && (r.comp || 'sa') === state.comp);
   docs.sort((a, b) => (b.ko || 0) - (a.ko || 0));
   let hits = 0, full = 0, two = 0, pts = 0;
-  const li = (r, p) => `<li class="${r.hit ? 'ok' : ''}"><span class="nm" title="${r.n}${r.sub ? ' → entrato ' + r.sub : ''}">${r.n}${r.sub ? `<small class="note">→ entrato ${r.sub}</small>` : ''}</span><span class="lead"></span><span class="val">${r.hit ? `<span class="hit">${r.viaSub ? '✓ sostituto' : '✓ giallo'}</span> · ` : ''}${Math.round(p * 100)}%${r.np ? ' · non ha giocato' : r.f != null ? ' · ' + r.f + ' f.' : ''}</span></li>`;
+  const li = (r, p) => `<li class="${r.hit ? 'ok' : ''}"><span class="nm" title="${esc(r.n + (r.sub ? ' → entrato ' + r.sub : ''))}">${esc(r.n)}${r.sub ? `<small class="note">→ entrato ${esc(r.sub)}</small>` : ''}</span><span class="lead"></span><span class="val">${r.hit ? `<span class="hit">${r.viaSub ? '✓ sostituto' : '✓ giallo'}</span> · ` : ''}${Math.round(p * 100)}%${r.np ? ' · non ha giocato' : r.f != null ? ' · ' + r.f + ' f.' : ''}</span></li>`;
   const byG = {};
   for (const r of docs) {
     const sc = score(r.tris_app, r, true); hits += sc.hits; full += sc.hits === 3; two += sc.hits >= 2; pts += sc.punti;
@@ -922,7 +929,7 @@ function setComp(c, keepId) {
   state.id = null; select(keepId && DATA.matches.some(m => m.id === keepId) ? keepId : next.id);
   if (state.view === 'storico') renderStorico(); else if (state.view === 'area') renderArea(); else history.replaceState(null, '', '#m' + state.id);
 }
-// ---- live dal browser: dati ESPN ogni 60 secondi durante le partite (nessun server, nessun PC) ----
+// ---- formazioni e tabellini ESPN, anche se la pubblicazione da GitHub è in ritardo ----
 const LIVE_B = { sa: [-0.103, 0.891, -0.198, 0.034, 0.103, -0.015, -0.066, -0.023], ucl: [0.090, 0.894, 0.025, 0.006, 0.086, -0.063, -0.117, 0.020] };
 function liveProb(p0, t, all, own, opp, sd, comp) {
   const lgY = comp === 'sa' ? 4.2 : 3.6, rem = Math.max(0, (95 - t) / 95), base = 1 - Math.pow(1 - p0, rem);
@@ -939,65 +946,134 @@ function findPl(app, list) { // list: [{n, ...}] della stessa squadra
   return c.find(x => { const f = nrm(x.n); return a.length === 1 || (a[0].length === 1 ? f[0].startsWith(a[0]) : f.some(w => w === a[0] || wPre(w, a[0]))); }) || null;
 }
 const ESPN = 'https://site.api.espn.com/apis/site/v2/sports/soccer/', espnId = {}, sbCache = {};
+const finalReady = new Set(), liveChecked = new Map();
+const teamSides = [['h', 'home'], ['a', 'away']];
+const wholeStat = value => /^\d+$/.test(String(value)) ? Number(value) : null;
+const cardKind = type => /second yellow|yellow.*red/i.test(type) ? 'YR' : /red/i.test(type) ? 'R' : 'G';
+const teamWordsMatch = (a, b) => nrm(a).some(w => !['the','club','city','united','calcio','football'].includes(w) && nrm(b).some(v => v === w || wPre(v, w)));
+async function espnJson(path) {
+  const response = await fetch(ESPN + path, { signal: AbortSignal.timeout(8000) });
+  if (!response.ok) throw new Error('ESPN ' + response.status);
+  return response.json();
+}
 async function espnEvent(m) {
   if (espnId[m.id]) return espnId[m.id];
   const lg = m.comp === 'ucl' ? 'uefa.champions' : 'ita.1', d = new Date(m.ko * 1000).toISOString().slice(0, 10).replace(/-/g, '');
-  const k = lg + d; sbCache[k] = sbCache[k] || fetch(ESPN + lg + '/scoreboard?dates=' + d).then(r => r.json());
-  const ev = (await sbCache[k]).events || [], tk = [...nrm(m.h), ...nrm(m.a)];
-  let best = null, bs = 0;
-  for (const e of ev) {
-    if (Math.abs(Date.parse(e.date) / 1000 - m.ko) > 1200) continue;
-    const et = (e.competitions?.[0]?.competitors || []).flatMap(c => nrm(c.team?.displayName));
-    const sc = tk.filter(w => et.some(v => v === w || wPre(v, w))).length;
-    if (sc > bs) { bs = sc; best = e.id; }
-  }
-  if (best) espnId[m.id] = [lg, best]; return espnId[m.id];
+  const k = lg + d;
+  sbCache[k] ||= espnJson(lg + '/scoreboard?dates=' + d).catch(error => { delete sbCache[k]; throw error; });
+  const ev = (await sbCache[k]).events || [];
+  const match = ev.find(e => Math.abs(Date.parse(e.date) / 1000 - m.ko) <= 1200 && teamSides.every(([sd, homeAway]) => {
+    const team = e.competitions?.[0]?.competitors?.find(t => t.homeAway === homeAway)?.team;
+    return [team?.displayName, team?.shortDisplayName, team?.name].some(n => teamWordsMatch(m[sd], n));
+  }));
+  if (match) return espnId[m.id] = [lg, match.id];
+  delete sbCache[k];
+}
+function espnLineups(rosters, competitors) {
+  const teams = teamSides.map(([, homeAway]) => {
+    const club = competitors?.find(t => t.homeAway === homeAway)?.team?.id;
+    const roster = club && rosters?.find(t => t.homeAway === homeAway && String(t.team?.id) === String(club));
+    const formation = roster?.formation;
+    const players = roster?.roster?.filter(p => p.starter === true) || [];
+    if (!/^\d(?:-\d){1,4}$/.test(formation) || formation.split('-').reduce((sum, n) => sum + +n, 0) !== 10 ||
+        players.length !== 11 || new Set(players.map(p => p.athlete?.id)).size !== 11 ||
+        players.some(p => !p.athlete?.id || !p.athlete.displayName || wholeStat(p.jersey) == null)) return null;
+    return {formation, players:players.map(p => ({name:p.athlete.displayName, jersey:+p.jersey}))};
+  });
+  return teams.every(Boolean) ? teams : null;
+}
+function espnFinal(m, j, xi, es, sc, cards, sub, fl) {
+  const type = j.header.competitions[0].status.type;
+  if (!type.completed || !xi || !Array.isArray(j.keyEvents)) return false;
+  const played = teamSides.flatMap(([sd]) => (es[sd] || []).filter(p => p.start || p.inn));
+  if (played.length !== Object.keys(fl).length || played.some(p => p.fc == null || p.fs == null || p.y == null)) return false;
+  if (!teamSides.every(([sd, homeAway]) => {
+    const teamId = j.header.competitions[0].competitors.find(t => t.homeAway === homeAway)?.team?.id;
+    const total = j.boxscore?.teams?.find(t => String(t.team?.id) === String(teamId))?.statistics;
+    const value = name => wholeStat(total?.find(s => s.name === name)?.displayValue);
+    const stats = es[sd].filter(p => p.start || p.inn);
+    return value('foulsCommitted') === stats.reduce((sum, p) => sum + p.fc, 0) && value('yellowCards') === stats.reduce((sum, p) => sum + p.y, 0);
+  })) return false;
+  const booked = new Set(cards.filter(c => c[2] !== 'R').map(c => c[1]));
+  const ammoniti = played.filter(p => p.y > 0).map(p => p.name);
+  const entrants = new Set(Object.values(sub));
+  if (ammoniti.some(n => !booked.has(n)) || played.some(p => p.inn && !entrants.has(p.name))) return false;
+  const prior = savedAppTris.get(m.id);
+  if (prior?.trio?.length === 3 && !results[m.id]) results[m.id] = {
+    matchId:m.id, comp:prior.comp, partita:prior.partita, giornata:prior.comp === 'ucl' ? CUP?.round : ALL.round, ko:m.ko,
+    finale:sc.h + '-' + sc.a, p3_app:prior.p3, tris_app:prior.trio, ammoniti, sostituzioni:sub,
+    falli:Object.fromEntries(Object.entries(fl).map(([n, p]) => [n, p[0]])),
+    falli_subiti:Object.fromEntries(Object.entries(fl).map(([n, p]) => [n, p[1]])),
+  };
+  return true;
 }
 async function liveFetch(m) {
   const id = await espnEvent(m); if (!id) return;
-  const j = await fetch(ESPN + id[0] + '/summary?event=' + id[1]).then(r => r.json());
-  const cp = j.header?.competitions?.[0], stt = cp?.status?.type?.state; if (!cp || stt === 'pre') return;
-  const side = {}, sc = {}; (cp.competitors || []).forEach(c => { side[c.homeAway] = c; sc[c.homeAway === 'home' ? 'h' : 'a'] = +c.score || 0; });
+  const j = await espnJson(id[0] + '/summary?event=' + id[1]);
+  const cp = j.header?.competitions?.[0], stt = cp?.status?.type?.state;
+  if (!cp || !['pre','in','post'].includes(stt) || /CANCEL|ABANDON|FORFEIT|POSTPON|SUSPEND|AWARD/i.test(cp.status.type.name)) return;
+  const xi = espnLineups(j.rosters, cp.competitors);
+  const changedXI = !m.uff && xi && JSON.stringify(xi) !== JSON.stringify(m.espnXI);
+  if (changedXI) m.espnXI = xi;
+  const sameComp = (m.comp || 'sa') === state.comp, open = sameComp && state.view === 'partite' && state.id === m.id;
+  if (stt === 'pre') {
+    if (changedXI && sameComp) renderList();
+    if (changedXI && open) select(m.id);
+    return;
+  }
+  const side = Object.fromEntries((cp.competitors || []).map(c => [c.homeAway,c]));
+  const sc = Object.fromEntries(teamSides.map(([sd,homeAway]) => [sd,wholeStat(side[homeAway]?.score)]));
+  if (sc.h == null || sc.a == null) return;
   const ht = cp.status?.type?.name === 'STATUS_HALFTIME' || /^half ?time$/i.test(cp.status?.type?.description || ''), fin = stt === 'post', clock = ht ? 'Intervallo' : cp.status?.displayClock || '',
     mm = (clock.match(/\d+/g) || []).map(Number), m0 = (mm[0] || 0) + (mm[1] || 0), t = fin ? 95 : ht ? 45 : Math.min(95, m0);
+  const appName = (nm, s) => { const ap = m.pl.find(p => p[1] === s && findPl(p[0], [{ n: nm }])), w = nm.split(' ');
+    return ap ? ap[0] : w.length > 1 ? w[0][0] + '. ' + w.slice(1).join(' ') : nm; };
   const es = {}; (j.rosters || []).forEach(r => { es[r.homeAway === 'home' ? 'h' : 'a'] = (r.roster || []).map(p => {
-    const st = {}; (p.stats || []).forEach(x => st[x.name] = +x.value || 0);
-    return { n: p.athlete?.displayName || '', start: !!p.starter, out: !!p.subbedOut, inn: !!p.subbedIn, fc: st.foulsCommitted || 0, fs: st.foulsSuffered || 0, y: st.yellowCards || 0, r: st.redCards || 0 }; }); });
+    const st = Object.fromEntries((p.stats || []).map(x => [x.name,wholeStat(x.value)]));
+    const n = p.athlete?.displayName || '';
+    return { n, name:appName(n, r.homeAway === 'home' ? 'h' : 'a'), start: !!p.starter, out: !!p.subbedOut, inn: !!p.subbedIn, fc: st.foulsCommitted, fs: st.foulsSuffered, y: st.yellowCards, r: st.redCards }; }); });
+  const eventSide = e => e.team?.id != null && teamSides.find(([,homeAway]) => String(e.team.id) === String(side[homeAway]?.team?.id))?.[0];
   const yc = { h: 0, a: 0 }, cards = [], fl = {}, P = {}, out = [];
   for (const e of j.keyEvents || []) {
-    const ty = e.type?.text || ''; if (!/card/i.test(ty)) continue;
-    const nm = e.participants?.[0]?.athlete?.displayName || '', s = ['h', 'a'].find(s => (es[s] || []).some(x => x.n === nm)) || (e.team?.id === side.home?.team?.id ? 'h' : 'a');
-    yc[s]++; const ap = m.pl.find(p => p[1] === s && findPl(p[0], [{ n: nm }]));
-    const w = nm.split(' '); cards.push([parseInt(e.clock?.displayValue) || 0, ap ? ap[0] : (w.length > 1 ? w[0][0] + '. ' + w.slice(1).join(' ') : nm), /red/i.test(ty) ? 'R' : 'G']);
+    const ty = e.type?.text || '', nm = e.participants?.[0]?.athlete?.displayName, s = eventSide(e);
+    if (!/card/i.test(ty) || !nm || !s) continue;
+    const kind = cardKind(ty), minute = String(e.clock?.displayValue || '').match(/^(\d+)(?:\+(\d+))?/);
+    if (kind !== 'R') yc[s]++;
+    cards.push([minute?.[2] ? minute[1] + '+' + minute[2] : +minute?.[1] || 0, appName(nm,s), kind]);
   }
+  for (const [s] of teamSides) for (const x of es[s] || []) if (x.name && (x.start || x.inn || x.fc || x.fs)) fl[x.name] = [x.fc ?? 0, x.fs ?? 0, s];
   for (const p of m.pl) {
     const x = findPl(p[0], es[p[1]] || []), s = p[1], o = s === 'h' ? 'a' : 'h';
-    if (x && (x.fc || x.fs)) fl[p[0]] = [x.fc, x.fs, s]; if (x) x.used = 1;
-    if (x && (x.y || x.r) || cards.some(c => c[1] === p[0])) { P[p[0]] = 1; continue; }
-    if (x && x.out) { P[p[0]] = 0; out.push(p[0]); continue; }
+    if (x?.y || cards.some(c => c[1] === p[0] && c[2] !== 'R')) { P[p[0]] = 1; continue; }
+    if (x?.out || x?.r || cards.some(c => c[1] === p[0] && c[2] === 'R')) { P[p[0]] = 0; out.push(p[0]); continue; }
     let q = liveProb(p[4], t, yc.h + yc.a, yc[s], yc[o], s === 'h' ? sc.h - sc.a : sc.a - sc.h, m.comp === 'ucl' ? 'ucl' : 'sa');
     const f = Math.pow(1.3, Math.min(4, x ? x.fc : 0)); P[p[0]] = q * f / (1 - q + q * f);
   }
-  for (const s of ['h', 'a']) for (const x of es[s] || []) if (!x.used && (x.fc || x.fs)) { const w = x.n.split(' '); fl[w.length > 1 ? w[0][0] + '. ' + w.slice(1).join(' ') : x.n] = [x.fc, x.fs, s]; }
-  const sub = {}, appName = (nm, s) => { const ap = m.pl.find(p => p[1] === s && findPl(p[0], [{ n: nm }])), w = nm.split(' ');
-    return ap ? ap[0] : w.length > 1 ? w[0][0] + '. ' + w.slice(1).join(' ') : nm; };
+  const sub = {};
   for (const e of j.keyEvents || []) {      // sostituzioni: "X replaces Y" (X entra, Y esce)
     if (!/substitut/i.test(e.type?.text || '')) continue;
     const ps = (e.participants || []).map(x => x.athlete?.displayName || '').filter(Boolean); if (ps.length < 2) continue;
-    const s = ['h', 'a'].find(s => (es[s] || []).some(x => ps.includes(x.n))) || (e.team?.id === side.home?.team?.id ? 'h' : 'a');
+    const s = eventSide(e); if (!s) continue;
     const R = es[s] || [], f = n => R.find(x => x.n === n) || {}, t = (e.text || '').match(/([^.,]+?) replaces ([^.]+)/i);
     let [i, o] = ps;
     if (t && ps.includes(t[1].trim()) && ps.includes(t[2].trim())) [i, o] = [t[1].trim(), t[2].trim()];
     else if ((f(i).out && !f(i).inn) || (f(o).inn && !f(o).out)) [i, o] = [o, i];
     sub[appName(o, s)] = appName(i, s);
   }
-  cards.sort((a, b) => a[0] - b[0]);
+  const minutes = value => String(value).split('+').reduce((sum, n) => sum + +n, 0);
+  cards.sort((a, b) => minutes(a[0]) - minutes(b[0]));
+  const transition = !m.live || m.live.fin !== fin;
+  const complete = fin && espnFinal(m, j, xi, es, sc, cards, sub, fl);
+  if (complete) finalReady.add(m.id);
   m.live = { t: clock, sc: sc.h + ' - ' + sc.a, fin, agg: new Date().toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit', second: '2-digit' }), cards, fl, p: P, out, sub, src: 'espn',
     m0, per: +cp.status?.period || 0, at: Date.now(), run: stt === 'in' && !ht && m0 > 0 };
-  if (state.id === m.id && state.view !== 'storico' && state.view !== 'area') {
+  if (sameComp && (transition || changedXI)) renderList();
+  if (open) {
     const box = document.querySelector('.livebox');
-    if (box) box.outerHTML = liveHtml(m); else select(m.id);
+    if (box && !transition && !changedXI) box.outerHTML = liveHtml(m); else select(m.id);
   }
+  if (complete && results[m.id] && sameComp && state.view === 'storico') renderStorico();
+  if (complete && results[m.id] && sameComp && state.view === 'area') renderArea();
 }
 // minuto che scorre da solo tra un aggiornamento e l'altro (stile 41'... 42'... 45'+1')
 const liveMin = L => { if (!L.run) return L.t; const mn = L.m0 + Math.floor((Date.now() - L.at) / 60000), cap = L.per >= 2 ? 90 : 45;
@@ -1006,8 +1082,11 @@ setInterval(() => { const m = (typeof DATA !== 'undefined' && DATA) ? DATA.match
   if (m && m.live && m.live.src === 'espn' && m.live.run && el) el.textContent = liveMin(m.live); }, 5000);
 async function liveLoop() {
   if (!document.hidden) {
-    const now = Date.now() / 1000, all = [...ALL.matches, ...(CUP ? CUP.matches : [])];
-    await Promise.all(all.filter(m => now > m.ko - 120 && now < m.ko + 9000 && !(m.live?.fin && m.live?.src === 'espn')).map(m => liveFetch(m).catch(() => {})));
+    const now = Date.now() / 1000;
+    const due = allMatches().filter(m => now >= m.ko - 90 * 60 && now < m.ko + 7 * 24 * 3600 &&
+      !finalReady.has(m.id) && !(m.live?.fin && m.live?.src !== 'espn') &&
+      now - (liveChecked.get(m.id) || 0) >= (now > m.ko + 3 * 3600 ? 300 : 29));
+    await Promise.all(due.map(m => { liveChecked.set(m.id, now); return liveFetch(m).catch(() => {}); }));
   }
   setTimeout(liveLoop, 30000);
 }
