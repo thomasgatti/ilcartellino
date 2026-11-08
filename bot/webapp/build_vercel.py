@@ -1,12 +1,14 @@
 """Versione per Vercel: stessa pagina di index.html, ma senza account Claude.
-I tris di ognuno restano nel suo browser (localStorage); esiti e tris dell'app da vercel/risultati.json.
+I tris di ognuno restano nel suo browser (localStorage). Lo storico legge gli esiti e i tris prepartita salvati.
 Uscita: vercel/sito/index.html (cartella da trascinare su Vercel)."""
 import json, pathlib
 here = pathlib.Path(__file__).parent
 html = (here / 'index.html').read_text(encoding='utf-8')
 ris = json.loads((here / 'vercel' / 'risultati.json').read_text(encoding='utf-8'))
+tris = json.loads((here / 'tris_app.json').read_text(encoding='utf-8'))
 shim = """<script>
 (() => { const RIS = %s; const K = 'ammoniti_tris_v1';
+  window.cartellinoTris = %s;
   const load = () => { try { return JSON.parse(localStorage.getItem(K) || '{}'); } catch (e) { return {}; } };
   const save = o => { try { localStorage.setItem(K, JSON.stringify(o)); } catch (e) {} };
   const snap = arr => ({ docs: arr.map(v => ({ data: () => v })) });
@@ -19,7 +21,7 @@ shim = """<script>
   window.claude = { use: async k => k === 'db' ? db : k === 'user' ? user : null };
 })();
 </script>
-""" % json.dumps(ris, ensure_ascii=False).replace('</', '<\\/')
+""" % tuple(json.dumps(rows, ensure_ascii=False).replace('</', '<\\/') for rows in (ris, tris))
 import datetime
 stamp = datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
 html = html.replace('<head>', f'<head>\n<meta name="build" content="{stamp}">\n<link rel="manifest" href="/manifest.webmanifest">', 1)
