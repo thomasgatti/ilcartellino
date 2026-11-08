@@ -226,22 +226,22 @@
   "id": 5749744,
   "ko": 1794157200,
   "partita": "Inter - Como",
-  "uff": false,
-  "p3": 0.004892937257445581,
+  "uff": true,
+  "p3": 0.008215062881584275,
   "trio": [
    {
     "n": "Y. Couto",
-    "p": 0.2259,
+    "p": 0.2537,
     "team": "Como"
    },
    {
-    "n": "N. Paz",
-    "p": 0.1416,
+    "n": "J. Ramón",
+    "p": 0.1858,
     "team": "Como"
    },
    {
-    "n": "A. Bastoni",
-    "p": 0.1318,
+    "n": "H. Çalhanoglu",
+    "p": 0.1503,
     "team": "Inter"
    }
   ]
