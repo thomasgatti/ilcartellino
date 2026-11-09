@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta name="build" content="2026-11-09T09:36:38Z">
+<meta name="build" content="2026-11-09T09:37:14Z">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -705,7 +705,13 @@ function needRis(m) {            // a partita finita le sostituzioni si leggono 
   }).catch(() => {});
 }
 function liveHtml(m) {
-  const L = m.live; if (!L) return '';
+  const L = m.live;
+  if (!L) {     // partita iniziata ma il feed non ha ancora punteggio ed eventi
+    const now = Date.now() / 1000;
+    if (now < m.ko || now >= m.ko + 9000) return '';
+    return `<div class="livebox" role="status"><div class="lh"><span class="pill live lmin still">In attesa del live</span><span class="lscore">${m.h} <b>–</b> ${m.a}</span></div>
+      <p class="note">Punteggio, ammoniti e falli fatti e subiti compariranno appena disponibili.</p></div>`;
+  }
   setTimeout(() => needRis(m), 0);
   const waiting = appTrisWaiting(m), recorded = appTrisAtKickoff(m);
   const app = waiting ? [] : (recorded || pick(m, '21', 0)).trio.map(t => t.n);
@@ -1142,6 +1148,8 @@ async function liveLoop() {
       !finalReady.has(m.id) && !(m.live?.fin && m.live?.src !== 'espn') &&
       now - (liveChecked.get(m.id) || 0) >= (now > m.ko + 3 * 3600 ? 300 : 29));
     await Promise.all(due.map(m => { liveChecked.set(m.id, now); return liveFetch(m).catch(() => {}); }));
+    const cur = state.view === 'partite' ? DATA.matches.find(x => x.id === state.id) : null;   // inizio partita a pagina aperta
+    if (cur && !cur.live && !!liveHtml(cur) !== !!document.querySelector('.livebox')) select(cur.id);
   }
   setTimeout(liveLoop, 30000);
 }
