@@ -19,7 +19,7 @@ const files = {
   lineups: path.join(app, 'lineups.txt'),
   tris: path.join(app, 'tris_app.json'),
 };
-const now = Date.now() / 1000;
+const now = (process.env.CARTELLINO_ORA ? Date.parse(process.env.CARTELLINO_ORA) : Date.now()) / 1000;   // CARTELLINO_ORA solo per le prove
 const hour = 3600;
 const historic = process.argv[2] || path.join(root, 'dati/fotmob');
 const python = process.env.PYTHON || 'python3';
@@ -110,33 +110,40 @@ function startModel(cutoff) {
   return globalThis.ammBuild();
 }
 
-// Passa alla giornata successiva quando quella in corso è tutta archiviata e la prossima inizia entro 72 ore
-// (Serie A: FotMob 55, 10 partite; Champions fase campionato: FotMob 42, 18 partite).
+// Calendario della giornata (Serie A: FotMob 55, 10 partite; Champions fase campionato: FotMob 42, 18 partite).
+// Passa alla giornata successiva quando quella in corso è tutta archiviata e la prossima inizia entro 72 ore e almeno metà
+// delle partite ha una formazione (ultima, probabile o ufficiale). Le partite rimaste fuori entrano ai giri successivi.
 const LEAGUE = {sa:{id:55,size:10}, ucl:{id:42,size:18}};
-async function advanceRound(round, archived) {
-  if (!round.matches.length || round.matches.some(m => !archived.has(m.id))) return;
+async function syncRound(round, archived) {
   const season = round.section.season?.replace(/^(\d{4})-(\d{2})$/, '$1/20$2');
   if (!season) return;
   const {id:league,size} = LEAGUE[round.comp];
+  const current = Number(round.section.round);
+  const finishedAll = round.matches.length > 0 && round.matches.every(m => archived.has(m.id));
+  if (!finishedAll && round.matches.length >= size) return;
   const response = await fetch(`/api/data/leagues?id=${league}&season=` + encodeURIComponent(season));
   if (!response.ok) throw new Error(`Calendario ${round.comp}: FotMob ${response.status}`);
   const list = (await response.json()).fixtures?.allMatches || [];
-  const next = Number(round.section.round) + 1;
-  const fixtures = list.filter(m => Number(m.round) === next && !m.status?.cancelled);
-  if (!fixtures.length) return;
-  const first = Math.min(...fixtures.map(m => Date.parse(m.status.utcTime) / 1000));
-  if (fixtures.length !== size || first <= now || first > now + Number(process.env.CARTELLINO_ANTICIPO_ORE || 72) * hour) return;
-  const loaded = await Promise.allSettled(fixtures.map(m => matchDetails(+m.id)));
+  const day = finishedAll ? current + 1 : current;
+  const known = new Set(round.matches.map(m => m.id));
+  const fixtures = list.filter(m => Number(m.round) === day && !m.status?.cancelled);
+  const todo = fixtures.filter(m => !known.has(+m.id) && Date.parse(m.status.utcTime) / 1000 > now);
+  if (!todo.length) return;
+  if (finishedAll) {
+    const first = Math.min(...fixtures.map(m => Date.parse(m.status.utcTime) / 1000));
+    if (fixtures.length !== size || first <= now || first > now + Number(process.env.CARTELLINO_ANTICIPO_ORE || 72) * hour) return;
+  }
+  const loaded = await Promise.allSettled(todo.map(m => matchDetails(+m.id)));
   const ready = loaded.flatMap((r, i) => {
-    if (r.status !== 'fulfilled') { warn(fixtures[i], r.reason); return []; }
+    if (r.status !== 'fulfilled') { warn(todo[i], r.reason); return []; }
     const j = r.value, lu = j.content?.lineup;
-    return ['lastStarting11','predicted','standard'].some(t => validLineup(lu,t)) ? [{id:+fixtures[i].id, j}] : [];
+    return ['lastStarting11','predicted','standard'].some(t => validLineup(lu,t)) ? [{id:+todo[i].id, j}] : [];
   });
-  if (ready.length === fixtures.length) {
-    round.pending = await Promise.all(ready.map(({id,j}) => prepareLineup(id,j)));
-    round.advance = next;
-    console.log(`Nuova giornata ${round.comp}: ${next} (${ready.length} partite)`);
-  } else console.warn(`Giornata ${round.comp} ${next}: formazioni pronte ${ready.length}/${fixtures.length}`);
+  console.log(`Giornata ${round.comp} ${day}: formazioni pronte ${ready.length}/${todo.length}`);
+  if (!ready.length || (finishedAll && ready.length < Math.ceil(size / 2))) return;
+  round.pending = await Promise.all(ready.map(({id,j}) => prepareLineup(id,j)));
+  for (const item of round.pending) item.beforeKickoff = true;
+  if (finishedAll) round.advance = day; else round.append = true;
 }
 
 // Archivio FotMob (ramo dati) letto una volta sola, per arbitri e linee cartellini.
@@ -254,7 +261,8 @@ function applyForecast(round, exportRows) {
     if (old.live) m.live = old.live;
   }
   const changed = new Map(newMatches.map(m => [m.id,m]));
-  round.section.matches = round.advance ? newMatches : round.matches.map(m => changed.get(m.id) || m);
+  round.section.matches = round.advance ? newMatches : [...round.matches.map(m => changed.get(m.id) || m),
+    ...newMatches.filter(m => !former.has(m.id))].sort((a,b) => a.ko - b.ko || a.id - b.id);
   if (round.advance) {
     round.section.round = day;
     round.section.lineups_note = 'Le schede distinguono l’ultima formazione disponibile, le probabili e gli undici ufficiali di FotMob. La titolarità degli undici ufficiali è al 100%.';
@@ -322,7 +330,7 @@ try {
   }
   for (const round of rounds) {
     if (!round.pending.length && !round.matches.some(needsTrisRevision)) {
-      await advanceRound(round,seen).catch(e => console.warn(e.message));
+      await syncRound(round,seen).catch(e => console.warn(e.message));
     }
   }
   const all = rounds.flatMap(r => r.pending);
