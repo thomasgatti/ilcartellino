@@ -5,6 +5,10 @@ on:
       urls:
         description: Indirizzi separati da spazio (relativi = FotMob)
         required: true
+      js:
+        description: Espressione JS sul JSON (j) da stampare nel log
+        required: false
+        default: ''
 jobs:
   sonda:
     runs-on: ubuntu-24.04
@@ -14,7 +18,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: node cloud/sonda.mjs "${{ inputs.urls }}"
+      - run: node cloud/sonda.mjs "$URLS" "$JS"
+        env:
+          URLS: ${{ inputs.urls }}
+          JS: ${{ inputs.js }}
       - uses: actions/upload-artifact@v4
         with:
           name: sonda
