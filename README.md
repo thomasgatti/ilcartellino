@@ -27,7 +27,7 @@ template.html + data.json + lineups.txt ──build.py──▶ bot/webapp/index
 | `bot/ammoniti/` | Modello, script Python di conversione, test, RUNBOOK, dati di lavoro (`data/`, `tmp/`). |
 | `lib/` | Copie dei `.js` del modello servite su `/lib/` del sito (CORS aperto, `vercel.json`): le usano la scheda FotMob nel browser e il bot nel cloud. |
 | `cloud/` | Bot per GitHub Actions (Node 20): scarica FotMob, formazioni ufficiali, esiti. |
-| `.github/workflows/` | `giornata.yml` (**Giornata automatica**: ogni 15 minuti nei giorni di partita, in pratica GitHub la lancia ogni qualche ora; ufficiali, esiti, passaggio alla giornata successiva di Serie A e Champions, arbitri e linee cartellini; pubblica solo se la variabile `CARTELLINO_AUTO` è `true`), `aggiorna_dati.yml` (ogni giorno 05:17 UTC, scarica FotMob nel ramo `dati`), `sonda.yml` (manuale: scarica indirizzi FotMob e ne stampa un estratto nel log, per controllare i dati senza PC), `formazioni.yml` ed `esiti.yml` (manuali, più vecchi). |
+| `.github/workflows/` | `giornata.yml` (**Giornata automatica**: lanciata da cron-job.org ogni 20 minuti, 11:00-23:40, tranne il giovedì, e ogni mattina dopo l'aggiornamento dati; ufficiali, esiti, passaggio alla giornata successiva di Serie A e Champions, arbitri e linee cartellini; pubblica solo se la variabile `CARTELLINO_AUTO` è `true`), `aggiorna_dati.yml` (ogni giorno 05:17 UTC, scarica FotMob nel ramo `dati`), `sonda.yml` (manuale: scarica indirizzi FotMob e ne stampa un estratto nel log, per controllare i dati senza PC), `formazioni.yml` ed `esiti.yml` (manuali, più vecchi). |
 
 ### Dati di una partita (`data.json`)
 `{id, comp, ko (unix), h, a, hc/ac ([colore sfondo, colore testo]), ref, odds, uff (formazioni ufficiali), src, tags, derby, ctx, pl, live?, lu?}`

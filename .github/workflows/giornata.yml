@@ -1,8 +1,9 @@
 name: Giornata automatica
+# Avvio programmato da cron-job.org (job "Giornata ilcartellino": POST all'API workflow_dispatch con prova=false,
+# ogni 20 minuti dalle 11 alle 23:40 ora italiana, tranne il giovedì; token fine-grained "cron-job ilcartellino",
+# solo Actions in scrittura su questo repository, scade l'8/11/2027). Il cron di GitHub partiva ogni qualche ora.
+# Ripiego: parte comunque dopo ogni "Aggiorna dati FotMob" (ogni mattina).
 on:
-  schedule:
-    - cron: '8,23,38,53 9-23 * * 0,1,5,6'
-    - cron: '8,23,38,53 15-23 * * 2,3,4'
   push:
     branches: [main]
     paths:
