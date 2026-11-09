@@ -247,6 +247,7 @@ function applyForecast(round, exportRows) {
     m.uff = Number(e.lt === 'standard');
     m.src = e.lt === 'lastStarting11' ? 'provv' : 'fotmob';
     if (abs.length) m.abs = abs;
+    if (!m.ref || m.ref === '–') m.ref = prepared.get(m.id).j.content?.matchFacts?.infoBox?.Referee?.text || m.ref;
     if (m.uff && (m.pl.filter(p => p[1] === 'h' && p[6] === 100).length !== 10 ||
         m.pl.filter(p => p[1] === 'a' && p[6] === 100).length !== 10)) {
       throw new Error(`Pronostico incompleto per la formazione ufficiale: ${m.id}`);
