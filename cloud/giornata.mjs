@@ -308,6 +308,8 @@ function archiveResult(round, m, j) {
     Number.isFinite(totals[i].value) && totals[i].value !== Object.values(fl).filter(v => v[2] === side).reduce((sum,v) => sum + v[0],0))) {
     throw new Error('Falli individuali non ancora allineati ai totali');
   }
+  // angoli per squadra (FotMob), per la ricerca EXTRA sugli angoli: [casa, trasferta]
+  const corners = j.content.stats?.Periods?.All?.stats?.flatMap(g => g.stats).find(s => s.key === 'corners')?.stats;
   const cards = [], ammoniti = new Set(), sub = {};
   for (const e of events) {
     const side = e.isHome ? 'h' : 'a';
@@ -329,7 +331,7 @@ function archiveResult(round, m, j) {
     finale:rawScore.replace(/\s/g,''),p3_app:prior.p3,ammoniti:[...ammoniti],
     falli:Object.fromEntries(Object.entries(fl).map(([p,row]) => [p,row[0]])),
     falli_subiti:Object.fromEntries(Object.entries(fl).map(([p,row]) => [p,row[1]])),
-    sostituzioni:sub,tris_app:prior.trio.map(({n,p}) => ({n,p})),tris_app_revisione:prior.revised,aggiornato:new Date().toISOString(),
+    sostituzioni:sub,...(Array.isArray(corners) && corners.length === 2 && corners.every(Number.isFinite) ? {angoli:corners} : {}),tris_app:prior.trio.map(({n,p}) => ({n,p})),tris_app_revisione:prior.revised,aggiornato:new Date().toISOString(),
   });
   seen.add(m.id);
   console.log('Archiviata',m.h,m.a,rawScore);
