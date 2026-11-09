@@ -279,7 +279,7 @@ function cardsChanged(m, j) {
   if (!stored) return false;
   const key = x => norm(short(x));
   const players = new Set(Object.values(j.content?.playerStats || {}).map(p => p.name && key(p.name)));   // niente allenatori
-  const fresh = new Set((j.content?.matchFacts?.events?.events || []).filter(e => e.type === 'Card' && e.card !== 'Red' && e.player?.name)
+  const fresh = new Set((j.content?.matchFacts?.events?.events || []).filter(e => e.type === 'Card' && e.player?.name)
     .map(e => key(e.player.name)).filter(x => players.has(x)));
   const before = new Set(stored.ammoniti.map(norm));
   return fresh.size !== before.size || [...fresh].some(x => !before.has(x));
@@ -313,7 +313,7 @@ function archiveResult(round, m, j) {
     const side = e.isHome ? 'h' : 'a';
     if (e.type === 'Card' && e.player?.name && ['Yellow','YellowRed','Red'].includes(e.card)) {
       const name = n(e.player.name,side);
-      if (e.card !== 'Red' && Object.hasOwn(fl,name)) ammoniti.add(name);
+      if (Object.hasOwn(fl,name)) ammoniti.add(name);          // anche il rosso diretto vale come ammonito (regola del gioco)
       cards.push([e.overloadTime > 0 ? `${e.time}+${e.overloadTime}` : e.time,name,e.card === 'Yellow' ? 'G' : 'R']);
     }
     if (e.type === 'Substitution' && e.swap?.[0]?.name && e.swap?.[1]?.name) sub[n(e.swap[1].name,side)] = n(e.swap[0].name,side);
