@@ -194,7 +194,7 @@ function updateReferee(round, m, j) {
 
 async function inspect(round) {
   const window = round.matches.filter(m => now < m.ko + 7 * 24 * hour && (
-    (!m.uff && now >= m.ko - 60 * hour) || (now >= m.ko + 75 * 60 && !seen.has(m.id))));
+    (!m.uff && now >= m.ko - 60 * hour) || (now >= m.ko + 75 * 60 && (!seen.has(m.id) || now < m.ko + 48 * hour))));
   round.pending = [];
   round.finished = [];
   for (const m of window) {
@@ -204,6 +204,8 @@ async function inspect(round) {
       if (!status.started && updateReferee(round,m,j)) round.touched = true;
       if (now < m.ko - 36 * hour) continue;            // tra 60 e 36 ore prima: solo l'arbitro
       if (status.finished && !seen.has(m.id)) round.finished.push({m,j});
+      // nelle 48 ore dopo la fine FotMob a volte corregge i cartellini (9/11: giallo di Musah passato a Diawara): riarchivia
+      else if (status.finished && cardsChanged(m,j)) round.finished.push({m,j});
       if (m.uff) continue;
       const lineup = j.content?.lineup;
       const beforeKickoff = !status.started && !status.finished && now < m.ko;
@@ -272,6 +274,17 @@ function applyForecast(round, exportRows) {
   return [...changed.keys()];
 }
 
+function cardsChanged(m, j) {
+  const stored = results.find(r => r.matchId === m.id);
+  if (!stored) return false;
+  const key = x => norm(short(x));
+  const players = new Set(Object.values(j.content?.playerStats || {}).map(p => p.name && key(p.name)));   // niente allenatori
+  const fresh = new Set((j.content?.matchFacts?.events?.events || []).filter(e => e.type === 'Card' && e.card !== 'Red' && e.player?.name)
+    .map(e => key(e.player.name)).filter(x => players.has(x)));
+  const before = new Set(stored.ammoniti.map(norm));
+  return fresh.size !== before.size || [...fresh].some(x => !before.has(x));
+}
+
 function archiveResult(round, m, j) {
   const rawScore = j.header.status.scoreStr;
   if (typeof rawScore !== 'string' || !/^\d+\s*-\s*\d+$/.test(rawScore)) throw new Error('Punteggio finale assente');
@@ -305,8 +318,11 @@ function archiveResult(round, m, j) {
     }
     if (e.type === 'Substitution' && e.swap?.[0]?.name && e.swap?.[1]?.name) sub[n(e.swap[1].name,side)] = n(e.swap[0].name,side);
   }
-  const prior = savedTris.get(m.id);
+  const previous = results.findIndex(r => r.matchId === m.id);
+  const kept = previous >= 0 ? results[previous] : null;
+  const prior = savedTris.get(m.id) || (kept && {trio:kept.tris_app,p3:kept.p3_app,revised:kept.tris_app_revisione});
   if (!prior?.trio?.length) throw new Error('Tris prepartita assente');
+  if (previous >= 0) { results.splice(previous,1); console.log('Cartellini corretti da FotMob:',m.h,m.a); }
   m.live = {t:'FT',sc:rawScore,fin:true,cards,fl,p:{},out:Object.keys(sub),sub,src:'fotmob'};
   results.push({
     matchId:m.id,comp:round.comp,partita:`${m.h} - ${m.a}`,giornata:round.section.round,ko:m.ko,
