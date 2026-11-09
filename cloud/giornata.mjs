@@ -1,4 +1,5 @@
-// Aggiorna le ufficiali e gli esiti delle partite presenti nell'app. Avanza anche il turno di Serie A.
+// Aggiorna le ufficiali e gli esiti delle partite presenti nell'app. Avanza da solo la giornata di Serie A e di Champions,
+// e completa arbitro (con le sue medie) e linea cartellini (stima del modello se manca quella del mercato).
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -18,7 +19,7 @@ const files = {
   lineups: path.join(app, 'lineups.txt'),
   tris: path.join(app, 'tris_app.json'),
 };
-const now = Date.now() / 1000;
+const now = (process.env.CARTELLINO_ORA ? Date.parse(process.env.CARTELLINO_ORA) : Date.now()) / 1000;   // CARTELLINO_ORA solo per le prove
 const hour = 3600;
 const historic = process.argv[2] || path.join(root, 'dati/fotmob');
 const python = process.env.PYTHON || 'python3';
@@ -109,38 +110,99 @@ function startModel(cutoff) {
   return globalThis.ammBuild();
 }
 
-async function advanceSerieA(round, archived) {
-  if (!round.matches.length || round.matches.some(m => !archived.has(m.id))) return;
+// Calendario della giornata (Serie A: FotMob 55, 10 partite; Champions fase campionato: FotMob 42, 18 partite).
+// Passa alla giornata successiva quando quella in corso è tutta archiviata e la prossima inizia entro 72 ore e almeno metà
+// delle partite ha una formazione (ultima, probabile o ufficiale). Le partite rimaste fuori entrano ai giri successivi.
+const LEAGUE = {sa:{id:55,size:10}, ucl:{id:42,size:18}};
+async function syncRound(round, archived) {
   const season = round.section.season?.replace(/^(\d{4})-(\d{2})$/, '$1/20$2');
   if (!season) return;
-  const response = await fetch('/api/data/leagues?id=55&season=' + encodeURIComponent(season));
-  if (!response.ok) throw new Error(`Calendario Serie A: FotMob ${response.status}`);
+  const {id:league,size} = LEAGUE[round.comp];
+  const current = Number(round.section.round);
+  const finishedAll = round.matches.length > 0 && round.matches.every(m => archived.has(m.id));
+  if (!finishedAll && round.matches.length >= size) return;
+  const response = await fetch(`/api/data/leagues?id=${league}&season=` + encodeURIComponent(season));
+  if (!response.ok) throw new Error(`Calendario ${round.comp}: FotMob ${response.status}`);
   const list = (await response.json()).fixtures?.allMatches || [];
-  const next = Number(round.section.round) + 1;
-  const fixtures = list.filter(m => Number(m.round) === next && !m.status?.cancelled);
-  const first = Math.min(...fixtures.map(m => Date.parse(m.status.utcTime) / 1000));
-  if (fixtures.length !== 10 || first <= now || first > now + 72 * hour) return;
-  const loaded = await Promise.allSettled(fixtures.map(m => matchDetails(+m.id)));
-  const ready = loaded.flatMap((r, i) => {
-    if (r.status !== 'fulfilled') { warn(fixtures[i], r.reason); return []; }
-    const j = r.value, lu = j.content?.lineup;
-    return ['lastStarting11','predicted','standard'].some(t => validLineup(lu,t)) ? [{id:+fixtures[i].id, j}] : [];
-  });
-  if (ready.length === fixtures.length) {
-    round.pending = await Promise.all(ready.map(({id,j}) => prepareLineup(id,j)));
-    round.advance = next;
+  const day = finishedAll ? current + 1 : current;
+  const known = new Set(round.matches.map(m => m.id));
+  const fixtures = list.filter(m => Number(m.round) === day && !m.status?.cancelled);
+  const todo = fixtures.filter(m => !known.has(+m.id) && Date.parse(m.status.utcTime) / 1000 > now);
+  if (!todo.length) return;
+  if (finishedAll) {
+    const first = Math.min(...fixtures.map(m => Date.parse(m.status.utcTime) / 1000));
+    if (fixtures.length !== size || first <= now || first > now + Number(process.env.CARTELLINO_ANTICIPO_ORE || 72) * hour) return;
   }
+  const loaded = await Promise.allSettled(todo.map(m => matchDetails(+m.id)));
+  const ready = loaded.flatMap((r, i) => {
+    if (r.status !== 'fulfilled') { warn(todo[i], r.reason); return []; }
+    const j = r.value, lu = j.content?.lineup;
+    return ['lastStarting11','predicted','standard'].some(t => validLineup(lu,t)) ? [{id:+todo[i].id, j}] : [];
+  });
+  console.log(`Giornata ${round.comp} ${day}: formazioni pronte ${ready.length}/${todo.length}`);
+  if (!ready.length || (finishedAll && ready.length < Math.ceil(size / 2))) return;
+  round.pending = await Promise.all(ready.map(({id,j}) => prepareLineup(id,j)));
+  for (const item of round.pending) item.beforeKickoff = true;
+  if (finishedAll) round.advance = day; else round.append = true;
+}
+
+// Archivio FotMob (ramo dati) letto una volta sola, per arbitri e linee cartellini.
+let archiveCache = null;
+const archive = () => archiveCache ??= fs.existsSync(historic) ? fs.readdirSync(historic).filter(f => f.endsWith('.json.gz')).flatMap(f =>
+  Object.values(JSON.parse(zlib.gunzipSync(fs.readFileSync(path.join(historic, f)))))) : [];
+const dec = x => x.toFixed(1).replace('.', ',');
+// Nota arbitro dallo storico: cartellini (gialli, secondi gialli e rossi) e gialli per gara.
+// Serie A: solo gare di Serie A; Champions: tutte le competizioni in archivio.
+function refNote(name, comp, ko) {
+  const games = archive().filter(m => m.ref?.[1] && norm(m.ref[1]) === norm(name) && m.ts < ko && (comp !== 'sa' || m.lg === 55));
+  if (!games.length) return null;
+  const cards = games.reduce((a,m) => a + (m.cards || []).length, 0), yellows = games.reduce((a,m) => a + (m.cards || []).filter(c => c[2] !== 'Red').length, 0);
+  return `${dec(cards / games.length)} cartellini/gara · ${dec(yellows / games.length)} gialli · ${games.length} gare${comp === 'sa' ? ' di Serie A' : ' in archivio'}`;
+}
+// Linea cartellini stimata dal modello quando manca quella del mercato: media cartellini delle ultime gare della competizione
+// × √(somma delle probabilità dei titolari / media della giornata), poi la soglia x,5 più vicina alla mediana (Poisson).
+// Sull'11ª giornata coincideva con la linea dei bookmaker in 7 partite su 10.
+function estimateLines(round) {
+  const open = round.section.matches.filter(m => m.line == null || m.line_est);
+  if (!open.length) return false;
+  const lg = LEAGUE[round.comp].id, cut = Math.min(...round.section.matches.map(m => m.ko));
+  const past = archive().filter(m => m.lg === lg && m.ts < cut).sort((a,b) => b.ts - a.ts).slice(0, round.comp === 'sa' ? 380 : 250);
+  if (past.length < 50) return false;
+  const avg = past.reduce((a,m) => a + (m.cards || []).length, 0) / past.length;
+  const sum = m => m.pl.reduce((a,p) => a + (p[4] || 0), 0), mean = round.section.matches.reduce((a,m) => a + sum(m), 0) / round.section.matches.length;
+  let changed = false;
+  for (const m of open) {
+    const lambda = avg * Math.sqrt(sum(m) / mean);
+    let k = 0, term = Math.exp(-lambda), cdf = term;
+    while (cdf < .5) { k++; term *= lambda / k; cdf += term; }
+    const line = dec(k + .5);
+    if (m.line !== line || !m.line_est) { m.line = line; m.line_est = 1; changed = true; }
+  }
+  return changed;
+}
+// Arbitro designato (FotMob) e nota con le sue medie; vale anche quando la formazione non cambia.
+function updateReferee(round, m, j) {
+  const name = j?.content?.matchFacts?.infoBox?.Referee?.text;
+  let changed = false;
+  if (name && name !== m.ref) { m.ref = name; delete m.refnote; changed = true; }
+  if (m.ref && m.ref !== '–' && !m.refnote) {
+    const note = refNote(m.ref, round.comp, m.ko);
+    if (note) { m.refnote = note; changed = true; }
+  }
+  return changed;
 }
 
 async function inspect(round) {
   const window = round.matches.filter(m => now < m.ko + 7 * 24 * hour && (
-    (!m.uff && now >= m.ko - 36 * hour) || (now >= m.ko + 75 * 60 && !seen.has(m.id))));
+    (!m.uff && now >= m.ko - 60 * hour) || (now >= m.ko + 75 * 60 && !seen.has(m.id))));
   round.pending = [];
   round.finished = [];
   for (const m of window) {
     try {
       const j = await matchDetails(m.id), status = j.header.status;
       if (status.cancelled || status.awarded) continue;
+      if (!status.started && updateReferee(round,m,j)) round.touched = true;
+      if (now < m.ko - 36 * hour) continue;            // tra 60 e 36 ore prima: solo l'arbitro
       if (status.finished && !seen.has(m.id)) round.finished.push({m,j});
       if (m.uff) continue;
       const lineup = j.content?.lineup;
@@ -185,20 +247,23 @@ function applyForecast(round, exportRows) {
     m.uff = Number(e.lt === 'standard');
     m.src = e.lt === 'lastStarting11' ? 'provv' : 'fotmob';
     if (abs.length) m.abs = abs;
+    if (!m.ref || m.ref === '–') m.ref = prepared.get(m.id).j.content?.matchFacts?.infoBox?.Referee?.text || m.ref;
     if (m.uff && (m.pl.filter(p => p[1] === 'h' && p[6] === 100).length !== 10 ||
         m.pl.filter(p => p[1] === 'a' && p[6] === 100).length !== 10)) {
       throw new Error(`Pronostico incompleto per la formazione ufficiale: ${m.id}`);
     }
     if (!old) continue;
     if (!m.uff && old.forfait?.length) m.forfait = old.forfait;
-    for (const key of ['line','derby','hc','ac']) if (old[key] != null) m[key] = old[key];
+    for (const key of ['derby','hc','ac']) if (old[key] != null) m[key] = old[key];
+    if (m.line == null && old.line != null) { m.line = old.line; if (old.line_est) m.line_est = 1; }
     if (!m.odds) m.odds = old.odds;
     if (m.ref === '–') m.ref = old.ref;
     if (old.ref === m.ref && old.refnote) m.refnote = old.refnote;
     if (old.live) m.live = old.live;
   }
   const changed = new Map(newMatches.map(m => [m.id,m]));
-  round.section.matches = round.advance ? newMatches : round.matches.map(m => changed.get(m.id) || m);
+  round.section.matches = round.advance ? newMatches : [...round.matches.map(m => changed.get(m.id) || m),
+    ...newMatches.filter(m => !former.has(m.id))].sort((a,b) => a.ko - b.ko || a.id - b.id);
   if (round.advance) {
     round.section.round = day;
     round.section.lineups_note = 'Le schede distinguono l’ultima formazione disponibile, le probabili e gli undici ufficiali di FotMob. La titolarità degli undici ufficiali è al 100%.';
@@ -264,8 +329,10 @@ try {
       try { archiveResult(round,m,j); finished++; } catch (e) { warn(m,e); }
     }
   }
-  if (!rounds[0].pending.length && !rounds[0].matches.some(needsTrisRevision)) {
-    await advanceSerieA(rounds[0],seen).catch(e => console.warn(e.message));
+  for (const round of rounds) {
+    if (!round.pending.length && !round.matches.some(needsTrisRevision)) {
+      await syncRound(round,seen).catch(e => console.warn(e.message));
+    }
   }
   const all = rounds.flatMap(r => r.pending);
   if (all.length) {
@@ -292,7 +359,17 @@ try {
     const currentIds = new Set(rounds.flatMap(r => r.section.matches.map(m => m.id)));
     fs.writeFileSync(files.lineups,[...field].filter(([id]) => currentIds.has(id)).map(([,line]) => line).join('\n')+'\n');
   }
-  if (finished || changedIds.length) {
+  let touched = rounds.some(r => r.touched);
+  for (const round of rounds) {
+    for (const m of round.section.matches) {
+      if (m.ko > now && m.ref && m.ref !== '–' && !m.refnote) {
+        const note = refNote(m.ref, round.comp, m.ko);
+        if (note) { m.refnote = note; touched = true; }
+      }
+    }
+    if (estimateLines(round)) touched = true;
+  }
+  if (finished || changedIds.length || touched) {
     write(files.data,data);
     if (finished) write(files.results,results);
   }
