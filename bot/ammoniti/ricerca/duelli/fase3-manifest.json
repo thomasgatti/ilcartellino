@@ -1,0 +1,177 @@
+{
+  "schema": 1,
+  "dataRef": "cdcd037ab30cc8e578b69b690dd11aa04c065b61",
+  "researchBase": "3d3b8d389c1213d92f8f69b4a2c3f781ca6ca0bd",
+  "inputNote": "Dataset derivato dalle risposte con SHA nel manifesto compresso. Metadati di identità possono usare ancore dell’intero archivio; le statistiche delle feature usano solo il passato. Il digest del testo app della fotografia riguarda la copia UTF-8 locale; il commit sorgente fissa il contenuto JSON originale.",
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 8499,
+      "sha256": "99f59f722a34aba0ceca4795a629c0f65593fc4483839b5524f7485e3b610c55"
+    },
+    {
+      "path": "PASSAGGIO_CLAUDE.md",
+      "bytes": 4097,
+      "sha256": "db20c09d4bd46dab14f86a6e413c32bcd5bc006a0111f39cf6723cc761120e37"
+    },
+    {
+      "path": "archive.config.json",
+      "bytes": 496,
+      "sha256": "9eb4ac1898b2c7d6468caac0779a4fac2683d646c0ce5669d90bc61acd3528a0"
+    },
+    {
+      "path": "attacker.protocol.json",
+      "bytes": 2080,
+      "sha256": "1ec734a7fd8e7a1fca47651f253d55bb81d8d8d0cd984204344448525b868bf7"
+    },
+    {
+      "path": "collect_archive.mjs",
+      "bytes": 3696,
+      "sha256": "b287c1e201b2bd4dd0f920bba9daa482ae5e2afa3e9b47c2f559fe114b298224"
+    },
+    {
+      "path": "audit_archive.mjs",
+      "bytes": 6218,
+      "sha256": "718a32a3304c44bc0363edce465090799d133393f57d7955befc387d00cf719c"
+    },
+    {
+      "path": "provider_bridge.mjs",
+      "bytes": 13256,
+      "sha256": "0094ecc31261d09d1f7b6f678216a6bdaef1f4bab757d75ca491bffc81bf7d8e"
+    },
+    {
+      "path": "provider_bridge.test.mjs",
+      "bytes": 7699,
+      "sha256": "7bbfb6bb2b8db9c08e0caaf32d6f8c842691b8ebbf44ec931ae7df5f6c455a99"
+    },
+    {
+      "path": "temporal_baseline.mjs",
+      "bytes": 11890,
+      "sha256": "be2bf43d64468f8d374735acb9dadf7bb8461d1be9c467f17430dbca6cb2cdea"
+    },
+    {
+      "path": "temporal_baseline.test.mjs",
+      "bytes": 4777,
+      "sha256": "37bdbe51398f5d3f73e377ef6a8b4ceceacc8c56bf09889b61c6e2f2563372e0"
+    },
+    {
+      "path": "attacker_history.mjs",
+      "bytes": 13046,
+      "sha256": "d576afaa96e50f9508d22696ad9fd9dde5d3f2c9b0a423928ae74ffa013b48e3"
+    },
+    {
+      "path": "attacker_history.test.mjs",
+      "bytes": 7651,
+      "sha256": "d6050cb5aaec69e4991fcfa1586b2b281f1f3be2277d2d8a062c4bc84b0a4492"
+    },
+    {
+      "path": "attacker_experiment.mjs",
+      "bytes": 6701,
+      "sha256": "fb55d5a6718b81bece0ef7182c4f6347c3b50cf43852a054e55ff15ea39efada"
+    },
+    {
+      "path": "capture_predictions.mjs",
+      "bytes": 2279,
+      "sha256": "97fe24cdbf34cb72bd13de31df1f697aeabcd6787c2cef9829a6ac89e081bb9b"
+    },
+    {
+      "path": "capture_predictions.test.mjs",
+      "bytes": 1234,
+      "sha256": "4710a6eead0d379869b13fef493f187a1d94f44e350961bb7526434f5143d126"
+    },
+    {
+      "path": "summarize_phase3.mjs",
+      "bytes": 11547,
+      "sha256": "e0ba46dc76e86721149269c750783fde699f52813d8e24c76402d7b51745efc4"
+    },
+    {
+      "path": "confronto-documento.md",
+      "bytes": 2284,
+      "sha256": "daff6ca5e6b46d7107a1d30c3fa97534630db035d77e0debd0fe8e3f8ac75151"
+    },
+    {
+      "path": "rapporto-fase3.md",
+      "bytes": 9253,
+      "sha256": "3b6de1958959955fe31ab7e759749a79f3fd84b4867dc9373918be9ea47b29ac"
+    },
+    {
+      "path": "audit-fase3.json",
+      "bytes": 4993,
+      "sha256": "8e2ea8cb0e9b26278c6c07d05c275e83929f330344163b1d808569955cbdffd5"
+    },
+    {
+      "path": "esperimento-attaccanti.json",
+      "bytes": 82346,
+      "sha256": "2b79e917018fc1aa9823c601a1a7039190b5e2ed3f52b19522e42c24ec799e2c"
+    },
+    {
+      "path": "sintesi-fase3.json",
+      "bytes": 2980,
+      "sha256": "e839f7cddb3a157165dd4402d66ff26047f6fd9dcca8bf75947a2fbc5a9df3f4"
+    },
+    {
+      "path": "snapshots/2026-11-05.json",
+      "bytes": 58872,
+      "sha256": "dec715fadd94f59bc14deaa8b657bbd32bca81d5035efecc1dc95e66b9901156"
+    },
+    {
+      "path": "dati-episodi.json.gz",
+      "bytes": 1050936,
+      "sha256": "b318a30ae3265ac875b7e682573ad566c2b9deed0a8862715895c8c2d5cae369",
+      "uncompressedSha256": "0b20eb833f1e6d251286131ebf84dd28b0c4e3b72b44ee0d509d504e7ad18582"
+    },
+    {
+      "path": "fonti-archivio.json.gz",
+      "bytes": 143762,
+      "sha256": "570850df18c4bedd6e25a8cebe6605b3383f71e1ebd5c36f9dd3773e5fd4494e",
+      "uncompressedSha256": "3f6f90d86c1490193183493836c84ff1df186b7ee46b80ec23c18c2f26654312"
+    },
+    {
+      "path": "revisioni-archivio.json.gz",
+      "bytes": 122339,
+      "sha256": "9f561f2fed48ef70886ef09545454849a50bf8f146e9c5852db4830987950eb7",
+      "uncompressedSha256": "fb3a2e8efdabb2e1ad7cc561e08a08f6d56857459f9cb257b352f3f66cfe762d"
+    },
+    {
+      "path": "profili-attaccanti.json.gz",
+      "bytes": 175637,
+      "sha256": "9c86c903b51c45475d85185c89af13062ce1c2049549e393e792267d7e86f123",
+      "uncompressedSha256": "6619f53a35b9e1794374c6242895cf24438f13e56cd3f9009725af864d5d0ae2"
+    },
+    {
+      "path": "duelli.mjs",
+      "bytes": 14248,
+      "sha256": "1d905025962071c798dc9ff2132bb1af9c4c3089d32e217719c39777ecc79a97"
+    },
+    {
+      "path": "accounting.mjs",
+      "bytes": 2566,
+      "sha256": "1da63bbbb19e48c8645c356dd3b23c8cc04de4baa6c22561d78ff6ece814772d"
+    },
+    {
+      "path": "production_research.mjs",
+      "bytes": 3495,
+      "sha256": "45093e33f1ddaf442278cabd9dc4472871776fbc189e64ed734f4ced55dd7c6e"
+    },
+    {
+      "path": "experiment_metrics.mjs",
+      "bytes": 2292,
+      "sha256": "80094e03bc3e7c7eba1adae970235a67f731f72ee018add1850da83f790b1d73"
+    },
+    {
+      "path": "identity-registry.json",
+      "bytes": 19693,
+      "sha256": "6e268cd86a85ae579461be8bd72522e846ed0ab54fb74f89c4f56c3df6589490"
+    },
+    {
+      "path": "model-manifest.json",
+      "bytes": 1707,
+      "sha256": "4b4bf5de09976f5bb9f6b84569a2850bb4c9f2367f5a8a31cc6f87fca910cbb6"
+    },
+    {
+      "path": "fotmob-manifest.json",
+      "bytes": 12304,
+      "sha256": "159bcff98d7a2f6a797398244393bec5f371f9a4d4eccc82a9ffd1857dadae33"
+    }
+  ]
+}

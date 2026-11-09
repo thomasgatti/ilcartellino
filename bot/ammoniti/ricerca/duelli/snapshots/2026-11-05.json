@@ -1,0 +1,3581 @@
+{
+  "schema": 1,
+  "capturedAt": "2026-11-05T16:46:07.865Z",
+  "sourceCommit": "92466cbdfdde034a29978b62864ea5ae7d25f306",
+  "sourceSha256": "dd8e514bcb81709295a818dc369ff2f25d49bbba558e3ac3aaf4b143bd5398f2",
+  "scope": "Pronostici pubblicati del sito, con formazioni disponibili e p0/q originali. Nessun pronostico della ricerca sostituisce il modello servito.",
+  "limitations": "Il timestamp locale non è una certificazione indipendente; il commit remoto che conserva questo file fornisce un ulteriore riscontro temporale. Una sola giornata non basta per validare nuovi modelli.",
+  "excludedAlreadyStarted": 18,
+  "matches": [
+    {
+      "id": 5749749,
+      "ko": 1793994300,
+      "h": "Venezia",
+      "a": "Udinese",
+      "hc": [
+        "#231f20",
+        "#ed7d01"
+      ],
+      "ac": [
+        "#ffffff",
+        "#000000"
+      ],
+      "ref": "–",
+      "odds": "43/30",
+      "line": null,
+      "uff": 0,
+      "pl": [
+        [
+          "M. Moreno",
+          "h",
+          "D",
+          "",
+          0.221,
+          "J. Ekkelenkamp",
+          92,
+          null
+        ],
+        [
+          "R. Halhal",
+          "h",
+          "D",
+          "",
+          0.191,
+          "J. Ekkelenkamp",
+          92,
+          null
+        ],
+        [
+          "J. Jesus",
+          "h",
+          "D",
+          "",
+          0.19,
+          "J. Ekkelenkamp",
+          92,
+          null
+        ],
+        [
+          "K. Pérez",
+          "h",
+          "M",
+          "",
+          0.173,
+          "M. Palma",
+          75,
+          null
+        ],
+        [
+          "J. Abankwah",
+          "a",
+          "D",
+          "",
+          0.165,
+          "L. Lauberbach",
+          86,
+          null
+        ],
+        [
+          "J. Karlström",
+          "a",
+          "M",
+          "",
+          0.155,
+          "P. Mazzocchi",
+          92,
+          null
+        ],
+        [
+          "H. Kamara",
+          "a",
+          "M",
+          "",
+          0.139,
+          "A. Hainaut",
+          92,
+          null
+        ],
+        [
+          "S. Sohm",
+          "h",
+          "M",
+          "",
+          0.132,
+          "C. Kabasele",
+          92,
+          null
+        ],
+        [
+          "G. Chakvetadze",
+          "a",
+          "M",
+          "",
+          0.13,
+          "R. Halhal",
+          69,
+          null
+        ],
+        [
+          "C. Kabasele",
+          "a",
+          "D",
+          "",
+          0.127,
+          "T. Helgason",
+          69,
+          null
+        ],
+        [
+          "A. Hainaut",
+          "h",
+          "M",
+          "",
+          0.122,
+          "H. Kamara",
+          92,
+          null
+        ],
+        [
+          "M. Palma",
+          "a",
+          "M",
+          "",
+          0.122,
+          "T. Helgason",
+          69,
+          null
+        ],
+        [
+          "K. Davis",
+          "a",
+          "F",
+          "",
+          0.113,
+          "M. Moreno",
+          86,
+          null
+        ],
+        [
+          "N. Zaniolo",
+          "a",
+          "F",
+          "",
+          0.109,
+          "J. Jesus",
+          52,
+          null
+        ],
+        [
+          "M. Vojvoda",
+          "a",
+          "D",
+          "",
+          0.104,
+          "G. Busio",
+          86,
+          null
+        ],
+        [
+          "T. Bašić",
+          "h",
+          "M",
+          "",
+          0.091,
+          "J. Karlström",
+          56,
+          null
+        ],
+        [
+          "J. Ekkelenkamp",
+          "a",
+          "M",
+          "",
+          0.083,
+          "M. Moreno",
+          92,
+          null
+        ],
+        [
+          "P. Mazzocchi",
+          "h",
+          "D",
+          "",
+          0.078,
+          "J. Karlström",
+          56,
+          null
+        ],
+        [
+          "J. Yeboah",
+          "h",
+          "F",
+          "",
+          0.078,
+          "M. Palma",
+          56,
+          null
+        ],
+        [
+          "L. Miller",
+          "a",
+          "M",
+          "",
+          0.074,
+          "P. Mazzocchi",
+          34,
+          null
+        ],
+        [
+          "A. Adams",
+          "h",
+          "F",
+          "",
+          0.061,
+          "C. Kabasele",
+          92,
+          null
+        ],
+        [
+          "G. Busio",
+          "h",
+          "M",
+          "",
+          0.06,
+          "J. Karlström",
+          37,
+          null
+        ],
+        [
+          "T. Helgason",
+          "h",
+          "M",
+          "",
+          0.058,
+          "C. Kabasele",
+          56,
+          null
+        ],
+        [
+          "L. Lauberbach",
+          "h",
+          "F",
+          "",
+          0.057,
+          "J. Abankwah",
+          56,
+          null
+        ],
+        [
+          "E. Ebosse",
+          "a",
+          "D",
+          "",
+          0.054,
+          "A. Hainaut",
+          34,
+          null
+        ],
+        [
+          "O. Zarraga",
+          "a",
+          "M",
+          "",
+          0.047,
+          "M. Moreno",
+          34,
+          null
+        ],
+        [
+          "R. Haps",
+          "h",
+          "D",
+          "",
+          0.045,
+          "M. Vojvoda",
+          37,
+          null
+        ],
+        [
+          "O. Solet",
+          "a",
+          "D",
+          "",
+          0.032,
+          "T. Helgason",
+          34,
+          null
+        ]
+      ],
+      "tags": {
+        "M. Moreno": [
+          "Storico: LaLiga 2256'"
+        ],
+        "R. Halhal": [
+          "Storico: Pro League (BEL) 2849'"
+        ],
+        "J. Karlström": [
+          "Diffidato: al prossimo giallo salta una partita"
+        ],
+        "G. Chakvetadze": [
+          "Storico: Championship 1797'"
+        ],
+        "M. Palma": [
+          "Poca esperienza: 480' nello storico"
+        ],
+        "A. Adams": [
+          "Storico: LaLiga 2190'"
+        ],
+        "L. Lauberbach": [
+          "Storico: Pro League (BEL) 1872'"
+        ]
+      },
+      "derby": false,
+      "src": "provv",
+      "ctx": [
+        "Precedenti tesi: nelle ultime sfide tra queste due squadre +39% gialli rispetto alla media",
+        "1 diffidato tra i probabili titolari: J. Karlström (Udinese). Di solito stanno più attenti"
+      ],
+      "comp": "sa"
+    },
+    {
+      "id": 5749741,
+      "ko": 1794060000,
+      "h": "Cagliari",
+      "a": "Frosinone",
+      "hc": [
+        "#990000",
+        "#242766"
+      ],
+      "ac": [
+        "#ffff00",
+        "#0033cc"
+      ],
+      "ref": "–",
+      "odds": "35/39",
+      "line": null,
+      "uff": 0,
+      "pl": [
+        [
+          "P. Masini",
+          "a",
+          "M",
+          "",
+          0.205,
+          "A. Romano",
+          90,
+          null
+        ],
+        [
+          "Z. Pedro",
+          "h",
+          "D",
+          "",
+          0.199,
+          "G. Kvernadze",
+          92,
+          null
+        ],
+        [
+          "G. Bracaglia",
+          "a",
+          "D",
+          "",
+          0.199,
+          "A. Fadera",
+          90,
+          null
+        ],
+        [
+          "A. Deiola",
+          "h",
+          "M",
+          "",
+          0.189,
+          "R. Schmid",
+          72,
+          null
+        ],
+        [
+          "J. Rodríguez",
+          "h",
+          "D",
+          "",
+          0.186,
+          "R. Schmid",
+          92,
+          null
+        ],
+        [
+          "A. Obert",
+          "h",
+          "D",
+          "",
+          0.181,
+          "F. Ghedjemis",
+          92,
+          null
+        ],
+        [
+          "G. Calvani",
+          "a",
+          "D",
+          "",
+          0.174,
+          "J. Fazzini",
+          90,
+          null
+        ],
+        [
+          "A. Romano",
+          "h",
+          "M",
+          "",
+          0.16,
+          "G. Calò",
+          92,
+          null
+        ],
+        [
+          "D. Maldini",
+          "h",
+          "M",
+          "",
+          0.138,
+          "G. Calvani",
+          90,
+          null
+        ],
+        [
+          "M. Ndary Adopo",
+          "h",
+          "M",
+          "",
+          0.135,
+          "G. Calò",
+          92,
+          null
+        ],
+        [
+          "G. Calò",
+          "a",
+          "M",
+          "",
+          0.131,
+          "M. Ndary Adopo",
+          92,
+          null
+        ],
+        [
+          "G. Cittadini",
+          "a",
+          "M",
+          "",
+          0.124,
+          "D. Maldini",
+          54,
+          null
+        ],
+        [
+          "A. Oyono",
+          "a",
+          "D",
+          "",
+          0.119,
+          "J. Fazzini",
+          72,
+          null
+        ],
+        [
+          "A. Raimondo",
+          "a",
+          "F",
+          "",
+          0.118,
+          "J. Rodríguez",
+          92,
+          null
+        ],
+        [
+          "R. Schmid",
+          "a",
+          "M",
+          "",
+          0.115,
+          "A. Deiola",
+          92,
+          null
+        ],
+        [
+          "I. Monterisi",
+          "a",
+          "D",
+          "",
+          0.111,
+          "D. Maldini",
+          72,
+          null
+        ],
+        [
+          "M. Nzola",
+          "h",
+          "F",
+          "",
+          0.107,
+          "I. Monterisi",
+          72,
+          null
+        ],
+        [
+          "G. Kvernadze",
+          "a",
+          "F",
+          "",
+          0.104,
+          "Z. Pedro",
+          92,
+          null
+        ],
+        [
+          "A. Fadera",
+          "h",
+          "F",
+          "",
+          0.096,
+          "I. Monterisi",
+          54,
+          null
+        ],
+        [
+          "Y. Mina",
+          "h",
+          "D",
+          "",
+          0.091,
+          "R. Schmid",
+          54,
+          null
+        ],
+        [
+          "H. Winks",
+          "h",
+          "M",
+          "",
+          0.086,
+          "P. Masini",
+          54,
+          null
+        ],
+        [
+          "P. Mendy",
+          "h",
+          "F",
+          "",
+          0.081,
+          "I. Monterisi",
+          54,
+          null
+        ],
+        [
+          "F. Ghedjemis",
+          "a",
+          "F",
+          "",
+          0.081,
+          "A. Obert",
+          92,
+          null
+        ],
+        [
+          "J. Fazzini",
+          "h",
+          "M",
+          "",
+          0.075,
+          "G. Calvani",
+          36,
+          null
+        ],
+        [
+          "Y. Massolin",
+          "h",
+          "M",
+          "",
+          0.063,
+          "G. Bracaglia",
+          36,
+          null
+        ],
+        [
+          "E. Tchato",
+          "a",
+          "D",
+          "",
+          0.058,
+          "J. Fazzini",
+          36,
+          null
+        ]
+      ],
+      "tags": {
+        "G. Bracaglia": [
+          "Poca esperienza: 721' nello storico",
+          "Diffidato: al prossimo giallo salta una partita"
+        ],
+        "A. Deiola": [
+          "Diffidato: al prossimo giallo salta una partita"
+        ],
+        "G. Calvani": [
+          "Poca esperienza: 784' nello storico"
+        ],
+        "A. Romano": [
+          "Poca esperienza: 877' nello storico"
+        ],
+        "G. Calò": [
+          "Poca esperienza: 856' nello storico"
+        ],
+        "G. Cittadini": [
+          "Poca esperienza: 641' nello storico"
+        ],
+        "R. Schmid": [
+          "Storico: Bundesliga 5827'"
+        ],
+        "G. Kvernadze": [
+          "Poca esperienza: 895' nello storico"
+        ],
+        "F. Ghedjemis": [
+          "Poca esperienza: 776' nello storico"
+        ],
+        "Y. Massolin": [
+          "Poca esperienza: 147' nello storico"
+        ],
+        "E. Tchato": [
+          "Storico: Ligue 1 1902'"
+        ]
+      },
+      "derby": false,
+      "src": "provv",
+      "ctx": [
+        "Precedenti tesi: nelle ultime sfide tra queste due squadre +22% gialli rispetto alla media",
+        "2 diffidati tra i probabili titolari: A. Deiola (Cagliari), G. Bracaglia (Frosinone). Di solito stanno più attenti"
+      ],
+      "comp": "sa"
+    },
+    {
+      "id": 5749748,
+      "ko": 1794060000,
+      "h": "Torino",
+      "a": "Lecce",
+      "hc": [
+        "#6d1b1d",
+        "#ffffff"
+      ],
+      "ac": [
+        "#f6ea00",
+        "#db2d1f"
+      ],
+      "ref": "–",
+      "odds": "53/21",
+      "line": null,
+      "uff": 0,
+      "pl": [
+        [
+          "Y. Maleh",
+          "a",
+          "M",
+          "",
+          0.195,
+          "S. Coco",
+          92,
+          null
+        ],
+        [
+          "D. Veiga",
+          "a",
+          "D",
+          "",
+          0.186,
+          "Z. Aboukhlal",
+          92,
+          null
+        ],
+        [
+          "T. Gabriel",
+          "a",
+          "D",
+          "",
+          0.143,
+          "N. Vlašić",
+          92,
+          null
+        ],
+        [
+          "O. Ngom",
+          "a",
+          "M",
+          "",
+          0.139,
+          "A. Ismajli",
+          88,
+          null
+        ],
+        [
+          "J. Siebert",
+          "a",
+          "D",
+          "",
+          0.132,
+          "D. Bragança",
+          70,
+          null
+        ],
+        [
+          "S. Coco",
+          "h",
+          "D",
+          "",
+          0.117,
+          "O. Gorter",
+          92,
+          null
+        ],
+        [
+          "P. Comuzzo",
+          "h",
+          "D",
+          "",
+          0.109,
+          "K. N’Dri",
+          92,
+          null
+        ],
+        [
+          "R. Belghali",
+          "h",
+          "M",
+          "",
+          0.1,
+          "A. Gallo",
+          92,
+          null
+        ],
+        [
+          "D. Bragança",
+          "h",
+          "M",
+          "",
+          0.099,
+          "J. Siebert",
+          90,
+          null
+        ],
+        [
+          "A. Ismajli",
+          "h",
+          "D",
+          "",
+          0.097,
+          "O. Gorter",
+          90,
+          null
+        ],
+        [
+          "Z. Aboukhlal",
+          "h",
+          "M",
+          "",
+          0.085,
+          "D. Veiga",
+          36,
+          null
+        ],
+        [
+          "K. N’Dri",
+          "a",
+          "F",
+          "",
+          0.083,
+          "P. Comuzzo",
+          70,
+          null
+        ],
+        [
+          "G. Simeone",
+          "h",
+          "F",
+          "",
+          0.078,
+          "T. Gabriel",
+          92,
+          null
+        ],
+        [
+          "R. Mandragora",
+          "h",
+          "M",
+          "",
+          0.076,
+          "T. Gabriel",
+          54,
+          null
+        ],
+        [
+          "A. Cacciamani",
+          "h",
+          "M",
+          "",
+          0.072,
+          "D. Veiga",
+          72,
+          null
+        ],
+        [
+          "J. Monteiro",
+          "a",
+          "F",
+          "",
+          0.068,
+          "S. Coco",
+          53,
+          null
+        ],
+        [
+          "N. Vlašić",
+          "h",
+          "M",
+          "",
+          0.065,
+          "T. Gabriel",
+          90,
+          null
+        ],
+        [
+          "A. Gallo",
+          "a",
+          "D",
+          "",
+          0.063,
+          "R. Belghali",
+          92,
+          null
+        ],
+        [
+          "A. Fatah",
+          "a",
+          "F",
+          "",
+          0.058,
+          "S. Coco",
+          53,
+          null
+        ],
+        [
+          "G. Gineitis",
+          "h",
+          "M",
+          "",
+          0.055,
+          "O. Ngom",
+          36,
+          null
+        ],
+        [
+          "O. Gorter",
+          "a",
+          "M",
+          "",
+          0.05,
+          "S. Coco",
+          35,
+          null
+        ],
+        [
+          "L. Coulibaly",
+          "a",
+          "M",
+          "",
+          0.05,
+          "P. Comuzzo",
+          35,
+          null
+        ],
+        [
+          "P. Esteban",
+          "a",
+          "F",
+          "",
+          0.049,
+          "A. Ismajli",
+          35,
+          null
+        ],
+        [
+          "K. Gaspar",
+          "a",
+          "D",
+          "",
+          0.047,
+          "D. Bragança",
+          35,
+          null
+        ],
+        [
+          "C. Adams",
+          "h",
+          "F",
+          "",
+          0.045,
+          "J. Siebert",
+          92,
+          null
+        ],
+        [
+          "K. Fitz-Jim",
+          "h",
+          "M",
+          "",
+          0.035,
+          "J. Siebert",
+          36,
+          null
+        ],
+        [
+          "N. Štulić",
+          "a",
+          "F",
+          "",
+          0.031,
+          "A. Ismajli",
+          35,
+          null
+        ],
+        [
+          "W. Geubbels",
+          "a",
+          "F",
+          "",
+          0.025,
+          "A. Ismajli",
+          35,
+          null
+        ]
+      ],
+      "tags": {
+        "D. Bragança": [
+          "Storico: Liga Portugal 1586'"
+        ],
+        "Z. Aboukhlal": [
+          "Storico: Ligue 1 1907'"
+        ],
+        "A. Cacciamani": [
+          "Poca esperienza: 697' nello storico"
+        ],
+        "J. Monteiro": [
+          "Storico: Super League (SUI) 2414'"
+        ],
+        "A. Fatah": [
+          "Storico: Premiership (SCO) 934'"
+        ],
+        "O. Gorter": [
+          "Poca esperienza: 222' nello storico"
+        ],
+        "P. Esteban": [
+          "Poca esperienza: 234' nello storico"
+        ],
+        "K. Fitz-Jim": [
+          "Storico: Eredivisie 1745'"
+        ],
+        "W. Geubbels": [
+          "Storico: Ligue 1 1012'"
+        ]
+      },
+      "derby": false,
+      "src": "provv",
+      "comp": "sa"
+    },
+    {
+      "id": 5749747,
+      "ko": 1794070800,
+      "h": "Parma",
+      "a": "Bologna",
+      "hc": [
+        "#ffffff",
+        "#000000"
+      ],
+      "ac": [
+        "#003366",
+        "#cc0000"
+      ],
+      "ref": "–",
+      "odds": "21/52",
+      "line": null,
+      "uff": 0,
+      "pl": [
+        [
+          "T. Pobega",
+          "a",
+          "M",
+          "",
+          0.258,
+          "V. Sierro",
+          92,
+          null
+        ],
+        [
+          "M. Troilo",
+          "h",
+          "D",
+          "",
+          0.22,
+          "J. Odgaard",
+          92,
+          null
+        ],
+        [
+          "N. Casale",
+          "a",
+          "D",
+          "",
+          0.197,
+          "E. Bilal Touré",
+          92,
+          null
+        ],
+        [
+          "L. Ferguson",
+          "a",
+          "M",
+          "",
+          0.192,
+          "M. Keita",
+          92,
+          null
+        ],
+        [
+          "V. Sierro",
+          "h",
+          "M",
+          "",
+          0.166,
+          "T. Pobega",
+          88,
+          null
+        ],
+        [
+          "A. Theate",
+          "a",
+          "D",
+          "",
+          0.15,
+          "G. Fabbian",
+          88,
+          null
+        ],
+        [
+          "D. Carlos",
+          "h",
+          "D",
+          "",
+          0.138,
+          "N. Cambiaghi",
+          53,
+          null
+        ],
+        [
+          "E. Del Prato",
+          "h",
+          "D",
+          "",
+          0.133,
+          "T. Pobega",
+          92,
+          null
+        ],
+        [
+          "N. Zortea",
+          "a",
+          "D",
+          "",
+          0.133,
+          "E. Valeri",
+          92,
+          null
+        ],
+        [
+          "D. Drobnič",
+          "h",
+          "D",
+          "",
+          0.132,
+          "F. Bernardeschi",
+          70,
+          null
+        ],
+        [
+          "F. Bernardeschi",
+          "a",
+          "M",
+          "",
+          0.13,
+          "D. Drobnič",
+          88,
+          null
+        ],
+        [
+          "G. Fabbian",
+          "h",
+          "M",
+          "",
+          0.123,
+          "A. Theate",
+          70,
+          null
+        ],
+        [
+          "N. Cambiaghi",
+          "a",
+          "F",
+          "",
+          0.119,
+          "E. Del Prato",
+          88,
+          null
+        ],
+        [
+          "M. Keita",
+          "h",
+          "M",
+          "",
+          0.118,
+          "L. Ferguson",
+          92,
+          null
+        ],
+        [
+          "J. Miranda",
+          "a",
+          "D",
+          "",
+          0.114,
+          "S. Britschgi",
+          88,
+          null
+        ],
+        [
+          "E. Bilal Touré",
+          "h",
+          "F",
+          "",
+          0.108,
+          "N. Casale",
+          92,
+          null
+        ],
+        [
+          "S. Britschgi",
+          "h",
+          "M",
+          "",
+          0.106,
+          "J. Miranda",
+          70,
+          null
+        ],
+        [
+          "M. Darmian",
+          "a",
+          "D",
+          "",
+          0.101,
+          "E. Valeri",
+          70,
+          null
+        ],
+        [
+          "J. Odgaard",
+          "a",
+          "M",
+          "",
+          0.097,
+          "M. Troilo",
+          70,
+          null
+        ],
+        [
+          "E. Valeri",
+          "h",
+          "D",
+          "",
+          0.077,
+          "N. Zortea",
+          88,
+          null
+        ],
+        [
+          "F. Carboni",
+          "h",
+          "M",
+          "",
+          0.07,
+          "L. Ferguson",
+          35,
+          null
+        ],
+        [
+          "M. Vitík",
+          "a",
+          "D",
+          "",
+          0.07,
+          "E. Bilal Touré",
+          35,
+          null
+        ],
+        [
+          "D. Romero",
+          "h",
+          "F",
+          "",
+          0.061,
+          "N. Casale",
+          53,
+          null
+        ],
+        [
+          "R. Piccoli",
+          "a",
+          "F",
+          "",
+          0.052,
+          "M. Troilo",
+          35,
+          null
+        ],
+        [
+          "S. Lontani",
+          "h",
+          "F",
+          "",
+          0.036,
+          "M. Vitík",
+          35,
+          null
+        ],
+        [
+          "A. Bernabé",
+          "h",
+          "M",
+          "",
+          0.028,
+          "A. Theate",
+          35,
+          null
+        ]
+      ],
+      "tags": {
+        "V. Sierro": [
+          "Storico: Ligue 1 2409'"
+        ],
+        "D. Drobnič": [
+          "Poca esperienza: 450' nello storico"
+        ],
+        "F. Carboni": [
+          "Poca esperienza: 535' nello storico"
+        ],
+        "D. Romero": [
+          "Poca esperienza: 423' nello storico"
+        ],
+        "S. Lontani": [
+          "Poca esperienza: 502' nello storico"
+        ]
+      },
+      "derby": false,
+      "src": "provv",
+      "comp": "sa"
+    },
+    {
+      "id": 5749740,
+      "ko": 1794080700,
+      "h": "Roma",
+      "a": "Sassuolo",
+      "hc": [
+        "#990000",
+        "#eaca15"
+      ],
+      "ac": [
+        "#006600",
+        "#000000"
+      ],
+      "ref": "–",
+      "odds": "72/10",
+      "line": null,
+      "uff": 0,
+      "pl": [
+        [
+          "M. Hermoso",
+          "h",
+          "D",
+          "",
+          0.113,
+          "V. Adžić",
+          68,
+          null
+        ],
+        [
+          "D. Berardi",
+          "a",
+          "F",
+          "",
+          0.113,
+          "M. Hermoso",
+          92,
+          null
+        ],
+        [
+          "D. Ćaleta-Car",
+          "a",
+          "D",
+          "",
+          0.112,
+          "R. Mora",
+          67,
+          null
+        ],
+        [
+          "J. Doig",
+          "a",
+          "D",
+          "",
+          0.111,
+          "M. Soulé",
+          84,
+          null
+        ],
+        [
+          "M. de Roon",
+          "h",
+          "M",
+          "",
+          0.108,
+          "N. Matić",
+          92,
+          null
+        ],
+        [
+          "E. N'Dicka",
+          "h",
+          "D",
+          "",
+          0.094,
+          "N. Matić",
+          92,
+          null
+        ],
+        [
+          "F. Candé",
+          "a",
+          "D",
+          "",
+          0.092,
+          "M. Soulé",
+          50,
+          null
+        ],
+        [
+          "I. Van Der Brempt",
+          "a",
+          "D",
+          "",
+          0.089,
+          "R. Mora",
+          50,
+          null
+        ],
+        [
+          "B. Cristante",
+          "h",
+          "M",
+          "",
+          0.086,
+          "N. Matić",
+          68,
+          null
+        ],
+        [
+          "N. Matić",
+          "a",
+          "M",
+          "",
+          0.083,
+          "E. N'Dicka",
+          84,
+          null
+        ],
+        [
+          "A. Laurienté",
+          "a",
+          "F",
+          "",
+          0.081,
+          "D. Ghilardi",
+          84,
+          null
+        ],
+        [
+          "S. Esposito",
+          "a",
+          "M",
+          "",
+          0.076,
+          "D. Ghilardi",
+          84,
+          null
+        ],
+        [
+          "G. Mancini",
+          "h",
+          "D",
+          "",
+          0.073,
+          "I. Sulemana",
+          51,
+          null
+        ],
+        [
+          "V. Adžić",
+          "a",
+          "M",
+          "",
+          0.072,
+          "M. Hermoso",
+          67,
+          null
+        ],
+        [
+          "Wesley",
+          "h",
+          "D",
+          "",
+          0.064,
+          "V. Adžić",
+          68,
+          null
+        ],
+        [
+          "N. Pisilli",
+          "h",
+          "M",
+          "",
+          0.06,
+          "J. Idzes",
+          51,
+          null
+        ],
+        [
+          "S. Walukiewicz",
+          "a",
+          "D",
+          "",
+          0.056,
+          "Wesley",
+          34,
+          null
+        ],
+        [
+          "D. Bakola",
+          "a",
+          "M",
+          "",
+          0.052,
+          "B. Cristante",
+          67,
+          null
+        ],
+        [
+          "N. Molina",
+          "h",
+          "D",
+          "",
+          0.05,
+          "N. Matić",
+          68,
+          null
+        ],
+        [
+          "D. Ghilardi",
+          "h",
+          "D",
+          "",
+          0.049,
+          "N. Matić",
+          34,
+          null
+        ],
+        [
+          "S. Castro",
+          "h",
+          "F",
+          "",
+          0.049,
+          "J. Idzes",
+          34,
+          null
+        ],
+        [
+          "D. Malen",
+          "h",
+          "F",
+          "",
+          0.048,
+          "J. Idzes",
+          68,
+          null
+        ],
+        [
+          "J. Idzes",
+          "a",
+          "D",
+          "",
+          0.048,
+          "R. Mora",
+          34,
+          null
+        ],
+        [
+          "K. Thorstvedt",
+          "a",
+          "M",
+          "",
+          0.048,
+          "E. N'Dicka",
+          34,
+          null
+        ],
+        [
+          "C. Odenthal",
+          "a",
+          "D",
+          "",
+          0.045,
+          "R. Mora",
+          34,
+          null
+        ],
+        [
+          "I. Sulemana",
+          "a",
+          "M",
+          "",
+          0.043,
+          "B. Cristante",
+          34,
+          null
+        ],
+        [
+          "K. Koulierakis",
+          "h",
+          "D",
+          "",
+          0.038,
+          "V. Adžić",
+          34,
+          null
+        ],
+        [
+          "M. Soulé",
+          "h",
+          "M",
+          "",
+          0.037,
+          "F. Candé",
+          85,
+          null
+        ],
+        [
+          "R. Mora",
+          "h",
+          "M",
+          "",
+          0.029,
+          "J. Idzes",
+          51,
+          null
+        ],
+        [
+          "E. Lulli",
+          "h",
+          "M",
+          "",
+          0.028,
+          "J. Doig",
+          34,
+          null
+        ],
+        [
+          "D. Rensch",
+          "h",
+          "D",
+          "",
+          0.021,
+          "N. Matić",
+          34,
+          null
+        ]
+      ],
+      "tags": {
+        "D. Ćaleta-Car": [
+          "Storico: LaLiga 2150'"
+        ],
+        "V. Adžić": [
+          "Poca esperienza: 836' nello storico"
+        ],
+        "C. Odenthal": [
+          "Poca esperienza: 335' nello storico"
+        ],
+        "K. Koulierakis": [
+          "Storico: Bundesliga 4951'"
+        ],
+        "R. Mora": [
+          "Storico: Liga Portugal 2572'"
+        ],
+        "E. Lulli": [
+          "Poca esperienza: 477' nello storico"
+        ]
+      },
+      "derby": false,
+      "src": "provv",
+      "comp": "sa"
+    },
+    {
+      "id": 5749746,
+      "ko": 1794137400,
+      "h": "Napoli",
+      "a": "Lazio",
+      "hc": [
+        "#008cea",
+        "#ffffff"
+      ],
+      "ac": [
+        "#64b6e1",
+        "#ffffff"
+      ],
+      "ref": "–",
+      "odds": "44/30",
+      "line": null,
+      "uff": 0,
+      "pl": [
+        [
+          "K. Taylor",
+          "a",
+          "M",
+          "",
+          0.161,
+          "",
+          92,
+          null
+        ],
+        [
+          "R. Belahyane",
+          "a",
+          "M",
+          "",
+          0.154,
+          "",
+          92,
+          null
+        ],
+        [
+          "O. Provstgaard",
+          "a",
+          "D",
+          "",
+          0.151,
+          "",
+          92,
+          null
+        ],
+        [
+          "R. Floriani",
+          "a",
+          "M",
+          "",
+          0.149,
+          "",
+          92,
+          null
+        ],
+        [
+          "M. Zaccagni",
+          "a",
+          "F",
+          "",
+          0.147,
+          "",
+          92,
+          null
+        ],
+        [
+          "R. Marín",
+          "h",
+          "D",
+          "",
+          0.136,
+          "",
+          81,
+          null
+        ],
+        [
+          "T. Noslin",
+          "a",
+          "F",
+          "",
+          0.136,
+          "",
+          92,
+          null
+        ],
+        [
+          "N. Tavares",
+          "a",
+          "D",
+          "",
+          0.128,
+          "",
+          92,
+          null
+        ],
+        [
+          "D. Frattesi",
+          "a",
+          "M",
+          "",
+          0.121,
+          "",
+          92,
+          null
+        ],
+        [
+          "G. Di Lorenzo",
+          "h",
+          "D",
+          "",
+          0.107,
+          "",
+          92,
+          null
+        ],
+        [
+          "G. Isaksen",
+          "a",
+          "F",
+          "",
+          0.105,
+          "",
+          92,
+          null
+        ],
+        [
+          "N. Lang",
+          "h",
+          "F",
+          "",
+          0.087,
+          "",
+          81,
+          null
+        ],
+        [
+          "B. Badiashile",
+          "h",
+          "D",
+          "",
+          0.086,
+          "",
+          61,
+          null
+        ],
+        [
+          "S. McTominay",
+          "h",
+          "M",
+          "",
+          0.081,
+          "",
+          81,
+          null
+        ],
+        [
+          "F. Anguissa",
+          "h",
+          "M",
+          "",
+          0.079,
+          "",
+          61,
+          null
+        ],
+        [
+          "L. Lucca",
+          "h",
+          "F",
+          "",
+          0.076,
+          "",
+          40,
+          null
+        ],
+        [
+          "M. Olivera",
+          "h",
+          "D",
+          "",
+          0.071,
+          "",
+          61,
+          null
+        ],
+        [
+          "K. De Bruyne",
+          "h",
+          "M",
+          "",
+          0.069,
+          "",
+          61,
+          null
+        ],
+        [
+          "J. Šutalo",
+          "a",
+          "D",
+          "",
+          0.063,
+          "",
+          92,
+          null
+        ],
+        [
+          "A. Rrahmani",
+          "h",
+          "D",
+          "",
+          0.06,
+          "",
+          61,
+          null
+        ],
+        [
+          "S. Lobotka",
+          "h",
+          "M",
+          "",
+          0.059,
+          "",
+          61,
+          null
+        ],
+        [
+          "D. Leite",
+          "a",
+          "D",
+          "",
+          0.052,
+          "",
+          37,
+          null
+        ],
+        [
+          "M. Politano",
+          "h",
+          "F",
+          "",
+          0.048,
+          "",
+          61,
+          null
+        ],
+        [
+          "R. Højlund",
+          "h",
+          "F",
+          "",
+          0.046,
+          "",
+          61,
+          null
+        ],
+        [
+          "D. Doekhi",
+          "a",
+          "D",
+          "",
+          0.042,
+          "",
+          37,
+          null
+        ],
+        [
+          "D. Neres",
+          "h",
+          "F",
+          "",
+          0.027,
+          "",
+          20,
+          null
+        ],
+        [
+          "L. Marianucci",
+          "h",
+          "D",
+          "",
+          0.026,
+          "",
+          20,
+          null
+        ],
+        [
+          "L. Spinazzola",
+          "h",
+          "D",
+          "",
+          0.024,
+          "",
+          40,
+          null
+        ],
+        [
+          "B. Gilmour",
+          "h",
+          "M",
+          "",
+          0.022,
+          "",
+          20,
+          null
+        ],
+        [
+          "G. Nascimento",
+          "h",
+          "F",
+          "",
+          0.021,
+          "",
+          20,
+          null
+        ],
+        [
+          "S. Beukema",
+          "h",
+          "D",
+          "",
+          0.019,
+          "",
+          20,
+          null
+        ]
+      ],
+      "tags": {
+        "B. Badiashile": [
+          "Storico: Premier League 804'"
+        ],
+        "J. Šutalo": [
+          "Storico: Eredivisie 4247'"
+        ],
+        "D. Leite": [
+          "Storico: Bundesliga 4518'"
+        ],
+        "D. Doekhi": [
+          "Storico: Bundesliga 6120'"
+        ]
+      },
+      "derby": false,
+      "src": "provv",
+      "comp": "sa"
+    },
+    {
+      "id": 5749743,
+      "ko": 1794146400,
+      "h": "Genoa",
+      "a": "Milan",
+      "hc": [
+        "#000033",
+        "#660000"
+      ],
+      "ac": [
+        "#000000",
+        "#cc0000"
+      ],
+      "ref": "–",
+      "odds": "21/53",
+      "line": null,
+      "uff": 0,
+      "pl": [
+        [
+          "G. Ramos",
+          "a",
+          "F",
+          "",
+          0.172,
+          "",
+          92,
+          null
+        ],
+        [
+          "Y. Musah",
+          "a",
+          "M",
+          "",
+          0.148,
+          "",
+          82,
+          null
+        ],
+        [
+          "L. Østigard",
+          "h",
+          "D",
+          "",
+          0.144,
+          "",
+          92,
+          null
+        ],
+        [
+          "K. De Winter",
+          "a",
+          "D",
+          "",
+          0.14,
+          "",
+          82,
+          null
+        ],
+        [
+          "J. Vásquez",
+          "h",
+          "D",
+          "",
+          0.136,
+          "",
+          92,
+          null
+        ],
+        [
+          "M. Frendrup",
+          "h",
+          "M",
+          "",
+          0.121,
+          "",
+          84,
+          null
+        ],
+        [
+          "S. Wiafe",
+          "h",
+          "M",
+          "",
+          0.12,
+          "",
+          63,
+          null
+        ],
+        [
+          "S. Pavlović",
+          "a",
+          "D",
+          "",
+          0.114,
+          "",
+          92,
+          null
+        ],
+        [
+          "A. Rabiot",
+          "a",
+          "M",
+          "",
+          0.114,
+          "",
+          61,
+          null
+        ],
+        [
+          "M. Egill Ellertsson",
+          "h",
+          "M",
+          "",
+          0.113,
+          "",
+          92,
+          null
+        ],
+        [
+          "H. Traorè",
+          "h",
+          "M",
+          "",
+          0.113,
+          "",
+          63,
+          null
+        ],
+        [
+          "S. El Shaarawy",
+          "h",
+          "M",
+          "",
+          0.111,
+          "",
+          84,
+          null
+        ],
+        [
+          "D. Moreira",
+          "a",
+          "M",
+          "",
+          0.099,
+          "",
+          61,
+          null
+        ],
+        [
+          "J. Messias",
+          "h",
+          "F",
+          "",
+          0.093,
+          "",
+          84,
+          null
+        ],
+        [
+          "A. Marcandalli",
+          "h",
+          "D",
+          "",
+          0.084,
+          "",
+          63,
+          null
+        ],
+        [
+          "M. Osmajić",
+          "h",
+          "F",
+          "",
+          0.081,
+          "",
+          92,
+          null
+        ],
+        [
+          "K. Ehizibue",
+          "h",
+          "D",
+          "",
+          0.081,
+          "",
+          42,
+          null
+        ],
+        [
+          "M. Gila",
+          "a",
+          "D",
+          "",
+          0.079,
+          "",
+          61,
+          null
+        ],
+        [
+          "P. Estupinán",
+          "a",
+          "D",
+          "",
+          0.077,
+          "",
+          41,
+          null
+        ],
+        [
+          "L. Modrić",
+          "a",
+          "M",
+          "",
+          0.074,
+          "",
+          61,
+          null
+        ],
+        [
+          "S. Otoa",
+          "h",
+          "D",
+          "",
+          0.069,
+          "",
+          42,
+          null
+        ],
+        [
+          "C. Pulisic",
+          "a",
+          "F",
+          "",
+          0.061,
+          "",
+          82,
+          null
+        ],
+        [
+          "A. Jashari",
+          "a",
+          "M",
+          "",
+          0.057,
+          "",
+          41,
+          null
+        ],
+        [
+          "S. Diawara",
+          "a",
+          "D",
+          "",
+          0.054,
+          "",
+          41,
+          null
+        ],
+        [
+          "O. Hutchinson",
+          "a",
+          "F",
+          "",
+          0.052,
+          "",
+          41,
+          null
+        ],
+        [
+          "F. Tomori",
+          "a",
+          "D",
+          "",
+          0.051,
+          "",
+          41,
+          null
+        ],
+        [
+          "D. Bartesaghi",
+          "a",
+          "M",
+          "",
+          0.048,
+          "",
+          41,
+          null
+        ],
+        [
+          "A. Cissè",
+          "a",
+          "M",
+          "",
+          0.036,
+          "",
+          20,
+          null
+        ],
+        [
+          "Vítinha",
+          "h",
+          "F",
+          "",
+          0.032,
+          "",
+          21,
+          null
+        ],
+        [
+          "D. Puczka",
+          "h",
+          "D",
+          "",
+          0.032,
+          "",
+          21,
+          null
+        ],
+        [
+          "S. Chukwueze",
+          "a",
+          "F",
+          "",
+          0.032,
+          "",
+          41,
+          null
+        ],
+        [
+          "Amorim",
+          "h",
+          "M",
+          "",
+          0.03,
+          "",
+          21,
+          null
+        ],
+        [
+          "M. Mitaj",
+          "h",
+          "D",
+          "",
+          0.03,
+          "",
+          21,
+          null
+        ],
+        [
+          "M. Gabbia",
+          "a",
+          "D",
+          "",
+          0.03,
+          "",
+          20,
+          null
+        ],
+        [
+          "T. Baldanzi",
+          "h",
+          "M",
+          "",
+          0.027,
+          "",
+          21,
+          null
+        ]
+      ],
+      "tags": {
+        "G. Ramos": [
+          "Storico: Ligue 1 2372'"
+        ],
+        "L. Østigard": [
+          "Diffidato: al prossimo giallo salta una partita"
+        ],
+        "S. Wiafe": [
+          "Poca esperienza: 272' nello storico"
+        ],
+        "D. Moreira": [
+          "Storico: Ligue 1 4614'"
+        ],
+        "M. Osmajić": [
+          "Storico: Championship 1870'"
+        ],
+        "S. Diawara": [
+          "Poca esperienza: 238' nello storico"
+        ],
+        "O. Hutchinson": [
+          "Storico: Premier League 4274'"
+        ],
+        "A. Cissè": [
+          "Poca esperienza: 567' nello storico"
+        ],
+        "D. Puczka": [
+          "Poca esperienza: 138' nello storico"
+        ],
+        "Amorim": [
+          "Storico: Liga Portugal 1630'"
+        ],
+        "M. Mitaj": [
+          "Poca esperienza: 130' nello storico"
+        ]
+      },
+      "derby": false,
+      "src": "provv",
+      "ctx": [
+        "1 diffidato tra i probabili titolari: L. Østigard (Genoa). Di solito stanno più attenti"
+      ],
+      "comp": "sa"
+    },
+    {
+      "id": 5749745,
+      "ko": 1794146400,
+      "h": "Monza",
+      "a": "Atalanta",
+      "hc": [
+        "#d71742",
+        "#ffffff"
+      ],
+      "ac": [
+        "#0000cc",
+        "#000000"
+      ],
+      "ref": "–",
+      "odds": "28/45",
+      "line": null,
+      "uff": 0,
+      "pl": [
+        [
+          "L. Lucchesi",
+          "h",
+          "D",
+          "",
+          0.145,
+          "",
+          83,
+          null
+        ],
+        [
+          "S. Birindelli",
+          "h",
+          "D",
+          "",
+          0.142,
+          "",
+          92,
+          null
+        ],
+        [
+          "N. Krstović",
+          "a",
+          "F",
+          "",
+          0.142,
+          "",
+          92,
+          null
+        ],
+        [
+          "Éderson",
+          "a",
+          "M",
+          "",
+          0.121,
+          "",
+          92,
+          null
+        ],
+        [
+          "F. Ondoa",
+          "h",
+          "M",
+          "",
+          0.12,
+          "",
+          83,
+          null
+        ],
+        [
+          "R. Mangas",
+          "h",
+          "D",
+          "",
+          0.113,
+          "",
+          92,
+          null
+        ],
+        [
+          "E. Kouadio",
+          "h",
+          "D",
+          "",
+          0.102,
+          "",
+          62,
+          null
+        ],
+        [
+          "S. Goglichidze",
+          "h",
+          "D",
+          "",
+          0.1,
+          "",
+          83,
+          null
+        ],
+        [
+          "T. Kristensen",
+          "a",
+          "D",
+          "",
+          0.097,
+          "",
+          83,
+          null
+        ],
+        [
+          "J. Rowe",
+          "a",
+          "F",
+          "",
+          0.094,
+          "",
+          83,
+          null
+        ],
+        [
+          "G. Varela",
+          "h",
+          "F",
+          "",
+          0.09,
+          "",
+          92,
+          null
+        ],
+        [
+          "R. Obrić",
+          "a",
+          "D",
+          "",
+          0.087,
+          "",
+          62,
+          null
+        ],
+        [
+          "D. Zappacosta",
+          "a",
+          "D",
+          "",
+          0.086,
+          "",
+          83,
+          null
+        ],
+        [
+          "E. Elmas",
+          "a",
+          "F",
+          "",
+          0.084,
+          "",
+          62,
+          null
+        ],
+        [
+          "C. De Ketelaere",
+          "a",
+          "M",
+          "",
+          0.082,
+          "",
+          92,
+          null
+        ],
+        [
+          "E. Akinsanmiro",
+          "h",
+          "M",
+          "",
+          0.081,
+          "",
+          62,
+          null
+        ],
+        [
+          "A. Carboni",
+          "h",
+          "D",
+          "",
+          0.074,
+          "",
+          62,
+          null
+        ],
+        [
+          "L. Colombo",
+          "h",
+          "M",
+          "",
+          0.073,
+          "",
+          41,
+          null
+        ],
+        [
+          "C. Ngonge",
+          "h",
+          "F",
+          "",
+          0.068,
+          "",
+          41,
+          null
+        ],
+        [
+          "D. Mota",
+          "h",
+          "F",
+          "",
+          0.059,
+          "",
+          62,
+          null
+        ],
+        [
+          "G. Scalvini",
+          "a",
+          "D",
+          "",
+          0.057,
+          "",
+          41,
+          null
+        ],
+        [
+          "L. Bernasconi",
+          "a",
+          "M",
+          "",
+          0.057,
+          "",
+          62,
+          null
+        ],
+        [
+          "E. Zeballos",
+          "h",
+          "F",
+          "",
+          0.051,
+          "",
+          41,
+          null
+        ],
+        [
+          "G. Gaetano",
+          "a",
+          "M",
+          "",
+          0.048,
+          "",
+          41,
+          null
+        ],
+        [
+          "N. Zalewski",
+          "a",
+          "D",
+          "",
+          0.043,
+          "",
+          41,
+          null
+        ],
+        [
+          "M. Pašalić",
+          "a",
+          "M",
+          "",
+          0.042,
+          "",
+          41,
+          null
+        ],
+        [
+          "R. Bellanova",
+          "a",
+          "D",
+          "",
+          0.041,
+          "",
+          62,
+          null
+        ],
+        [
+          "J. Robinson",
+          "h",
+          "F",
+          "",
+          0.036,
+          "",
+          62,
+          null
+        ],
+        [
+          "M. Folorunsho",
+          "h",
+          "M",
+          "",
+          0.034,
+          "",
+          21,
+          null
+        ],
+        [
+          "S. Kolašinac",
+          "a",
+          "D",
+          "",
+          0.03,
+          "",
+          21,
+          null
+        ],
+        [
+          "F. Kessié",
+          "a",
+          "M",
+          "",
+          0.03,
+          "",
+          21,
+          null
+        ],
+        [
+          "A. Bakoune",
+          "h",
+          "M",
+          "",
+          0.028,
+          "",
+          21,
+          null
+        ],
+        [
+          "L. Samardžić",
+          "a",
+          "M",
+          "",
+          0.022,
+          "",
+          21,
+          null
+        ]
+      ],
+      "tags": {
+        "L. Lucchesi": [
+          "Poca esperienza: 681' nello storico"
+        ],
+        "F. Ondoa": [
+          "Poca esperienza: 526' nello storico"
+        ],
+        "R. Mangas": [
+          "Storico: Liga Portugal 1215'"
+        ],
+        "G. Varela": [
+          "Storico: Liga Portugal 1521'"
+        ],
+        "R. Obrić": [
+          "Poca esperienza: 430' nello storico"
+        ],
+        "L. Colombo": [
+          "Poca esperienza: 184' nello storico"
+        ],
+        "E. Zeballos": [
+          "Poca esperienza: 137' nello storico"
+        ],
+        "J. Robinson": [
+          "Storico: Championship 881'"
+        ],
+        "A. Bakoune": [
+          "Poca esperienza: 277' nello storico"
+        ]
+      },
+      "derby": false,
+      "src": "provv",
+      "comp": "sa"
+    },
+    {
+      "id": 5749744,
+      "ko": 1794157200,
+      "h": "Inter",
+      "a": "Como",
+      "hc": [
+        "#1a57cc",
+        "#000000"
+      ],
+      "ac": [
+        "#09436b",
+        "#ffffff"
+      ],
+      "ref": "–",
+      "odds": "53/23",
+      "line": null,
+      "uff": 0,
+      "pl": [
+        [
+          "Y. Couto",
+          "a",
+          "M",
+          "",
+          0.172,
+          "",
+          82,
+          null
+        ],
+        [
+          "M. Caqueret",
+          "a",
+          "M",
+          "",
+          0.138,
+          "",
+          82,
+          null
+        ],
+        [
+          "N. Paz",
+          "a",
+          "M",
+          "",
+          0.133,
+          "",
+          82,
+          null
+        ],
+        [
+          "P. Sučić",
+          "h",
+          "M",
+          "",
+          0.113,
+          "",
+          82,
+          null
+        ],
+        [
+          "L. Da Cunha",
+          "a",
+          "M",
+          "",
+          0.103,
+          "",
+          92,
+          null
+        ],
+        [
+          "A. Bastoni",
+          "h",
+          "D",
+          "",
+          0.102,
+          "",
+          82,
+          null
+        ],
+        [
+          "M. Perrone",
+          "a",
+          "M",
+          "",
+          0.102,
+          "",
+          61,
+          null
+        ],
+        [
+          "J. Ramón",
+          "a",
+          "D",
+          "",
+          0.101,
+          "",
+          61,
+          null
+        ],
+        [
+          "M. Thuram",
+          "h",
+          "F",
+          "",
+          0.098,
+          "",
+          92,
+          null
+        ],
+        [
+          "M. Kempf",
+          "a",
+          "D",
+          "",
+          0.097,
+          "",
+          82,
+          null
+        ],
+        [
+          "Kaiki",
+          "a",
+          "D",
+          "",
+          0.095,
+          "",
+          61,
+          null
+        ],
+        [
+          "A. Diouf",
+          "h",
+          "M",
+          "",
+          0.093,
+          "",
+          82,
+          null
+        ],
+        [
+          "H. Çalhanoglu",
+          "h",
+          "M",
+          "",
+          0.087,
+          "",
+          61,
+          null
+        ],
+        [
+          "C. Augusto",
+          "h",
+          "D",
+          "",
+          0.084,
+          "",
+          82,
+          null
+        ],
+        [
+          "A. Douvikas",
+          "a",
+          "F",
+          "",
+          0.081,
+          "",
+          92,
+          null
+        ],
+        [
+          "Y. Aurel Bisseck",
+          "h",
+          "D",
+          "",
+          0.079,
+          "",
+          92,
+          null
+        ],
+        [
+          "N. Barella",
+          "h",
+          "M",
+          "",
+          0.075,
+          "",
+          61,
+          null
+        ],
+        [
+          "F. Pio Esposito",
+          "h",
+          "F",
+          "",
+          0.071,
+          "",
+          61,
+          null
+        ],
+        [
+          "L. Milla",
+          "a",
+          "M",
+          "",
+          0.064,
+          "",
+          61,
+          null
+        ],
+        [
+          "S. Ricci",
+          "a",
+          "M",
+          "",
+          0.063,
+          "",
+          41,
+          null
+        ],
+        [
+          "Á. Valle",
+          "a",
+          "D",
+          "",
+          0.063,
+          "",
+          41,
+          null
+        ],
+        [
+          "M. Akanji",
+          "h",
+          "D",
+          "",
+          0.06,
+          "",
+          61,
+          null
+        ],
+        [
+          "H. Mkhitaryan",
+          "h",
+          "M",
+          "",
+          0.048,
+          "",
+          41,
+          null
+        ],
+        [
+          "F. Dimarco",
+          "h",
+          "D",
+          "",
+          0.046,
+          "",
+          61,
+          null
+        ],
+        [
+          "M. Baturina",
+          "a",
+          "F",
+          "",
+          0.043,
+          "",
+          41,
+          null
+        ],
+        [
+          "I. Smolčić",
+          "a",
+          "D",
+          "",
+          0.04,
+          "",
+          20,
+          null
+        ],
+        [
+          "T. Chalobah",
+          "a",
+          "D",
+          "",
+          0.036,
+          "",
+          41,
+          null
+        ],
+        [
+          "A. Diao",
+          "a",
+          "F",
+          "",
+          0.029,
+          "",
+          20,
+          null
+        ],
+        [
+          "P. Zieliński",
+          "h",
+          "M",
+          "",
+          0.028,
+          "",
+          41,
+          null
+        ],
+        [
+          "B. Pavard",
+          "h",
+          "D",
+          "",
+          0.026,
+          "",
+          20,
+          null
+        ],
+        [
+          "M. Liberali",
+          "a",
+          "F",
+          "",
+          0.026,
+          "",
+          20,
+          null
+        ],
+        [
+          "W. Kambwala",
+          "a",
+          "D",
+          "",
+          0.024,
+          "",
+          20,
+          null
+        ],
+        [
+          "D. Spence",
+          "h",
+          "D",
+          "",
+          0.02,
+          "",
+          20,
+          null
+        ],
+        [
+          "A. Stanković",
+          "h",
+          "M",
+          "",
+          0.02,
+          "",
+          20,
+          null
+        ],
+        [
+          "A. Bonny",
+          "h",
+          "F",
+          "",
+          0.018,
+          "",
+          20,
+          null
+        ],
+        [
+          "L. Henrique",
+          "h",
+          "M",
+          "",
+          0.016,
+          "",
+          20,
+          null
+        ]
+      ],
+      "tags": {
+        "Y. Couto": [
+          "Storico: Bundesliga 1880'"
+        ],
+        "Kaiki": [
+          "Poca esperienza: 532' nello storico"
+        ],
+        "L. Milla": [
+          "Storico: LaLiga 6151'"
+        ],
+        "T. Chalobah": [
+          "Storico: Premier League 4756'"
+        ],
+        "M. Liberali": [
+          "Poca esperienza: 198' nello storico"
+        ],
+        "W. Kambwala": [
+          "Storico: LaLiga 1200'"
+        ],
+        "A. Stanković": [
+          "Storico: Pro League (BEL) 3076'"
+        ]
+      },
+      "derby": false,
+      "src": "provv",
+      "ctx": [
+        "Precedenti tesi: nelle ultime sfide tra queste due squadre +19% gialli rispetto alla media"
+      ],
+      "comp": "sa"
+    },
+    {
+      "id": 5749742,
+      "ko": 1794167100,
+      "h": "Fiorentina",
+      "a": "Juventus",
+      "hc": [
+        "#542baa",
+        "#ffffff"
+      ],
+      "ac": [
+        "#ffffff",
+        "#000000"
+      ],
+      "ref": "–",
+      "odds": "27/46",
+      "line": null,
+      "uff": 0,
+      "pl": [
+        [
+          "D. Luiz",
+          "a",
+          "M",
+          "",
+          0.2,
+          "",
+          92,
+          null
+        ],
+        [
+          "F. Mastantuono",
+          "h",
+          "F",
+          "",
+          0.167,
+          "",
+          92,
+          null
+        ],
+        [
+          "A. Njie",
+          "h",
+          "F",
+          "",
+          0.154,
+          "",
+          86,
+          null
+        ],
+        [
+          "M. Pellegrino",
+          "h",
+          "F",
+          "",
+          0.153,
+          "",
+          86,
+          null
+        ],
+        [
+          "Á. Jiménez",
+          "h",
+          "D",
+          "",
+          0.149,
+          "",
+          92,
+          null
+        ],
+        [
+          "G. Bremer",
+          "a",
+          "D",
+          "",
+          0.146,
+          "",
+          92,
+          null
+        ],
+        [
+          "W. McKennie",
+          "a",
+          "M",
+          "",
+          0.144,
+          "",
+          92,
+          null
+        ],
+        [
+          "C. Ndour",
+          "h",
+          "M",
+          "",
+          0.13,
+          "",
+          92,
+          null
+        ],
+        [
+          "N. Fagioli",
+          "h",
+          "M",
+          "",
+          0.128,
+          "",
+          92,
+          null
+        ],
+        [
+          "J. Lucumí",
+          "a",
+          "D",
+          "",
+          0.121,
+          "",
+          92,
+          null
+        ],
+        [
+          "Viery",
+          "h",
+          "D",
+          "",
+          0.116,
+          "",
+          65,
+          null
+        ],
+        [
+          "R. Drăgușin",
+          "h",
+          "D",
+          "",
+          0.109,
+          "",
+          92,
+          null
+        ],
+        [
+          "R. Kolo Muani",
+          "a",
+          "F",
+          "",
+          0.107,
+          "",
+          92,
+          null
+        ],
+        [
+          "P. Sarr",
+          "a",
+          "M",
+          "",
+          0.101,
+          "",
+          67,
+          null
+        ],
+        [
+          "P. Kalulu",
+          "a",
+          "D",
+          "",
+          0.098,
+          "",
+          92,
+          null
+        ],
+        [
+          "K. Alajbegović",
+          "a",
+          "F",
+          "",
+          0.095,
+          "",
+          67,
+          null
+        ],
+        [
+          "M. Pongračić",
+          "h",
+          "D",
+          "",
+          0.089,
+          "",
+          43,
+          null
+        ],
+        [
+          "M. Brescianini",
+          "h",
+          "M",
+          "",
+          0.085,
+          "",
+          65,
+          null
+        ],
+        [
+          "T. Koopmeiners",
+          "a",
+          "M",
+          "",
+          0.084,
+          "",
+          45,
+          null
+        ],
+        [
+          "Z. Çelik",
+          "a",
+          "D",
+          "",
+          0.071,
+          "",
+          45,
+          null
+        ],
+        [
+          "F. Gatti",
+          "a",
+          "D",
+          "",
+          0.07,
+          "",
+          45,
+          null
+        ],
+        [
+          "A. Cambiaso",
+          "a",
+          "D",
+          "",
+          0.067,
+          "",
+          45,
+          null
+        ],
+        [
+          "Valde",
+          "h",
+          "D",
+          "",
+          0.066,
+          "",
+          43,
+          null
+        ],
+        [
+          "J. Mário",
+          "h",
+          "M",
+          "",
+          0.062,
+          "",
+          43,
+          null
+        ],
+        [
+          "N. González",
+          "a",
+          "F",
+          "",
+          0.057,
+          "",
+          45,
+          null
+        ],
+        [
+          "C. Inao Oulaï",
+          "h",
+          "M",
+          "",
+          0.051,
+          "",
+          22,
+          null
+        ],
+        [
+          "J. Cabal",
+          "a",
+          "D",
+          "",
+          0.044,
+          "",
+          22,
+          null
+        ],
+        [
+          "N. Woltemade",
+          "a",
+          "F",
+          "",
+          0.041,
+          "",
+          45,
+          null
+        ],
+        [
+          "L. Ranieri",
+          "h",
+          "D",
+          "",
+          0.038,
+          "",
+          22,
+          null
+        ],
+        [
+          "W. Gnonto",
+          "h",
+          "F",
+          "",
+          0.037,
+          "",
+          22,
+          null
+        ],
+        [
+          "F. Conceição",
+          "a",
+          "F",
+          "",
+          0.037,
+          "",
+          22,
+          null
+        ],
+        [
+          "Pote",
+          "h",
+          "F",
+          "",
+          0.036,
+          "",
+          22,
+          null
+        ],
+        [
+          "Beto",
+          "h",
+          "F",
+          "",
+          0.025,
+          "",
+          22,
+          null
+        ]
+      ],
+      "tags": {
+        "F. Mastantuono": [
+          "Storico: LaLiga 1037'"
+        ],
+        "Viery": [
+          "Poca esperienza: 582' nello storico"
+        ],
+        "P. Sarr": [
+          "Storico: Premier League 3304'"
+        ],
+        "K. Alajbegović": [
+          "Storico: Bundesliga (AUT) 1912'"
+        ],
+        "Valde": [
+          "Poca esperienza: 520' nello storico"
+        ],
+        "C. Inao Oulaï": [
+          "Storico: Süper Lig 2077'"
+        ],
+        "N. Woltemade": [
+          "Storico: Premier League 1931'"
+        ],
+        "W. Gnonto": [
+          "Storico: Premier League 524'",
+          "Poca esperienza: 780' nello storico"
+        ],
+        "Pote": [
+          "Storico: Liga Portugal 2870'"
+        ]
+      },
+      "derby": false,
+      "src": "provv",
+      "comp": "sa"
+    }
+  ]
+}

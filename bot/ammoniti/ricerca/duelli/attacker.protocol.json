@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "fixedBeforeCandidateEvaluation": true,
+  "purpose": "Valutare se il tasso storico di cartellini temporalmente associati a falli sugli avversari aggiunge informazione alla componente FotMob ricostruita senza medie future.",
+  "development": ["2022/2023", "2023/2024", "2024/2025"],
+  "retrospectiveDiagnostics": ["2025/2026", "2026/2027"],
+  "diagnosticsWarning": "Queste stagioni sono già state consultate nelle fasi precedenti; non sono una verifica cieca. Nessuna ricerca iterativa di parametri su questi risultati.",
+  "fitting": {"train":"stagioni precedenti alla stagione valutata", "ridge":2, "availabilityBufferSeconds":10800, "positionMode":"historical"},
+  "commonCoverageControls": ["conversionCoverage", "per90Coverage", "positionCoverage"],
+  "candidates": {
+    "conversione": {"signal":"conversionSignal", "shrinkFouls":50},
+    "per90": {"signal":"per90Signal", "shrinkMinutes":900}
+  },
+  "quality": {
+    "conversion": "almeno 90% coppie trusted e almeno 90% coppie mappate, audit cartellini coerente; censura trial con cartellino vicino non attribuibile",
+    "per90": "almeno 95% coppie trusted e mappate, totali contabili entro1, audit cartellini coerente e tutti i gialli attribuiti a una coppia o esplicitamente non da fallo",
+    "unknown": "cronaca mancante, identità dubbia o cartellino non attribuito non diventano zeri di esposizione",
+    "cards": "associazione temporale entro30s e stesso autore/periodo, non prova della causalità"
+  },
+  "selection": {"minLoglossGain":0.0002,"requireTop3NotWorse":true,"comparisons":["baseline temporale", "baseline temporale con soli indicatori di copertura"],"selectionData":"solo sviluppo"},
+  "deployment": "Nessuna promozione automatica: confronto solo componente FotMob, non fusione Sofascore/quote o calibrazione finale. Occorre successiva verifica prospettica del sistema completo.",
+  "futureTest": "Archiviare, per nuove gare dopo questo studio, feature e pronostici prima del calcio d'inizio senza modificarli dopo; non riciclare gli anni già consultati come holdout mai visto."
+}

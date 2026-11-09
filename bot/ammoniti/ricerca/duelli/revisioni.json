@@ -1,0 +1,1901 @@
+[
+  {
+    "matchId": "401915310",
+    "partita": "Sporting CP at Shakhtar Donetsk",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915310",
+    "id": "54761630",
+    "minute": "32'",
+    "people": [
+      {
+        "id": "272722",
+        "name": "Luis Suárez",
+        "side": "away"
+      },
+      {
+        "id": "226181",
+        "name": "Mykola Matviyenko",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Foul by Luis Suárez (Sporting Lisbon).",
+      "Mykola Matviienko (Shakhtar Donetsk) wins a free kick in the defensive half."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "401915310",
+    "partita": "Sporting CP at Shakhtar Donetsk",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915310",
+    "id": "54761652",
+    "minute": "34'",
+    "people": [
+      {
+        "id": "313078",
+        "name": "Pedrinho",
+        "side": "home"
+      },
+      {
+        "id": "296969",
+        "name": "Geny Catamo",
+        "side": "away"
+      }
+    ],
+    "texts": [
+      "Geny Catamo (Sporting Lisbon) wins a free kick on the right wing.",
+      "Foul by Pedro Henrique (Shakhtar Donetsk)."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "401915310",
+    "partita": "Sporting CP at Shakhtar Donetsk",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915310",
+    "id": "54762034",
+    "minute": "43'",
+    "people": [
+      {
+        "id": "313078",
+        "name": "Pedrinho",
+        "side": "home"
+      },
+      {
+        "id": "296969",
+        "name": "Geny Catamo",
+        "side": "away"
+      }
+    ],
+    "texts": [
+      "Geny Catamo (Sporting Lisbon) wins a free kick in the defensive half.",
+      "Foul by Pedro Henrique (Shakhtar Donetsk)."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "401915310",
+    "partita": "Sporting CP at Shakhtar Donetsk",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915310",
+    "id": "54763246",
+    "minute": "64'",
+    "people": [
+      {
+        "id": "287025",
+        "name": "Maxi Araújo",
+        "side": "away"
+      },
+      {
+        "id": "359420",
+        "name": "Alisson Santana",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Alisson Santana (Shakhtar Donetsk) wins a free kick on the right wing.",
+      "Foul by Gonçalo Inácio (Sporting Lisbon)."
+    ],
+    "problems": [
+      "testo_indica_altro_giocatore"
+    ]
+  },
+  {
+    "matchId": "401915310",
+    "partita": "Sporting CP at Shakhtar Donetsk",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915310",
+    "id": "54763606",
+    "minute": "78'",
+    "people": [
+      {
+        "id": "296969",
+        "name": "Geny Catamo",
+        "side": "away"
+      },
+      {
+        "id": "361629",
+        "name": "Newertton",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Foul by Geny Catamo (Sporting Lisbon).",
+      "Newerton (Shakhtar Donetsk) wins a free kick on the left wing."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "401915310",
+    "partita": "Sporting CP at Shakhtar Donetsk",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915310",
+    "id": "54763755",
+    "minute": "84'",
+    "people": [
+      {
+        "id": "276070",
+        "name": "Valeriy Bondar",
+        "side": "home"
+      },
+      {
+        "id": "272722",
+        "name": "Luis Suárez",
+        "side": "away"
+      }
+    ],
+    "texts": [
+      "Luis Suárez (Sporting Lisbon) wins a free kick in the defensive half.",
+      "Foul by Valerii Bondar (Shakhtar Donetsk)."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "401915310",
+    "partita": "Sporting CP at Shakhtar Donetsk",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915310",
+    "id": "54763968",
+    "minute": "88'",
+    "people": [
+      {
+        "id": "276070",
+        "name": "Valeriy Bondar",
+        "side": "home"
+      },
+      {
+        "id": "272722",
+        "name": "Luis Suárez",
+        "side": "away"
+      }
+    ],
+    "texts": [
+      "Luis Suárez (Sporting Lisbon) wins a free kick in the attacking half.",
+      "Foul by Valerii Bondar (Shakhtar Donetsk)."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "401915311",
+    "partita": "VfB Stuttgart at Galatasaray",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915311",
+    "id": "54761419",
+    "minute": "29'",
+    "people": [
+      {
+        "id": "218714",
+        "name": "Grischa Prömel",
+        "side": "away"
+      },
+      {
+        "id": "355113",
+        "name": "Alexey Batrakov",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Foul by Grischa Prömel (Stuttgart).",
+      "Aleksey Batrakov (Galatasaray) wins a free kick in the defensive half."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "401915311",
+    "partita": "VfB Stuttgart at Galatasaray",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915311",
+    "id": "54762239",
+    "minute": "45'+2'",
+    "people": [
+      {
+        "id": "403741",
+        "name": "Yanik Spalt",
+        "side": "away"
+      },
+      {
+        "id": "355113",
+        "name": "Alexey Batrakov",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Foul by Yanik Spalt (Stuttgart).",
+      "Aleksey Batrakov (Galatasaray) wins a free kick in the attacking half."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "401915311",
+    "partita": "VfB Stuttgart at Galatasaray",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915311",
+    "id": "54762765",
+    "minute": "48'",
+    "people": [
+      {
+        "id": "355113",
+        "name": "Alexey Batrakov",
+        "side": "home"
+      },
+      {
+        "id": "289322",
+        "name": "Ramon Hendriks",
+        "side": "away"
+      }
+    ],
+    "texts": [
+      "Ramon Hendriks (Stuttgart) wins a free kick in the defensive half.",
+      "Foul by Aleksey Batrakov (Galatasaray)."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "401915311",
+    "partita": "VfB Stuttgart at Galatasaray",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915311",
+    "id": "54762871",
+    "minute": "51'",
+    "people": [
+      {
+        "id": "355113",
+        "name": "Alexey Batrakov",
+        "side": "home"
+      },
+      {
+        "id": "336595",
+        "name": "Bilal El Khannouss",
+        "side": "away"
+      }
+    ],
+    "texts": [
+      "Bilal El Khannouss (Stuttgart) wins a free kick in the defensive half.",
+      "Foul by Aleksey Batrakov (Galatasaray)."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "401915311",
+    "partita": "VfB Stuttgart at Galatasaray",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915311",
+    "id": "54763238",
+    "minute": "61'",
+    "people": [
+      {
+        "id": "218714",
+        "name": "Grischa Prömel",
+        "side": "away"
+      },
+      {
+        "id": "355113",
+        "name": "Alexey Batrakov",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Foul by Grischa Prömel (Stuttgart).",
+      "Aleksey Batrakov (Galatasaray) wins a free kick in the attacking half."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "401915307",
+    "partita": "Internazionale at Feyenoord Rotterdam",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915307",
+    "id": "54774531",
+    "minute": "30'",
+    "people": [
+      {
+        "id": "313354",
+        "name": "Oussama Targhaline",
+        "side": "home"
+      },
+      {
+        "id": "194748",
+        "name": "Federico Dimarco",
+        "side": "away"
+      }
+    ],
+    "texts": [
+      "Federico Dimarco (Inter Milan) wins a free kick on the left wing.",
+      "Foul by Oussama Targhalline (Feyenoord)."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "401915307",
+    "partita": "Internazionale at Feyenoord Rotterdam",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915307",
+    "id": "54774753",
+    "minute": "32'",
+    "people": [
+      {
+        "id": "362674",
+        "name": "Pio Esposito",
+        "side": "away"
+      },
+      {
+        "id": "313354",
+        "name": "Oussama Targhaline",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Foul by Francesco Pio Esposito (Inter Milan).",
+      "Oussama Targhalline (Feyenoord) wins a free kick in the defensive half."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "401915307",
+    "partita": "Internazionale at Feyenoord Rotterdam",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915307",
+    "id": "54780454",
+    "minute": "48'",
+    "people": [
+      {
+        "id": "170785",
+        "name": "Hakan Çalhanoglu",
+        "side": "away"
+      },
+      {
+        "id": "313354",
+        "name": "Oussama Targhaline",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Foul by Nicolò Barella (Inter Milan).",
+      "Oussama Targhalline (Feyenoord) wins a free kick in the defensive half."
+    ],
+    "problems": [
+      "testo_indica_altro_giocatore",
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "401915307",
+    "partita": "Internazionale at Feyenoord Rotterdam",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915307",
+    "id": "54789336",
+    "minute": "86'",
+    "people": [
+      {
+        "id": "276279",
+        "name": "Tsuyoshi Watanabe",
+        "side": "home"
+      },
+      {
+        "id": "362674",
+        "name": "Pio Esposito",
+        "side": "away"
+      }
+    ],
+    "texts": [
+      "Francesco Pio Esposito (Inter Milan) wins a free kick in the defensive half.",
+      "Foul by Tsuyoshi Watanabe (Feyenoord)."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "401915307",
+    "partita": "Internazionale at Feyenoord Rotterdam",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915307",
+    "id": "54789342",
+    "minute": "87'",
+    "people": [
+      {
+        "id": "313354",
+        "name": "Oussama Targhaline",
+        "side": "home"
+      },
+      {
+        "id": "194748",
+        "name": "Federico Dimarco",
+        "side": "away"
+      }
+    ],
+    "texts": [
+      "Federico Dimarco (Inter Milan) wins a free kick in the defensive half.",
+      "Foul by Oussama Targhalline (Feyenoord)."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "401915307",
+    "partita": "Internazionale at Feyenoord Rotterdam",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915307",
+    "id": "54789382",
+    "minute": "88'",
+    "people": [
+      {
+        "id": "147625",
+        "name": "Henrikh Mkhitaryan",
+        "side": "away"
+      },
+      {
+        "id": "313354",
+        "name": "Oussama Targhaline",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Foul by Henrikh Mkhitaryan (Inter Milan).",
+      "Oussama Targhalline (Feyenoord) wins a free kick in the defensive half."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "401915307",
+    "partita": "Internazionale at Feyenoord Rotterdam",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915307",
+    "id": "54790025",
+    "minute": "90'+1'",
+    "people": [
+      {
+        "id": "362674",
+        "name": "Pio Esposito",
+        "side": "away"
+      },
+      {
+        "id": "332573",
+        "name": "Mika Mármol",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Foul by Francesco Pio Esposito (Inter Milan).",
+      "Mika Mármol (Feyenoord) wins a free kick in the defensive half."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "401915309",
+    "partita": "Paris Saint-Germain at Villarreal",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915309",
+    "id": "54775218",
+    "minute": "35'",
+    "people": [
+      {
+        "id": "337011",
+        "name": "Renato Veiga",
+        "side": "home"
+      },
+      {
+        "id": "248699",
+        "name": "Matvei Safonov",
+        "side": "away"
+      }
+    ],
+    "texts": [
+      "Foul by Renato Veiga (Villarreal).",
+      "Matvey Safonov (Paris Saint Germain) wins a free kick in the defensive half."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "401915384",
+    "partita": "Lille at Bodo/Glimt",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915384",
+    "id": "54770278",
+    "minute": "15'",
+    "people": [
+      {
+        "id": "345988",
+        "name": "Ngal'ayel Mukau",
+        "side": "away"
+      },
+      {
+        "id": "208353",
+        "name": "Sondre Brunstad Fet",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Sondre Fet (Bodø/Glimt) wins a free kick in the defensive half.",
+      "Foul by Ngal'ayel Mukau (Lille)."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "401915384",
+    "partita": "Lille at Bodo/Glimt",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915384",
+    "id": "54773954",
+    "minute": "30'",
+    "people": [
+      {
+        "id": "208353",
+        "name": "Sondre Brunstad Fet",
+        "side": "home"
+      },
+      {
+        "id": "345988",
+        "name": "Ngal'ayel Mukau",
+        "side": "away"
+      }
+    ],
+    "texts": [
+      "Foul by Sondre Fet (Bodø/Glimt).",
+      "Ngal'ayel Mukau (Lille) wins a free kick on the right wing."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "401915384",
+    "partita": "Lille at Bodo/Glimt",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915384",
+    "id": "54775965",
+    "minute": "39'",
+    "people": [
+      {
+        "id": "297157",
+        "name": "Dilane Bakwa",
+        "side": "away"
+      },
+      {
+        "id": "208353",
+        "name": "Sondre Brunstad Fet",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Sondre Fet (Bodø/Glimt) wins a free kick in the defensive half.",
+      "Foul by Dilane Bakwa (Lille)."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "401915384",
+    "partita": "Lille at Bodo/Glimt",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915384",
+    "id": "54786295",
+    "minute": "76'",
+    "people": [
+      {
+        "id": "208353",
+        "name": "Sondre Brunstad Fet",
+        "side": "home"
+      },
+      {
+        "id": "318779",
+        "name": "Hákon Haraldsson",
+        "side": "away"
+      }
+    ],
+    "texts": [
+      "Hákon Haraldsson (Lille) wins a free kick in the defensive half.",
+      "Foul by Sondre Fet (Bodø/Glimt)."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "401915384",
+    "partita": "Lille at Bodo/Glimt",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915384",
+    "id": "54788638",
+    "minute": "88'",
+    "people": [
+      {
+        "id": "88965",
+        "name": "Olivier Giroud",
+        "side": "away"
+      },
+      {
+        "id": "217655",
+        "name": "Nikita Haykin",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Foul by Olivier Giroud (Lille).",
+      "Nikita Haikin (Bodø/Glimt) wins a free kick in the defensive half."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "401915385",
+    "partita": "Slovan Bratislava at LASK Linz",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915385",
+    "id": "54784246",
+    "minute": "65'",
+    "people": [
+      {
+        "id": "340760",
+        "name": "Moses Usor",
+        "side": "home"
+      },
+      {
+        "id": "340556",
+        "name": "Sandro Cruz",
+        "side": "away"
+      }
+    ],
+    "texts": [
+      "Sandro Cruz (Slovan Bratislava) wins a free kick in the defensive half.",
+      "Foul by Krystof Danek (LASK)."
+    ],
+    "problems": [
+      "testo_indica_altro_giocatore"
+    ]
+  },
+  {
+    "matchId": "401915382",
+    "partita": "Liverpool at Fenerbahce",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915382",
+    "id": "54800339",
+    "minute": "9'",
+    "people": [
+      {
+        "id": "305629",
+        "name": "Ismail Yüksek",
+        "side": "home"
+      },
+      {
+        "id": "249299",
+        "name": "Alexis Mac Allister",
+        "side": "away"
+      }
+    ],
+    "texts": [
+      "Foul by Mason Greenwood (Fenerbahce).",
+      "Alexis Mac Allister (Liverpool) wins a free kick in the defensive half."
+    ],
+    "problems": [
+      "testo_indica_altro_giocatore"
+    ]
+  },
+  {
+    "matchId": "401915382",
+    "partita": "Liverpool at Fenerbahce",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=401915382",
+    "id": "54800538",
+    "minute": "16'",
+    "people": [
+      {
+        "id": "222670",
+        "name": "Nélson Semedo",
+        "side": "home"
+      },
+      {
+        "id": "226177",
+        "name": "Kostas Tsimikas",
+        "side": "away"
+      }
+    ],
+    "texts": [
+      "Foul by Mason Greenwood (Fenerbahce).",
+      "Kostas Tsimikas (Liverpool) wins a free kick in the defensive half."
+    ],
+    "problems": [
+      "testo_indica_altro_giocatore"
+    ]
+  },
+  {
+    "matchId": "757707",
+    "partita": "Arsenal at Slavia Prague",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757707",
+    "id": "46327897",
+    "minute": "77'",
+    "people": [
+      {
+        "id": "293919",
+        "name": "Muhammed-Cham Saracevic",
+        "side": "home"
+      },
+      {
+        "id": "397263",
+        "name": "Max Dowman",
+        "side": "away"
+      }
+    ],
+    "texts": [
+      "Foul by Muhammed Cham (Slavia Prague).",
+      "Max Dowman (Arsenal) wins a free kick on the right wing."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "757707",
+    "partita": "Arsenal at Slavia Prague",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757707",
+    "id": "46327986",
+    "minute": "90'+3'",
+    "people": [
+      {
+        "id": "343937",
+        "name": "David Doudera",
+        "side": "home"
+      },
+      {
+        "id": "390975",
+        "name": "Andre Annous",
+        "side": "away"
+      }
+    ],
+    "texts": [
+      "Andre Harriman-Annous (Arsenal) wins a free kick on the left wing.",
+      "Foul by David Doudera (Slavia Prague)."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "757710",
+    "partita": "Sporting CP at Juventus",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757710",
+    "id": "46328642",
+    "minute": "10'",
+    "people": [
+      {
+        "id": "290129",
+        "name": "Pierre Kalulu",
+        "side": "home"
+      },
+      {
+        "id": "262591",
+        "name": "Pedro Gonçalves",
+        "side": "away"
+      }
+    ],
+    "texts": [
+      "Foul by Pierre Kalulu (Juventus).",
+      "Pote (Sporting Lisbon) wins a free kick in the attacking half."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "757710",
+    "partita": "Sporting CP at Juventus",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757710",
+    "id": "46329306",
+    "minute": "35'",
+    "people": [
+      {
+        "id": "217538",
+        "name": "Manuel Locatelli",
+        "side": "home"
+      },
+      {
+        "id": "262591",
+        "name": "Pedro Gonçalves",
+        "side": "away"
+      }
+    ],
+    "texts": [
+      "Foul by Manuel Locatelli (Juventus).",
+      "Pote (Sporting Lisbon) wins a free kick in the defensive half."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "757710",
+    "partita": "Sporting CP at Juventus",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757710",
+    "id": "46330167",
+    "minute": "59'",
+    "people": [
+      {
+        "id": "274159",
+        "name": "Francisco Trincão",
+        "side": "away"
+      },
+      {
+        "id": "308029",
+        "name": "Andrea Cambiaso",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Andrea Cambiaso (Juventus) wins a free kick on the left wing.",
+      "Foul by Trincão (Sporting Lisbon)."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "757712",
+    "partita": "AS Monaco at Bodo/Glimt",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757712",
+    "id": "46329056",
+    "minute": "24'",
+    "people": [
+      {
+        "id": "214401",
+        "name": "Thilo Kehrer",
+        "side": "away"
+      },
+      {
+        "id": "208353",
+        "name": "Sondre Brunstad Fet",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Foul by Thilo Kehrer (Monaco).",
+      "Sondre Fet (Bodø/Glimt) wins a free kick in the attacking half."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "757712",
+    "partita": "AS Monaco at Bodo/Glimt",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757712",
+    "id": "46329367",
+    "minute": "37'",
+    "people": [
+      {
+        "id": "238088",
+        "name": "Fredrik André Bjørkan",
+        "side": "home"
+      },
+      {
+        "id": "214401",
+        "name": "Thilo Kehrer",
+        "side": "away"
+      }
+    ],
+    "texts": [
+      "Foul by Fredrik Bjørkan (Bodø/Glimt).",
+      "Thilo Kehrer (Monaco) wins a free kick in the defensive half."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "757712",
+    "partita": "AS Monaco at Bodo/Glimt",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757712",
+    "id": "46329859",
+    "minute": "47'",
+    "people": [
+      {
+        "id": "238088",
+        "name": "Fredrik André Bjørkan",
+        "side": "home"
+      },
+      {
+        "id": "329690",
+        "name": "Maghnes Akliouche",
+        "side": "away"
+      }
+    ],
+    "texts": [
+      "Foul by Fredrik Bjørkan (Bodø/Glimt).",
+      "Maghnes Akliouche (Monaco) wins a free kick in the defensive half."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "757712",
+    "partita": "AS Monaco at Bodo/Glimt",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757712",
+    "id": "46330119",
+    "minute": "54'",
+    "people": [
+      {
+        "id": "208518",
+        "name": "Mamadou Coulibaly",
+        "side": "away"
+      },
+      {
+        "id": "208353",
+        "name": "Sondre Brunstad Fet",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Foul by Mamadou Coulibaly (Monaco).",
+      "Sondre Fet (Bodø/Glimt) wins a free kick in the defensive half."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "757712",
+    "partita": "AS Monaco at Bodo/Glimt",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757712",
+    "id": "46330165",
+    "minute": "56'",
+    "people": [
+      {
+        "id": "208518",
+        "name": "Mamadou Coulibaly",
+        "side": "away"
+      },
+      {
+        "id": "208353",
+        "name": "Sondre Brunstad Fet",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Foul by Mamadou Coulibaly (Monaco).",
+      "Sondre Fet (Bodø/Glimt) wins a free kick in the attacking half."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "757712",
+    "partita": "AS Monaco at Bodo/Glimt",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757712",
+    "id": "46330282",
+    "minute": "61'",
+    "people": [
+      {
+        "id": "214401",
+        "name": "Thilo Kehrer",
+        "side": "away"
+      },
+      {
+        "id": "208353",
+        "name": "Sondre Brunstad Fet",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Foul by Thilo Kehrer (Monaco).",
+      "Sondre Fet (Bodø/Glimt) wins a free kick on the left wing."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "757712",
+    "partita": "AS Monaco at Bodo/Glimt",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757712",
+    "id": "46330798",
+    "minute": "78'",
+    "people": [
+      {
+        "id": "238088",
+        "name": "Fredrik André Bjørkan",
+        "side": "home"
+      },
+      {
+        "id": "240660",
+        "name": "Jordan Teze",
+        "side": "away"
+      }
+    ],
+    "texts": [
+      "Foul by Fredrik Bjørkan (Bodø/Glimt).",
+      "Jordan Teze (Monaco) wins a free kick in the defensive half."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "757716",
+    "partita": "Chelsea at FK Qarabag",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757716",
+    "id": "46332293",
+    "minute": "9'",
+    "people": [
+      {
+        "id": "339879",
+        "name": "Jamie Gittens",
+        "side": "away"
+      },
+      {
+        "id": "238827",
+        "name": "Kady",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Foul by Jamie Gittens (Chelsea).",
+      "Kady Borges (Qarabag) wins a free kick in the defensive half."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "757716",
+    "partita": "Chelsea at FK Qarabag",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757716",
+    "id": "46332313",
+    "minute": "12'",
+    "people": [
+      {
+        "id": "259910",
+        "name": "Marc Cucurella",
+        "side": "away"
+      },
+      {
+        "id": "238827",
+        "name": "Kady",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Foul by Marc Cucurella (Chelsea).",
+      "Kady Borges (Qarabag) wins a free kick in the defensive half."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "757716",
+    "partita": "Chelsea at FK Qarabag",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757716",
+    "id": "46332347",
+    "minute": "26'",
+    "people": [
+      {
+        "id": "259910",
+        "name": "Marc Cucurella",
+        "side": "away"
+      },
+      {
+        "id": "238827",
+        "name": "Kady",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Foul by Marc Cucurella (Chelsea).",
+      "Kady Borges (Qarabag) wins a free kick in the defensive half."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "757716",
+    "partita": "Chelsea at FK Qarabag",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757716",
+    "id": "46332614",
+    "minute": "75'",
+    "people": [
+      {
+        "id": "231198",
+        "name": "Tosin Adarabioyo",
+        "side": "away"
+      },
+      {
+        "id": "346634",
+        "name": "Nariman Akhundzade",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Foul by Tosin Adarabioyo (Chelsea).",
+      "Nariman Akhundzada (Qarabag) wins a free kick in the defensive half."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "757716",
+    "partita": "Chelsea at FK Qarabag",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/summary?event=757716",
+    "id": "46332696",
+    "minute": "90'",
+    "people": [
+      {
+        "id": "289877",
+        "name": "Moisés Caicedo",
+        "side": "away"
+      },
+      {
+        "id": "346634",
+        "name": "Nariman Akhundzade",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Foul by Moisés Caicedo (Chelsea).",
+      "Nariman Akhundzada (Qarabag) wins a free kick in the defensive half."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "401874798",
+    "partita": "Monza at Bologna",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874798",
+    "id": "54542320",
+    "minute": "46'",
+    "people": [
+      {
+        "id": "376261",
+        "name": "Manga Foe Ondoa",
+        "side": "away"
+      },
+      {
+        "id": "287790",
+        "name": "Nicolò Cambiaghi",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Foul by Manga Foe Ondoa (Monza).",
+      "Lewis Ferguson (Bologna) wins a free kick in the defensive half."
+    ],
+    "problems": [
+      "testo_indica_altro_giocatore"
+    ]
+  },
+  {
+    "matchId": "401874798",
+    "partita": "Monza at Bologna",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874798",
+    "id": "54549551",
+    "minute": "75'",
+    "people": [
+      {
+        "id": "238885",
+        "name": "Patrick Cutrone",
+        "side": "away"
+      },
+      {
+        "id": "304222",
+        "name": "Arthur Theate",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Foul by Saba Goglichidze (Monza).",
+      "Arthur Theate (Bologna) wins a free kick in the defensive half."
+    ],
+    "problems": [
+      "testo_indica_altro_giocatore"
+    ]
+  },
+  {
+    "matchId": "401874990",
+    "partita": "AS Roma at Udinese",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874990",
+    "id": "54571284",
+    "minute": "23'",
+    "people": [
+      {
+        "id": "150081",
+        "name": "Christian Kabasele",
+        "side": "home"
+      },
+      {
+        "id": "259481",
+        "name": "Donyell Malen",
+        "side": "away"
+      }
+    ],
+    "texts": [
+      "Foul by Lennon Miller (Udinese).",
+      "Donyell Malen (Roma) wins a free kick on the left wing."
+    ],
+    "problems": [
+      "testo_indica_altro_giocatore"
+    ]
+  },
+  {
+    "matchId": "401874782",
+    "partita": "Torino at Frosinone",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874782",
+    "id": "54651130",
+    "minute": "79'",
+    "people": [
+      {
+        "id": "364685",
+        "name": "Luis Hasa",
+        "side": "home"
+      },
+      {
+        "id": "330707",
+        "name": "Emirhan Ilkhan",
+        "side": "away"
+      }
+    ],
+    "texts": [
+      "Foul by Daniel Bîrligea (Frosinone).",
+      "Emirhan Ilkhan (Torino) wins a free kick in the defensive half."
+    ],
+    "problems": [
+      "testo_indica_altro_giocatore"
+    ]
+  },
+  {
+    "matchId": "401874782",
+    "partita": "Torino at Frosinone",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874782",
+    "id": "54653457",
+    "minute": "90'+4'",
+    "people": [
+      {
+        "id": "364685",
+        "name": "Luis Hasa",
+        "side": "home"
+      },
+      {
+        "id": "330707",
+        "name": "Emirhan Ilkhan",
+        "side": "away"
+      }
+    ],
+    "texts": [
+      "Foul by Luis Hasa (Frosinone).",
+      "Nathan Patterson (Torino) wins a free kick in the defensive half."
+    ],
+    "problems": [
+      "testo_indica_altro_giocatore"
+    ]
+  },
+  {
+    "matchId": "401874983",
+    "partita": "Cagliari at Lazio",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874983",
+    "id": "54643797",
+    "minute": "44'",
+    "people": [
+      {
+        "id": "290545",
+        "name": "Daniel Maldini",
+        "side": "away"
+      },
+      {
+        "id": "330041",
+        "name": "Romano Floriani",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Foul by Daniel Maldini (Cagliari).",
+      "Romano Floriani Mussolini (Lazio) wins a free kick in the defensive half."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "401874983",
+    "partita": "Cagliari at Lazio",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874983",
+    "id": "54646625",
+    "minute": "51'",
+    "people": [
+      {
+        "id": "418819",
+        "name": "Paul Mendy",
+        "side": "away"
+      },
+      {
+        "id": "330041",
+        "name": "Romano Floriani",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Foul by Paul Mendy (Cagliari).",
+      "Romano Floriani Mussolini (Lazio) wins a free kick in the defensive half."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "401874983",
+    "partita": "Cagliari at Lazio",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874983",
+    "id": "54649134",
+    "minute": "69'",
+    "people": [
+      {
+        "id": "330041",
+        "name": "Romano Floriani",
+        "side": "home"
+      },
+      {
+        "id": "418819",
+        "name": "Paul Mendy",
+        "side": "away"
+      }
+    ],
+    "texts": [
+      "Paul Mendy (Cagliari) wins a free kick on the left wing.",
+      "Foul by Romano Floriani Mussolini (Lazio)."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "401874968",
+    "partita": "Genoa at Lecce",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874968",
+    "id": "54669596",
+    "minute": "68'",
+    "people": [
+      {
+        "id": "212476",
+        "name": "Kingsley Ehizibue",
+        "side": "away"
+      },
+      {
+        "id": "330550",
+        "name": "Amar Ahmed",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Amar Fatah (Lecce) wins a free kick on the left wing.",
+      "Foul by Kingsley Ehizibue (Genoa)."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "401874968",
+    "partita": "Genoa at Lecce",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874968",
+    "id": "54670375",
+    "minute": "78'",
+    "people": [
+      {
+        "id": "364761",
+        "name": "Alessandro Marcandalli",
+        "side": "away"
+      },
+      {
+        "id": "3123406",
+        "name": "Francisco Esteban Sánchez",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Foul by Alessandro Marcandalli (Genoa).",
+      "Paco Esteban (Lecce) wins a free kick on the left wing."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "401874968",
+    "partita": "Genoa at Lecce",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874968",
+    "id": "54671195",
+    "minute": "88'",
+    "people": [
+      {
+        "id": "330550",
+        "name": "Amar Ahmed",
+        "side": "home"
+      },
+      {
+        "id": "324256",
+        "name": "Mikael Ellertsson",
+        "side": "away"
+      }
+    ],
+    "texts": [
+      "Mikael Ellertsson (Genoa) wins a free kick in the defensive half.",
+      "Foul by Amar Fatah (Lecce)."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "401874968",
+    "partita": "Genoa at Lecce",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874968",
+    "id": "54671358",
+    "minute": "90'+4'",
+    "people": [
+      {
+        "id": "222446",
+        "name": "Djibril Sow",
+        "side": "away"
+      },
+      {
+        "id": "330550",
+        "name": "Amar Ahmed",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Foul by Djibril Sow (Genoa).",
+      "Amar Fatah (Lecce) wins a free kick in the defensive half."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "401874963",
+    "partita": "Fiorentina at Sassuolo",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874963",
+    "id": "54721006",
+    "minute": "40'",
+    "people": [
+      {
+        "id": "347018",
+        "name": "Sulemana",
+        "side": "home"
+      },
+      {
+        "id": "367861",
+        "name": "Álex Jiménez",
+        "side": "away"
+      }
+    ],
+    "texts": [
+      "Álex Jiménez (Fiorentina) wins a free kick on the right wing.",
+      "Foul by Ibrahim Sulemana (Sassuolo)."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "401874971",
+    "partita": "Parma at Atalanta",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874971",
+    "id": "54727779",
+    "minute": "36'",
+    "people": [
+      {
+        "id": "323118",
+        "name": "Giovanni Fabbian",
+        "side": "away"
+      },
+      {
+        "id": "118279",
+        "name": "Jon Rowe",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Foul by Giovanni Fabbian (Parma).",
+      "Jonathan Rowe (Atalanta) wins a free kick in the attacking half."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "401874971",
+    "partita": "Parma at Atalanta",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=401874971",
+    "id": "54731635",
+    "minute": "64'",
+    "people": [
+      {
+        "id": "118279",
+        "name": "Jon Rowe",
+        "side": "home"
+      },
+      {
+        "id": "218857",
+        "name": "Vincent Sierro",
+        "side": "away"
+      }
+    ],
+    "texts": [
+      "Vincent Sierro (Parma) wins a free kick in the defensive half.",
+      "Foul by Jonathan Rowe (Atalanta)."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "736880",
+    "partita": "Juventus at Cremonese",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=736880",
+    "id": "46299603",
+    "minute": "30'",
+    "people": [
+      {
+        "id": "330041",
+        "name": "Romano Floriani",
+        "side": "home"
+      },
+      {
+        "id": "308029",
+        "name": "Andrea Cambiaso",
+        "side": "away"
+      }
+    ],
+    "texts": [
+      "Andrea Cambiaso (Juventus) wins a free kick in the defensive half.",
+      "Foul by Romano Floriani Mussolini (Cremonese)."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "736883",
+    "partita": "Internazionale at Hellas Verona",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=736883",
+    "id": "46305741",
+    "minute": "65'",
+    "people": [
+      {
+        "id": "193977",
+        "name": "Roberto Gagliardini",
+        "side": "home"
+      },
+      {
+        "id": "362674",
+        "name": "Pio Esposito",
+        "side": "away"
+      }
+    ],
+    "texts": [
+      "Foul by Roberto Gagliardini (Verona).",
+      "Francesco Pio Esposito (Inter Milan) wins a free kick in the attacking half."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "736883",
+    "partita": "Internazionale at Hellas Verona",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=736883",
+    "id": "46305769",
+    "minute": "68'",
+    "people": [
+      {
+        "id": "362674",
+        "name": "Pio Esposito",
+        "side": "away"
+      },
+      {
+        "id": "286128",
+        "name": "Armel Bella-Kotchap",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Armel Bella-Kotchap (Verona) wins a free kick in the defensive half.",
+      "Foul by Francesco Pio Esposito (Inter Milan)."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "736879",
+    "partita": "Lecce at Fiorentina",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=736879",
+    "id": "46306944",
+    "minute": "2'",
+    "people": [
+      {
+        "id": "259916",
+        "name": "José Antonio Morente",
+        "side": "away"
+      },
+      {
+        "id": "384300",
+        "name": "Niccolò Fortini",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Foul by Tete Morente (Lecce).",
+      "Niccolò Fortini (Fiorentina) wins a free kick in the defensive half."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "736879",
+    "partita": "Lecce at Fiorentina",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=736879",
+    "id": "46307674",
+    "minute": "41'",
+    "people": [
+      {
+        "id": "259916",
+        "name": "José Antonio Morente",
+        "side": "away"
+      },
+      {
+        "id": "255650",
+        "name": "Marin Pongracic",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Foul by Tete Morente (Lecce).",
+      "Marin Pongracic (Fiorentina) wins a free kick in the defensive half."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "736879",
+    "partita": "Lecce at Fiorentina",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=736879",
+    "id": "46308391",
+    "minute": "65'",
+    "people": [
+      {
+        "id": "259916",
+        "name": "José Antonio Morente",
+        "side": "away"
+      },
+      {
+        "id": "384300",
+        "name": "Niccolò Fortini",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Foul by Tete Morente (Lecce).",
+      "Niccolò Fortini (Fiorentina) wins a free kick on the left wing."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "736879",
+    "partita": "Lecce at Fiorentina",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=736879",
+    "id": "46308748",
+    "minute": "83'",
+    "people": [
+      {
+        "id": "259916",
+        "name": "José Antonio Morente",
+        "side": "away"
+      },
+      {
+        "id": "168453",
+        "name": "Dodô",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Dodô (Fiorentina) wins a free kick in the attacking half.",
+      "Foul by Tete Morente (Lecce)."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "736882",
+    "partita": "Pisa at Torino",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=736882",
+    "id": "46308133",
+    "minute": "54'",
+    "people": [
+      {
+        "id": "207874",
+        "name": "Stefano Moreo",
+        "side": "away"
+      },
+      {
+        "id": "239120",
+        "name": "Adrian Ismajli",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Ardian Ismajli (Torino) wins a free kick in the defensive half.",
+      "Foul by Stefano Moreo (Pisa)."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "736882",
+    "partita": "Pisa at Torino",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=736882",
+    "id": "46308295",
+    "minute": "61'",
+    "people": [
+      {
+        "id": "129285",
+        "name": "Marcus Holmgren Pedersen",
+        "side": "home"
+      },
+      {
+        "id": "362776",
+        "name": "Ebenezer Akinsanmiro",
+        "side": "away"
+      }
+    ],
+    "texts": [
+      "Ebenezer Akinsanmiro (Pisa) wins a free kick in the defensive half.",
+      "Foul by Marcus Pedersen (Torino)."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "736882",
+    "partita": "Pisa at Torino",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=736882",
+    "id": "46309148",
+    "minute": "90'+4'",
+    "people": [
+      {
+        "id": "129285",
+        "name": "Marcus Holmgren Pedersen",
+        "side": "home"
+      },
+      {
+        "id": "245623",
+        "name": "Michel Aebischer",
+        "side": "away"
+      }
+    ],
+    "texts": [
+      "Foul by Marcus Pedersen (Torino).",
+      "Michel Aebischer (Pisa) wins a free kick in the defensive half."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "736874",
+    "partita": "Bologna at Parma",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=736874",
+    "id": "46310807",
+    "minute": "23'",
+    "people": [
+      {
+        "id": "276653",
+        "name": "Adrián Bernabé",
+        "side": "home"
+      },
+      {
+        "id": "118279",
+        "name": "Jon Rowe",
+        "side": "away"
+      }
+    ],
+    "texts": [
+      "Foul by Adrián Bernabé (Parma).",
+      "Jonathan Rowe (Bologna) wins a free kick in the attacking half."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "736874",
+    "partita": "Bologna at Parma",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=736874",
+    "id": "46311856",
+    "minute": "53'",
+    "people": [
+      {
+        "id": "297751",
+        "name": "Oliver Sørensen",
+        "side": "home"
+      },
+      {
+        "id": "118279",
+        "name": "Jon Rowe",
+        "side": "away"
+      }
+    ],
+    "texts": [
+      "Foul by Oliver Sørensen (Parma).",
+      "Jonathan Rowe (Bologna) wins a free kick on the left wing."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  },
+  {
+    "matchId": "736874",
+    "partita": "Bologna at Parma",
+    "source": "https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/summary?event=736874",
+    "id": "46312124",
+    "minute": "72'",
+    "people": [
+      {
+        "id": "118279",
+        "name": "Jon Rowe",
+        "side": "away"
+      },
+      {
+        "id": "396009",
+        "name": "Sascha Britschgi",
+        "side": "home"
+      }
+    ],
+    "texts": [
+      "Foul by Jonathan Rowe (Bologna).",
+      "Sascha Britschgi (Parma) wins a free kick in the defensive half."
+    ],
+    "problems": [
+      "grafia_o_alias_non_verificato"
+    ]
+  }
+]

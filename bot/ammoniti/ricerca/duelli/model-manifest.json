@@ -1,0 +1,45 @@
+{
+  "ref": "8824f5e94d1198fb88f93493e171e1d401a21b1a",
+  "files": [
+    {
+      "path": "bot/ammoniti/fm_model.js",
+      "sha": "9f1443e22cd5d2789f450fca092596688a2eabbc",
+      "canonicalSha256": "ddc26d05e5f58a5ec5da7ff01646193c3691b72e45f607f4845d823f65d82e09"
+    },
+    {
+      "path": "bot/ammoniti/cup_model.js",
+      "sha": "e49067771e881a8e18d5cae1945cded011235ae3",
+      "canonicalSha256": "9bd5b47e53454967bc5996ac389ecf837b37deeb57c8cd70d4572ebcf8523e91"
+    },
+    {
+      "path": "bot/ammoniti/cup_model2.js",
+      "sha": "1d68ed8d9790c95a6a562f2e765f2f2eb9580ecc",
+      "canonicalSha256": "4512082aa122ad51aab65e5ea182325b90157e31f222137e1a0904ceb1e33641"
+    },
+    {
+      "path": "bot/ammoniti/ext_model.js",
+      "sha": "5b718f3e912876347e7ad68b87c4ea798d6c1f1c",
+      "canonicalSha256": "e593c129157c3afb1d54f3ae4522ea31016a53f852a65db67d10631e7db435bb"
+    },
+    {
+      "path": "bot/ammoniti/cup_x2.js",
+      "sha": "c4b6b18be17453244d137600a396c838f9cb860c",
+      "canonicalSha256": "916af21776eb26ef6aea7988ca41ebb35a532672ddf626ed0f2a03ec84ae4d93"
+    },
+    {
+      "path": "bot/ammoniti/deep_feats.js",
+      "sha": "9cac08fad9b354bb3856fd7b145d9f0bc8c84d0b",
+      "canonicalSha256": "3766992e3e09f93979b55d0c5a6c33280f4744b6368a564270fe8baae347e178"
+    },
+    {
+      "path": "bot/ammoniti/cup_x3.js",
+      "sha": "c5923666d6d1f819233be502c4da34b1ffe2f3e7",
+      "canonicalSha256": "555abc2dddba286757ec87a28e83497aa12bc508129a08fcc58e737d2e34c233"
+    },
+    {
+      "path": "bot/ammoniti/amm_boot.js",
+      "sha": "f88dfb724ab480d24a69488b5636792244d181df",
+      "canonicalSha256": "490bb96f87f5364870d88b256d925ce9bb230c9ae143e657563f1d0b6f972592"
+    }
+  ]
+}

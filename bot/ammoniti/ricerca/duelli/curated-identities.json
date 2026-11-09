@@ -1,0 +1,163 @@
+{
+  "schema": 1,
+  "reviewedOn": "2026-11-05",
+  "scope": "Alias per id ESPN con riscontro anagrafico e fonti di club, federazioni o schede statistiche; non sostituiscono identità discordanti negli eventi.",
+  "entries": [
+    {
+      "id": "313078",
+      "names": [
+        "Pedro Henrique",
+        "Pedro Henrique Azevedo Pereira"
+      ],
+      "birthDate": "2002-07-11",
+      "source": "https://shakhtar.com/en/news/2023/july/19_news/19_pedrinho-is-shakhtar-player/",
+      "verification": "Nome completo, soprannome, ruolo e data di nascita nella presentazione del club."
+    },
+    {
+      "id": "355113",
+      "names": [
+        "Aleksey Batrakov"
+      ],
+      "birthDate": "2005-06-09",
+      "source": "https://www.galatasaray.org/en/p/83-aleksey-batrakov/3741",
+      "verification": "Grafia e data di nascita della scheda del club."
+    },
+    {
+      "id": "313354",
+      "names": [
+        "Oussama Targhalline"
+      ],
+      "birthDate": "2002-05-20",
+      "source": "https://eredivisie.com/clubs/feyenoord/players/oussama-targhalline/",
+      "verification": "Grafia, squadra e data di nascita nel profilo della lega."
+    },
+    {
+      "id": "362674",
+      "names": [
+        "Francesco Pio Esposito"
+      ],
+      "birthDate": "2005-06-28",
+      "source": "https://www.inter.it/it/squadra/prima-squadra/giocatore/francesco-pio-esposito",
+      "verification": "Nome esteso e data di nascita nella biografia del club."
+    },
+    {
+      "id": "118279",
+      "names": [
+        "Jonathan Rowe"
+      ],
+      "birthDate": "2003-04-30",
+      "source": "https://www.atalanta.it/news/benvenuto-jonathan-rowe",
+      "verification": "Nome e data di nascita nella presentazione del club; continuità dal Bologna."
+    },
+    {
+      "id": "259916",
+      "names": [
+        "Tete Morente",
+        "José Antonio Morente Oliva"
+      ],
+      "birthDate": "1996-12-04",
+      "source": "https://uslecce.it/tete-morente-e-un-calciatore-del-lecce/",
+      "verification": "Il comunicato collega esplicitamente Tete e José Antonio Morente Oliva, classe 1996; la data completa è verificata nel profilo ESPN."
+    },
+    {
+      "id": "239120",
+      "names": [
+        "Ardian Ismajli"
+      ],
+      "birthDate": "1996-09-30",
+      "source": "https://www.torinofc.it/prima-squadra/2026-2027/difensore/ismajli-ardian",
+      "verification": "Nome e data di nascita nella scheda del club."
+    },
+    {
+      "id": "276070",
+      "names": [
+        "Valerii Bondar"
+      ],
+      "birthDate": "1999-02-27",
+      "source": "https://www.sofascore.com/football/player/valerii-bondar/904850",
+      "verification": "Grafia, squadra, numero 5 e data di nascita nel secondo fornitore."
+    },
+    {
+      "id": "248699",
+      "names": [
+        "Matvey Safonov"
+      ],
+      "birthDate": "1999-02-25",
+      "source": "https://www.sofascore.com/football/player/matvey-safonov/800749",
+      "verification": "Grafia, squadra, ruolo e data di nascita nel secondo fornitore."
+    },
+    {
+      "id": "217655",
+      "names": [
+        "Nikita Haikin"
+      ],
+      "birthDate": "1995-07-11",
+      "source": "https://www.sofascore.com/football/player/nikita-haikin/792624",
+      "verification": "Grafia, squadra, ruolo e data di nascita nel secondo fornitore."
+    },
+    {
+      "id": "361629",
+      "names": [
+        "Newerton",
+        "Newerton Palmares"
+      ],
+      "birthDate": "2005-06-03",
+      "source": "https://www.sofascore.com/football/player/newerton-palmares/1485599",
+      "verification": "Nome, squadra, numero 11 e data di nascita nel secondo fornitore."
+    },
+    {
+      "id": "330041",
+      "names": [
+        "Romano Floriani Mussolini"
+      ],
+      "birthDate": "2003-01-27",
+      "source": "https://www.sslazio.it/it/player/r-floriani-mussolini",
+      "verification": "La scheda e i video del club collegano nome abbreviato e completo; data di nascita coincidente."
+    },
+    {
+      "id": "262591",
+      "names": [
+        "Pote"
+      ],
+      "birthDate": "1998-06-28",
+      "source": "https://www.sporting.pt/en/news/football/main-team/2020-08-19/pedro-goncalves-joins-sporting-cp",
+      "verification": "Il comunicato collega esplicitamente Pedro Gonçalves al soprannome Pote; data completa verificata nel profilo ESPN."
+    },
+    {
+      "id": "204679",
+      "names": [
+        "Victor Nilsson Lindelöf"
+      ],
+      "birthDate": "1994-07-17",
+      "source": "https://www.svenskfotboll.se/landslag/herr/historik-herr/stora-spelare/",
+      "verification": "Nome esteso e continuità fra Manchester United e Aston Villa nell'elenco della federazione; data completa verificata nel profilo ESPN."
+    },
+    {
+      "id": "266660",
+      "names": [
+        "Yann Aurel Bisseck"
+      ],
+      "birthDate": "2000-11-29",
+      "source": "https://www.inter.it/it/squadra/prima-squadra/giocatore/yann-aurel-bisseck",
+      "verification": "Nome esteso e data di nascita nella scheda del club."
+    },
+    {
+      "id": "269732",
+      "names": [
+        "Odin Lurås Bjørtuft"
+      ],
+      "birthDate": "1998-12-19",
+      "source": "https://www.glimt.no/lag/odin-luras-bjortuft",
+      "verification": "Nome esteso nell'identificativo della scheda ufficiale e data di nascita nel profilo."
+    },
+    {
+      "id": "318779",
+      "names": [
+        "Hákon Arnar Haraldsson"
+      ],
+      "birthDate": "2003-04-10",
+      "source": "https://www.losc.fr/actualites/2026-01-24/hakon-haraldsson-dogue-jusquen-2030",
+      "verification": "Il comunicato usa sia la forma breve sia quella estesa del nome; anagrafica verificata nel profilo ESPN."
+    }
+  ]
+}

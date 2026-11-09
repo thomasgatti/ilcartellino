@@ -1,0 +1,386 @@
+{
+  "schema": 2,
+  "reviewedOn": "2026-11-05",
+  "aliases": {
+    "118279": {
+      "names": [
+        "Jon Rowe",
+        "J. Rowe",
+        "Jonathan Rowe"
+      ],
+      "id": "118279",
+      "espnSource": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/ita.1/seasons/2026/athletes/118279?lang=en&region=us",
+      "sha256": "ca2629ad465b9e18bbb084fec34427363f8b52d617a928f45095f24c3bbd81af",
+      "birthDate": "2003-04-30",
+      "independentSource": "https://www.atalanta.it/news/benvenuto-jonathan-rowe",
+      "verification": "Nome e data di nascita nella presentazione del club; continuità dal Bologna."
+    },
+    "204679": {
+      "names": [
+        "Victor Lindelöf",
+        "V. Lindelöf",
+        "Victor Nilsson Lindelöf"
+      ],
+      "id": "204679",
+      "espnSource": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/uefa.champions/seasons/2026/athletes/204679?lang=en&region=us",
+      "sha256": "b2ffcec08a79372f85e430b264a8267c0cee1ebf5c80d9eac31d80aff9f2b3e1",
+      "birthDate": "1994-07-17",
+      "independentSource": "https://www.svenskfotboll.se/landslag/herr/historik-herr/stora-spelare/",
+      "verification": "Nome esteso e continuità fra Manchester United e Aston Villa nell'elenco della federazione; data completa verificata nel profilo ESPN."
+    },
+    "217655": {
+      "names": [
+        "Nikita Haykin",
+        "N. Haykin",
+        "Nikita Haikin"
+      ],
+      "id": "217655",
+      "espnSource": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/uefa.champions/seasons/2026/athletes/217655?lang=en&region=us",
+      "sha256": "7901f227cf1c996310f5cac70c3e6ef219c1269c2f45a354c4197de1ce209a24",
+      "birthDate": "1995-07-11",
+      "independentSource": "https://www.sofascore.com/football/player/nikita-haikin/792624",
+      "verification": "Grafia, squadra, ruolo e data di nascita nel secondo fornitore."
+    },
+    "239120": {
+      "names": [
+        "Adrian Ismajli",
+        "A. Ismajli",
+        "Ardian Ismajli"
+      ],
+      "id": "239120",
+      "espnSource": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/ita.1/seasons/2026/athletes/239120?lang=en&region=us",
+      "sha256": "d310eb40d2fb93411c7a79b4f25d131748a96692db567c899ebea0f829c832a9",
+      "birthDate": "1996-09-30",
+      "independentSource": "https://www.torinofc.it/prima-squadra/2026-2027/difensore/ismajli-ardian",
+      "verification": "Nome e data di nascita nella scheda del club."
+    },
+    "248699": {
+      "names": [
+        "Matvei Safonov",
+        "M. Safonov",
+        "Matvey Safonov"
+      ],
+      "id": "248699",
+      "espnSource": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/uefa.champions/seasons/2026/athletes/248699?lang=en&region=us",
+      "sha256": "9fd5ebc2a0a1ab3438ab215d893e459b15a80c568db746cef1b2da4a447b28f4",
+      "birthDate": "1999-02-25",
+      "independentSource": "https://www.sofascore.com/football/player/matvey-safonov/800749",
+      "verification": "Grafia, squadra, ruolo e data di nascita nel secondo fornitore."
+    },
+    "259916": {
+      "names": [
+        "José Antonio Morente",
+        "J. Morente",
+        "Tete Morente",
+        "José Antonio Morente Oliva"
+      ],
+      "id": "259916",
+      "espnSource": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/ita.1/seasons/2026/athletes/259916?lang=en&region=us",
+      "sha256": "9078d54809a8054286020d10a59306e777ffd76e44f51ebfb7bb0457bcc75cc0",
+      "birthDate": "1996-12-04",
+      "independentSource": "https://uslecce.it/tete-morente-e-un-calciatore-del-lecce/",
+      "verification": "Il comunicato collega esplicitamente Tete e José Antonio Morente Oliva, classe 1996; la data completa è verificata nel profilo ESPN."
+    },
+    "262591": {
+      "names": [
+        "Pedro Gonçalves",
+        "P. Gonçalves",
+        "Pote"
+      ],
+      "id": "262591",
+      "espnSource": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/uefa.champions/seasons/2026/athletes/262591?lang=en&region=us",
+      "sha256": "6ada0a5408fbf9cbfb354482c232db9844a805476ff8ede60b1eafc6a1974a6f",
+      "birthDate": "1998-06-28",
+      "independentSource": "https://www.sporting.pt/en/news/football/main-team/2020-08-19/pedro-goncalves-joins-sporting-cp",
+      "verification": "Il comunicato collega esplicitamente Pedro Gonçalves al soprannome Pote; data completa verificata nel profilo ESPN."
+    },
+    "266660": {
+      "names": [
+        "Yann Bisseck",
+        "Y. Bisseck",
+        "Yann Aurel Bisseck"
+      ],
+      "id": "266660",
+      "espnSource": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/uefa.champions/seasons/2026/athletes/266660?lang=en&region=us",
+      "sha256": "404d8b7e556f7c9182a2248ae404b433d28a70411d847b0221e3ca2c8d5e02b1",
+      "birthDate": "2000-11-29",
+      "independentSource": "https://www.inter.it/it/squadra/prima-squadra/giocatore/yann-aurel-bisseck",
+      "verification": "Nome esteso e data di nascita nella scheda del club."
+    },
+    "269732": {
+      "names": [
+        "Odin Bjørtuft",
+        "O. Bjørtuft",
+        "Odin Lurås Bjørtuft"
+      ],
+      "id": "269732",
+      "espnSource": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/uefa.champions/seasons/2026/athletes/269732?lang=en&region=us",
+      "sha256": "58ce11defc095ae95d68f4a13e60c9347658243baa555c8ecbed8b1cfc6b6377",
+      "birthDate": "1998-12-19",
+      "independentSource": "https://www.glimt.no/lag/odin-luras-bjortuft",
+      "verification": "Nome esteso nell'identificativo della scheda ufficiale e data di nascita nel profilo."
+    },
+    "276070": {
+      "names": [
+        "Valeriy Bondar",
+        "V. Bondar",
+        "Valerii Bondar"
+      ],
+      "id": "276070",
+      "espnSource": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/uefa.champions/seasons/2026/athletes/276070?lang=en&region=us",
+      "sha256": "aa9514a47723333810481bd13a4193b0e4f01de584e9729d5d1b7198bfb86c4a",
+      "birthDate": "1999-02-27",
+      "independentSource": "https://www.sofascore.com/football/player/valerii-bondar/904850",
+      "verification": "Grafia, squadra, numero 5 e data di nascita nel secondo fornitore."
+    },
+    "313078": {
+      "names": [
+        "Pedrinho",
+        "Pedro Henrique",
+        "Pedro Henrique Azevedo Pereira"
+      ],
+      "id": "313078",
+      "espnSource": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/uefa.champions/seasons/2026/athletes/313078?lang=en&region=us",
+      "sha256": "55718c9862e9831a9d2e9c41937ca17125690955e56c02a18a4427c6726813d1",
+      "birthDate": "2002-07-11",
+      "independentSource": "https://shakhtar.com/en/news/2023/july/19_news/19_pedrinho-is-shakhtar-player/",
+      "verification": "Nome completo, soprannome, ruolo e data di nascita nella presentazione del club."
+    },
+    "313354": {
+      "names": [
+        "Oussama Targhaline",
+        "O. Targhaline",
+        "Oussama Targhalline"
+      ],
+      "id": "313354",
+      "espnSource": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/uefa.champions/seasons/2026/athletes/313354?lang=en&region=us",
+      "sha256": "ce96187944c5f4b6e102a88d97151dd489de19ee47f04d3d883f7d4ca2cd9faa",
+      "birthDate": "2002-05-20",
+      "independentSource": "https://eredivisie.com/clubs/feyenoord/players/oussama-targhalline/",
+      "verification": "Grafia, squadra e data di nascita nel profilo della lega."
+    },
+    "318779": {
+      "names": [
+        "Hákon Haraldsson",
+        "H. Haraldsson",
+        "Hákon Arnar Haraldsson"
+      ],
+      "id": "318779",
+      "espnSource": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/uefa.champions/seasons/2026/athletes/318779?lang=en&region=us",
+      "sha256": "bcff75a8aba84ca6269c8f27637d6a0f113950a2c674006113d4e67f83c91bca",
+      "birthDate": "2003-04-10",
+      "independentSource": "https://www.losc.fr/actualites/2026-01-24/hakon-haraldsson-dogue-jusquen-2030",
+      "verification": "Il comunicato usa sia la forma breve sia quella estesa del nome; anagrafica verificata nel profilo ESPN."
+    },
+    "330041": {
+      "names": [
+        "Romano Floriani",
+        "R. Floriani",
+        "Romano Floriani Mussolini"
+      ],
+      "id": "330041",
+      "espnSource": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/ita.1/seasons/2026/athletes/330041?lang=en&region=us",
+      "sha256": "95a14ae79ea1f912df9c77fccfcd46c412c9f5f10030f98592864a92588d1d8c",
+      "birthDate": "2003-01-27",
+      "independentSource": "https://www.sslazio.it/it/player/r-floriani-mussolini",
+      "verification": "La scheda e i video del club collegano nome abbreviato e completo; data di nascita coincidente."
+    },
+    "347018": {
+      "names": [
+        "Sulemana",
+        "Ibrahim Sulemana"
+      ],
+      "id": "347018",
+      "espnSource": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/ita.1/seasons/2026/athletes/347018?lang=en&region=us",
+      "sha256": "9808fc9e063ebda3c7d842cda1f4a18e662196f6d801960e5194fca780af42de",
+      "birthDate": "2003-05-22",
+      "independentSource": null,
+      "verification": "Il profilo ESPN espone già sia Sulemana sia Ibrahim Sulemana."
+    },
+    "355113": {
+      "names": [
+        "Alexey Batrakov",
+        "A. Batrakov",
+        "Aleksey Batrakov"
+      ],
+      "id": "355113",
+      "espnSource": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/uefa.champions/seasons/2026/athletes/355113?lang=en&region=us",
+      "sha256": "eb01f6b5b5394261c89ffe575c58a3ba8ab5bf6cba60a5e4f86fdb4bfe26b0ad",
+      "birthDate": "2005-06-09",
+      "independentSource": "https://www.galatasaray.org/en/p/83-aleksey-batrakov/3741",
+      "verification": "Grafia e data di nascita della scheda del club."
+    },
+    "361629": {
+      "names": [
+        "Newertton",
+        "Newerton",
+        "Newerton Palmares"
+      ],
+      "id": "361629",
+      "espnSource": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/uefa.champions/seasons/2026/athletes/361629?lang=en&region=us",
+      "sha256": "f585111427c79d981585ef9be9a9b30b922a878cc86f8465444bba81b28485ea",
+      "birthDate": "2005-06-03",
+      "independentSource": "https://www.sofascore.com/football/player/newerton-palmares/1485599",
+      "verification": "Nome, squadra, numero 11 e data di nascita nel secondo fornitore."
+    },
+    "362674": {
+      "names": [
+        "Pio Esposito",
+        "P. Esposito",
+        "Francesco Pio Esposito"
+      ],
+      "id": "362674",
+      "espnSource": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/ita.1/seasons/2026/athletes/362674?lang=en&region=us",
+      "sha256": "ddc799aaaba34af5cc65dd11f5f3df44a7e0da487f04ddad7ee773d8b0e02c61",
+      "birthDate": "2005-06-28",
+      "independentSource": "https://www.inter.it/it/squadra/prima-squadra/giocatore/francesco-pio-esposito",
+      "verification": "Nome esteso e data di nascita nella biografia del club."
+    }
+  },
+  "sources": [
+    {
+      "id": "313078",
+      "espnSource": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/uefa.champions/seasons/2026/athletes/313078?lang=en&region=us",
+      "sha256": "55718c9862e9831a9d2e9c41937ca17125690955e56c02a18a4427c6726813d1",
+      "birthDate": "2002-07-11",
+      "independentSource": "https://shakhtar.com/en/news/2023/july/19_news/19_pedrinho-is-shakhtar-player/",
+      "verification": "Nome completo, soprannome, ruolo e data di nascita nella presentazione del club."
+    },
+    {
+      "id": "355113",
+      "espnSource": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/uefa.champions/seasons/2026/athletes/355113?lang=en&region=us",
+      "sha256": "eb01f6b5b5394261c89ffe575c58a3ba8ab5bf6cba60a5e4f86fdb4bfe26b0ad",
+      "birthDate": "2005-06-09",
+      "independentSource": "https://www.galatasaray.org/en/p/83-aleksey-batrakov/3741",
+      "verification": "Grafia e data di nascita della scheda del club."
+    },
+    {
+      "id": "313354",
+      "espnSource": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/uefa.champions/seasons/2026/athletes/313354?lang=en&region=us",
+      "sha256": "ce96187944c5f4b6e102a88d97151dd489de19ee47f04d3d883f7d4ca2cd9faa",
+      "birthDate": "2002-05-20",
+      "independentSource": "https://eredivisie.com/clubs/feyenoord/players/oussama-targhalline/",
+      "verification": "Grafia, squadra e data di nascita nel profilo della lega."
+    },
+    {
+      "id": "362674",
+      "espnSource": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/ita.1/seasons/2026/athletes/362674?lang=en&region=us",
+      "sha256": "ddc799aaaba34af5cc65dd11f5f3df44a7e0da487f04ddad7ee773d8b0e02c61",
+      "birthDate": "2005-06-28",
+      "independentSource": "https://www.inter.it/it/squadra/prima-squadra/giocatore/francesco-pio-esposito",
+      "verification": "Nome esteso e data di nascita nella biografia del club."
+    },
+    {
+      "id": "118279",
+      "espnSource": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/ita.1/seasons/2026/athletes/118279?lang=en&region=us",
+      "sha256": "ca2629ad465b9e18bbb084fec34427363f8b52d617a928f45095f24c3bbd81af",
+      "birthDate": "2003-04-30",
+      "independentSource": "https://www.atalanta.it/news/benvenuto-jonathan-rowe",
+      "verification": "Nome e data di nascita nella presentazione del club; continuità dal Bologna."
+    },
+    {
+      "id": "259916",
+      "espnSource": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/ita.1/seasons/2026/athletes/259916?lang=en&region=us",
+      "sha256": "9078d54809a8054286020d10a59306e777ffd76e44f51ebfb7bb0457bcc75cc0",
+      "birthDate": "1996-12-04",
+      "independentSource": "https://uslecce.it/tete-morente-e-un-calciatore-del-lecce/",
+      "verification": "Il comunicato collega esplicitamente Tete e José Antonio Morente Oliva, classe 1996; la data completa è verificata nel profilo ESPN."
+    },
+    {
+      "id": "239120",
+      "espnSource": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/ita.1/seasons/2026/athletes/239120?lang=en&region=us",
+      "sha256": "d310eb40d2fb93411c7a79b4f25d131748a96692db567c899ebea0f829c832a9",
+      "birthDate": "1996-09-30",
+      "independentSource": "https://www.torinofc.it/prima-squadra/2026-2027/difensore/ismajli-ardian",
+      "verification": "Nome e data di nascita nella scheda del club."
+    },
+    {
+      "id": "276070",
+      "espnSource": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/uefa.champions/seasons/2026/athletes/276070?lang=en&region=us",
+      "sha256": "aa9514a47723333810481bd13a4193b0e4f01de584e9729d5d1b7198bfb86c4a",
+      "birthDate": "1999-02-27",
+      "independentSource": "https://www.sofascore.com/football/player/valerii-bondar/904850",
+      "verification": "Grafia, squadra, numero 5 e data di nascita nel secondo fornitore."
+    },
+    {
+      "id": "248699",
+      "espnSource": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/uefa.champions/seasons/2026/athletes/248699?lang=en&region=us",
+      "sha256": "9fd5ebc2a0a1ab3438ab215d893e459b15a80c568db746cef1b2da4a447b28f4",
+      "birthDate": "1999-02-25",
+      "independentSource": "https://www.sofascore.com/football/player/matvey-safonov/800749",
+      "verification": "Grafia, squadra, ruolo e data di nascita nel secondo fornitore."
+    },
+    {
+      "id": "217655",
+      "espnSource": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/uefa.champions/seasons/2026/athletes/217655?lang=en&region=us",
+      "sha256": "7901f227cf1c996310f5cac70c3e6ef219c1269c2f45a354c4197de1ce209a24",
+      "birthDate": "1995-07-11",
+      "independentSource": "https://www.sofascore.com/football/player/nikita-haikin/792624",
+      "verification": "Grafia, squadra, ruolo e data di nascita nel secondo fornitore."
+    },
+    {
+      "id": "361629",
+      "espnSource": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/uefa.champions/seasons/2026/athletes/361629?lang=en&region=us",
+      "sha256": "f585111427c79d981585ef9be9a9b30b922a878cc86f8465444bba81b28485ea",
+      "birthDate": "2005-06-03",
+      "independentSource": "https://www.sofascore.com/football/player/newerton-palmares/1485599",
+      "verification": "Nome, squadra, numero 11 e data di nascita nel secondo fornitore."
+    },
+    {
+      "id": "330041",
+      "espnSource": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/ita.1/seasons/2026/athletes/330041?lang=en&region=us",
+      "sha256": "95a14ae79ea1f912df9c77fccfcd46c412c9f5f10030f98592864a92588d1d8c",
+      "birthDate": "2003-01-27",
+      "independentSource": "https://www.sslazio.it/it/player/r-floriani-mussolini",
+      "verification": "La scheda e i video del club collegano nome abbreviato e completo; data di nascita coincidente."
+    },
+    {
+      "id": "262591",
+      "espnSource": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/uefa.champions/seasons/2026/athletes/262591?lang=en&region=us",
+      "sha256": "6ada0a5408fbf9cbfb354482c232db9844a805476ff8ede60b1eafc6a1974a6f",
+      "birthDate": "1998-06-28",
+      "independentSource": "https://www.sporting.pt/en/news/football/main-team/2020-08-19/pedro-goncalves-joins-sporting-cp",
+      "verification": "Il comunicato collega esplicitamente Pedro Gonçalves al soprannome Pote; data completa verificata nel profilo ESPN."
+    },
+    {
+      "id": "204679",
+      "espnSource": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/uefa.champions/seasons/2026/athletes/204679?lang=en&region=us",
+      "sha256": "b2ffcec08a79372f85e430b264a8267c0cee1ebf5c80d9eac31d80aff9f2b3e1",
+      "birthDate": "1994-07-17",
+      "independentSource": "https://www.svenskfotboll.se/landslag/herr/historik-herr/stora-spelare/",
+      "verification": "Nome esteso e continuità fra Manchester United e Aston Villa nell'elenco della federazione; data completa verificata nel profilo ESPN."
+    },
+    {
+      "id": "266660",
+      "espnSource": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/uefa.champions/seasons/2026/athletes/266660?lang=en&region=us",
+      "sha256": "404d8b7e556f7c9182a2248ae404b433d28a70411d847b0221e3ca2c8d5e02b1",
+      "birthDate": "2000-11-29",
+      "independentSource": "https://www.inter.it/it/squadra/prima-squadra/giocatore/yann-aurel-bisseck",
+      "verification": "Nome esteso e data di nascita nella scheda del club."
+    },
+    {
+      "id": "269732",
+      "espnSource": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/uefa.champions/seasons/2026/athletes/269732?lang=en&region=us",
+      "sha256": "58ce11defc095ae95d68f4a13e60c9347658243baa555c8ecbed8b1cfc6b6377",
+      "birthDate": "1998-12-19",
+      "independentSource": "https://www.glimt.no/lag/odin-luras-bjortuft",
+      "verification": "Nome esteso nell'identificativo della scheda ufficiale e data di nascita nel profilo."
+    },
+    {
+      "id": "318779",
+      "espnSource": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/uefa.champions/seasons/2026/athletes/318779?lang=en&region=us",
+      "sha256": "bcff75a8aba84ca6269c8f27637d6a0f113950a2c674006113d4e67f83c91bca",
+      "birthDate": "2003-04-10",
+      "independentSource": "https://www.losc.fr/actualites/2026-01-24/hakon-haraldsson-dogue-jusquen-2030",
+      "verification": "Il comunicato usa sia la forma breve sia quella estesa del nome; anagrafica verificata nel profilo ESPN."
+    },
+    {
+      "id": "347018",
+      "espnSource": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/ita.1/seasons/2026/athletes/347018?lang=en&region=us",
+      "sha256": "9808fc9e063ebda3c7d842cda1f4a18e662196f6d801960e5194fca780af42de",
+      "birthDate": "2003-05-22",
+      "independentSource": null,
+      "verification": "Il profilo ESPN espone già sia Sulemana sia Ibrahim Sulemana."
+    }
+  ]
+}

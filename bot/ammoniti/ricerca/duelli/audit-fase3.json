@@ -1,0 +1,193 @@
+{
+  "schema": 1,
+  "dataRef": "cdcd037ab30cc8e578b69b690dd11aa04c065b61",
+  "protocolHash": "1ec734a7fd8e7a1fca47651f253d55bb81d8d8d0cd984204344448525b868bf7",
+  "identityRegistryHash": "6e268cd86a85ae579461be8bd72522e846ed0ab54fb74f89c4f56c3df6589490",
+  "totals": {
+    "fixtures": 2816,
+    "normalized": 2816,
+    "matched": 2816,
+    "unmatched": 0,
+    "rawFoulRows": 128032,
+    "foulEvents": 64082,
+    "trustedPairs": 60457,
+    "cards": 11265,
+    "linkedCards": 7412,
+    "mappedFouls": 58661,
+    "mappedLinkedCards": 7190,
+    "played": 87602,
+    "mappedPlayed": 85785,
+    "conversionEligible": 1786,
+    "per90Eligible": 489,
+    "trials": 39090,
+    "positiveTrials": 4773,
+    "per90Players": 14166
+  },
+  "groups": {
+    "ita.1|2021/2022": {
+      "matches": 380,
+      "matched": 380,
+      "conversionEligible": 204,
+      "per90Eligible": 53,
+      "trials": 4868,
+      "positiveTrials": 626,
+      "mappedFouls": 8513,
+      "trustedPairs": 8814,
+      "foulEvents": 9563
+    },
+    "uefa.champions|2021/2022": {
+      "matches": 125,
+      "matched": 125,
+      "conversionEligible": 45,
+      "per90Eligible": 8,
+      "trials": 915,
+      "positiveTrials": 100,
+      "mappedFouls": 2190,
+      "trustedPairs": 2351,
+      "foulEvents": 2747
+    },
+    "ita.1|2022/2023": {
+      "matches": 381,
+      "matched": 381,
+      "conversionEligible": 207,
+      "per90Eligible": 55,
+      "trials": 4603,
+      "positiveTrials": 603,
+      "mappedFouls": 7983,
+      "trustedPairs": 8188,
+      "foulEvents": 8855
+    },
+    "uefa.champions|2022/2023": {
+      "matches": 125,
+      "matched": 125,
+      "conversionEligible": 66,
+      "per90Eligible": 19,
+      "trials": 1279,
+      "positiveTrials": 166,
+      "mappedFouls": 2254,
+      "trustedPairs": 2357,
+      "foulEvents": 2591
+    },
+    "ita.1|2023/2024": {
+      "matches": 379,
+      "matched": 379,
+      "conversionEligible": 264,
+      "per90Eligible": 60,
+      "trials": 5798,
+      "positiveTrials": 787,
+      "mappedFouls": 8014,
+      "trustedPairs": 8201,
+      "foulEvents": 8560
+    },
+    "uefa.champions|2023/2024": {
+      "matches": 125,
+      "matched": 125,
+      "conversionEligible": 76,
+      "per90Eligible": 13,
+      "trials": 1542,
+      "positiveTrials": 201,
+      "mappedFouls": 2394,
+      "trustedPairs": 2512,
+      "foulEvents": 2662
+    },
+    "ita.1|2024/2025": {
+      "matches": 380,
+      "matched": 380,
+      "conversionEligible": 288,
+      "per90Eligible": 97,
+      "trials": 6583,
+      "positiveTrials": 766,
+      "mappedFouls": 8482,
+      "trustedPairs": 8667,
+      "foulEvents": 8971
+    },
+    "uefa.champions|2024/2025": {
+      "matches": 189,
+      "matched": 189,
+      "conversionEligible": 130,
+      "per90Eligible": 29,
+      "trials": 2454,
+      "positiveTrials": 289,
+      "mappedFouls": 3453,
+      "trustedPairs": 3519,
+      "foulEvents": 3740
+    },
+    "ita.1|2025/2026": {
+      "matches": 380,
+      "matched": 380,
+      "conversionEligible": 277,
+      "per90Eligible": 97,
+      "trials": 6437,
+      "positiveTrials": 723,
+      "mappedFouls": 8618,
+      "trustedPairs": 8902,
+      "foulEvents": 9051
+    },
+    "uefa.champions|2025/2026": {
+      "matches": 189,
+      "matched": 189,
+      "conversionEligible": 127,
+      "per90Eligible": 32,
+      "trials": 2531,
+      "positiveTrials": 283,
+      "mappedFouls": 3656,
+      "trustedPairs": 3762,
+      "foulEvents": 3966
+    },
+    "ita.1|2026/2027": {
+      "matches": 100,
+      "matched": 100,
+      "conversionEligible": 55,
+      "per90Eligible": 12,
+      "trials": 1103,
+      "positiveTrials": 112,
+      "mappedFouls": 1859,
+      "trustedPairs": 1911,
+      "foulEvents": 2048
+    },
+    "uefa.champions|2026/2027": {
+      "matches": 63,
+      "matched": 63,
+      "conversionEligible": 47,
+      "per90Eligible": 14,
+      "trials": 977,
+      "positiveTrials": 117,
+      "mappedFouls": 1245,
+      "trustedPairs": 1273,
+      "foulEvents": 1328
+    }
+  },
+  "sourceProblems": {
+    "grafia_o_alias_non_verificato": 3344,
+    "coppia_non_valida": 162,
+    "identita_non_univoca": 107,
+    "testo_indica_altro_giocatore": 102,
+    "tipo_mano_fallo_discordante": 21
+  },
+  "failed": [],
+  "sourceSeasonDifferences": [],
+  "anchorConflicts": [
+    {
+      "provider": "espn",
+      "id": "208518",
+      "otherIds": [
+        "1524548",
+        "833024"
+      ]
+    },
+    {
+      "provider": "espn",
+      "id": "276823",
+      "otherIds": [
+        "1322366",
+        "975170"
+      ]
+    }
+  ],
+  "limitations": [
+    "Le coppie provano falli sanzionati; non coprono i duelli senza fallo o il tempo di marcatura.",
+    "Cartellini associati temporalmente, non cause controfattuali dimostrate.",
+    "Corrispondenze di id sono metadati di identità; ancore da nomi completi esatti e squadre della medesima gara, senza esiti per decidere gli abbinamenti.",
+    "Raccolta retrospettiva: il contenuto può essere stato corretto dal fornitore dopo le partite."
+  ]
+}

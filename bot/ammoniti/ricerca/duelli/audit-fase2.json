@@ -1,0 +1,134 @@
+{
+  "schema": 2,
+  "baseCommit": "4ef307827be2ab64e7074717a424195fa42bee65",
+  "inputHashes": {
+    "appData": "2519cbe22f2f7b1ba3a9871ee2be625fe3049cff71924c7a4c10edcb95fc48c9",
+    "marketLog": "19a0166253ada42547b62625405c2c848aa929320aea05c0f66e762b2bed6bfd",
+    "identityRegistry": "6e268cd86a85ae579461be8bd72522e846ed0ab54fb74f89c4f56c3df6589490"
+  },
+  "totals": {
+    "matches": 40,
+    "rawFoulRows": 1831,
+    "foulEvents": 922,
+    "trustedPairs": 898,
+    "expectedFouls": 970,
+    "missingTeamTotals": 0,
+    "untrustedFouls": 24,
+    "unstructuredFoulRows": 1,
+    "duplicateSourceIds": 2,
+    "coordinateConflicts": 2,
+    "cards": 155,
+    "linkedCards": 107,
+    "verifiedSubstitutions": 354,
+    "unverifiedSubstitutions": 18
+  },
+  "groups": {
+    "uefa.champions|2026/2027": {
+      "matches": 10,
+      "rawFoulRows": 417,
+      "foulEvents": 211,
+      "trustedPairs": 204,
+      "expectedFouls": 223,
+      "missingTeamTotals": 0,
+      "untrustedFouls": 7,
+      "unstructuredFoulRows": 0,
+      "duplicateSourceIds": 1,
+      "coordinateConflicts": 1,
+      "cards": 37,
+      "linkedCards": 20,
+      "verifiedSubstitutions": 89,
+      "unverifiedSubstitutions": 3
+    },
+    "uefa.champions|2025/2026": {
+      "matches": 10,
+      "rawFoulRows": 474,
+      "foulEvents": 237,
+      "trustedPairs": 229,
+      "expectedFouls": 248,
+      "missingTeamTotals": 0,
+      "untrustedFouls": 8,
+      "unstructuredFoulRows": 0,
+      "duplicateSourceIds": 0,
+      "coordinateConflicts": 0,
+      "cards": 44,
+      "linkedCards": 30,
+      "verifiedSubstitutions": 77,
+      "unverifiedSubstitutions": 9
+    },
+    "ita.1|2026/2027": {
+      "matches": 10,
+      "rawFoulRows": 426,
+      "foulEvents": 217,
+      "trustedPairs": 208,
+      "expectedFouls": 234,
+      "missingTeamTotals": 0,
+      "untrustedFouls": 9,
+      "unstructuredFoulRows": 0,
+      "duplicateSourceIds": 0,
+      "coordinateConflicts": 0,
+      "cards": 36,
+      "linkedCards": 26,
+      "verifiedSubstitutions": 94,
+      "unverifiedSubstitutions": 5
+    },
+    "ita.1|2025/2026": {
+      "matches": 10,
+      "rawFoulRows": 514,
+      "foulEvents": 257,
+      "trustedPairs": 257,
+      "expectedFouls": 265,
+      "missingTeamTotals": 0,
+      "untrustedFouls": 0,
+      "unstructuredFoulRows": 1,
+      "duplicateSourceIds": 1,
+      "coordinateConflicts": 1,
+      "cards": 38,
+      "linkedCards": 31,
+      "verifiedSubstitutions": 94,
+      "unverifiedSubstitutions": 1
+    }
+  },
+  "accounting": {
+    "totals": {
+      "structuredFouls": 922,
+      "structuredHandballs": 41,
+      "textHandballPenalties": 5,
+      "textOnlyFouls": 1,
+      "expected": 970,
+      "residual": 1,
+      "unknownSide": 0
+    },
+    "teamsWithResidual": [
+      {
+        "match": "401875002",
+        "team": "Como",
+        "expected": 5,
+        "structured": 4,
+        "additional": 0,
+        "residual": 1
+      }
+    ]
+  },
+  "identityCount": 18,
+  "mappedAppPlayers": 198,
+  "unmappedAppPlayers": [
+    {
+      "name": "S. Camara",
+      "side": "away",
+      "reason": "ambiguo"
+    },
+    {
+      "name": "S. Camara",
+      "side": "away",
+      "reason": "ambiguo"
+    }
+  ],
+  "caveats": [
+    "Il numero di falli con coppia identificata diviso per il totale del tabellino è un riscontro contabile, non una misura di accuratezza: falli di mano e rigori possono avere struttura diversa.",
+    "Un fallo osservato prova un contatto sanzionato fra due giocatori; non misura tutti gli 1 contro 1 né il tempo passato a marcarsi.",
+    "L’associazione fallo-cartellino richiede motivo esplicito, stesso autore e periodo, un solo fallo precedente entro 30 secondi; resta un’associazione temporale da validare.",
+    "Coordinate discordi conservate come conflitto e non usate; serve verificare orientamento e convenzione prima di confrontarle con FotMob.",
+    "Rosa e file attuale dell’app sono dati a posteriori: per un test prepartita servono snapshot archiviati prima del calcio di inizio.",
+    "Campione di convenienza selezionato per date e id, non rappresentativo dell’intera stagione. Per misurare il valore predittivo occorrono più stagioni e test temporale."
+  ]
+}

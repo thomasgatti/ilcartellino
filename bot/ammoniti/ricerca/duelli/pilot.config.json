@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "descrizione": "Campione di qualità, non campione per selezionare variabili predittive. Dieci partite per competizione e stagione, in ordine di data e id ESPN; soltanto incontri conclusi.",
+  "groups": [
+    {"league": "uefa.champions", "season": "2026/2027", "dates": ["20261103", "20261104"], "take": 10},
+    {"league": "uefa.champions", "season": "2025/2026", "dates": ["20251104", "20251105"], "take": 10},
+    {"league": "ita.1", "season": "2026/2027", "dates": ["20261030", "20261031", "20261101", "20261102"], "take": 10},
+    {"league": "ita.1", "season": "2025/2026", "dates": ["20251031", "20251101", "20251102", "20251103"], "take": 10}
+  ]
+}
