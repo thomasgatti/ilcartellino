@@ -1,0 +1,22 @@
+name: Sonda dati
+on:
+  workflow_dispatch:
+    inputs:
+      urls:
+        description: Indirizzi separati da spazio (relativi = FotMob)
+        required: true
+jobs:
+  sonda:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node cloud/sonda.mjs "${{ inputs.urls }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sonda
+          path: sonda/
+          retention-days: 3
