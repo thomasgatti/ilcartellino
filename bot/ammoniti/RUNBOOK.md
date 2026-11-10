@@ -384,3 +384,9 @@ Diffidati in Serie A (5/11, 2021/22→oggi, __SAM3 senza diffida): diffidati amm
 - Da questa data la Giornata automatica salva gli angoli di ogni partita archiviata (campo `angoli`: [casa, trasferta], da FotMob), così la verifica può continuare sulle gare nuove senza dipendere da ESPN.
 - 10/11: negli esiti anche `quote_1x2` (probabilità implicite casa/trasferta in %, come in data.json, dall'ultimo calcolo prima del calcio d'inizio) e `linea_cartellini` (`linea_stimata: 1` se è la stima del modello). Le quote passate non si possono recuperare (FotMob le toglie a partita finita): lo storico parte da qui. La stima angoli invece si può ricalcolare dopo, perché usa solo partite precedenti.
 - Prossimi passi possibili: forza delle squadre dalle quote 1X2 (chi domina batte più angoli; serve uno storico di quote), registrare le stime prima delle partite per una verifica in avanti, e una linea di mercato con orario per misurare un vantaggio rispetto alle quote.
+
+## Livello di ammonizioni della stagione (10/11/2026)
+- Dubbio: g11 con 32 gialli fra i titolari contro 26,3 attesi → il modello abbassa troppo il livello? Test in ricerca/livello/livello.mjs (modello FotMob Serie A, gruppi base+lega+squadre+duelli, finestra del livello W righe titolari, oggi 3000).
+- Tasso gialli titolari per stagione: 17,6 / 18,6 / 17,6 / 16,9 / 15,1 / 14,3 / 12,7% (2020/21 → 2026/27 parziale, 105 gare).
+- Attesi/osservati sulla stagione di verifica con W=3000: 2024/25 1296/1148, 2025/26 1161/1090, 2026/27 274/267 → nella stagione in corso il modello è calibrato (semmai di poco alto). W da 750 a 12000 cambia la log loss di meno di 0,0005 (2026/27: 0,37224 … 0,37178). Senza il gruppo "lega" peggiora (0,37290, attesi 300).
+- Conclusione: nessuna modifica. Il +5,7 della g11 è rumore (deviazione tipica ~5 gialli su una giornata).
