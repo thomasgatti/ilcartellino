@@ -331,7 +331,8 @@ function archiveResult(round, m, j) {
     finale:rawScore.replace(/\s/g,''),p3_app:prior.p3,ammoniti:[...ammoniti],
     falli:Object.fromEntries(Object.entries(fl).map(([p,row]) => [p,row[0]])),
     falli_subiti:Object.fromEntries(Object.entries(fl).map(([p,row]) => [p,row[1]])),
-    sostituzioni:sub,...(Array.isArray(corners) && corners.length === 2 && corners.every(Number.isFinite) ? {angoli:corners} : {}),tris_app:prior.trio.map(({n,p}) => ({n,p})),tris_app_revisione:prior.revised,aggiornato:new Date().toISOString(),
+    sostituzioni:sub,...(Array.isArray(corners) && corners.length === 2 && corners.every(Number.isFinite) ? {angoli:corners} : {}),
+    ...(m.odds ? {quote_1x2:m.odds} : {}), ...(m.line != null ? {linea_cartellini:m.line, ...(m.line_est ? {linea_stimata:1} : {})} : {}),tris_app:prior.trio.map(({n,p}) => ({n,p})),tris_app_revisione:prior.revised,aggiornato:new Date().toISOString(),
   });
   seen.add(m.id);
   console.log('Archiviata',m.h,m.a,rawScore);
