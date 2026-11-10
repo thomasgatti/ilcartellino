@@ -306,46 +306,14 @@ details.how p { margin: 8px 0 0; max-width: none; }
 :root[data-comp="extra"] h1 { background: linear-gradient(90deg, var(--xa), var(--xb)); -webkit-background-clip: text; background-clip: text; color: transparent; }
 :root[data-comp="extra"] h1 span { color: var(--muted); -webkit-text-fill-color: var(--muted); }
 :root[data-comp="extra"] .topbar { display: none; }
-.xintro { display: grid; gap: 6px; margin: 6px 0 14px; }
-.xgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 14px; align-items: start; }
-.xcard { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; display: grid; gap: 12px; min-width: 0; border-top: 4px solid var(--xa); }
-.xhead { display: grid; gap: 4px; }
-.xmeta { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; font-size: 12.5px; color: var(--muted); }
-.xcomp { font-weight: 800; color: var(--xa); text-transform: uppercase; letter-spacing: .05em; }
-.xbadge { font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 999px; background: color-mix(in srgb, var(--xb) 16%, transparent); color: var(--xb); }
-.xbadge.lu { background: color-mix(in srgb, var(--ink) 8%, transparent); color: var(--muted); }
-.xbadge.lu.ok { background: color-mix(in srgb, var(--xb) 16%, transparent); color: var(--xb); }
-.xteams { font: 800 19px var(--display); line-height: 1.2; }
-.xsec { display: grid; gap: 6px; }
-.xk { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: var(--xk, var(--muted)); display: inline-flex; gap: 6px; align-items: center; }
-.xk::before { content: ""; width: 4px; height: 12px; border-radius: 2px; background: currentColor; }
-.xsec.cards { --xk: var(--xo); } .xsec.corn { --xk: var(--xa); }
-.xchips { display: flex; flex-wrap: wrap; gap: 6px; }
-.xchip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 4px 4px 10px; border-radius: 999px; font-size: 13.5px; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--xo) 45%, transparent); }
-.xchip b { font-variant-numeric: tabular-nums; font-size: 12px; padding: 1px 7px; border-radius: 999px; background: color-mix(in srgb, var(--xo) 18%, transparent); }
-.xchip.ok b { background: #f5c400; color: #2a2200; } .xchip.no { opacity: .6; }
-.xchip .tm { font-size: 11px; color: var(--muted); }
-.xmore summary { cursor: pointer; font-size: 13px; color: var(--muted); }
-.xpl { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 18px; margin-top: 6px; font-size: 13px; }
-.xpl ol { margin: 0; padding-left: 18px; display: grid; gap: 2px; } .xpl h4 { margin: 0 0 2px; font-size: 12px; color: var(--muted); }
-.xpl li span { float: right; font-variant-numeric: tabular-nums; color: var(--muted); }
-.xcorn { width: 100%; border-collapse: collapse; font-size: 13.5px; table-layout: fixed; }
-.xcorn th, .xcorn td { padding: 5px 4px; text-align: center; border-bottom: 1px dashed color-mix(in srgb, var(--line) 70%, transparent); font-variant-numeric: tabular-nums; }
-.xcorn th { font-size: 11.5px; color: var(--muted); font-weight: 700; }
-.xcorn th:nth-child(2), .xcorn td:nth-child(2) { width: 17%; }
-.xcorn td:first-child, .xcorn th:first-child { text-align: left; width: 33%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.xcorn td.mu { font-weight: 800; color: var(--xa); }
-.xcorn td.hi { font-weight: 800; }
-.xbar { display: flex; height: 22px; border-radius: 999px; overflow: hidden; font-size: 11.5px; font-weight: 700; color: var(--xbar-ink, #fff); }
-.xbar span { display: flex; align-items: center; justify-content: center; min-width: 0; white-space: nowrap; overflow: hidden; }
-.xbar .h { background: var(--xa); } .xbar .d { background: color-mix(in srgb, var(--muted) 70%, transparent); } .xbar .a { background: var(--xb); }
-.xres { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 10px; align-items: start; }
-.xres .xcard { border-top-width: 3px; gap: 8px; padding: 12px 14px; }
-@media (max-width: 600px) {
-  .xgrid, .xres { grid-template-columns: 1fr; }
-  .xcard { padding: 12px; }
-  .xpl { grid-template-columns: 1fr; }
-  .xteams { font-size: 17px; }
+.xintro { margin: 4px 0 14px; }
+#extra .layout { margin-top: 0; }
+:root[data-comp="extra"] .match[aria-current="true"] { border-color: transparent; box-shadow: 0 0 0 2px var(--xa) inset, 0 4px 16px color-mix(in srgb, var(--xa) 22%, transparent); }
+:root[data-comp="extra"] .panel { background: linear-gradient(90deg, #0f766e, #16a34a) top / 100% 5px no-repeat, var(--surface); }
+:root[data-comp="extra"] .day { color: var(--xa); }
+:root[data-comp="extra"] .sectabs button[aria-selected="true"] { border-bottom-color: var(--xa); }
+#extra .p3 .pill { display: block; margin-top: 3px; font-size: 9.5px; padding: 1px 5px; }
+#extra .xwho { margin-top: 12px; }
 }
 .stat .k2 { display: block; font-size: 11.5px; color: var(--muted); margin-top: 3px; }
 .livebox { margin: 12px 0 0; border: 1px solid color-mix(in srgb, #d92d20 40%, transparent); background: color-mix(in srgb, #d92d20 8%, transparent); border-radius: 12px; padding: 10px 12px; display: grid; gap: 6px; font-size: 14px; }
@@ -955,36 +923,75 @@ async function renderArea() {
     <p class="note">I tris dell'app di tutte le partite, anche quelle in cui non hai giocato, sono nello <button type="button" class="link" onclick="setView('storico')">Storico tris dell'app</button>.</p>
     ${cards.length ? cards.join('') : '<p class="note">Non hai ancora salvato nessun tris: torna su "Partite", scegli una partita e crea il tuo.</p>'}`;
 }
-// ---- EXTRA: big match dei campionati esteri e delle coppe nazionali (stime del modello, nessuna scelta personale) ----
+// ---- EXTRA: big match dei campionati esteri e delle coppe nazionali (stime del modello) ----
+// Stessi componenti delle altre sezioni: lista partite, scheda con riquadri, figurine del tris, titolari, storico.
+const xstate = { id: null, sec: 'tris' };
+const xcols = (m, s) => (s === 'h' ? m.hc : m.ac) || ['#13202d', '#ffffff'];
 function renderExtra() {
   const X = ALL.extra || { matches: [], storico: [] }, el = document.getElementById('extra');
-  const luTxt = m => m.lt === 'standard' ? ['Formazioni ufficiali', 'ok'] : m.lt === 'predicted' ? ['Formazioni probabili', ''] : m.pl?.length ? ['Ultime formazioni', ''] : ['Formazioni non ancora uscite', ''];
-  const side = (m, s) => s === 'h' ? m.h : m.a;
-  const card = m => {
-    const [lt, ok] = luTxt(m), c = m.corners;
-    const trio = m.tris?.length ? `<div class="xchips">${m.tris.map(t => `<span class="xchip">${t.n} <span class="tm">${side(m, t.s)}</span><b>${pct(t.p)}</b></span>`).join('')}</div>` : '<p class="note">Il tris arriva quando FotMob pubblica le formazioni (di solito 1-2 giorni prima).</p>';
-    const list = s => `<div><h4>${side(m, s)}</h4><ol>${m.pl.filter(p => p[1] === s).slice(0, 8).map(p => `<li>${p[0]} <span>${pct(p[2])}</span></li>`).join('')}</ol></div>`;
-    const lines = c ? c.linee.map((L, i) => [L, i]).filter(([L]) => L >= 3.5 && L <= 6.5) : [];
-    const row = (s) => { const t = c[s]; return `<tr><td>${side(m, s)}</td><td class="mu">${t.mu.toFixed(1).replace('.', ',')}</td>${lines.map(([, i]) => `<td class="${t.o[i] >= .5 ? 'hi' : ''}">${pct(t.o[i])}</td>`).join('')}</tr>`; };
-    const corn = c ? `<table class="xcorn"><thead><tr><th>Squadra</th><th>Attesi</th>${lines.map(([L]) => `<th>+${String(L).replace('.', ',')}</th>`).join('')}</tr></thead><tbody>${row('h')}${row('a')}</tbody></table>
-      <div class="xbar" role="img" aria-label="Chi batte più angoli: ${m.h} ${pct(c.piu_casa)}, pari ${pct(c.pari)}, ${m.a} ${pct(1 - c.piu_casa - c.pari)}"><span class="h" style="flex:${c.piu_casa}">${pct(c.piu_casa)}</span><span class="d" style="flex:${c.pari}">${pct(c.pari)}</span><span class="a" style="flex:${1 - c.piu_casa - c.pari}">${pct(1 - c.piu_casa - c.pari)}</span></div>
-      <p class="note">Barra: chi batte più angoli (${m.h} · pari · ${m.a}).</p>` : '<p class="note">Angoli non disponibili per questa partita.</p>';
-    return `<article class="xcard"><div class="xhead"><div class="xmeta"><span class="xcomp">${m.comp}</span><span>${fmtWd(m.ko)} ${new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', day: 'numeric', month: 'short' }).format(m.ko * 1000)} · ${fmtTime(m.ko)}</span>${m.derby ? '<span class="xbadge">Derby</span>' : ''}<span class="xbadge lu ${ok}">${lt}</span></div>
-      <div class="xteams">${m.h} – ${m.a}</div>${m.ref ? `<div class="xmeta">Arbitro: ${m.ref}</div>` : ''}</div>
-      <div class="xsec cards"><span class="xk">Tris cartellini</span>${trio}${m.pl?.length ? `<details class="xmore"><summary>Tutti i titolari</summary><div class="xpl">${list('h')}${list('a')}</div></details>` : ''}</div>
-      <div class="xsec corn"><span class="xk">Angoli per squadra</span>${corn}</div></article>`;
-  };
   const sub = r => r.sostituzioni || {}, booked = r => new Set((r.ammoniti || []).map(c => c[1]));
-  const res = r => { const b = booked(r), hit = n => b.has(n) || b.has(sub(r)[n]);
-    const ang = r.angoli ? `${r.angoli[0]}-${r.angoli[1]}` : '–', prev = r.angoli_prev ? `${r.angoli_prev[0].toFixed(1).replace('.', ',')}-${r.angoli_prev[1].toFixed(1).replace('.', ',')}` : '–';
-    return `<article class="xcard"><div class="xmeta"><span class="xcomp">${r.comp}</span><span>${fmtDay(r.ko)}</span></div><div class="xteams">${r.h} ${r.finale} ${r.a}</div>
-      <div class="xchips">${(r.tris || []).map(t => `<span class="xchip ${hit(t.n) ? 'ok' : 'no'}">${t.n}${sub(r)[t.n] && !b.has(t.n) && b.has(sub(r)[t.n]) ? ` ➜ ${sub(r)[t.n]}` : ''}<b>${hit(t.n) ? '✓' : 'no'}</b></span>`).join('') || '<span class="note">Nessun tris</span>'}</div>
-      <div class="xmeta">Ammoniti: ${(r.ammoniti || []).map(c => c[1] + (c[2] === 'R' ? ' (rosso)' : '')).join(', ') || 'nessuno'}</div>
-      <div class="xmeta">Angoli ${ang} · previsti ${prev}</div></article>`; };
-  const tot = X.storico.reduce((a, r) => { const b = booked(r); a.n += (r.tris || []).length; a.h += (r.tris || []).filter(t => b.has(t.n) || b.has(sub(r)[t.n])).length; return a; }, { n: 0, h: 0 });
-  el.innerHTML = `<div class="xintro"><p class="note">Big match di Premier League, LaLiga, Bundesliga e Ligue 1 (derby e sfide fra le prime 7) e delle coppe nazionali (FA Cup, EFL Cup, Copa del Rey, DFB Pokal, Coupe de France, Coppa Italia).</p></div>
-    ${X.matches.length ? `<div class="xgrid">${X.matches.map(card).join('')}</div>` : '<p class="note">Nessun big match nei prossimi giorni.</p>'}
-    ${X.storico.length ? `<div class="gday">Esiti${tot.n ? ` · tris ${tot.h} su ${tot.n}` : ''}</div><div class="xres">${X.storico.slice(0, 30).map(res).join('')}</div>` : ''}`;
+  const hist = r => { const b = booked(r), rows = (r.tris || []).map(t => { const via = !b.has(t.n) && b.has(sub(r)[t.n]); return { ...t, hit: b.has(t.n) || via, via, sub: sub(r)[t.n] }; }), hits = rows.filter(x => x.hit).length;
+    const li = x => `<li class="${x.hit ? 'ok' : ''}"><span class="nm" title="${esc(x.n)}">${esc(x.n)}${x.sub && x.via ? `<small class="note">→ entrato ${esc(x.sub)}</small>` : ''}</span><span class="lead"></span><span class="val">${x.hit ? `<span class="hit">${x.via ? '✓ sostituto' : '✓ giallo'}</span> · ` : ''}${Math.round(x.p * 100)}%</span></li>`;
+    const ang = r.angoli ? `angoli ${r.angoli[0]}-${r.angoli[1]}${r.angoli_prev ? ` (attesi ${r.angoli_prev.map(v => v.toFixed(1).replace('.', ',')).join('-')})` : ''}` : '';
+    return { hits, card: `<article class="hist-card"><div class="hh"><h3>${esc(r.h)} – ${esc(r.a)} · ${r.finale}</h3>${rows.length ? `<span class="hits-badge ${hits === 3 ? 'h3' : hits === 2 ? 'h2' : ''}">${hits}/3</span>` : ''}</div>
+      <span class="note">${r.comp} · ${fmtDay(r.ko)}, ${fmtTime(r.ko)}${ang ? ' · ' + ang : ''}</span>
+      <div class="side app"><h4>Tris del modello</h4><ul>${rows.map(li).join('') || '<li><span class="nm">Nessun tris</span></li>'}</ul></div></article>` }; };
+  const H = X.storico.map(hist), tot = H.reduce((a, h, i) => a + ((X.storico[i].tris || []).length ? 3 : 0), 0), hits = H.reduce((a, h) => a + h.hits, 0);
+  el.innerHTML = `<p class="note xintro">Big match di Premier League, LaLiga, Bundesliga e Ligue 1 (derby e sfide fra le prime 7) e delle coppe nazionali (FA Cup, EFL Cup, Copa del Rey, DFB Pokal, Coupe de France, Coppa Italia).</p>
+    ${X.matches.length ? `<div class="layout"><nav class="list" id="xlist" aria-label="Big match"></nav><main class="panel" id="xpanel" aria-live="polite"></main></div>` : '<p class="note">Nessun big match nei prossimi giorni.</p>'}
+    ${X.storico.length ? `<div class="gday">Esiti${tot ? ` · ${hits} gialli su ${tot}` : ''}</div><div class="hist-grid">${H.map(h => h.card).join('')}</div>` : ''}`;
+  if (!X.matches.length) return;
+  const list = document.getElementById('xlist'); let lastDay = '';
+  for (const m of X.matches) {
+    const d = fmtDay(m.ko); if (d !== lastDay) { const h = document.createElement('div'); h.className = 'day'; h.textContent = d; list.appendChild(h); lastDay = d; }
+    const p3 = m.tris?.length === 3 ? m.tris.reduce((a, t) => a * t.p, 1) * jointK(m.tris.map(t => ({ side: t.s }))) : null;
+    const b = document.createElement('button'); b.className = 'match'; b.type = 'button'; b.id = 'xb' + m.id;
+    b.innerHTML = `<span class="time"><span class="wd">${fmtWd(m.ko)}</span>${fmtTime(m.ko)}</span>
+      <span class="teams"><span class="team"><i class="chip" style="background:${xcols(m, 'h')[0]}"></i>${esc(m.h)}</span><span class="team"><i class="chip" style="background:${xcols(m, 'a')[0]}"></i>${esc(m.a)}</span></span>
+      <span class="p3"><b>${p3 ? trioPct(p3) : '–'}</b>trio<span class="pill done">${m.comp}</span></span>`;
+    b.addEventListener('click', () => { xstate.id = m.id; xselect(); });
+    list.appendChild(b);
+  }
+  if (!X.matches.some(m => m.id === xstate.id)) xstate.id = X.matches[0].id;
+  xselect();
+}
+function xselect() {
+  const X = ALL.extra, m = X.matches.find(x => x.id === xstate.id); if (!m) return;
+  document.querySelectorAll('#xlist .match').forEach(b => b.setAttribute('aria-current', String(b.id === 'xb' + m.id)));
+  const c = m.corners, sec = xstate.sec, side = s => s === 'h' ? m.h : m.a;
+  const lu = m.lt === 'standard' ? '<span class="pill uff">Ufficiali</span>' : m.lt === 'predicted' ? '<span class="pill old">Probabili</span>' : '<span class="pill old">In attesa formazioni</span>';
+  const st = m.tris?.length === 3 ? m.tris.map(t => ({ n: t.n, team: side(t.s), p: t.p, cols: xcols(m, t.s), num: t.num, pos: t.r, tags: [], vs: null })) : null;
+  const p3 = st ? st.reduce((a, t) => a * t.p, 1) * jointK(m.tris.map(t => ({ side: t.s }))) : null;
+  const trisSec = st ? `<p class="note">Tris 2 + 1 del modello: vale anche il giallo di chi entra al posto del giocatore scelto, rosso compreso.</p>
+      <div class="stickers">${st.map(x => sticker(x, false)).join('')}</div>
+      <div class="summary"><span>Tutti e tre ammoniti</span><span class="big">${(p3 * 100).toFixed(1)}%</span></div>`
+    : '<p class="note">Il tris compare quando FotMob pubblica le formazioni (di solito 1-2 giorni prima della partita).</p>';
+  const col = s => `<div class="pcol"><h4><i class="chip big" style="background:${xcols(m, s)[0]}"></i>${esc(side(s))}</h4>
+      ${m.pl.filter(p => p[1] === s).map(p => `<div class="prow"><span></span><div><div class="nm">${esc(p[0])}</div><div class="sub">${ROLE[p[3]] || ''}${p[4] ? ' · n. ' + p[4] : ''}</div></div><div class="pp">${pct(p[2])}</div></div>`).join('')}</div>`;
+  const tuttiSec = m.pl?.length ? `<div class="picker">${col('h')}${col('a')}</div>` : '<p class="note">Formazioni non ancora disponibili.</p>';
+  const lines = c ? c.linee.map((L, i) => [L, i]).filter(([L]) => L >= 3.5 && L <= 6.5) : [];
+  const row = s => `<tr><td>${esc(side(s))}</td><td class="n"><b>${c[s].mu.toFixed(1).replace('.', ',')}</b></td>${lines.map(([, i]) => `<td class="n">${pct(c[s].o[i])}</td>`).join('')}</tr>`;
+  const angSec = c ? `<div class="tablebox"><table><thead><tr><th>Squadra</th><th class="n">Attesi</th>${lines.map(([L]) => `<th class="n">Più di ${String(L).replace('.', ',')}</th>`).join('')}</tr></thead><tbody>${row('h')}${row('a')}</tbody></table></div>
+      <div class="stat xwho"><span class="k">Chi batte più angoli</span><div class="odds" aria-hidden="true"><span style="width:${c.piu_casa * 100}%;background:${strong(xcols(m, 'h'))}"></span><span style="width:${c.pari * 100}%;background:var(--line)"></span><span style="width:${(1 - c.piu_casa - c.pari) * 100}%;background:${strong(xcols(m, 'a'))}"></span></div><span class="v">${esc(m.h)} ${pct(c.piu_casa)} · pari ${pct(c.pari)} · ${esc(m.a)} ${pct(1 - c.piu_casa - c.pari)}</span></div>
+      <p class="note">Angoli della singola squadra, stimati da angoli, tiri, tocchi in area, xG e possesso delle ultime partite di campionato.</p>` : '<p class="note">Angoli non disponibili per questa partita.</p>';
+  document.getElementById('xpanel').innerHTML = `
+    <div class="mhead">
+      <div class="mteams"><span class="mt"><i class="chip big" style="background:${xcols(m, 'h')[0]}"></i>${esc(m.h)}</span><span class="mvs">–</span><span class="mt"><i class="chip big" style="background:${xcols(m, 'a')[0]}"></i>${esc(m.a)}</span></div>
+      <div class="mwhen"><span>${fmtDay(m.ko)}, <b>${fmtTime(m.ko)}</b></span>${lu}${m.derby ? '<span class="tag">Derby</span>' : ''}</div>
+    </div>
+    <div class="stats">
+      <div class="stat"><span class="k">Competizione</span><span class="v">${m.comp}</span></div>
+      <div class="stat"><span class="k">Arbitro</span><span class="v">${m.ref ? esc(m.ref) : '–'}</span></div>
+      <div class="stat"><span class="k">Angoli attesi</span><span class="v">${c ? c.h.mu.toFixed(1).replace('.', ',') + ' – ' + c.a.mu.toFixed(1).replace('.', ',') : '–'}</span></div>
+      <div class="stat"><span class="k">Tutti e tre ammoniti</span><span class="v">${p3 ? trioPct(p3) : '–'}</span></div>
+    </div>
+    <div class="sectabs" role="tablist" aria-label="Sezioni della partita">
+      <button type="button" role="tab" data-xsec="tris" aria-selected="${sec === 'tris'}">Tris cartellini</button>
+      <button type="button" role="tab" data-xsec="tutti" aria-selected="${sec === 'tutti'}">Tutti i titolari</button>
+      <button type="button" role="tab" data-xsec="angoli" aria-selected="${sec === 'angoli'}">Angoli</button>
+    </div>
+    <div class="sec" role="tabpanel">${sec === 'tris' ? trisSec : sec === 'tutti' ? tuttiSec : angSec}</div>`;
+  document.querySelectorAll('#xpanel [data-xsec]').forEach(b => b.addEventListener('click', () => { xstate.sec = b.dataset.xsec; xselect(); }));
 }
 function setView(v) {
   state.view = v; document.getElementById('tab-partite').setAttribute('aria-pressed', String(v === 'partite')); document.getElementById('tab-area').setAttribute('aria-pressed', String(v === 'area'));

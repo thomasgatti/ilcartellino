@@ -56,7 +56,7 @@ for (const m of [...ex.matches]) {
     .map(e => [e.time, short(e.player.name), e.card === 'Red' ? 'R' : e.card === 'YellowRed' ? 'GR' : 'G', e.isHome ? 'h' : 'a']).filter(c => Object.values(names).includes(c[1]));
   const subs = {}; for (const e of ev.filter(e => e.type === 'Substitution' && e.swap?.length === 2)) subs[short(e.swap[1].name)] = short(e.swap[0].name);
   const corners = (j.content?.stats?.Periods?.All?.stats || []).flatMap(g => g.stats || []).find(s => s.key === 'corners')?.stats;
-  ex.storico.unshift({ id: m.id, comp: m.comp, h: m.h, a: m.a, ko: m.ko, finale: `${H[0].score}-${H[1].score}`, tris: m.tris, angoli_prev: m.corners ? [m.corners.h.mu, m.corners.a.mu] : null,
+  ex.storico.unshift({ id: m.id, comp: m.comp, h: m.h, a: m.a, hc: m.hc, ac: m.ac, ko: m.ko, finale: `${H[0].score}-${H[1].score}`, tris: m.tris, angoli_prev: m.corners ? [m.corners.h.mu, m.corners.a.mu] : null,
     ammoniti: cards, sostituzioni: subs, angoli: Array.isArray(corners) && corners.every(Number.isFinite) ? corners : null });
   ex.matches = ex.matches.filter(x => x.id !== m.id);
   console.log('EXTRA archiviata', m.h, m.a);
@@ -141,17 +141,20 @@ for (const [country, list] of Object.entries(byCountry)) {
     try {
       const r = await fmPredictMatch(c.id, fin.model);
       lt = r.lineupType || null; ref = r.ref || null;
-      pl = r.out.filter(x => x.st).map(x => [short(x.name), x.side ? 'h' : 'a', +x.p.toFixed(4), x.role]).sort((a, b) => b[2] - a[2]);
+      const num = {}; const j = await get('/api/data/matchDetails?matchId=' + c.id);
+      for (const T of [j?.content?.lineup?.homeTeam, j?.content?.lineup?.awayTeam]) for (const p of [...(T?.starters || []), ...(T?.subs || [])]) num[p.id] = p.shirtNumber;
+      const tc = j?.general?.teamColors?.lightMode; if (tc) { c.hc = [tc.home, '#ffffff']; c.ac = [tc.away, '#ffffff']; }
+      pl = r.out.filter(x => x.st).map(x => [short(x.name), x.side ? 'h' : 'a', +x.p.toFixed(4), x.role, num[x.id] ?? null]).sort((a, b) => b[2] - a[2]);
     } catch (e) { console.log('EXTRA senza formazioni', c.h, c.a, String(e).slice(0, 80)); }
     const best = side => pl.filter(p => p[1] === side);
     let tris = [];
     if (best('h').length && best('a').length) {
       const A = [...best('h').slice(0, 2), best('a')[0]], B = [...best('a').slice(0, 2), best('h')[0]];
       const prod = t => t.reduce((s, p) => s * p[2], 1);
-      tris = (prod(A) >= prod(B) ? A : B).map(p => ({ n: p[0], s: p[1], p: p[2] }));
+      tris = (prod(A) >= prod(B) ? A : B).map(p => ({ n: p[0], s: p[1], p: p[2], r: p[3], num: p[4] }));
     }
     const uff = lt === 'standard' ? 1 : 0;
-    out.push({ id: c.id, comp: c.comp, ko: c.ko, h: c.h, a: c.a, derby: c.derby ? 1 : 0, scelta: c.chosen ? 1 : 0, lt, uff, ref,
+    out.push({ id: c.id, comp: c.comp, ko: c.ko, h: c.h, a: c.a, hc: c.hc || old?.hc || null, ac: c.ac || old?.ac || null, derby: c.derby ? 1 : 0, scelta: c.chosen ? 1 : 0, lt, uff, ref,
       tris: tris.length ? tris : old?.tris || [], pl: pl.length ? pl.slice(0, 22) : old?.pl || [], corners: cornerOut(cm && cm(c.hid, c.aid)) || old?.corners || null });
   }
 }
