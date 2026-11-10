@@ -1,0 +1,32 @@
+name: Dati EXTRA FotMob
+# Statistiche di squadra (angoli, tiri, xG…) e per giocatore (gol, xG, tiri…) per le partite dell'archivio, nel ramo dati (cartella extra/).
+# Manuale per recuperare lo storico; ogni giorno lo stesso passo gira dentro "Aggiorna dati FotMob" per le partite nuove.
+on:
+  workflow_dispatch:
+    inputs:
+      minuti:
+        description: Minuti massimi di scaricamento
+        default: '100'
+concurrency: dati
+jobs:
+  extra:
+    runs-on: ubuntu-latest
+    timeout-minutes: 130
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          ref: dati
+          path: dati
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Scarica
+        run: node cloud/scrape_extra.mjs dati/fotmob dati/extra "${{ inputs.minuti }}"
+      - name: Salva
+        if: always()
+        run: |
+          cd dati && git config user.name "bot ammoniti" && git config user.email "bot@users.noreply.github.com"
+          git add -A extra && (git commit -qm "extra $(date -u +%F)" && git push -q origin HEAD:dati) || echo "niente di nuovo"
