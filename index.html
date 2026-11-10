@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta name="build" content="2026-11-10T10:51:11Z">
+<meta name="build" content="2026-11-10T11:06:22Z">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -987,7 +987,7 @@ function renderExtra() {
     const corn = c ? `<table class="xcorn"><thead><tr><th>Squadra</th><th>Attesi</th>${lines.map(([L]) => `<th>+${String(L).replace('.', ',')}</th>`).join('')}</tr></thead><tbody>${row('h')}${row('a')}</tbody></table>
       <div class="xbar" role="img" aria-label="Chi batte più angoli: ${m.h} ${pct(c.piu_casa)}, pari ${pct(c.pari)}, ${m.a} ${pct(1 - c.piu_casa - c.pari)}"><span class="h" style="flex:${c.piu_casa}">${pct(c.piu_casa)}</span><span class="d" style="flex:${c.pari}">${pct(c.pari)}</span><span class="a" style="flex:${1 - c.piu_casa - c.pari}">${pct(1 - c.piu_casa - c.pari)}</span></div>
       <p class="note">Barra: chi batte più angoli (${m.h} · pari · ${m.a}).</p>` : '<p class="note">Angoli non disponibili per questa partita.</p>';
-    return `<article class="xcard"><div class="xhead"><div class="xmeta"><span class="xcomp">${m.comp}</span><span>${fmtWd(m.ko)} ${new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', day: 'numeric', month: 'short' }).format(m.ko * 1000)} · ${fmtTime(m.ko)}</span>${m.derby ? '<span class="xbadge">Derby</span>' : ''}${m.scelta ? '<span class="xbadge">Scelta tua</span>' : ''}<span class="xbadge lu ${ok}">${lt}</span></div>
+    return `<article class="xcard"><div class="xhead"><div class="xmeta"><span class="xcomp">${m.comp}</span><span>${fmtWd(m.ko)} ${new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', day: 'numeric', month: 'short' }).format(m.ko * 1000)} · ${fmtTime(m.ko)}</span>${m.derby ? '<span class="xbadge">Derby</span>' : ''}<span class="xbadge lu ${ok}">${lt}</span></div>
       <div class="xteams">${m.h} – ${m.a}</div>${m.ref ? `<div class="xmeta">Arbitro: ${m.ref}</div>` : ''}</div>
       <div class="xsec cards"><span class="xk">Tris cartellini</span>${trio}${m.pl?.length ? `<details class="xmore"><summary>Tutti i titolari</summary><div class="xpl">${list('h')}${list('a')}</div></details>` : ''}</div>
       <div class="xsec corn"><span class="xk">Angoli per squadra</span>${corn}</div></article>`;
@@ -1000,8 +1000,7 @@ function renderExtra() {
       <div class="xmeta">Ammoniti: ${(r.ammoniti || []).map(c => c[1] + (c[2] === 'R' ? ' (rosso)' : '')).join(', ') || 'nessuno'}</div>
       <div class="xmeta">Angoli ${ang} · previsti ${prev}</div></article>`; };
   const tot = X.storico.reduce((a, r) => { const b = booked(r); a.n += (r.tris || []).length; a.h += (r.tris || []).filter(t => b.has(t.n) || b.has(sub(r)[t.n])).length; return a; }, { n: 0, h: 0 });
-  el.innerHTML = `<div class="xintro"><p class="note">Big match di Premier League, LaLiga, Bundesliga e Ligue 1 (derby e sfide fra le prime 7) e delle coppe nazionali (FA Cup, EFL Cup, Copa del Rey, DFB Pokal, Coupe de France, Coppa Italia), più le partite che chiedi tu. Tutte le stime vengono dal modello: per i cartellini vale anche il giallo di chi entra al posto del giocatore scelto, rosso compreso.</p>
-    <p class="note">Aggiornato ${X.updated ? hm(new Date(X.updated * 1000).toISOString()) : '–'}.</p></div>
+  el.innerHTML = `<div class="xintro"><p class="note">Big match di Premier League, LaLiga, Bundesliga e Ligue 1 (derby e sfide fra le prime 7) e delle coppe nazionali (FA Cup, EFL Cup, Copa del Rey, DFB Pokal, Coupe de France, Coppa Italia).</p></div>
     ${X.matches.length ? `<div class="xgrid">${X.matches.map(card).join('')}</div>` : '<p class="note">Nessun big match nei prossimi giorni.</p>'}
     ${X.storico.length ? `<div class="gday">Esiti${tot.n ? ` · tris ${tot.h} su ${tot.n}` : ''}</div><div class="xres">${X.storico.slice(0, 30).map(res).join('')}</div>` : ''}`;
 }
