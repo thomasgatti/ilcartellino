@@ -153,6 +153,7 @@ for (const [country, list] of Object.entries(byCountry)) {
       const prod = t => t.reduce((s, p) => s * p[2], 1);
       tris = (prod(A) >= prod(B) ? A : B).map(p => ({ n: p[0], s: p[1], p: p[2], r: p[3], num: p[4] }));
     }
+    if (!pl.length) lt = null;           // FotMob segna 'standard' anche quando non ci sono ancora titolari
     const uff = lt === 'standard' ? 1 : 0;
     out.push({ id: c.id, comp: c.comp, ko: c.ko, h: c.h, a: c.a, hc: c.hc || old?.hc || null, ac: c.ac || old?.ac || null, derby: c.derby ? 1 : 0, scelta: c.chosen ? 1 : 0, lt, uff, ref,
       tris: tris.length ? tris : old?.tris || [], pl: pl.length ? pl.slice(0, 22) : old?.pl || [], corners: cornerOut(cm && cm(c.hid, c.aid)) || old?.corners || null });
