@@ -938,7 +938,7 @@ function renderExtra() {
       <div class="side app"><h4>Tris del modello</h4><ul>${rows.map(li).join('') || '<li><span class="nm">Nessun tris</span></li>'}</ul></div></article>` }; };
   const H = X.storico.map(hist), tot = H.reduce((a, h, i) => a + ((X.storico[i].tris || []).length ? 3 : 0), 0), hits = H.reduce((a, h) => a + h.hits, 0);
   el.innerHTML = `<p class="note xintro">Big match di Premier League, LaLiga, Bundesliga e Ligue 1 (derby e sfide fra le prime 7) e delle coppe nazionali (FA Cup, EFL Cup, Copa del Rey, DFB Pokal, Coupe de France, Coppa Italia).</p>
-    ${X.matches.length ? `<div class="layout"><nav class="list" id="xlist" aria-label="Big match"></nav><main class="panel" id="xpanel" aria-live="polite"></main></div>` : '<p class="note">Nessun big match nei prossimi giorni.</p>'}
+    ${X.matches.length ? `<div class="layout"><nav class="list" id="xlist" aria-label="Big match"></nav><main class="panel" id="xpanel" aria-live="polite"></main></div>` : '<p class="note">Nessun big match nei prossimi giorni: le partite compaiono qui appena entrano in calendario.</p>'}
     ${X.storico.length ? `<div class="gday">Esiti${tot ? ` · ${hits} gialli su ${tot}` : ''}</div><div class="hist-grid">${H.map(h => h.card).join('')}</div>` : ''}`;
   if (!X.matches.length) return;
   const list = document.getElementById('xlist'); let lastDay = '';
@@ -1246,7 +1246,7 @@ function start() {
   document.getElementById('comp-sa').addEventListener('click', () => setComp('sa'));
   document.getElementById('comp-ucl').addEventListener('click', () => setComp('ucl'));
   document.getElementById('comp-extra').addEventListener('click', () => setComp('extra'));
-  if (ALL.extra && (ALL.extra.matches?.length || ALL.extra.storico?.length)) document.getElementById('comp-extra').hidden = false;
+  if (ALL.extra) document.getElementById('comp-extra').hidden = false;
   if (!CUP && document.getElementById('comp-extra').hidden) document.querySelector('.comps').hidden = true;
   const fromHash = +(location.hash || '').replace('#m', '');
   let c0 = 'sa'; try { c0 = localStorage.getItem('ammoniti_comp') || 'sa'; } catch (e) {}

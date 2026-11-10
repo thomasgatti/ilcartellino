@@ -19,6 +19,10 @@ on:
         description: Solo prova, senza pubblicare
         type: boolean
         default: true
+      extra:
+        description: Ricalcola subito la sezione EXTRA
+        type: boolean
+        default: false
 
 concurrency:
   group: pubblicazione-cartellino
@@ -52,7 +56,7 @@ jobs:
         run: node cloud/extra.mjs
         continue-on-error: true
         env:
-          EXTRA_FORZA: ${{ github.event_name == 'workflow_dispatch' && inputs.prova && '1' || '' }}
+          EXTRA_FORZA: ${{ github.event_name == 'workflow_dispatch' && (inputs.prova || inputs.extra) && '1' || '' }}
       - name: Rigenera l'interfaccia
         run: |
           if git diff --quiet -- bot/webapp/data.json bot/webapp/lineups.txt bot/webapp/vercel/risultati.json; then exit 0; fi
