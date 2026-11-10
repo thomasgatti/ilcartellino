@@ -24,7 +24,7 @@ const DERBY = [['Real Madrid', 'Barcelona'], ['Real Madrid', 'Atlético Madrid']
   ['Borussia Dortmund', 'Bayern München'], ['Borussia Dortmund', 'Schalke 04'], ['Hamburger SV', 'Werder Bremen'], ['1. FC Köln', 'Borussia Mönchengladbach'],
   ['Paris Saint-Germain', 'Marseille'], ['Lyon', 'Saint-Étienne'], ['Nice', 'Monaco'], ['Lens', 'Lille'],
   ['Inter', 'AC Milan'], ['Juventus', 'Torino'], ['Roma', 'Lazio'], ['Inter', 'Juventus'], ['Genoa', 'Sampdoria'], ['Napoli', 'Roma']];
-const TOP = 7, MAX_AUTO = 8, AHEAD = 10 * day;
+const TOP = 7, MAX_AUTO = 8, AHEAD = 14 * day;
 
 const read = f => JSON.parse(fs.readFileSync(f, 'utf8'));
 const data = read(DATA);
