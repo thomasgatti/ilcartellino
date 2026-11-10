@@ -390,3 +390,4 @@ Diffidati in Serie A (5/11, 2021/22→oggi, __SAM3 senza diffida): diffidati amm
 - Tasso gialli titolari per stagione: 17,6 / 18,6 / 17,6 / 16,9 / 15,1 / 14,3 / 12,7% (2020/21 → 2026/27 parziale, 105 gare).
 - Attesi/osservati sulla stagione di verifica con W=3000: 2024/25 1296/1148, 2025/26 1161/1090, 2026/27 274/267 → nella stagione in corso il modello è calibrato (semmai di poco alto). W da 750 a 12000 cambia la log loss di meno di 0,0005 (2026/27: 0,37224 … 0,37178). Senza il gruppo "lega" peggiora (0,37290, attesi 300).
 - Conclusione: nessuna modifica. Il +5,7 della g11 è rumore (deviazione tipica ~5 gialli su una giornata).
+- 10/11: app su claude.ai (artifact d5ea5092…) ripubblicata da bot/webapp/index.html e database `risultati` dell'artifact completato con la g11 (10 esiti, db_write). La Giornata automatica aggiorna solo Vercel: l'artifact va riallineato a mano (pagina + collection risultati) quando serve.
