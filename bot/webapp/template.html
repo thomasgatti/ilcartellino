@@ -298,6 +298,55 @@ details.how p { margin: 8px 0 0; max-width: none; }
 .summary { display: flex; flex-wrap: wrap; gap: 8px 22px; align-items: baseline; font-size: 15px; }
 .summary .big { font: 900 34px var(--display); font-variant-numeric: tabular-nums; }
 .note { font-size: 13px; color: var(--muted); max-width: 70ch; margin: 0; }
+/* ---- EXTRA ---- */
+:root[data-comp="extra"] { --xa: #0f766e; --xb: #16a34a; --xo: #d35f00; }
+:root[data-comp="extra"][data-theme="dark"] { --xa: #2dd4bf; --xb: #4ade80; --xo: #ff9a3c; --xbar-ink: #04201b; }
+@media (prefers-color-scheme: dark) { :root[data-comp="extra"]:not([data-theme="light"]) { --xa: #2dd4bf; --xb: #4ade80; --xo: #ff9a3c; --xbar-ink: #04201b; } }
+:root[data-comp="extra"] .comps button[aria-pressed="true"] { background: linear-gradient(90deg, #0f766e, #16a34a); color: #fff; box-shadow: 0 0 14px rgba(22,163,74,.4); }
+:root[data-comp="extra"] h1 { background: linear-gradient(90deg, var(--xa), var(--xb)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+:root[data-comp="extra"] h1 span { color: var(--muted); -webkit-text-fill-color: var(--muted); }
+:root[data-comp="extra"] .topbar { display: none; }
+.xintro { display: grid; gap: 6px; margin: 6px 0 14px; }
+.xgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 14px; align-items: start; }
+.xcard { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; display: grid; gap: 12px; min-width: 0; border-top: 4px solid var(--xa); }
+.xhead { display: grid; gap: 4px; }
+.xmeta { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; font-size: 12.5px; color: var(--muted); }
+.xcomp { font-weight: 800; color: var(--xa); text-transform: uppercase; letter-spacing: .05em; }
+.xbadge { font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 999px; background: color-mix(in srgb, var(--xb) 16%, transparent); color: var(--xb); }
+.xbadge.lu { background: color-mix(in srgb, var(--ink) 8%, transparent); color: var(--muted); }
+.xbadge.lu.ok { background: color-mix(in srgb, var(--xb) 16%, transparent); color: var(--xb); }
+.xteams { font: 800 19px var(--display); line-height: 1.2; }
+.xsec { display: grid; gap: 6px; }
+.xk { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: var(--xk, var(--muted)); display: inline-flex; gap: 6px; align-items: center; }
+.xk::before { content: ""; width: 4px; height: 12px; border-radius: 2px; background: currentColor; }
+.xsec.cards { --xk: var(--xo); } .xsec.corn { --xk: var(--xa); }
+.xchips { display: flex; flex-wrap: wrap; gap: 6px; }
+.xchip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 4px 4px 10px; border-radius: 999px; font-size: 13.5px; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--xo) 45%, transparent); }
+.xchip b { font-variant-numeric: tabular-nums; font-size: 12px; padding: 1px 7px; border-radius: 999px; background: color-mix(in srgb, var(--xo) 18%, transparent); }
+.xchip.ok b { background: #f5c400; color: #2a2200; } .xchip.no { opacity: .6; }
+.xchip .tm { font-size: 11px; color: var(--muted); }
+.xmore summary { cursor: pointer; font-size: 13px; color: var(--muted); }
+.xpl { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 18px; margin-top: 6px; font-size: 13px; }
+.xpl ol { margin: 0; padding-left: 18px; display: grid; gap: 2px; } .xpl h4 { margin: 0 0 2px; font-size: 12px; color: var(--muted); }
+.xpl li span { float: right; font-variant-numeric: tabular-nums; color: var(--muted); }
+.xcorn { width: 100%; border-collapse: collapse; font-size: 13.5px; table-layout: fixed; }
+.xcorn th, .xcorn td { padding: 5px 4px; text-align: center; border-bottom: 1px dashed color-mix(in srgb, var(--line) 70%, transparent); font-variant-numeric: tabular-nums; }
+.xcorn th { font-size: 11.5px; color: var(--muted); font-weight: 700; }
+.xcorn th:nth-child(2), .xcorn td:nth-child(2) { width: 17%; }
+.xcorn td:first-child, .xcorn th:first-child { text-align: left; width: 33%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.xcorn td.mu { font-weight: 800; color: var(--xa); }
+.xcorn td.hi { font-weight: 800; }
+.xbar { display: flex; height: 22px; border-radius: 999px; overflow: hidden; font-size: 11.5px; font-weight: 700; color: var(--xbar-ink, #fff); }
+.xbar span { display: flex; align-items: center; justify-content: center; min-width: 0; white-space: nowrap; overflow: hidden; }
+.xbar .h { background: var(--xa); } .xbar .d { background: color-mix(in srgb, var(--muted) 70%, transparent); } .xbar .a { background: var(--xb); }
+.xres { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 10px; align-items: start; }
+.xres .xcard { border-top-width: 3px; gap: 8px; padding: 12px 14px; }
+@media (max-width: 600px) {
+  .xgrid, .xres { grid-template-columns: 1fr; }
+  .xcard { padding: 12px; }
+  .xpl { grid-template-columns: 1fr; }
+  .xteams { font-size: 17px; }
+}
 .stat .k2 { display: block; font-size: 11.5px; color: var(--muted); margin-top: 3px; }
 .livebox { margin: 12px 0 0; border: 1px solid color-mix(in srgb, #d92d20 40%, transparent); background: color-mix(in srgb, #d92d20 8%, transparent); border-radius: 12px; padding: 10px 12px; display: grid; gap: 6px; font-size: 14px; }
 .livebox .lmin { background: #e5332a; color: #fff; animation: livepulse 1.6s ease-in-out infinite; }
@@ -470,6 +519,7 @@ footer { font-size: 13px; color: var(--muted); display: grid; gap: 6px; }
   <div class="comps" role="group" aria-label="Competizione">
     <button type="button" id="comp-sa" aria-pressed="true">Serie A</button>
     <button type="button" id="comp-ucl" aria-pressed="false"><span class="star" aria-hidden="true">✦</span> Champions League</button>
+    <button type="button" id="comp-extra" aria-pressed="false" hidden>EXTRA</button>
   </div>
   <header>
     <h1>I miei ammoniti <span id="hdr-round"></span></h1>
@@ -486,6 +536,7 @@ footer { font-size: 13px; color: var(--muted); display: grid; gap: 6px; }
   </div>
   <section class="area" id="area" hidden></section>
   <section class="area" id="storico" hidden></section>
+  <section class="area" id="extra" hidden></section>
   <footer>
     <details class="how"><summary>Come funziona</summary>
       <p id="lnote"></p>
@@ -904,6 +955,38 @@ async function renderArea() {
     <p class="note">I tris dell'app di tutte le partite, anche quelle in cui non hai giocato, sono nello <button type="button" class="link" onclick="setView('storico')">Storico tris dell'app</button>.</p>
     ${cards.length ? cards.join('') : '<p class="note">Non hai ancora salvato nessun tris: torna su "Partite", scegli una partita e crea il tuo.</p>'}`;
 }
+// ---- EXTRA: big match dei campionati esteri e delle coppe nazionali (stime del modello, nessuna scelta personale) ----
+function renderExtra() {
+  const X = ALL.extra || { matches: [], storico: [] }, el = document.getElementById('extra');
+  const luTxt = m => m.lt === 'standard' ? ['Formazioni ufficiali', 'ok'] : m.lt === 'predicted' ? ['Formazioni probabili', ''] : m.pl?.length ? ['Ultime formazioni', ''] : ['Formazioni non ancora uscite', ''];
+  const side = (m, s) => s === 'h' ? m.h : m.a;
+  const card = m => {
+    const [lt, ok] = luTxt(m), c = m.corners;
+    const trio = m.tris?.length ? `<div class="xchips">${m.tris.map(t => `<span class="xchip">${t.n} <span class="tm">${side(m, t.s)}</span><b>${pct(t.p)}</b></span>`).join('')}</div>` : '<p class="note">Il tris arriva quando FotMob pubblica le formazioni (di solito 1-2 giorni prima).</p>';
+    const list = s => `<div><h4>${side(m, s)}</h4><ol>${m.pl.filter(p => p[1] === s).slice(0, 8).map(p => `<li>${p[0]} <span>${pct(p[2])}</span></li>`).join('')}</ol></div>`;
+    const lines = c ? c.linee.map((L, i) => [L, i]).filter(([L]) => L >= 3.5 && L <= 6.5) : [];
+    const row = (s) => { const t = c[s]; return `<tr><td>${side(m, s)}</td><td class="mu">${t.mu.toFixed(1).replace('.', ',')}</td>${lines.map(([, i]) => `<td class="${t.o[i] >= .5 ? 'hi' : ''}">${pct(t.o[i])}</td>`).join('')}</tr>`; };
+    const corn = c ? `<table class="xcorn"><thead><tr><th>Squadra</th><th>Attesi</th>${lines.map(([L]) => `<th>+${String(L).replace('.', ',')}</th>`).join('')}</tr></thead><tbody>${row('h')}${row('a')}</tbody></table>
+      <div class="xbar" role="img" aria-label="Chi batte più angoli: ${m.h} ${pct(c.piu_casa)}, pari ${pct(c.pari)}, ${m.a} ${pct(1 - c.piu_casa - c.pari)}"><span class="h" style="flex:${c.piu_casa}">${pct(c.piu_casa)}</span><span class="d" style="flex:${c.pari}">${pct(c.pari)}</span><span class="a" style="flex:${1 - c.piu_casa - c.pari}">${pct(1 - c.piu_casa - c.pari)}</span></div>
+      <p class="note">Barra: chi batte più angoli (${m.h} · pari · ${m.a}).</p>` : '<p class="note">Angoli non disponibili per questa partita.</p>';
+    return `<article class="xcard"><div class="xhead"><div class="xmeta"><span class="xcomp">${m.comp}</span><span>${fmtWd(m.ko)} ${new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', day: 'numeric', month: 'short' }).format(m.ko * 1000)} · ${fmtTime(m.ko)}</span>${m.derby ? '<span class="xbadge">Derby</span>' : ''}${m.scelta ? '<span class="xbadge">Scelta tua</span>' : ''}<span class="xbadge lu ${ok}">${lt}</span></div>
+      <div class="xteams">${m.h} – ${m.a}</div>${m.ref ? `<div class="xmeta">Arbitro: ${m.ref}</div>` : ''}</div>
+      <div class="xsec cards"><span class="xk">Tris cartellini</span>${trio}${m.pl?.length ? `<details class="xmore"><summary>Tutti i titolari</summary><div class="xpl">${list('h')}${list('a')}</div></details>` : ''}</div>
+      <div class="xsec corn"><span class="xk">Angoli per squadra</span>${corn}</div></article>`;
+  };
+  const sub = r => r.sostituzioni || {}, booked = r => new Set((r.ammoniti || []).map(c => c[1]));
+  const res = r => { const b = booked(r), hit = n => b.has(n) || b.has(sub(r)[n]);
+    const ang = r.angoli ? `${r.angoli[0]}-${r.angoli[1]}` : '–', prev = r.angoli_prev ? `${r.angoli_prev[0].toFixed(1).replace('.', ',')}-${r.angoli_prev[1].toFixed(1).replace('.', ',')}` : '–';
+    return `<article class="xcard"><div class="xmeta"><span class="xcomp">${r.comp}</span><span>${fmtDay(r.ko)}</span></div><div class="xteams">${r.h} ${r.finale} ${r.a}</div>
+      <div class="xchips">${(r.tris || []).map(t => `<span class="xchip ${hit(t.n) ? 'ok' : 'no'}">${t.n}${sub(r)[t.n] && !b.has(t.n) && b.has(sub(r)[t.n]) ? ` ➜ ${sub(r)[t.n]}` : ''}<b>${hit(t.n) ? '✓' : 'no'}</b></span>`).join('') || '<span class="note">Nessun tris</span>'}</div>
+      <div class="xmeta">Ammoniti: ${(r.ammoniti || []).map(c => c[1] + (c[2] === 'R' ? ' (rosso)' : '')).join(', ') || 'nessuno'}</div>
+      <div class="xmeta">Angoli ${ang} · previsti ${prev}</div></article>`; };
+  const tot = X.storico.reduce((a, r) => { const b = booked(r); a.n += (r.tris || []).length; a.h += (r.tris || []).filter(t => b.has(t.n) || b.has(sub(r)[t.n])).length; return a; }, { n: 0, h: 0 });
+  el.innerHTML = `<div class="xintro"><p class="note">Big match di Premier League, LaLiga, Bundesliga e Ligue 1 (derby e sfide fra le prime 7) e delle coppe nazionali (FA Cup, EFL Cup, Copa del Rey, DFB Pokal, Coupe de France, Coppa Italia), più le partite che chiedi tu. Tutte le stime vengono dal modello: per i cartellini vale anche il giallo di chi entra al posto del giocatore scelto, rosso compreso.</p>
+    <p class="note">Aggiornato ${X.updated ? hm(new Date(X.updated * 1000).toISOString()) : '–'}.</p></div>
+    ${X.matches.length ? `<div class="xgrid">${X.matches.map(card).join('')}</div>` : '<p class="note">Nessun big match nei prossimi giorni.</p>'}
+    ${X.storico.length ? `<div class="gday">Esiti${tot.n ? ` · tris ${tot.h} su ${tot.n}` : ''}</div><div class="xres">${X.storico.slice(0, 30).map(res).join('')}</div>` : ''}`;
+}
 function setView(v) {
   state.view = v; document.getElementById('tab-partite').setAttribute('aria-pressed', String(v === 'partite')); document.getElementById('tab-area').setAttribute('aria-pressed', String(v === 'area'));
   document.getElementById('tab-storico').setAttribute('aria-pressed', String(v === 'storico'));
@@ -962,6 +1045,18 @@ function paintHeader() {
 }
 function setComp(c, keepId) {
   if (c === 'ucl' && !CUP) c = 'sa';
+  if (c === 'extra' && !ALL.extra) c = 'sa';
+  for (const k of ['sa', 'ucl', 'extra']) document.getElementById('comp-' + k).setAttribute('aria-pressed', String(c === k));
+  document.getElementById('extra').hidden = c !== 'extra';
+  if (c === 'extra') {
+    state.comp = 'extra'; DATA = ALL; document.documentElement.dataset.comp = 'extra';
+    try { localStorage.setItem('ammoniti_comp', c); } catch (e) {}
+    document.querySelector('.layout').hidden = true; document.getElementById('area').hidden = true; document.getElementById('storico').hidden = true;
+    document.getElementById('hdr-round').textContent = '· EXTRA';
+    document.getElementById('meta').innerHTML = '<span>Big match esteri e coppe nazionali</span>';
+    renderExtra(); history.replaceState(null, '', '#extra'); return;
+  }
+  document.querySelector('.layout').hidden = state.view !== 'partite'; document.getElementById('area').hidden = state.view !== 'area'; document.getElementById('storico').hidden = state.view !== 'storico';
   state.comp = c; DATA = c === 'ucl' ? { ...ALL, ...CUP } : ALL;
   document.documentElement.dataset.comp = c;
   document.getElementById('comp-sa').setAttribute('aria-pressed', String(c === 'sa'));
@@ -1144,10 +1239,13 @@ function start() {
   document.getElementById('tab-storico').addEventListener('click', () => setView('storico'));
   document.getElementById('comp-sa').addEventListener('click', () => setComp('sa'));
   document.getElementById('comp-ucl').addEventListener('click', () => setComp('ucl'));
-  if (!CUP) document.querySelector('.comps').hidden = true;
+  document.getElementById('comp-extra').addEventListener('click', () => setComp('extra'));
+  if (ALL.extra && (ALL.extra.matches?.length || ALL.extra.storico?.length)) document.getElementById('comp-extra').hidden = false;
+  if (!CUP && document.getElementById('comp-extra').hidden) document.querySelector('.comps').hidden = true;
   const fromHash = +(location.hash || '').replace('#m', '');
   let c0 = 'sa'; try { c0 = localStorage.getItem('ammoniti_comp') || 'sa'; } catch (e) {}
   if (location.hash === '#ucl') c0 = 'ucl';
+  if (location.hash === '#extra') c0 = 'extra';
   if (CUP && CUP.matches.some(m => m.id === fromHash)) c0 = 'ucl'; else if (ALL.matches.some(m => m.id === fromHash)) c0 = 'sa';
   setComp(c0, fromHash);
   setTimeout(liveLoop, 1000);
@@ -1156,7 +1254,7 @@ function start() {
   if (location.hash === '#area') setView('area');
   if (location.hash === '#storico') setView('storico');
 }
-window.addEventListener('hashchange', () => { if (location.hash === '#storico') { if (state.view !== 'storico') setView('storico'); return; } if (location.hash === '#area') { if (state.view !== 'area') setView('area'); return; } const id = +(location.hash || '').replace('#m', ''); if (!DATA.matches.some(m => m.id === id) && allMatches().some(m => m.id === id)) setComp(state.comp === 'ucl' ? 'sa' : 'ucl', id); if (DATA.matches.some(m => m.id === id)) { if (state.view !== 'partite') setView('partite'); select(id); } });
+window.addEventListener('hashchange', () => { if (location.hash === '#extra') { if (state.comp !== 'extra') setComp('extra'); return; } if (location.hash === '#storico') { if (state.view !== 'storico') setView('storico'); return; } if (location.hash === '#area') { if (state.view !== 'area') setView('area'); return; } const id = +(location.hash || '').replace('#m', ''); if (!DATA.matches.some(m => m.id === id) && allMatches().some(m => m.id === id)) setComp(state.comp === 'ucl' ? 'sa' : 'ucl', id); if (DATA.matches.some(m => m.id === id)) { if (state.view !== 'partite') setView('partite'); select(id); } });
 start();
 </script>
 </body>

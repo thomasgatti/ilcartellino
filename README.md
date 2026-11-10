@@ -27,6 +27,8 @@ template.html + data.json + lineups.txt ──build.py──▶ bot/webapp/index
 | `bot/ammoniti/` | Modello, script Python di conversione, test, RUNBOOK, dati di lavoro (`data/`, `tmp/`). |
 | `lib/` | Copie dei `.js` del modello servite su `/lib/` del sito (CORS aperto, `vercel.json`): le usano la scheda FotMob nel browser e il bot nel cloud. |
 | `cloud/` | Bot per GitHub Actions (Node 20): scarica FotMob, formazioni ufficiali, esiti. |
+| `cloud/extra.mjs` | Sezione **EXTRA** (gira dopo la Giornata automatica, ricalcola ogni 3 ore o vicino al calcio d'inizio): big match di Premier, LaLiga, Bundesliga, Ligue 1 e coppe nazionali (derby e sfide fra le prime 7, massimo 8) + le partite in `bot/webapp/extra_scelte.json` (`aggiunte`/`escluse`, id FotMob). Tris cartellini col modello Serie A riallenato sul campionato del paese, angoli per squadra (Poisson su angoli, tiri, tocchi in area, xG, possesso). Scrive `data.json → extra`. |
+| `cloud/scrape_extra.mjs` | Statistiche di squadra e per giocatore nel ramo `dati`, cartella `extra/` (angoli, tiri, xG, gol…). |
 | `.github/workflows/` | `giornata.yml` (**Giornata automatica**: lanciata da cron-job.org ogni 20 minuti, 11:00-23:40, tranne il giovedì, e ogni mattina dopo l'aggiornamento dati; ufficiali, esiti, passaggio alla giornata successiva di Serie A e Champions, arbitri e linee cartellini; pubblica solo se la variabile `CARTELLINO_AUTO` è `true`), `aggiorna_dati.yml` (ogni giorno 05:17 UTC, scarica FotMob nel ramo `dati`), `sonda.yml` (manuale: scarica indirizzi FotMob e ne stampa un estratto nel log, per controllare i dati senza PC), `formazioni.yml` ed `esiti.yml` (manuali, più vecchi). |
 
 ### Dati di una partita (`data.json`)
