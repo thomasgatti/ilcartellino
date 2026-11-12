@@ -1,0 +1,33 @@
+name: Quote storiche (football-data.co.uk)
+# Scarica i CSV di football-data.co.uk (risultati, statistiche e quote 1X2 / over-under / handicap, anche di chiusura)
+# nel ramo "dati", cartella quote/. Avvio manuale; si può rilanciare quando si vuole: riscarica la stagione in corso.
+on:
+  workflow_dispatch:
+concurrency: dati
+jobs:
+  quote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: dati
+          path: dati
+      - name: Scarica
+        run: |
+          mkdir -p dati/quote && cd dati/quote
+          for s in 2021 2122 2223 2324 2425 2526 2627; do
+            for c in I1 E0 E1 SC0 D1 SP1 F1 N1 B1 P1 T1 G1; do
+              curl -sSfL -A "Mozilla/5.0" -o "fd_${c}_${s}.csv" "https://www.football-data.co.uk/mmz4281/${s}/${c}.csv" || echo "manca ${c} ${s}"
+              sleep 1
+            done
+          done
+          for c in AUT SWZ DNK NOR; do curl -sSfL -A "Mozilla/5.0" -o "fd_${c}.csv" "https://www.football-data.co.uk/new/${c}.csv" || echo "manca ${c}"; sleep 1; done
+          curl -sSfL -A "Mozilla/5.0" -o notes.txt "https://www.football-data.co.uk/notes.txt" || true
+          ls -la | head -100
+      - name: Salva
+        run: |
+          cd dati && git config user.name "bot ammoniti" && git config user.email "bot@users.noreply.github.com"
+          git add -A quote && (git commit -qm "quote football-data $(date -u +%F)" && git push -q origin HEAD:dati) || echo "niente di nuovo"
