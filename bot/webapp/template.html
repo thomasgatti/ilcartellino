@@ -681,9 +681,60 @@ html { overflow-y: scroll; scrollbar-gutter: stable; }
   :root[data-comp="sa"] .sectabs button[aria-selected="true"] { border-color: #00e5e0; }
 }
 #panel { overflow-anchor: none; align-content: start; }  /* l'altezza tenuta cambiando scheda resta in fondo, senza allargare riquadri e schede */
+
+/* ---- Benvenuto ---- */
+#splash { display: none; }
+.splash-on #splash { display: grid; position: fixed; inset: 0; z-index: 9999; place-items: center; background: #fff; animation: spOut .45s ease 2.55s forwards; cursor: pointer; }
+.splash-on body { overflow: hidden; }
+.sp-stage { display: grid; justify-items: center; gap: 4px; }
+.sp-svg { width: min(60vw, 280px); height: auto; overflow: visible; }
+.sp-arm { transform-box: view-box; transform-origin: 110px 280px; animation: spRaise .75s cubic-bezier(.2,.9,.25,1.15) .15s both, spShake .5s ease-in-out .95s 1; }
+.sp-card { transform-box: fill-box; transform-origin: 50% 100%; animation: spPull .45s cubic-bezier(.2,.9,.3,1.2) .55s both; }
+.sp-glow { opacity: 0; transform-box: fill-box; transform-origin: center; animation: spGlow .9s ease-out 1s both; }
+.sp-burst { opacity: 0; animation: spBurst .6s ease-out 1.05s both; }
+.sp-title { font: 900 clamp(40px, 9vw, 68px)/1 var(--display); text-transform: uppercase; letter-spacing: .02em; color: #10162b; opacity: 0; animation: spText .5s ease 1.2s both; }
+.sp-sub { font: 600 15px var(--body); color: #6b7390; letter-spacing: .08em; text-transform: uppercase; opacity: 0; animation: spText .5s ease 1.45s both; }
+@keyframes spRaise { from { transform: translateY(170px) rotate(8deg); } to { transform: translateY(0) rotate(0); } }
+@keyframes spShake { 0%,100% { transform: rotate(0); } 30% { transform: rotate(-5deg); } 65% { transform: rotate(3deg); } }
+@keyframes spPull { from { transform: translateY(46px) scaleY(.4); opacity: .2; } to { transform: none; opacity: 1; } }
+@keyframes spGlow { 0% { opacity: 0; transform: scale(.4); } 40% { opacity: 1; } 100% { opacity: .55; transform: scale(1.15); } }
+@keyframes spBurst { 0% { opacity: 0; transform: scale(.7); } 50% { opacity: 1; } 100% { opacity: 0; transform: scale(1.15); } }
+@keyframes spText { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes spOut { to { opacity: 0; visibility: hidden; } }
+.sp-burst { transform-box: view-box; transform-origin: 110px 92px; }
+@media (prefers-reduced-motion: reduce) { .splash-on #splash { animation-duration: .2s; animation-delay: .9s; } .sp-arm, .sp-card, .sp-glow, .sp-burst, .sp-title, .sp-sub { animation-duration: .01s !important; animation-delay: 0s !important; } }
 </style>
 </head>
 <body>
+<!-- Schermata di benvenuto: una mano estrae il cartellino giallo (disegno originale). Una volta per sessione, si salta con un tocco. -->
+<script>try { if (!sessionStorage.getItem('cartellino_splash')) { document.documentElement.classList.add('splash-on'); sessionStorage.setItem('cartellino_splash', '1'); } } catch (e) {}</script>
+<div id="splash" aria-hidden="true">
+  <div class="sp-stage">
+    <svg class="sp-svg" viewBox="0 0 220 280" width="220" height="280">
+      <defs>
+        <linearGradient id="spCard" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe14d"/><stop offset=".55" stop-color="#ffd000"/><stop offset="1" stop-color="#f2b600"/></linearGradient>
+        <radialGradient id="spGlow"><stop offset="0" stop-color="#ffe14d" stop-opacity=".75"/><stop offset="1" stop-color="#ffe14d" stop-opacity="0"/></radialGradient>
+      </defs>
+      <circle class="sp-glow" cx="110" cy="92" r="92" fill="url(#spGlow)"/>
+      <g class="sp-burst" stroke="#ffcc00" stroke-width="5" stroke-linecap="round">
+        <line x1="110" y1="4" x2="110" y2="22"/><line x1="40" y1="34" x2="52" y2="46"/><line x1="180" y1="34" x2="168" y2="46"/><line x1="16" y1="100" x2="34" y2="100"/><line x1="204" y1="100" x2="186" y2="100"/>
+      </g>
+      <g class="sp-arm">
+        <rect class="sp-card" x="80" y="34" width="60" height="84" rx="7" fill="url(#spCard)" stroke="#d9a200" stroke-width="2"/>
+        <rect x="88" y="186" width="44" height="100" rx="10" fill="#151a2e"/>
+        <rect x="88" y="186" width="44" height="12" rx="4" fill="#2a3150"/>
+        <path d="M84 132 Q84 118 96 118 L126 118 Q138 118 138 132 L138 172 Q138 190 120 190 L100 190 Q84 190 84 172 Z" fill="#e8b48a"/>
+        <g fill="#f0c19a" stroke="#c98d63" stroke-width="1.6">
+          <rect x="85" y="104" width="14" height="30" rx="7"/><rect x="99" y="100" width="14" height="32" rx="7"/><rect x="113" y="102" width="14" height="31" rx="7"/><rect x="126" y="108" width="12" height="27" rx="6"/>
+        </g>
+        <path d="M84 150 Q70 140 74 124 Q78 114 88 122 L94 140 Z" fill="#e3ab80" stroke="#c98d63" stroke-width="1.6"/>
+      </g>
+    </svg>
+    <div class="sp-title">Il cartellino</div>
+    <div class="sp-sub">i tris degli ammoniti</div>
+  </div>
+</div>
+
 <div class="wrap">
   <div class="comps" role="group" aria-label="Competizione">
     <button type="button" id="comp-sa" aria-pressed="true">Serie A</button>
@@ -734,6 +785,11 @@ html { overflow-y: scroll; scrollbar-gutter: stable; }
 </div>
 <script id="data" type="application/json">/*__DATA__*/</script>
 <script>
+
+// benvenuto: si chiude da solo dopo l'animazione o con un tocco
+(() => { const sp = document.getElementById('splash'); if (!sp || !document.documentElement.classList.contains('splash-on')) return;
+  const close = () => { document.documentElement.classList.remove('splash-on'); sp.remove(); };
+  sp.addEventListener('click', close); sp.addEventListener('animationend', e => { if (e.target === sp) close(); }); setTimeout(close, 3600); })();
 const ALL = JSON.parse(document.getElementById('data').textContent);
 let DATA = ALL;
 const CUP = ALL.cups && ALL.cups.ucl ? ALL.cups.ucl : null;
