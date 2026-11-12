@@ -71,15 +71,80 @@ for lg, vars_, bg, surf, xa, xb in [
 {R} h1 {{ background-image: linear-gradient(90deg, #ffffff, {xa} 70%, {xb}); }}
 {R} .tabs button[aria-pressed="true"], {R} .histbtn[aria-pressed="true"] {{ background: {xa}; color: {'#1a1600' if lg == 'l1' else '#fff'}; }}
 """)
+def tri(pal, seed, n=46, bars=14, op=(.55, .7, .85)):
+    r = random.Random(seed); sh = []
+    for _ in range(n):
+        x, y, s_, c = r.uniform(-40, W), r.uniform(-40, H), r.choice([18, 26, 40, 56, 64]), r.choice(pal); h = s_ * math.sqrt(3) / 2
+        pts = [(x, y), (x + s_, y), (x + s_ / 2, y + h)] if r.random() < .55 else [(x + s_ / 2, y), (x + s_, y + h), (x, y + h)]
+        sh.append(f"<polygon points='{' '.join(f'{a:.0f},{b:.0f}' for a, b in pts)}' fill='{c}' opacity='{r.choice(op)}'/>")
+    for _ in range(bars):
+        x, y, w, l, c = r.uniform(0, W), r.uniform(0, H), r.choice([34, 46, 56]), r.choice([110, 150, 200]), r.choice(pal); dx = l / math.tan(math.radians(60))
+        sh.append(f"<polygon points='{x:.0f},{y:.0f} {x + w:.0f},{y:.0f} {x + w - dx:.0f},{y + l:.0f} {x - dx:.0f},{y + l:.0f}' fill='{c}' opacity='{r.choice(op[:2])}'/>")
+    return svg(''.join(sh))
+def dark_lg(lg, vars_, bg, surf, xa, xb, ink_on_accent='#fff'):
+    R = f'{X}[data-lg="{lg}"]'
+    return skin(R, vars_ + f" --xa: {xa}; --xb: {xb};", bg, surf) + f"""{R} .comps button[aria-pressed="true"] {{ background: linear-gradient(90deg, {xa}, {xb}); color: {ink_on_accent}; box-shadow: 0 0 14px color-mix(in srgb, {xa} 45%, transparent); }}
+{R} .panel {{ background: linear-gradient(90deg, {xa}, {xb}) top / 100% 5px no-repeat, {surf}; }}
+{R} h1 {{ background-image: linear-gradient(90deg, #ffffff, {xa} 70%, {xb}); }}
+{R} .tabs button[aria-pressed="true"], {R} .histbtn[aria-pressed="true"] {{ background: {xa}; color: {ink_on_accent}; }}
+"""
+def light_lg(lg, paper, bg, xa, xb, press_bg, press_ink, tab_bg):
+    R = f'{X}[data-lg="{lg}"]'
+    return f"""{R} {{ --paper: {paper}; --xa: {xa}; --xb: {xb}; }}
+{R} body {{ background-color: {paper}; background-image: {bg}; background-size: cover; background-position: center top; background-attachment: fixed; }}
+{R} h1 {{ background-image: linear-gradient(90deg, #ffffff, #ffe9e9); }}
+{R} h1 span, {R} .meta, {R} .xintro, {R} #extra > .note, {R} .day, {R} .who-chip, {R} .footer-credit, {R} .footer-privacy > summary {{ color: #fff !important; -webkit-text-fill-color: #fff; }}
+{R} .comps button[aria-pressed="true"] {{ background: {press_bg}; color: {press_ink}; }}
+{R} .panel {{ background: linear-gradient(90deg, {xa}, {xb}) top / 100% 5px no-repeat, var(--surface); }}
+{R} .histbtn[aria-pressed="true"], {R} .tabs button[aria-pressed="true"] {{ background: {tab_bg}; color: #fff; }}
+"""
 # 5) Bundesliga: rosso pieno con un taglio diagonale più chiaro, schede bianche
-R = f'{X}[data-lg="bl"]'
-css.append(f"""{R} {{ --paper: #c8000f; --xa: #d20515; --xb: #ff3b3b; }}
-{R} body {{ background-color: #c8000f; background-image: linear-gradient(160deg, rgba(255,255,255,.10) 0 38%, transparent 38.2%), linear-gradient(200deg, transparent 0 55%, rgba(0,0,0,.12) 55.2%), linear-gradient(180deg, #e30613, #a8000c); background-size: auto; background-attachment: fixed; }}
-{R} h1 {{ background-image: linear-gradient(90deg, #ffffff, #ffe1e1); }}
-{R} h1 span, {R} .meta, {R} .xintro, {R} #extra > .note, {R} .day, {R} .who-chip, {R} footer, {R} footer a {{ color: #fff !important; -webkit-text-fill-color: #fff; }}
-{R} .comps button[aria-pressed="true"] {{ background: #fff; color: #c8000f; }}
-{R} .panel {{ background: linear-gradient(90deg, #e30613, #ff3b3b) top / 100% 5px no-repeat, var(--surface); }}
-{R} .histbtn[aria-pressed="true"], {R} .tabs button[aria-pressed="true"] {{ background: #a8000c; color: #fff; }}
+css.append(light_lg('bl', '#c8000f', "linear-gradient(160deg, rgba(255,255,255,.10) 0 38%, transparent 38.2%), linear-gradient(200deg, transparent 0 55%, rgba(0,0,0,.12) 55.2%), linear-gradient(180deg, #e30613, #a8000c)",
+                    '#d20515', '#ff3b3b', '#fff', '#c8000f', '#a8000c'))
+# 7) FA Cup: rosso pieno con tagli neri ai lati, schede bianche
+FA = svg("<polygon points='0,0 90,0 0,260' fill='#111' opacity='.55'/><polygon points='1280,720 1150,720 1280,380' fill='#111' opacity='.55'/>"
+         "<polygon points='1180,0 1280,0 1280,120' fill='#111' opacity='.35'/><polygon points='0,600 70,720 0,720' fill='#111' opacity='.35'/>")
+css.append(light_lg('fa', '#d42027', f"{uri(FA)}, linear-gradient(180deg, #d42027, #b8161d)", '#d42027', '#111111', '#111', '#fff', '#111'))
+# 8) Copa del Rey: nastri curvi oro e rosso su nero
+CDR = svg("<path d='M-60,760 C220,420 300,140 520,-40' fill='none' stroke='url(#g)' stroke-width='70' opacity='.8'/>"
+          "<path d='M60,780 C330,470 420,180 640,-40' fill='none' stroke='url(#rr)' stroke-width='46' opacity='.75'/>"
+          "<path d='M1340,-40 C1060,300 980,520 760,780' fill='none' stroke='url(#rr)' stroke-width='64' opacity='.7'/>"
+          "<path d='M1240,-60 C980,260 900,500 680,780' fill='none' stroke='url(#g)' stroke-width='30' opacity='.6'/>",
+          "<linearGradient id='g' x1='0' y1='1' x2='1' y2='0'><stop offset='0' stop-color='#a8742e'/><stop offset='.5' stop-color='#f0c470'/><stop offset='1' stop-color='#c38a3c'/></linearGradient>"
+          "<linearGradient id='rr' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#ff2a3a'/><stop offset='1' stop-color='#a3121f'/></linearGradient>")
+css.append(dark_lg('cdr', dark('#070707', '#141012', '#fff6ea', '#cdb79a', '#3a2a22'), f"linear-gradient(180deg, rgba(7,7,7,.4), rgba(7,7,7,.78)), {uri(CDR)}", "linear-gradient(180deg, rgba(24,18,20,.95), rgba(14,10,12,.95))", '#e8b864', '#e0283a', '#1a1000'))
+# Coppa Italia: triangoli rossi e arancio su bordeaux
+CIT = tri(['#ff4a38', '#e03028', '#c42222', '#a00000', '#ff6a4a'], 11)
+css.append(dark_lg('cit', dark('#6a0000', '#7e0a0a', '#fff2ef', '#f0b3aa', '#9c2a26'), f"linear-gradient(180deg, rgba(106,0,0,.45), rgba(106,0,0,.8)), {uri(CIT)}", "linear-gradient(180deg, rgba(128,12,12,.95), rgba(100,4,4,.95))", '#ff5a40', '#ffb02e'))
+# EFL Cup: verde (il colore della coppa di lega) con fasce lime e oro
+EFL = svg("<polygon points='760,-20 900,-20 520,740 380,740' fill='#00a651' opacity='.75'/><polygon points='930,-20 990,-20 610,740 550,740' fill='#8dc63f' opacity='.7'/>"
+          "<polygon points='1040,-20 1070,-20 690,740 660,740' fill='#e2b13c' opacity='.7'/><polygon points='120,-20 170,-20 -210,740 -260,740' fill='#00a651' opacity='.5'/>")
+css.append(dark_lg('efl', dark('#06291c', '#0b3a28', '#effff6', '#a9d8bf', '#1e5a40'), f"linear-gradient(180deg, rgba(6,41,28,.4), rgba(6,41,28,.8)), {uri(EFL)}", "linear-gradient(180deg, rgba(14,64,44,.95), rgba(8,46,31,.95))", '#00c25e', '#e2b13c', '#03170e'))
+# DFB Pokal: viola con linee curve oro (coriandoli) e un tocco di verde
+r = random.Random(5)
+DFB = svg(''.join(f"<path d='M{x:.0f},{y:.0f} q{r.uniform(20, 60):.0f},{-r.uniform(30, 90):.0f} {r.uniform(60, 140):.0f},{-r.uniform(10, 60):.0f}' fill='none' stroke='{c}' stroke-width='{w}' stroke-linecap='round' opacity='.8'/>"
+               for x, y, c, w in [(r.uniform(0, W), r.uniform(60, H), r.choice(['#e8c15a', '#e8c15a', '#f3d98a', '#3ddc84']), r.choice([6, 9, 12])) for _ in range(40)]))
+css.append(dark_lg('dfb', dark('#24104f', '#2e1663', '#f6f0ff', '#c3b2e8', '#4a2f86'), f"linear-gradient(180deg, rgba(36,16,79,.4), rgba(36,16,79,.8)), {uri(DFB)}, linear-gradient(160deg, #4a1f96, #24104f)", "linear-gradient(180deg, rgba(56,26,118,.95), rgba(40,18,90,.95))", '#e8c15a', '#3ddc84', '#1a1000'))
+# Coupe de France: blu federale con esagoni bianchi, rossi e oro
+def hexa(cx, cy, rr, col, w, op): return "<polygon points='" + ' '.join(f"{cx + rr * math.cos(math.radians(60 * k + 30)):.0f},{cy + rr * math.sin(math.radians(60 * k + 30)):.0f}" for k in range(6)) + f"' fill='none' stroke='{col}' stroke-width='{w}' opacity='{op}'/>"
+CDF = svg(hexa(1040, 200, 220, '#ffffff', 26, .35) + hexa(1040, 200, 150, '#e1000f', 18, .7) + hexa(220, 600, 260, '#ffffff', 22, .25) + hexa(220, 600, 180, '#c9a24a', 16, .6) + hexa(640, -40, 140, '#e1000f', 14, .45))
+css.append(dark_lg('cdf', dark('#0a1f66', '#10297a', '#f2f6ff', '#aebde8', '#2a4294'), f"linear-gradient(180deg, rgba(10,31,102,.4), rgba(10,31,102,.8)), {uri(CDF)}, linear-gradient(180deg, #0b2a8a, #0a1f66)", "linear-gradient(180deg, rgba(20,48,140,.95), rgba(14,36,112,.95))", '#e1000f', '#c9a24a'))
+# Nazionali (Nations League): blu notte con triangoli multicolori, i colori delle bandiere
+NZ = tri(['#e4002b', '#ffd200', '#00b2a9', '#1e5bff', '#ffffff', '#ff7a00'], 23, n=40, bars=10)
+R = ':root[data-comp="naz"]'
+css.append(skin(R, dark('#0a1446', '#111d5e', '#f2f5ff', '#aab4e6', '#28337e') + " --na1: #1e5bff; --na2: #ffd200; --na3: #00b2a9;",
+                f"linear-gradient(180deg, rgba(10,20,70,.5), rgba(10,20,70,.82)), {uri(NZ)}", "linear-gradient(180deg, rgba(24,36,116,.94), rgba(16,27,92,.94))"))
+css.append(f"""{R} h1, {R}[data-theme="dark"] h1 {{ background-image: linear-gradient(90deg, #ffffff 0%, #ffd200 55%, #00b2a9 100%); }}
+@media (prefers-color-scheme: dark) {{ {R}:not([data-theme="light"]) h1 {{ background-image: linear-gradient(90deg, #ffffff 0%, #ffd200 55%, #00b2a9 100%); }} }}
+{R} body::before {{ background: linear-gradient(90deg, #e4002b 0 25%, #ffd200 25% 50%, #00b2a9 50% 75%, #1e5bff 75%); }}
+{R} .comps button[aria-pressed="true"] {{ background: linear-gradient(90deg, #1e5bff, #00b2a9); color: #fff; box-shadow: 0 0 14px rgba(0,178,169,.45); }}
+{R} .tabs button[aria-pressed="true"], {R} .histbtn[aria-pressed="true"] {{ background: #1e5bff; color: #fff; }}
+{R} .day {{ color: #ffd200; }}
+{R} .match[aria-current="true"] {{ box-shadow: 0 0 0 2px #ffd200 inset, 0 0 18px rgba(255,210,0,.25); }}
+{R} .panel {{ background: linear-gradient(90deg, #e4002b, #ffd200, #00b2a9, #1e5bff) top / 100% 5px no-repeat, linear-gradient(180deg, rgba(24,36,116,.94), rgba(16,27,92,.94)); }}
+{R} .sectabs button[aria-selected="true"] {{ border-bottom-color: #ffd200; }}
+{R} .posta {{ background: color-mix(in srgb, #ffd200 8%, var(--surface)); border-color: color-mix(in srgb, #ffd200 35%, var(--line)); border-left-color: #ffd200; }}
+{R} .posta .pk {{ color: #ffd200; }}
 """)
 open('sfondi.css', 'w').write('\n'.join(css))
 print(len('\n'.join(css)))
