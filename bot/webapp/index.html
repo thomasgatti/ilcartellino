@@ -647,6 +647,8 @@ footer { font-size: 13px; color: var(--muted); display: grid; gap: 6px; }
 .pill.wait, .ltag.wait { background: color-mix(in srgb, var(--muted) 22%, transparent); color: var(--ink); border-color: transparent; }
 .bandiera { width: 18px; height: 13.5px; border-radius: 2px; flex: none; object-fit: cover; box-shadow: 0 0 0 1px rgba(127,127,127,.45); }
 .bandiera.big { width: 26px; height: 19.5px; border-radius: 3px; }
+/* barra di scorrimento sempre presente: passando da Partite a La mia area (pagina corta) la pagina non si sposta di lato */
+html { overflow-y: scroll; scrollbar-gutter: stable; }
 </style>
 </head>
 <body>
