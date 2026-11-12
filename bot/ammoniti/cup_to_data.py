@@ -1,7 +1,8 @@
 """Converte l'esportazione FotMob delle partite di coppa (cupExport, solo titolari) nella sezione cups.ucl di webapp/data.json.
 Uso: python3 cup_to_data.py export.json "4" [uff_ids_separati_da_virgola] [quote_oddschecker.txt]
 Con il file delle quote 'ammonito' (Oddschecker) la probabilità finale è la media in logit tra modello e mercato (market_blend.py).
-Ogni riga giocatore: [nome, lato h/a, ruolo, numero, p, di fronte, titolare %, q]."""
+Ogni riga giocatore: [nome, lato h/a, ruolo, numero, p, di fronte, titolare %, q].
+Con CUP_COMP=naz scrive invece cups.naz (Nations League: stesso modello coppe, nomi delle nazionali in italiano)."""
 import json, sys, unicodedata, datetime, pathlib
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
 from market_blend import load_oc, slug_for, blend_match, W_MARKET, lg, ex
@@ -46,6 +47,16 @@ def load_contesto(path):
     return out
 
 
+import os
+COMP = os.environ.get('CUP_COMP', 'ucl')
+NAZ_IT = {'Italy': 'Italia', 'France': 'Francia', 'Belgium': 'Belgio', 'Turkiye': 'Turchia', 'Turkey': 'Turchia', 'Netherlands': 'Olanda',
+          'Greece': 'Grecia', 'Germany': 'Germania', 'Serbia': 'Serbia', 'Spain': 'Spagna', 'England': 'Inghilterra', 'Croatia': 'Croazia',
+          'Czechia': 'Rep. Ceca', 'Czech Republic': 'Rep. Ceca', 'Portugal': 'Portogallo', 'Denmark': 'Danimarca', 'Wales': 'Galles',
+          'Norway': 'Norvegia', 'Scotland': 'Scozia', 'Switzerland': 'Svizzera', 'Austria': 'Austria', 'Poland': 'Polonia', 'Hungary': 'Ungheria',
+          'Ukraine': 'Ucraina', 'Sweden': 'Svezia', 'Slovenia': 'Slovenia', 'Slovakia': 'Slovacchia', 'Romania': 'Romania', 'Ireland': 'Irlanda',
+          'Republic of Ireland': 'Irlanda', 'Northern Ireland': 'Irlanda del Nord', 'Iceland': 'Islanda', 'Finland': 'Finlandia', 'Albania': 'Albania',
+          'Bosnia and Herzegovina': 'Bosnia', 'Georgia': 'Georgia', 'Israel': 'Israele', 'Kosovo': 'Kosovo', 'North Macedonia': 'Macedonia del Nord',
+          'Montenegro': 'Montenegro', 'Bulgaria': 'Bulgaria'}
 DATA = pathlib.Path(__file__).resolve().parent.parent / 'webapp' / 'data.json'
 IT_COLORS = {}  # colori delle italiane presi dalla Serie A
 NAMES_IT = {}
@@ -76,7 +87,7 @@ def main():
     uff = set(int(x) for x in sys.argv[3].split(',')) if len(sys.argv) > 3 and sys.argv[3] else set()
     OC = load_oc(sys.argv[4]) if len(sys.argv) > 4 else None
     qdir = pathlib.Path(sys.argv[4]).parent if len(sys.argv) > 4 else pathlib.Path(__file__).parent / 'data' / 'quote'
-    LINEE = load_linee(qdir / f'linee_ucl{rnd}.txt'); CTXF = load_contesto(qdir / f'contesto_ucl{rnd}.txt')
+    LINEE = load_linee(qdir / f'linee_{COMP}{rnd}.txt'); CTXF = load_contesto(qdir / f'contesto_{COMP}{rnd}.txt')
     nblend = 0
     d = json.loads(DATA.read_text())
     # colori e nomi delle squadre italiane dalla Serie A (stessi colori in tutta l'app)
@@ -87,6 +98,8 @@ def main():
     matches = []
     for e in exp:
         (hid, hn), (aid, an) = e['teams']
+        if COMP == 'naz':
+            hn, an = NAZ_IT.get(hn, hn), NAZ_IT.get(an, an)
         hc = IT_COLORS.get(hn) or [e['colors']['home'], '#ffffff']
         ac = IT_COLORS.get(an) or [e['colors']['away'], '#ffffff']
         ko = int(datetime.datetime.fromisoformat(e['ko'].replace('Z', '+00:00')).timestamp())
@@ -128,7 +141,7 @@ def main():
                     continue
             else:  # formato compatto cupExport2/3: [nome, lato, ruolo, p, minuti, campionato principale estero, di fronte, (diffidato, gialli in Champions)]
                 name, side, role, p, mins, lgs, vs = row[:7]
-                diff = row[7] if len(row) > 7 else 0
+                diff = row[7] if len(row) > 7 and COMP != 'naz' else 0   # i diffidati contano solo in Champions
             qmk = None
             if BL:
                 p, qmk = BL[ri][0], BL[ri][1]
@@ -156,7 +169,7 @@ def main():
                 t.append(f"Poca esperienza: {mins}' nello storico")
             if t:
                 tags[nm] = t
-        matches.append({'id': e['id'], 'comp': 'ucl', 'ko': ko, 'h': hn, 'a': an, 'hc': hc, 'ac': ac, 'ref': e.get('ref') or '–',
+        matches.append({'id': e['id'], 'comp': COMP, 'ko': ko, 'h': hn, 'a': an, 'hc': hc, 'ac': ac, 'ref': e.get('ref') or '–',
                         'odds': odds_app, 'line': None, 'uff': 1 if (e['lt'] != 'predicted' or e['id'] in uff) else 0, 'tags': tags, 'derby': False,
                         'src': 'fotmob'})
         matches[-1]['pl'] = pl
@@ -189,12 +202,23 @@ def main():
             for team, inj in ((hn, C['inj_h']), (an, C['inj_a'])):
                 if inj:
                     ctx.append(f"Assenti {team}: {inj.replace(',', ', ')}")
-        dn = [(NAMES_IT.get(norm(r[0].split()[-1]) + '|' + (hn if r[1] else an)) or short(r[0])) + f" ({hn if r[1] else an})" for r in e['pl'] if len(r) > 7 and r[7]]
+        dn = [(NAMES_IT.get(norm(r[0].split()[-1]) + '|' + (hn if r[1] else an)) or short(r[0])) + f" ({hn if r[1] else an})" for r in e['pl'] if len(r) > 7 and r[7] and COMP != 'naz']
         if dn:
             ctx.append(f"{len(dn)} diffidat{'o' if len(dn) == 1 else 'i'} in campo: {', '.join(dn)}. Di solito stanno più attenti")
         if ctx:
             matches[-1]['ctx'] = ctx
     matches.sort(key=lambda m: m['ko'])
+    if COMP == 'naz':
+        d.setdefault('cups', {})['naz'] = {
+            'name': 'Nations League', 'round': rnd, 'season': '2026-27',
+            'updated': datetime.datetime.now(datetime.timezone.utc).astimezone().isoformat(timespec='minutes'), 'model': 'coppe v4',
+            'lineups_note': "Nations League: formazioni probabili di FotMob fino a circa un'ora prima, poi le ufficiali. Probabilità dal modello per le coppe: storico di gialli e falli di ogni giocatore nei club, in tutti i campionati in archivio (Serie A, Premier, LaLiga, Bundesliga, Ligue 1, Eredivisie, Portogallo, Turchia, Grecia e altri) e nelle coppe europee, più chi ha di fronte e quanto è severo l'arbitro. Le nazionali non hanno uno storico proprio: la scala è quella della Champions.",
+            'matches': matches}
+        DATA.write_text(json.dumps(d, ensure_ascii=False))
+        for m in matches:
+            top = sorted(m['pl'], key=lambda r: -r[4])[:4]
+            print(m['h'], '-', m['a'], 'uff' if m['uff'] else 'prob', [(r[0], r[4]) for r in top])
+        return
     d.setdefault('cups', {})['ucl'] = {
         'name': 'Champions League', 'round': rnd, 'season': '2026-27',
         'updated': datetime.datetime.now(datetime.timezone.utc).astimezone().isoformat(timespec='minutes'),

@@ -37,6 +37,11 @@ const rounds = [{comp:'sa', section:data, matches:data.matches}];
 if (data.cups?.ucl?.matches?.length) {
   rounds.push({comp:'ucl', section:data.cups.ucl, matches:data.cups.ucl.matches});
 }
+// Nazionali (Nations League A): le partite entrano una per una nelle 72 ore prima del calcio d'inizio.
+{
+  const section = data.cups?.naz || {name:'Nations League', round:'', season:'2026-27', matches:[]};
+  rounds.push({comp:'naz', section, matches:section.matches});
+}
 const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'cartellino-'));
 const cache = new Map();
 const prepared = new Map();
@@ -113,8 +118,9 @@ function startModel(cutoff) {
 // Calendario della giornata (Serie A: FotMob 55, 10 partite; Champions fase campionato: FotMob 42, 18 partite).
 // Passa alla giornata successiva quando quella in corso è tutta archiviata e la prossima inizia entro 72 ore e almeno metà
 // delle partite ha una formazione (ultima, probabile o ufficiale). Le partite rimaste fuori entrano ai giri successivi.
-const LEAGUE = {sa:{id:55,size:10}, ucl:{id:42,size:18}};
+const LEAGUE = {sa:{id:55,size:10}, ucl:{id:42,size:18}, naz:{id:9806,size:0}};
 async function syncRound(round, archived) {
+  if (round.comp === 'naz') return syncNaz(round);
   const season = round.section.season?.replace(/^(\d{4})-(\d{2})$/, '$1/20$2');
   if (!season) return;
   const {id:league,size} = LEAGUE[round.comp];
@@ -146,6 +152,104 @@ async function syncRound(round, archived) {
   if (finishedAll) round.advance = day; else round.append = true;
 }
 
+// Nazionali: classifica dei gironi e posta in palio (quarti per le prime due, spareggio per la terza, retrocessione per la quarta).
+const NAZ_IT = {Italy:'Italia', France:'Francia', Belgium:'Belgio', Turkiye:'Turchia', Turkey:'Turchia', Netherlands:'Olanda', Greece:'Grecia',
+  Germany:'Germania', Serbia:'Serbia', Spain:'Spagna', England:'Inghilterra', Croatia:'Croazia', Czechia:'Rep. Ceca', 'Czech Republic':'Rep. Ceca',
+  Portugal:'Portogallo', Denmark:'Danimarca', Wales:'Galles', Norway:'Norvegia'};
+const it = n => NAZ_IT[n] || n;
+const ART = {Italia:"l'", Inghilterra:"l'", Olanda:"l'", Belgio:'il ', Portogallo:'il ', Galles:'il '};
+const art = n => (ART[n] ?? 'la ') + n;
+// Per ogni squadra la posizione finale migliore e peggiore su tutti gli esiti (V/N/P) delle partite rimaste; a pari punti vale il caso peggiore/migliore.
+function groupRanks(table, left) {
+  const ids = table.map(t => t.id), range = Object.fromEntries(ids.map(id => [id, [5, 0]]));
+  const pts0 = Object.fromEntries(table.map(t => [t.id, t.pts]));
+  for (let k = 0; k < 3 ** left.length; k++) {
+    const pts = {...pts0};
+    left.forEach((m, i) => { const o = Math.floor(k / 3 ** i) % 3; if (o === 0) pts[m.h] += 3; else if (o === 2) pts[m.a] += 3; else { pts[m.h]++; pts[m.a]++; } });
+    for (const id of ids) {
+      const best = 1 + ids.filter(x => x !== id && pts[x] > pts[id]).length, worst = 1 + ids.filter(x => x !== id && pts[x] >= pts[id]).length;
+      range[id] = [Math.min(range[id][0], best), Math.max(range[id][1], worst)];
+    }
+  }
+  return range;
+}
+function stakeOf([best, worst]) {
+  if (worst <= 1) return 'già prima del girone';
+  if (worst <= 2) return best === 1 ? 'già ai quarti, si gioca il primo posto' : 'già ai quarti';
+  if (best >= 4) return 'già retrocessa';
+  if (best <= 2) return worst >= 4 ? 'in corsa per i quarti, ma rischia anche la retrocessione' : 'in corsa per i quarti';
+  if (best === 3 && worst === 3) return 'terza: andrà allo spareggio per restare in Lega A';
+  return 'lotta per evitare la retrocessione diretta';
+}
+function nazStakes(j) {
+  const out = new Map();
+  const fixtures = j.fixtures?.allMatches || [];
+  for (const g of j.table?.[0]?.data?.tables || []) {
+    const table = g.table?.all || [];
+    if (table.length !== 4) continue;
+    const ids = new Set(table.map(t => t.id)), name = Object.fromEntries(table.map(t => [t.id, it(t.name)]));
+    const pts = Object.fromEntries(table.map(t => [t.id, t.pts])), pos = Object.fromEntries(table.map(t => [t.id, t.idx]));
+    const left = fixtures.filter(m => ids.has(+m.home.id) && ids.has(+m.away.id) && !m.status?.finished && !m.status?.cancelled)
+      .map(m => ({id:+m.id, h:+m.home.id, a:+m.away.id}));
+    const range = groupRanks(table, left);
+    for (const m of left) {
+      const lines = [];
+      for (const [me, vs] of [[m.h, m.a], [m.a, m.h]]) {
+        let line = `${name[me]} (${pos[me]}ª, ${pts[me]} punti): ${stakeOf(range[me])}`;
+        if (range[me][0] !== range[me][1]) {
+          const above = table.filter(t => t.id !== me && t.pts > pts[me] && t.pts <= pts[me] + 3);
+          const reach = above.filter(t => t.pts === pts[me] + 3), pass = above.filter(t => t.pts < pts[me] + 3);
+          const who = (list, verb) => list.length ? `${verb} ${list.map(t => art(name[t.id])).join(' e ')}` : '';
+          const win = [who(pass, 'supera'), who(reach, 'aggancia')].filter(Boolean).join(' e ');
+          if (win) line += `. Con una vittoria ${win}` + (reach.length && !pass.length ? ` a ${pts[me] + 3} punti` : '');
+        }
+        lines.push(line);
+      }
+      const open = side => range[side][0] !== range[side][1];
+      out.set(m.id, {posta:lines, hot:open(m.h) && open(m.a), group:g.leagueName?.replace('Grp.', 'Girone')});
+    }
+  }
+  return out;
+}
+let nazPosta = new Map();
+async function syncNaz(round) {
+  const response = await fetch(`/api/data/leagues?id=${LEAGUE.naz.id}&season=2026%2F2027`);
+  if (!response.ok) throw new Error(`Calendario nazionali: FotMob ${response.status}`);
+  const j = await response.json();
+  nazPosta = nazStakes(j);
+  const known = new Set(round.matches.map(m => m.id)), pending = new Set(round.pending.map(x => x.id));
+  const horizon = now + Number(process.env.CARTELLINO_ANTICIPO_ORE || 72) * hour;
+  const todo = (j.fixtures?.allMatches || []).filter(m => !m.status?.cancelled && !known.has(+m.id) && !pending.has(+m.id) &&
+    Date.parse(m.status.utcTime) / 1000 > now && Date.parse(m.status.utcTime) / 1000 <= horizon);
+  if (!todo.length) return;
+  const loaded = await Promise.allSettled(todo.map(m => matchDetails(+m.id)));
+  const ready = loaded.flatMap((r, i) => {
+    if (r.status !== 'fulfilled') { warn(todo[i], r.reason); return []; }
+    const lu = r.value.content?.lineup;
+    return ['lastStarting11','predicted','standard'].some(t => validLineup(lu,t)) ? [{id:+todo[i].id, j:r.value, round:+todo[i].round}] : [];
+  });
+  console.log(`Nazionali: formazioni pronte ${ready.length}/${todo.length}`);
+  if (!ready.length) return;
+  for (const {id, j:raw, round:md} of ready) {
+    const item = await prepareLineup(id, raw);
+    item.beforeKickoff = true;
+    round.pending.push(item);
+    round.md = Math.max(round.md || 0, md || 0);
+  }
+  round.append = true;
+}
+// Posta in palio sulle partite delle nazionali (ricalcolata a ogni giro dalla classifica).
+function applyStakes(round) {
+  let changed = false;
+  for (const m of round.section.matches) {
+    const s = nazPosta.get(m.id);
+    if (!s || m.ko <= now) continue;
+    const next = {posta:s.posta, hot:s.hot ? 1 : 0, girone:s.group};
+    if (JSON.stringify(next) !== JSON.stringify({posta:m.posta, hot:m.hot, girone:m.girone})) { Object.assign(m, next); changed = true; }
+  }
+  return changed;
+}
+
 // Archivio FotMob (ramo dati) letto una volta sola, per arbitri e linee cartellini.
 let archiveCache = null;
 const archive = () => archiveCache ??= fs.existsSync(historic) ? fs.readdirSync(historic).filter(f => f.endsWith('.json.gz')).flatMap(f =>
@@ -165,6 +269,7 @@ function refNote(name, comp, ko) {
 function estimateLines(round) {
   const open = round.section.matches.filter(m => m.line == null || m.line_est);
   if (!open.length) return false;
+  if (round.comp === 'naz') return false;   // nessuno storico di Nations League in archivio
   const lg = LEAGUE[round.comp].id, cut = Math.min(...round.section.matches.map(m => m.ko));
   const past = archive().filter(m => m.lg === lg && m.ts < cut).sort((a,b) => b.ts - a.ts).slice(0, round.comp === 'sa' ? 380 : 250);
   if (past.length < 50) return false;
@@ -223,21 +328,26 @@ async function inspect(round) {
 }
 
 function applyForecast(round, exportRows) {
-  const sa = round.comp === 'sa', day = round.advance || round.section.round;
+  const sa = round.comp === 'sa', day = round.advance || (round.comp === 'naz' ? round.md || round.section.round : round.section.round);
   const filename = path.join(temp, round.comp + '.json');
   write(filename, exportRows);
   const args = [path.join(bot, sa ? 'sa_to_data.py' : 'cup_to_data.py'), filename, String(day)];
   if (!sa) args.push(exportRows.map(x => x.id).join(','));
-  const prefix = sa ? 'oc_sa' : 'oc_ucl';
+  const prefix = 'oc_' + round.comp;
   const qdir = path.join(bot,'data/quote');
   const quote = fs.readdirSync(qdir).filter(f => new RegExp(`^${prefix}${day}(?:_|\\.)`).test(f) && !f.includes('live')).sort().at(-1);
   if (quote) args.push(path.join(qdir,quote));
   const previous = fs.readFileSync(files.data);
   let newMatches;
   try {
-    execFileSync(python,args,{stdio:'inherit',env:{...process.env,PYTHONUTF8:'1'}});
+    execFileSync(python,args,{stdio:'inherit',env:{...process.env,PYTHONUTF8:'1',CUP_COMP:round.comp}});
     const generated = read(files.data);
-    newMatches = sa ? generated.matches : generated.cups.ucl.matches;
+    newMatches = sa ? generated.matches : generated.cups[round.comp].matches;
+    if (round.comp === 'naz' && !data.cups?.naz) {
+      const {matches, ...rest} = generated.cups.naz;
+      Object.assign(round.section, rest);
+      (data.cups ??= {}).naz = round.section;
+    }
   } finally {
     fs.writeFileSync(files.data,previous);
   }
@@ -266,6 +376,11 @@ function applyForecast(round, exportRows) {
   const changed = new Map(newMatches.map(m => [m.id,m]));
   round.section.matches = round.advance ? newMatches : [...round.matches.map(m => changed.get(m.id) || m),
     ...newMatches.filter(m => !former.has(m.id))].sort((a,b) => a.ko - b.ko || a.id - b.id);
+  if (round.comp === 'naz') {
+    // restano le partite delle ultime 36 ore e le prossime; le altre sono già nello storico
+    round.section.matches = round.section.matches.filter(m => m.ko > now - 36 * hour || !seen.has(m.id));
+    round.section.round = String(Math.max(Number(round.section.round) || 0, round.md || 0) || '');
+  }
   if (round.advance) {
     round.section.round = day;
     round.section.lineups_note = 'Le schede distinguono l’ultima formazione disponibile, le probabili e gli undici ufficiali di FotMob. La titolarità degli undici ufficiali è al 100%.';
@@ -349,7 +464,7 @@ try {
     }
   }
   for (const round of rounds) {
-    if (!round.pending.length && !round.matches.some(needsTrisRevision)) {
+    if (round.comp === 'naz' || (!round.pending.length && !round.matches.some(needsTrisRevision))) {
       await syncRound(round,seen).catch(e => console.warn(e.message));
     }
   }
@@ -387,6 +502,7 @@ try {
       }
     }
     if (estimateLines(round)) touched = true;
+    if (round.comp === 'naz' && applyStakes(round)) touched = true;
   }
   if (finished || changedIds.length || touched) {
     write(files.data,data);
