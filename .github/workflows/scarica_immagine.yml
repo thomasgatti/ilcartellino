@@ -1,0 +1,32 @@
+name: Scarica immagine
+# Scarica un'immagine con licenza libera (es. Unsplash) nel ramo "immagini", per poi usarla nel sito.
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: Indirizzo dell'immagine
+        required: true
+      nome:
+        description: Nome del file
+        required: true
+jobs:
+  scarica:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Scarica e salva
+        env:
+          URL: ${{ inputs.url }}
+          NOME: ${{ inputs.nome }}
+          TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -e
+          git init -q img && cd img
+          git remote add origin "https://x-access-token:${TOKEN}@github.com/${REPO}.git"
+          (git fetch -q --depth 1 origin immagini && git checkout -q -b immagini FETCH_HEAD) || git checkout -q --orphan immagini
+          curl -sSL -A "Mozilla/5.0" -o "$NOME" "$URL"
+          file "$NOME"; ls -la "$NOME"
+          git config user.name "bot ammoniti"; git config user.email "bot@users.noreply.github.com"
+          git add "$NOME" && git commit -qm "immagine $NOME" && git push -q origin HEAD:immagini
