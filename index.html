@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta name="build" content="2026-11-12T01:56:36Z">
+<meta name="build" content="2026-11-12T01:59:56Z">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -307,7 +307,7 @@ details.how p { margin: 8px 0 0; max-width: none; }
 :root[data-comp="extra"] .comps button[aria-pressed="true"] { background: linear-gradient(90deg, #0f766e, #16a34a); color: #fff; box-shadow: 0 0 14px rgba(22,163,74,.4); }
 :root[data-comp="extra"] h1 { background: linear-gradient(90deg, var(--xa), var(--xb)); -webkit-background-clip: text; background-clip: text; color: transparent; }
 :root[data-comp="extra"] h1 span { color: var(--muted); -webkit-text-fill-color: var(--muted); }
-:root[data-comp="extra"] #tab-area { display: none; }
+
 /* ---- Nazionali: rosso e oro ---- */
 :root[data-comp="naz"] { --na1: #7a1222; --na2: #d62b36; --na3: #e0a100; }
 :root[data-comp="naz"] body::before { content: ""; position: fixed; inset: 0 0 auto 0; height: 5px; z-index: 50; pointer-events: none; background: linear-gradient(90deg, var(--na1), var(--na2) 60%, var(--na3)); }
@@ -341,7 +341,7 @@ details.how p { margin: 8px 0 0; max-width: none; }
 :root[data-comp="extra"] .panel { background: linear-gradient(90deg, #0f766e, #16a34a) top / 100% 5px no-repeat, var(--surface); }
 :root[data-comp="extra"] .day { color: var(--xa); }
 :root[data-comp="extra"] .sectabs button[aria-selected="true"] { border-bottom-color: var(--xa); }
-#extra .p3 .pill { display: block; margin-top: 3px; font-size: 9.5px; padding: 1px 5px; }
+.p3 .lgpill, #extra .p3 .pill { display: block; margin-top: 3px; font-size: 9.5px; padding: 1px 5px; }
 #extra .xwho { margin-top: 12px; }
 }
 .stat .k2 { display: block; font-size: 11.5px; color: var(--muted); margin-top: 3px; }
@@ -643,6 +643,7 @@ footer { font-size: 13px; color: var(--muted); display: grid; gap: 6px; }
 :root[data-comp="naz"] .posta .pk { color: #ffd200; }
 
 :root[data-comp="sa"] .chip, :root[data-comp="ucl"] .chip, :root[data-lg="pl"] .chip, :root[data-lg="liga"] .chip, :root[data-lg="l1"] .chip, :root[data-comp="naz"] .chip, :root[data-lg="cdr"] .chip, :root[data-lg="cit"] .chip, :root[data-lg="efl"] .chip, :root[data-lg="dfb"] .chip, :root[data-lg="cdf"] .chip { box-shadow: 0 0 0 1px rgba(255,255,255,.4); }
+.pill.wait, .ltag.wait { background: color-mix(in srgb, var(--muted) 22%, transparent); color: var(--ink); border-color: transparent; }
 </style>
 </head>
 <body>
@@ -662,13 +663,13 @@ footer { font-size: 13px; color: var(--muted); display: grid; gap: 6px; }
     <span class="who-chip" id="who">Collegamento al tuo account…</span>
     <button type="button" class="histbtn" id="tab-storico" aria-pressed="false"><span>Storico<span class="hb-long"> tris dell'app</span></span></button>
   </div>
+  <p class="note xintro" id="xintro" hidden>Big match di Premier League, LaLiga, Bundesliga e Ligue 1 (derby e sfide fra le prime 7) e delle coppe nazionali (FA Cup, EFL Cup, Copa del Rey, DFB Pokal, Coupe de France, Coppa Italia).</p>
   <div class="layout">
     <nav class="list" id="list" aria-label="Partite della giornata"></nav>
     <main class="panel" id="panel" aria-live="polite"></main>
   </div>
   <section class="area" id="area" hidden></section>
   <section class="area" id="storico" hidden></section>
-  <section class="area" id="extra" hidden></section>
   <footer>
     <details class="how"><summary>Come funziona</summary>
       <p id="lnote"></p>
@@ -711,14 +712,19 @@ const ALL = JSON.parse(document.getElementById('data').textContent);
 let DATA = ALL;
 const CUP = ALL.cups && ALL.cups.ucl ? ALL.cups.ucl : null;
 const NAZ = ALL.cups && ALL.cups.naz && ALL.cups.naz.matches && ALL.cups.naz.matches.length ? ALL.cups.naz : null;
-const cupOf = c => c === 'ucl' ? CUP : c === 'naz' ? NAZ : null;
-const allMatches = () => [...ALL.matches, ...(CUP ? CUP.matches : []), ...(NAZ ? NAZ.matches : [])];
-const compOf = id => NAZ && NAZ.matches.some(m => m.id === id) ? 'naz' : CUP && CUP.matches.some(m => m.id === id) ? 'ucl' : 'sa';
+// EXTRA con la stessa interfaccia delle altre sezioni: le righe giocatore [nome, lato, p, ruolo, maglia] diventano [nome, lato, ruolo, maglia, p, di fronte, titolare %, q]
+const XADAPT = m => ({ ...m, comp: 'extra', lgname: m.comp, hc: m.hc || ['#13202d', '#ffffff'], ac: m.ac || ['#13202d', '#ffffff'], ref: m.ref || '–', src: 'fotmob', tags: {},
+  pl: (m.pl || []).map(r => [r[0], r[1], r[3], r[4] ?? '', r[2], '', 100, null]) });
+const XCUP = ALL.extra && ALL.extra.matches && ALL.extra.matches.length ? { name: 'EXTRA', round: '', season: '2026-27', matches: ALL.extra.matches.map(XADAPT),
+  lineups_note: "EXTRA: big match esteri e coppe nazionali. Probabilità dal modello della Serie A riallenato sul campionato di ogni paese (falli, gialli, duelli, avversari diretti, arbitro); formazioni probabili di FotMob fino a circa un'ora prima, poi le ufficiali. Linea cartellini stimata dal modello." } : null;
+const cupOf = c => c === 'ucl' ? CUP : c === 'naz' ? NAZ : c === 'extra' ? XCUP : null;
+const allMatches = () => [...ALL.matches, ...(CUP ? CUP.matches : []), ...(NAZ ? NAZ.matches : []), ...(XCUP ? XCUP.matches : [])];
+const compOf = id => NAZ && NAZ.matches.some(m => m.id === id) ? 'naz' : CUP && CUP.matches.some(m => m.id === id) ? 'ucl' : XCUP && XCUP.matches.some(m => m.id === id) ? 'extra' : 'sa';
 const COMP_NAME = { sa: 'Serie A', ucl: 'Champions', extra: 'EXTRA', naz: 'Nazionali' };
 // Champions, Nazionali ed EXTRA compaiono nel menu da 2 giorni prima della prima partita fino a 36 ore dopo l'ultima
 // anteprima: con ?tutte nell'indirizzo (e fino a sabato 14/11, per la revisione grafica) si vedono tutte le sezioni
 const ANTEPRIMA = /[?&]tutte\b/.test(location.search) || Date.now() < Date.parse('2026-11-14T00:00:00Z');
-const compVisible = c => { if (c === 'sa' || ANTEPRIMA) return true; const ms = c === 'extra' ? ALL.extra && ALL.extra.matches : (cupOf(c) || {}).matches, now = Date.now() / 1000;
+const compVisible = c => { if (c === 'sa') return true; if (ANTEPRIMA) return !!cupOf(c); const ms = (cupOf(c) || {}).matches, now = Date.now() / 1000;
   return !!(ms && ms.some(m => m.ko > now - 36 * 3600 && m.ko < now + 48 * 3600)); };
 // non usato più dall'interfaccia: il fattore personale manuale è stato tolto (state.boost resta vuoto)
 const ROLE = { D: 'Difensore', M: 'Centrocampista', F: 'Attaccante' };
@@ -732,6 +738,8 @@ const initials = n => { const m = n.match(/^(\S)\.\s+(.+)$/u); const t = (m ? m[
 const state = { comp: 'sa', id: null, mode: '21', revealed: {}, idx: {}, boost: {}, view: 'partite', sec: 'app', subRule: true };
 let DB = null, USER = null, UID = null, MYNAME = '', loaded = false;
 const myTris = {}, pickNow = {}, results = Object.fromEntries((window.cartellinoRisultati || []).map(r => [r.matchId, r]));
+for (const r of (ALL.extra && ALL.extra.storico) || []) results[r.id] ??= { matchId: r.id, comp: 'extra', partita: `${r.h} - ${r.a}`, ko: r.ko, finale: r.finale,
+  ammoniti: (r.ammoniti || []).map(c => c[1]), sostituzioni: r.sostituzioni || {}, falli: {}, tris_app: (r.tris || []).map(t => ({ n: t.n, p: t.p })) };
 const savedAppTris = new Map((window.cartellinoTris || []).map(t => [t.id, t]));
 const esc = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const withTimeout = (pr, ms = 10000) => Promise.race([pr, new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), ms))]);
@@ -786,7 +794,7 @@ function combos(m, mode, raw = false, subRule = state.subRule) {
 // i gialli di una stessa partita non sono indipendenti: su 21.000 partite (24 milioni di terne di titolari) i tris "2 + 1" finiscono tutti ammoniti
 // il 16% più spesso del prodotto delle probabilità, quelli tutti della stessa squadra solo il 4% (coppie di avversari +8%, compagni +2%, stesso reparto nessuna penalità)
 const jointK = t => (new Set(t.map(x => x.side)).size > 1 ? 1.16 : 1.04);
-function pick(m, mode, idx = 0, raw = false, subRule = state.subRule) { const c = combos(m, mode, raw, subRule); return { ...c[Math.min(idx, c.length - 1)], rank: Math.min(idx, c.length - 1) + 1, n: c.length }; }
+function pick(m, mode, idx = 0, raw = false, subRule = state.subRule) { const c = combos(m, mode, raw, subRule); if (!c.length) return { trio: [], p3: null, rank: 0, n: 0 }; return { ...c[Math.min(idx, c.length - 1)], rank: Math.min(idx, c.length - 1) + 1, n: c.length }; }
 const appTrisWaiting = m => m?.espnXI && !m.uff;
 const trisWaitingNote = 'In attesa del ricalcolo sulle formazioni ufficiali';
 function appTrisAtKickoff(m) {
@@ -818,6 +826,7 @@ function statusPill(m) {
   const base = label ? `<span class="basis">${label}</span>` : '';
   if (m.live?.fin || (!m.live && now > m.ko + 115 * 60)) return '<span class="pill done">Finita</span>' + base;
   if (m.live || now > m.ko) return '<span class="pill live">In corso</span>' + base;
+  if (!m.pl.length && !m.espnXI) return '<span class="pill wait">In attesa formazioni</span>';
   return m.uff || m.espnXI ? '<span class="pill uff">Formazioni ufficiali</span>' : `<span class="pill prob">⚠ Formazioni ${m.src === 'provv' ? 'provvisorie' : 'probabili'}</span>`;
 }
 function statusTag(m) {
@@ -825,6 +834,7 @@ function statusTag(m) {
   if (m.live?.fin || (!m.live && now > m.ko + 115 * 60)) return '<span class="ltag done">Finita</span>';
   if (m.live || now > m.ko) return '<span class="ltag live">In corso</span>';
   const uff = m.uff || m.espnXI;
+  if (!m.pl.length && !uff) return '<span class="ltag wait">In attesa</span>';
   return `<span class="ltag ${uff ? 'uff' : 'prob'}">${uff ? 'Ufficiali' : m.src === 'provv' ? 'Provvisorie' : 'Probabili'}</span>`;
 }
 function renderList() {
@@ -836,7 +846,7 @@ function renderList() {
     b.setAttribute('aria-current', String(m.id === state.id));
     b.innerHTML = `<span class="time"><span class="wd">${fmtWd(m.ko)}</span>${fmtTime(m.ko)}</span>
       <span class="teams"><span class="team"><i class="chip" style="background:${m.hc[0]}"></i>${m.h}</span><span class="team"><i class="chip" style="background:${m.ac[0]}"></i>${m.a}</span></span>
-      <span class="p3"><b>${trioPct(best?.p3)}</b>trio${statusTag(m)}${m.hot && m.ko > Date.now() / 1000 ? '<span class="tag hot">conta</span>' : ''}${myTris[m.id] ? '<span class="mysaved">✓ tuo tris</span>' : ''}</span>`;
+      <span class="p3"><b>${trioPct(best?.p3)}</b>trio${statusTag(m)}${m.hot && m.ko > Date.now() / 1000 ? '<span class="tag hot">conta</span>' : ''}${m.lgname ? `<span class="pill lgpill">${esc(m.lgname)}</span>` : ''}${myTris[m.id] ? '<span class="mysaved">✓ tuo tris</span>' : ''}</span>`;
     b.addEventListener('click', () => { history.replaceState(null, '', '#m' + m.id); select(m.id); focusPanel(b); });
     el.appendChild(b);
   }
@@ -942,6 +952,7 @@ function liveHtml(m) {
 }
 function select(id) {
   const m = DATA.matches.find(x => x.id === id) || DATA.matches[0]; state.id = m.id;
+  if (state.comp === 'extra' && LGSKIN[m.lgname]) document.documentElement.dataset.lg = LGSKIN[m.lgname]; else delete document.documentElement.dataset.lg;
   document.querySelectorAll('.match').forEach(b => b.setAttribute('aria-current', String(b.id === 'b' + m.id)));
   const waiting = appTrisWaiting(m), recorded = appTrisAtKickoff(m);
   const key = m.id + state.mode, best = recorded || pick(m, state.mode, state.idx[key] || 0), shown = !!state.revealed[key], sec = state.sec;
@@ -982,7 +993,7 @@ function select(id) {
   panel.innerHTML = `
     <div class="mhead">
       <div class="mteams"><span class="mt"><i class="chip big" style="background:${m.hc[0]}"></i>${m.h}</span><span class="mvs">–</span><span class="mt"><i class="chip big" style="background:${m.ac[0]}"></i>${m.a}</span></div>
-      <div class="mwhen"><span>${fmtDay(m.ko)}, <b>${fmtTime(m.ko)}</b></span>${statusPill(m)}${m.derby ? '<span class="tag">Derby</span>' : ''}${m.hot ? '<span class="tag hot">Partita che conta</span>' : ''}</div>${m.posta?.length ? `<div class="posta"><div class="pk">Posta in palio${m.girone ? ' · ' + esc(m.girone) : ''}</div><ul>${m.posta.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>` : ''}${m.uff ? '' : waiting ? '<p class="note">Undici ufficiali disponibili. Le stime dei singoli si aggiornano al prossimo calcolo del modello.</p>' : locked(m) ? '' : probNote(m)}
+      <div class="mwhen"><span>${fmtDay(m.ko)}, <b>${fmtTime(m.ko)}</b></span>${statusPill(m)}${m.derby ? '<span class="tag">Derby</span>' : ''}${m.hot ? '<span class="tag hot">Partita che conta</span>' : ''}${m.lgname ? `<span class="tag">${esc(m.lgname)}</span>` : ''}</div>${m.posta?.length ? `<div class="posta"><div class="pk">Posta in palio${m.girone ? ' · ' + esc(m.girone) : ''}</div><ul>${m.posta.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>` : ''}${!m.pl.length ? '<p class="note">Il tris compare quando FotMob pubblica le formazioni (di solito 1-2 giorni prima della partita).</p>' : m.uff ? '' : waiting ? '<p class="note">Undici ufficiali disponibili. Le stime dei singoli si aggiornano al prossimo calcolo del modello.</p>' : locked(m) ? '' : probNote(m)}
     </div>
     <div class="stats">
       <div class="stat"><span class="k">Arbitro</span><span class="v">${m.ref}</span>${m.refnote ? `<span class="k2">${m.refnote}</span>` : ''}</div>
@@ -1014,7 +1025,7 @@ function select(id) {
   } else if (sec !== 'app') wireBuilder(m);
 }
 const slugT = t => String(t).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-const sisalUrl = m => m.comp === 'naz' ? 'https://www.sisal.it/scommesse-matchpoint' : m.comp === 'ucl' ? 'https://www.sisal.it/scommesse-matchpoint/quote/calcio/champions-league' : `https://www.sisal.it/scommesse-matchpoint/evento/calcio/serie-a/${slugT(m.h)}-${slugT(m.a)}`;
+const sisalUrl = m => m.comp === 'naz' || m.comp === 'extra' ? 'https://www.sisal.it/scommesse-matchpoint' : m.comp === 'ucl' ? 'https://www.sisal.it/scommesse-matchpoint/quote/calcio/champions-league' : `https://www.sisal.it/scommesse-matchpoint/evento/calcio/serie-a/${slugT(m.h)}-${slugT(m.a)}`;
 // bottone verso la pagina Sisal della partita: copia i tre nomi negli appunti (Sisal non permette di precompilare il biglietto da siti esterni)
 const playHtml = (m, names) => names.length === 3 && !locked(m) ? `<div class="play"><a class="playbtn" href="${sisalUrl(m)}" target="_blank" rel="noopener noreferrer" data-names="${names.join(', ').replace(/"/g, '&quot;')}">Gioca su Sisal ↗</a><span class="play-note">Copia i 3 nomi e apre la partita su Sisal · 18+ · Gioca responsabilmente</span><span class="play-msg" aria-live="polite"></span></div>` : '';
 document.addEventListener('click', async e => {
@@ -1114,7 +1125,6 @@ async function renderArea() {
 }
 // ---- EXTRA: big match dei campionati esteri e delle coppe nazionali (stime del modello) ----
 // Stessi componenti delle altre sezioni: lista partite, scheda con riquadri, figurine del tris, titolari, storico.
-const xstate = { id: null, sec: 'tris' };
 // sfondo della sezione EXTRA secondo la competizione della partita aperta (ogni campionato e coppa ha il suo)
 const LGSKIN = { 'Premier League': 'pl', 'FA Cup': 'fa', 'EFL Cup': 'efl', 'LaLiga': 'liga', 'Copa del Rey': 'cdr', 'Bundesliga': 'bl', 'DFB Pokal': 'dfb', 'Ligue 1': 'l1', 'Coupe de France': 'cdf', 'Coppa Italia': 'cit' };
 const xcols = (m, s) => (s === 'h' ? m.hc : m.ac) || ['#13202d', '#ffffff'];
@@ -1127,75 +1137,13 @@ function extraHist(r) {
       <span class="note"><span class="ctag">EXTRA</span>${esc(r.comp)} · ${fmtTime(r.ko)}</span>
       <div class="side app"><h4>Tris del modello</h4><ul>${rows.map(li).join('') || '<li><span class="nm">Nessun tris</span></li>'}</ul></div></article>` };
 }
-function renderExtra() {
-  const X = ALL.extra || { matches: [], storico: [] }, el = document.getElementById('extra');
-  el.innerHTML = `<p class="note xintro">Big match di Premier League, LaLiga, Bundesliga e Ligue 1 (derby e sfide fra le prime 7) e delle coppe nazionali (FA Cup, EFL Cup, Copa del Rey, DFB Pokal, Coupe de France, Coppa Italia).</p>
-    ${X.matches.length ? `<div class="layout"><nav class="list" id="xlist" aria-label="Big match"></nav><main class="panel" id="xpanel" aria-live="polite"></main></div>` : '<p class="note">Nessun big match nei prossimi giorni: le partite compaiono qui appena entrano in calendario.</p>'}
-    ${X.storico.length ? `<p class="note">Gli esiti dei big match già giocati sono nello <button type="button" class="link" onclick="setView('storico')">Storico</button>.</p>` : ''}`;
-  if (!X.matches.length) return;
-  const list = document.getElementById('xlist'); let lastDay = '';
-  for (const m of X.matches) {
-    const d = fmtDay(m.ko); if (d !== lastDay) { const h = document.createElement('div'); h.className = 'day'; h.textContent = d; list.appendChild(h); lastDay = d; }
-    const p3 = m.tris?.length === 3 ? m.tris.reduce((a, t) => a * t.p, 1) * jointK(m.tris.map(t => ({ side: t.s }))) : null;
-    const b = document.createElement('button'); b.className = 'match'; b.type = 'button'; b.id = 'xb' + m.id;
-    b.innerHTML = `<span class="time"><span class="wd">${fmtWd(m.ko)}</span>${fmtTime(m.ko)}</span>
-      <span class="teams"><span class="team"><i class="chip" style="background:${xcols(m, 'h')[0]}"></i>${esc(m.h)}</span><span class="team"><i class="chip" style="background:${xcols(m, 'a')[0]}"></i>${esc(m.a)}</span></span>
-      <span class="p3"><b>${p3 ? trioPct(p3) : '–'}</b>trio<span class="pill done">${m.comp}</span></span>`;
-    b.addEventListener('click', () => { xstate.id = m.id; xselect(); });
-    list.appendChild(b);
-  }
-  if (!X.matches.some(m => m.id === xstate.id)) xstate.id = X.matches[0].id;
-  xselect();
-}
-function xselect() {
-  const X = ALL.extra, m = X.matches.find(x => x.id === xstate.id); if (!m) return;
-  if (LGSKIN[m.comp]) document.documentElement.dataset.lg = LGSKIN[m.comp]; else delete document.documentElement.dataset.lg;
-  document.querySelectorAll('#xlist .match').forEach(b => b.setAttribute('aria-current', String(b.id === 'xb' + m.id)));
-  const c = m.corners, sec = xstate.sec, side = s => s === 'h' ? m.h : m.a;
-  const lu = m.lt === 'standard' ? '<span class="pill uff">Ufficiali</span>' : m.lt === 'predicted' ? '<span class="pill old">Probabili</span>' : '<span class="pill old">In attesa formazioni</span>';
-  const st = m.tris?.length === 3 ? m.tris.map(t => ({ n: t.n, team: side(t.s), p: t.p, cols: xcols(m, t.s), num: t.num, pos: t.r, tags: [], vs: null })) : null;
-  const p3 = st ? st.reduce((a, t) => a * t.p, 1) * jointK(m.tris.map(t => ({ side: t.s }))) : null;
-  const trisSec = st ? `<p class="note">Tris 2 + 1 del modello: vale anche il giallo di chi entra al posto del giocatore scelto, rosso compreso.</p>
-      <div class="stickers">${st.map(x => sticker(x, false)).join('')}</div>
-      <div class="summary"><span>Tutti e tre ammoniti</span><span class="big">${(p3 * 100).toFixed(1)}%</span></div>`
-    : '<p class="note">Il tris compare quando FotMob pubblica le formazioni (di solito 1-2 giorni prima della partita).</p>';
-  const col = s => `<div class="pcol"><h4><i class="chip big" style="background:${xcols(m, s)[0]}"></i>${esc(side(s))}</h4>
-      ${m.pl.filter(p => p[1] === s).map(p => `<div class="prow"><span></span><div><div class="nm">${esc(p[0])}</div><div class="sub">${ROLE[p[3]] || ''}${p[4] ? ' · n. ' + p[4] : ''}</div></div><div class="pp">${pct(p[2])}</div></div>`).join('')}</div>`;
-  const tuttiSec = m.pl?.length ? `<div class="picker">${col('h')}${col('a')}</div>` : '<p class="note">Formazioni non ancora disponibili.</p>';
-  const lines = c ? c.linee.map((L, i) => [L, i]).filter(([L]) => L >= 3.5 && L <= 6.5) : [];
-  const row = s => `<tr><td>${esc(side(s))}</td><td class="n"><b>${c[s].mu.toFixed(1).replace('.', ',')}</b></td>${lines.map(([, i]) => `<td class="n">${pct(c[s].o[i])}</td>`).join('')}</tr>`;
-  const angSec = c ? `<div class="tablebox"><table><thead><tr><th>Squadra</th><th class="n">Attesi</th>${lines.map(([L]) => `<th class="n">Più di ${String(L).replace('.', ',')}</th>`).join('')}</tr></thead><tbody>${row('h')}${row('a')}</tbody></table></div>
-      <div class="stat xwho"><span class="k">Chi batte più angoli</span><div class="odds" aria-hidden="true"><span style="width:${c.piu_casa * 100}%;background:${strong(xcols(m, 'h'))}"></span><span style="width:${c.pari * 100}%;background:var(--line)"></span><span style="width:${(1 - c.piu_casa - c.pari) * 100}%;background:${strong(xcols(m, 'a'))}"></span></div><span class="v">${esc(m.h)} ${pct(c.piu_casa)} · pari ${pct(c.pari)} · ${esc(m.a)} ${pct(1 - c.piu_casa - c.pari)}</span></div>
-      <p class="note">Angoli della singola squadra, stimati da angoli, tiri, tocchi in area, xG e possesso delle ultime partite di campionato.</p>` : '<p class="note">Angoli non disponibili per questa partita.</p>';
-  document.getElementById('xpanel').innerHTML = `
-    <div class="mhead">
-      <div class="mteams"><span class="mt"><i class="chip big" style="background:${xcols(m, 'h')[0]}"></i>${esc(m.h)}</span><span class="mvs">–</span><span class="mt"><i class="chip big" style="background:${xcols(m, 'a')[0]}"></i>${esc(m.a)}</span></div>
-      <div class="mwhen"><span>${fmtDay(m.ko)}, <b>${fmtTime(m.ko)}</b></span>${lu}${m.derby ? '<span class="tag">Derby</span>' : ''}</div>
-    </div>
-    <div class="stats">
-      <div class="stat"><span class="k">Competizione</span><span class="v">${m.comp}</span></div>
-      <div class="stat"><span class="k">Arbitro</span><span class="v">${m.ref ? esc(m.ref) : '–'}</span></div>
-      <div class="stat"><span class="k">Angoli attesi</span><span class="v">${c ? c.h.mu.toFixed(1).replace('.', ',') + ' – ' + c.a.mu.toFixed(1).replace('.', ',') : '–'}</span></div>
-      <div class="stat"><span class="k">Tutti e tre ammoniti</span><span class="v">${p3 ? trioPct(p3) : '–'}</span></div>
-    </div>
-    <div class="sectabs" role="tablist" aria-label="Sezioni della partita">
-      <button type="button" role="tab" data-xsec="tris" aria-selected="${sec === 'tris'}">Tris cartellini</button>
-      <button type="button" role="tab" data-xsec="tutti" aria-selected="${sec === 'tutti'}">Tutti i titolari</button>
-      <button type="button" role="tab" data-xsec="angoli" aria-selected="${sec === 'angoli'}">Angoli</button>
-    </div>
-    <div class="sec" role="tabpanel">${sec === 'tris' ? trisSec : sec === 'tutti' ? tuttiSec : angSec}</div>`;
-  document.querySelectorAll('#xpanel [data-xsec]').forEach(b => b.addEventListener('click', () => { xstate.sec = b.dataset.xsec; xselect(); }));
-}
 function setView(v) {
-  if (v === 'area' && state.comp === 'extra') v = 'partite';
   state.view = v; document.getElementById('tab-partite').setAttribute('aria-pressed', String(v === 'partite')); document.getElementById('tab-area').setAttribute('aria-pressed', String(v === 'area'));
   document.getElementById('tab-storico').setAttribute('aria-pressed', String(v === 'storico'));
-  const ex = state.comp === 'extra';
-  document.querySelector('.layout').hidden = v !== 'partite' || ex; document.getElementById('extra').hidden = v !== 'partite' || !ex;
+  document.querySelector('.layout').hidden = v !== 'partite'; document.getElementById('xintro').hidden = v !== 'partite' || state.comp !== 'extra';
   document.getElementById('area').hidden = v !== 'area'; document.getElementById('storico').hidden = v !== 'storico';
   if (v === 'area') { history.replaceState(null, '', '#area'); renderArea(); }
   else if (v === 'storico') { history.replaceState(null, '', '#storico'); renderStorico(); }
-  else if (ex) { renderExtra(); history.replaceState(null, '', '#extra'); }
   else if (state.id) { history.replaceState(null, '', '#m' + state.id); select(state.id); }
 }
 // Storico unico: tutti i tris dell'app già giudicati (Serie A, Champions, Nazionali, EXTRA) in ordine di calendario,
@@ -1213,7 +1161,7 @@ async function renderStorico() {
   const li = (r, p) => `<li class="${r.hit ? 'ok' : ''}"><span class="nm" title="${esc(r.n + (r.sub ? ' → entrato ' + r.sub : ''))}">${esc(r.n)}${r.sub ? `<small class="note">→ entrato ${esc(r.sub)}</small>` : ''}</span><span class="lead"></span><span class="val">${r.hit ? `<span class="hit">${r.viaSub ? '✓ sostituto' : '✓ giallo'}</span> · ` : ''}${Math.round(p * 100)}%${r.np ? ' · non ha giocato' : r.f != null ? ' · ' + r.f + ' f.' : ''}</span></li>`;
   const items = [];
   for (const r of Object.values(results)) {
-    if (!r?.tris_app?.length) continue;
+    if (!r?.tris_app?.length || r.comp === 'extra') continue;   // gli EXTRA arrivano dal loro storico, sotto
     const c = r.comp || 'sa', m = allMatches().find(m => m.id === r.matchId), waiting = appTrisWaiting(m);
     const actual = m ? appTrisAtKickoff(m) : r.tris_app_revisione;
     const note = waiting ? trisWaitingNote : actual?.late ? 'Fuori dal bilancio prepartita' : '';
@@ -1253,23 +1201,16 @@ function focusPanel(btn) {
   if (top < strip || top > innerHeight * 0.5) window.scrollTo({ top: scrollY + top - strip - 8, behavior: smooth });
 }
 function paintHeader() {
-  document.getElementById('hdr-round').textContent = state.comp === 'naz' ? '· Nazionali' : state.comp === 'ucl' ? `· Champions ${DATA.round}ª` : `· Giornata ${DATA.round}ª`;
-  document.getElementById('meta').innerHTML = `<span>${state.comp === 'naz' ? 'UEFA Nations League' : state.comp === 'ucl' ? 'Champions' : 'Serie A'} <b>${DATA.season}</b></span>`;
+  document.getElementById('hdr-round').textContent = state.comp === 'extra' ? '· EXTRA' : state.comp === 'naz' ? '· Nazionali' : state.comp === 'ucl' ? `· Champions ${DATA.round}ª` : `· Giornata ${DATA.round}ª`;
+  document.getElementById('meta').innerHTML = state.comp === 'extra' ? '<span>Big match esteri e coppe nazionali</span>' : `<span>${state.comp === 'naz' ? 'UEFA Nations League' : state.comp === 'ucl' ? 'Champions' : 'Serie A'} <b>${DATA.season}</b></span>`;
   document.getElementById('lnote').textContent = DATA.lineups_note || '';
 }
 function setComp(c, keepId) {
-  if ((c === 'ucl' || c === 'naz') && !cupOf(c)) c = 'sa';
-  if (c === 'extra' && !ALL.extra) c = 'sa';
+  if (c !== 'sa' && !cupOf(c)) c = 'sa';
   for (const k of ['sa', 'ucl', 'naz', 'extra']) document.getElementById('comp-' + k).setAttribute('aria-pressed', String(c === k));
-  if (state.view === 'storico' || (c === 'extra' && state.view === 'area')) state.view = 'partite';   // lo storico è unico per tutte le competizioni
+  if (state.view === 'storico') state.view = 'partite';   // lo storico è unico per tutte le competizioni
   state.comp = c; document.documentElement.dataset.comp = c; if (c !== 'extra') delete document.documentElement.dataset.lg;
   try { localStorage.setItem('ammoniti_comp', c); } catch (e) {}
-  if (c === 'extra') {
-    DATA = ALL;
-    document.getElementById('hdr-round').textContent = '· EXTRA';
-    document.getElementById('meta').innerHTML = '<span>Big match esteri e coppe nazionali</span>';
-    setView(state.view); return;
-  }
   DATA = cupOf(c) ? { ...ALL, ...cupOf(c) } : ALL;
   paintHeader(); renderList();
   const now = Date.now() / 1000, next = DATA.matches.find(m => m.ko + 7200 > now) || DATA.matches[0];
@@ -1303,9 +1244,10 @@ async function espnJson(path) {
   if (!response.ok) throw new Error('ESPN ' + response.status);
   return response.json();
 }
+const ESPN_LG = { 'Premier League': 'eng.1', 'LaLiga': 'esp.1', 'Bundesliga': 'ger.1', 'Ligue 1': 'fra.1', 'FA Cup': 'eng.fa', 'EFL Cup': 'eng.league_cup', 'Copa del Rey': 'esp.copa_del_rey', 'DFB Pokal': 'ger.dfb_pokal', 'Coupe de France': 'fra.coupe_de_france', 'Coppa Italia': 'ita.coppa_italia' };
 async function espnEvent(m) {
   if (espnId[m.id]) return espnId[m.id];
-  const lg = m.comp === 'naz' ? 'uefa.nations' : m.comp === 'ucl' ? 'uefa.champions' : 'ita.1', d = new Date(m.ko * 1000).toISOString().slice(0, 10).replace(/-/g, '');
+  const lg = m.comp === 'extra' ? ESPN_LG[m.lgname] : m.comp === 'naz' ? 'uefa.nations' : m.comp === 'ucl' ? 'uefa.champions' : 'ita.1', d = new Date(m.ko * 1000).toISOString().slice(0, 10).replace(/-/g, '');
   const k = lg + d;
   sbCache[k] ||= espnJson(lg + '/scoreboard?dates=' + d).catch(error => { delete sbCache[k]; throw error; });
   const ev = (await sbCache[k]).events || [];
@@ -1393,7 +1335,7 @@ async function liveFetch(m) {
     const x = findPl(p[0], es[p[1]] || []), s = p[1], o = s === 'h' ? 'a' : 'h';
     if (x?.y || cards.some(c => c[1] === p[0] && c[2] !== 'R')) { P[p[0]] = 1; continue; }
     if (x?.out || x?.r || cards.some(c => c[1] === p[0] && c[2] === 'R')) { P[p[0]] = 0; out.push(p[0]); continue; }
-    let q = liveProb(p[4], t, yc.h + yc.a, yc[s], yc[o], s === 'h' ? sc.h - sc.a : sc.a - sc.h, m.comp === 'sa' || !m.comp ? 'sa' : 'ucl');
+    let q = liveProb(p[4], t, yc.h + yc.a, yc[s], yc[o], s === 'h' ? sc.h - sc.a : sc.a - sc.h, m.comp === 'sa' || m.comp === 'extra' || !m.comp ? 'sa' : 'ucl');
     const f = Math.pow(1.3, Math.min(4, x ? x.fc : 0)); P[p[0]] = q * f / (1 - q + q * f);
   }
   const sub = {};
@@ -1454,7 +1396,7 @@ function start() {
   else if (fromHash && allMatches().some(m => m.id === fromHash)) c0 = compOf(fromHash);
   else if (!compVisible(c0)) c0 = 'sa';
   // nel menu solo le competizioni con partite vicine (più quella aperta da un link)
-  for (const c of ['ucl', 'naz', 'extra']) document.getElementById('comp-' + c).hidden = !(compVisible(c) || (c === c0 && (c === 'extra' ? ALL.extra : cupOf(c))));
+  for (const c of ['ucl', 'naz', 'extra']) document.getElementById('comp-' + c).hidden = !(compVisible(c) || (c === c0 && cupOf(c)));
   document.querySelector('.comps').hidden = ['ucl', 'naz', 'extra'].every(c => document.getElementById('comp-' + c).hidden);
   setComp(c0, fromHash);
   setTimeout(liveLoop, 1000);
@@ -1463,7 +1405,7 @@ function start() {
   if (location.hash === '#area') setView('area');
   if (location.hash === '#storico') setView('storico');
 }
-window.addEventListener('hashchange', () => { if (location.hash === '#extra') { if (state.comp !== 'extra') setComp('extra'); return; } if (location.hash === '#storico') { if (state.view !== 'storico') setView('storico'); return; } if (location.hash === '#area') { if (state.view !== 'area') setView('area'); return; } const id = +(location.hash || '').replace('#m', ''); if (!DATA.matches.some(m => m.id === id) && allMatches().some(m => m.id === id)) setComp(compOf(id), id); if (DATA.matches.some(m => m.id === id)) { if (state.view !== 'partite') setView('partite'); select(id); } });
+window.addEventListener('hashchange', () => { if (['#ucl', '#naz', '#extra'].includes(location.hash)) { if (state.comp !== location.hash.slice(1)) setComp(location.hash.slice(1)); return; } if (location.hash === '#storico') { if (state.view !== 'storico') setView('storico'); return; } if (location.hash === '#area') { if (state.view !== 'area') setView('area'); return; } const id = +(location.hash || '').replace('#m', ''); if (!DATA.matches.some(m => m.id === id) && allMatches().some(m => m.id === id)) setComp(compOf(id), id); if (DATA.matches.some(m => m.id === id)) { if (state.view !== 'partite') setView('partite'); select(id); } });
 start();
 </script>
 </body>
