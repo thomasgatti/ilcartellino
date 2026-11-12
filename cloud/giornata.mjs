@@ -490,6 +490,7 @@ function applyForecast(round, exportRows) {
     if (!m.odds) m.odds = old.odds;
     if (m.ref === '–') m.ref = old.ref;
     if (old.ref === m.ref && old.refnote) m.refnote = old.refnote;
+    if (old.ref === m.ref && old.refstat && !m.refstat) m.refstat = old.refstat;
     if (old.live) m.live = old.live;
   }
   for (const m of newMatches) { try { addTags(round, m); } catch (e) { warn(m, e); } }
