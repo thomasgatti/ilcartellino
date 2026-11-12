@@ -9,10 +9,10 @@ function buildTagIndex(all) {
     for (const r of m.pl) {
       if (!r[5]) continue;
       const pid = +r[0], team = r[2] ? m.h[0] : m.a[0], opp = r[2] ? m.a[0] : m.h[0], p = P[pid] ||= {teams:{}, vs:{}, rec:[]};
-      p.teams[team] = m.ts;
-      const v = p.vs[opp] ||= [0, 0]; v[0]++; if (bookedY.has(pid)) v[1]++;
+      (p.teams[team] ||= []).push(m.ts);
+      (p.vs[opp] ||= []).push([m.ts, bookedY.has(pid) ? 1 : 0]);
       p.rec.push([m.ts, r[6] || 0, bookedY.has(pid) ? 1 : 0, m.lg + '|' + ROLE(r[3])]);
-      last[pid] = {ts:m.ts, team, red:sent.has(pid)};
+      (last[pid] ||= []).push({ts:m.ts, team, red:sent.has(pid)});
       const k = K[m.lg + '|' + ROLE(r[3])] ||= [0, 0]; k[0] += r[6] || 0; k[1] += bookedY.has(pid) ? 1 : 0;
     }
   }
@@ -23,10 +23,13 @@ export function makeTagger(all) {
   return (pid, team, opp, oppName, ko, club) => {
   const p = P[pid], out = [];
   if (!p) return out;
-  if (club && p.teams[opp] && p.teams[opp] < ko && (!p.teams[team] || p.teams[opp] < p.teams[team])) out.push(`Ex ${oppName}`);
-  const v = club && p.vs[opp];
-  if (v && v[1] >= 2) out.push(`${v[1]} gialli in ${v[0]} gare contro ${oppName}`);
-  const l = last[pid];
+  // solo ciò che è successo prima della partita (vale anche per le partite già giocate)
+  const before = a => (a || []).filter(t => (t[0] ?? t) < ko), lastIn = a => Math.max(-Infinity, ...before(a).map(t => t[0] ?? t));
+  if (club && lastIn(p.teams[opp]) > 0 && lastIn(p.teams[opp]) < lastIn(p.teams[team])) out.push(`Ex ${oppName}`);
+  else if (club && lastIn(p.teams[opp]) > 0 && !before(p.teams[team]).length) out.push(`Ex ${oppName}`);
+  const v = club && before(p.vs[opp]), vy = v ? v.reduce((a, x) => a + x[1], 0) : 0;
+  if (vy >= 2) out.push(`${vy} gialli in ${v.length} gare contro ${oppName}`);
+  const l = (last[pid] || []).filter(x => x.ts < ko).at(-1);
   if (l?.red && l.ts < ko && l.ts > ko - 60 * 86400 && (teamGames[l.team] || []).some(t => t > l.ts && t < ko)) out.push('Rientra da squalifica');
   // testa calda: gialli nelle ultime 3 stagioni contro quelli attesi dai suoi falli (tasso gialli/falli del ruolo nel campionato)
   const rec = p.rec.filter(x => x[0] > ko - 3 * 365 * 86400 && x[0] < ko);

@@ -394,20 +394,25 @@ async function inspect(round) {
 // Informative: le probabilità restano quelle del modello.
 let tagger = null;
 const playerTags = (...a) => (tagger ??= makeTagger(archive()))(...a);
-function addTags(round, m) {
-  const item = prepared.get(m.id), H = item?.j?.header?.teams, lu = item?.j?.content?.lineup;
-  if (!H || !lu) return;
+function addTags(round, m, j = prepared.get(m.id)?.j) {
+  const H = j?.header?.teams, lu = j?.content?.lineup;
+  const old = archive().find(x => x.id === m.id);          // partita già giocata: id dei giocatori dall'archivio
+  if (!old && (!H || !lu)) return false;
   const ids = {};
-  for (const [side, T] of [['h', lu.homeTeam], ['a', lu.awayTeam]]) for (const x of [...(T?.starters || []), ...(T?.subs || [])]) if (x.name) ids[side + '|' + norm(short(x.name))] = +x.id;
+  if (old) for (const r of old.pl) ids[(r[2] ? 'h' : 'a') + '|' + norm(short(r[1]))] = +r[0];
+  else for (const [side, T] of [['h', lu.homeTeam], ['a', lu.awayTeam]]) for (const x of [...(T?.starters || []), ...(T?.subs || [])]) if (x.name) ids[side + '|' + norm(short(x.name))] = +x.id;
+  const teamId = i => old ? +(i ? old.a : old.h)[0] : +H[i].id;
   const lastName = n => norm(n.split(' ').pop());
   const club = round.comp !== 'naz';
   for (const r of m.pl) {
     const side = r[1], pid = ids[side + '|' + norm(r[0])] ?? Object.entries(ids).find(([k]) => k.startsWith(side + '|') && k.endsWith(lastName(r[0])))?.[1];
     if (!pid) continue;
-    const team = +H[side === 'h' ? 0 : 1].id, opp = +H[side === 'h' ? 1 : 0].id, oppName = side === 'h' ? m.a : m.h;
+    const team = teamId(side === 'h' ? 0 : 1), opp = teamId(side === 'h' ? 1 : 0), oppName = side === 'h' ? m.a : m.h;
     const extra = playerTags(pid, team, opp, oppName, m.ko, club).filter(t => !(m.tags?.[r[0]] || []).includes(t));
     if (extra.length) (m.tags ||= {})[r[0]] = [...extra, ...(m.tags?.[r[0]] || [])];
   }
+  m.tagv = 1;
+  return true;
 }
 function applyForecast(round, exportRows) {
   const sa = round.comp === 'sa', day = round.advance || (round.comp === 'naz' ? round.md || round.section.round : round.section.round);
@@ -598,6 +603,10 @@ try {
       }
     }
     if (estimateLines(round)) touched = true;
+    // etichette anche sulle partite già in pagina (calcolate una volta: tagv)
+    for (const m of round.section.matches.filter(m => !m.tagv)) {
+      try { const ok = addTags(round, m, prepared.get(m.id)?.j || (archive().some(x => x.id === m.id) ? null : await matchDetails(m.id))); if (ok) touched = true; } catch (e) { warn(m, e); }
+    }
     if (round.comp === 'naz' && applyStakes(round)) touched = true;
     if (round.comp === 'naz') {
       const fixed = underdogFix(round);
