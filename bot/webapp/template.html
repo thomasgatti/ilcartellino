@@ -155,9 +155,10 @@ h1 span { color: var(--muted); font-weight: 600; }
 footer { width: 100%; }
 .footer-info { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; line-height: 1.6; text-align: center; }
 .footer-credit { margin: 0; }
-.footer-privacy { max-width: 720px; margin: 5px auto 0; text-align: left; }
+.footer-privacy { max-width: none; margin: 5px 0 0; text-align: left; }
 .footer-privacy summary { width: fit-content; margin-inline: auto; cursor: pointer; font-weight: 600; }
-.footer-privacy p { margin: 10px 0 0; }
+.footer-privacy p { margin: 6px 0 0; max-width: none; }
+.footer-privacy > p:first-of-type { margin-top: 12px; }
 .footer-privacy a { color: var(--ink); text-underline-offset: 3px; }
 .footer-privacy summary:focus-visible, .footer-privacy a:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 3px; }
 
@@ -649,6 +650,8 @@ footer { font-size: 13px; color: var(--muted); display: grid; gap: 6px; }
 .bandiera.big { width: 26px; height: 19.5px; border-radius: 3px; }
 /* barra di scorrimento sempre presente: passando da Partite a La mia area (pagina corta) la pagina non si sposta di lato */
 html { overflow-y: scroll; scrollbar-gutter: stable; }
+.area-storico { max-width: none; }
+.area-storico .link, .note .link { font: inherit; font-weight: 700; padding: 0; display: inline; vertical-align: baseline; }
 </style>
 </head>
 <body>
@@ -688,8 +691,12 @@ html { overflow-y: scroll; scrollbar-gutter: stable; }
       <p class="footer-credit">Webapp creata da <strong>Thomas Gatti</strong></p>
       <details class="footer-privacy">
         <summary>Privacy e dati</summary>
-        <p>Le preferenze di visualizzazione sono salvate in questo browser; i tuoi tris sono salvati nella tua area privata. Per eliminare i dati locali, cancella i dati del sito dalle impostazioni del browser.</p>
-        <p>La pagina usa Google Fonts per i caratteri ed ESPN per gli aggiornamenti delle partite. Questi servizi possono ricevere dati tecnici della connessione. La versione web del sito è ospitata su Vercel. Quando apri un sito esterno, consulta anche la sua informativa privacy.</p>
+        <p>Le preferenze di visualizzazione sono salvate in questo browser; i tuoi tris sono salvati nella tua area privata.</p>
+        <p>Per eliminare i dati locali, cancella i dati del sito dalle impostazioni del browser.</p>
+        <p>La pagina usa Google Fonts per i caratteri ed ESPN per gli aggiornamenti delle partite.</p>
+        <p>Questi servizi possono ricevere dati tecnici della connessione.</p>
+        <p>La versione web del sito è ospitata su Vercel.</p>
+        <p>Quando apri un sito esterno, consulta anche la sua informativa privacy.</p>
         <p>Informative dei servizi: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google</a> · <a href="https://privacy.thewaltdisneycompany.com/en/current-privacy-policy/" target="_blank" rel="noopener noreferrer">ESPN / Disney</a> · <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer">Vercel</a>.</p>
       </details>
     </div>
@@ -1111,7 +1118,7 @@ async function renderArea() {
       <div class="tile"><div class="k">Tris completi (3/3)</div><div class="v">${me.full}<small> · app ${ap.full}</small></div></div>
       <div class="tile"><div class="k">Partite vinte contro l'app</div><div class="v">${wins}<small> su ${judged}</small></div></div>
     </div>
-    <p class="note">I tris dell'app di tutte le partite, anche quelle in cui non hai giocato, sono nello <button type="button" class="link" onclick="setView('storico')">Storico tris dell'app</button>.</p>
+    <p class="note area-storico">I tris dell'app di tutte le partite, anche quelle in cui non hai giocato, sono nello <button type="button" class="link" onclick="setView('storico')">Storico tris dell'app</button>.</p>
     ${cards.length ? cards.join('') : '<p class="note">Non hai ancora salvato nessun tris: torna su "Partite", scegli una partita e crea il tuo.</p>'}`;
 }
 // ---- EXTRA: big match dei campionati esteri e delle coppe nazionali (stime del modello) ----
