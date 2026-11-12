@@ -31,6 +31,14 @@ jobs:
       - name: Dati EXTRA delle partite nuove
         run: node cloud/scrape_extra.mjs dati/fotmob dati/extra 20
         continue-on-error: true
+      - name: Quote della stagione in corso (football-data.co.uk, per il contesto del modello)
+        run: |
+          mkdir -p dati/quote && cd dati/quote
+          y=$(date -u +%y); m=$(date -u +%-m); if [ "$m" -ge 7 ]; then s="${y}$((10#$y+1))"; else s="$(printf %02d $((10#$y-1)))${y}"; fi
+          for c in I1 E0 E1 SC0 D1 SP1 F1 N1 B1 P1 T1 G1; do
+            curl -sSfL -A "Mozilla/5.0" -o "fd_${c}_${s}.tmp" "https://www.football-data.co.uk/mmz4281/${s}/${c}.csv" && mv "fd_${c}_${s}.tmp" "fd_${c}_${s}.csv"; rm -f "fd_${c}_${s}.tmp"; sleep 1
+          done
+        continue-on-error: true
       - name: Salva
         run: |
           cd dati && git config user.name "bot ammoniti" && git config user.email "bot@users.noreply.github.com"
