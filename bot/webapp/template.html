@@ -656,6 +656,20 @@ footer { font-size: 13px; color: var(--muted); display: grid; gap: 6px; }
 html { overflow-y: scroll; scrollbar-gutter: stable; }
 .area-storico { max-width: none; }
 .area-storico .link, .note .link { font: inherit; font-weight: 700; padding: 0; display: inline; vertical-align: baseline; }
+.cls { margin: 6px 0 14px; }
+.cls h4 { margin: 4px 0 8px; font: 800 14px var(--body); text-transform: uppercase; letter-spacing: .04em; }
+.cls table { width: 100%; border-collapse: collapse; font-size: 14px; font-variant-numeric: tabular-nums; }
+.cls th { font: 700 11px var(--body); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); text-align: center; padding: 6px 4px; border-bottom: 1px solid var(--line); }
+.cls td { text-align: center; padding: 6px 4px; border-bottom: 1px solid color-mix(in srgb, var(--line) 60%, transparent); }
+.cls .tm { text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px; }
+.cls .ps { width: 34px; position: relative; color: var(--muted); }
+.cls .ps i { position: absolute; left: 0; top: 4px; bottom: 4px; width: 4px; border-radius: 2px; }
+.cls .pt { font-weight: 800; }
+.cls tr.me td { background: color-mix(in srgb, var(--tc) 22%, transparent); font-weight: 800; }
+.cls tr.me .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--tc); box-shadow: 0 0 0 1px rgba(127,127,127,.6); margin-right: 7px; vertical-align: 1px; }
+.clsleg { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 8px; font-size: 12.5px; color: var(--muted); }
+.clsleg i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+@media (max-width: 560px) { .cls .vnp, .cls .gl { display: none; } .cls .tm { max-width: 150px; } }
 </style>
 </head>
 <body>
@@ -721,6 +735,24 @@ const XCUP = ALL.extra && ALL.extra.matches && ALL.extra.matches.length ? { name
 const cupOf = c => c === 'ucl' ? CUP : c === 'naz' ? NAZ : c === 'extra' ? XCUP : null;
 // bandiera per le nazionali, quadratino con il colore sociale per i club
 const teamMark = (name, cols, big) => ALL.bandiere && ALL.bandiere[name] ? `<img class="bandiera${big ? ' big' : ''}" src="${ALL.bandiere[name]}" alt="" aria-hidden="true">` : `<i class="chip${big ? ' big' : ''}" style="background:${cols[0]}"></i>`;
+// ---- Classifica (FotMob, aggiornata dal server): la competizione della partita, con le due squadre evidenziate
+const CLW = n => String(n).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9 ]/g, ' ').split(/\s+/).filter(w => w && !['fc', 'ac', 'as', 'ss', 'us', 'sc', 'cf', 'afc', 'club', 'calcio', 'de', 'real', 'atletico', 'manchester', 'borussia', 'sporting', 'city', 'united', 'utd', 'the', '1', 'rep'].includes(w));
+const sameTeam = (a, b) => { if (String(a).toLowerCase() === String(b).toLowerCase()) return true; const x = CLW(a), y = CLW(b); return x.length > 0 && x.some(w => w.length > 2 && y.includes(w)); };
+function classificaHtml(m) {
+  const C = ALL.classifiche || {}, c = m.comp || 'sa';
+  let groups = c === 'sa' ? C.sa : c === 'ucl' ? C.ucl : c === 'extra' ? (C.extra || {})[m.lgname] : null;
+  if (c === 'naz') for (const gs of Object.values(C.naz || {})) for (const g of gs || []) if (g.rows.some(r => sameTeam(m.h, r[1])) && g.rows.some(r => sameTeam(m.a, r[1]))) groups = [{ ...g, name: (Object.entries(C.naz).find(([, v]) => v === gs) || [''])[0] + (g.name ? ' · ' + g.name : '') }];
+  if (c === 'naz' && groups && groups.length > 1) groups = null;
+  if (!groups || !groups.length) return `<p class="note">${c === 'extra' && !(C.extra || {})[m.lgname] ? 'Le coppe non hanno una classifica.' : 'Classifica non ancora disponibile.'}</p>`;
+  const hi = name => sameTeam(m.h, name) ? 'h' : sameTeam(m.a, name) ? 'a' : '';
+  const col = side => side === 'h' ? (m.hc || [])[0] : (m.ac || [])[0];
+  return groups.map(g => `<div class="cls">${g.name ? `<h4>${esc(g.name)}</h4>` : ''}
+    <table><thead><tr><th class="ps">#</th><th class="tm">Squadra</th><th>G</th><th class="vnp">V</th><th class="vnp">N</th><th class="vnp">P</th><th class="gl">Gol</th><th>DR</th><th class="pt">Pt</th></tr></thead><tbody>
+    ${g.rows.map(r => { const s = hi(r[1]); return `<tr class="${s ? 'me' : ''}" ${s ? `style="--tc:${col(s) || 'var(--ink)'}"` : ''}><td class="ps"><i style="background:${r[9] || 'transparent'}"></i>${r[0]}</td><td class="tm">${s ? `<span class="dot"></span>` : ''}${esc(r[1])}</td><td>${r[2]}</td><td class="vnp">${r[3]}</td><td class="vnp">${r[4]}</td><td class="vnp">${r[5]}</td><td class="gl">${r[6]}</td><td>${r[7] > 0 ? '+' : ''}${r[7]}</td><td class="pt">${r[8]}</td></tr>`; }).join('')}
+    </tbody></table>
+    ${g.legend && g.legend.length ? `<div class="clsleg">${g.legend.map(([t, c2]) => `<span><i style="background:${c2}"></i>${esc(t)}</span>`).join('')}</div>` : ''}</div>`).join('') +
+    `<p class="note">Classifica di FotMob${C.updated ? ', aggiornata ' + fmtDay(C.updated).toLowerCase() + ' alle ' + fmtTime(C.updated) : ''}.</p>`;
+}
 const allMatches = () => [...ALL.matches, ...(CUP ? CUP.matches : []), ...(NAZ ? NAZ.matches : []), ...(XCUP ? XCUP.matches : [])];
 const compOf = id => NAZ && NAZ.matches.some(m => m.id === id) ? 'naz' : CUP && CUP.matches.some(m => m.id === id) ? 'ucl' : XCUP && XCUP.matches.some(m => m.id === id) ? 'extra' : 'sa';
 const COMP_NAME = { sa: 'Serie A', ucl: 'Champions', extra: 'EXTRA', naz: 'Nazionali' };
@@ -1009,8 +1041,9 @@ function select(id) {
       <button type="button" role="tab" data-sec="mio" aria-selected="${sec === 'mio'}">Il mio tris${saved ? ' ✓' : ''}</button>
       <button type="button" role="tab" data-sec="tutti" aria-selected="${sec === 'tutti'}">${m.espnXI && !m.uff ? 'Stime del modello' : 'Tutti i titolari'}</button>
       <button type="button" role="tab" data-sec="campo" aria-selected="${sec === 'campo'}">Formazioni</button>
+      <button type="button" role="tab" data-sec="classifica" aria-selected="${sec === 'classifica'}">Classifica</button>
     </div>
-    <div class="sec" role="tabpanel">${sec === 'app' ? appSec : sec === 'mio' ? mioSec : sec === 'campo' ? campoHtml(m, waiting ? [] : (recorded || pick(m, '21', 0)).trio) : tuttiSec}</div>`;
+    <div class="sec" role="tabpanel">${sec === 'app' ? appSec : sec === 'mio' ? mioSec : sec === 'classifica' ? classificaHtml(m) : sec === 'campo' ? campoHtml(m, waiting ? [] : (recorded || pick(m, '21', 0)).trio) : tuttiSec}</div>`;
   panel.querySelectorAll('[data-sec]').forEach(b => b.addEventListener('click', () => { state.sec = b.dataset.sec; select(m.id); }));
   panel.querySelectorAll('.subrule').forEach(b => b.addEventListener('click', () => { state.subRule = b.dataset.sub === '1'; saveUi(); renderList(); select(m.id); }));
   if (sec === 'app' && !recorded && !waiting) {

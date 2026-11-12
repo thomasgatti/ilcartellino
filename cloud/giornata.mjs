@@ -227,7 +227,32 @@ function nazStakes(j) {
 }
 // Lega A tutta; dalle altre leghe solo le partite scelte in bot/webapp/naz_scelte.json ({"aggiunte":[id FotMob], "escluse":[]}).
 const NAZ_SCELTE = (() => { try { return read(path.join(app, 'naz_scelte.json')); } catch { return {aggiunte:[], escluse:[]}; } })();
-let nazPosta = new Map();
+let nazPosta = new Map(), nazLeagues = null;
+// Classifiche per la scheda "Classifica" (FotMob): dopo ogni partita archiviata, altrimenti ogni 6 ore (ogni salvataggio è un deploy su Vercel).
+const ZONE_IT = {championsleague:'Champions League', europaleague:'Europa League', europa_conference_league:'Conference League (preliminari)',
+  relegation:'Retrocessione', q1of8finals:'Ottavi di finale', q1of16finals:'Spareggi per gli ottavi', championship_playoff:'Quarti di finale',
+  promotion:'Promozione', promotionqual:'Spareggio promozione', relegationqual:'Spareggio salvezza', relegation_playoff:'Spareggio salvezza'};
+function tableOf(j, rename = n => n) {
+  const d = j?.table?.[0]?.data; if (!d) return null;
+  const row = t => [t.idx, rename(t.name), t.played, t.wins, t.draws, t.losses, t.scoresStr, t.goalConDiff, t.pts, t.qualColor || null, t.id];
+  const legend = l => (l || []).map(x => [ZONE_IT[x.tKey] || x.title, x.color]);
+  const groups = d.table?.all ? [{name:'', rows:d.table.all.map(row), legend:legend(d.legend)}]
+    : (d.tables || []).map(g => ({name:(g.leagueName || '').replace('Grp.', 'Girone'), rows:(g.table?.all || []).map(row), legend:legend(g.legend || d.legend)}));
+  return groups.length ? groups : null;
+}
+async function updateTables(force) {
+  const old = data.classifiche;
+  if (!force && old?.updated && now - old.updated < 6 * 3600) return false;
+  const get = async (id, season = '2026%2F2027') => { try { const r = await fetch(`/api/data/leagues?id=${id}&season=${season}`); return r.ok ? await r.json() : null; } catch { return null; } };
+  const out = {updated:now, sa:null, ucl:null, naz:{}, extra:{}};
+  out.sa = tableOf(await get(55));
+  out.ucl = tableOf(await get(42));
+  for (const [id, j] of nazLeagues || await Promise.all([9806, 9807, 9808].map(async id => [id, await get(id)])))
+    out.naz[(j?.details?.name || String(id)).replace(/^UEFA Nations League /, 'Lega ')] = tableOf(j, it);
+  for (const [id, name] of [[47, 'Premier League'], [87, 'LaLiga'], [54, 'Bundesliga'], [53, 'Ligue 1']]) out.extra[name] = tableOf(await get(id));
+  data.classifiche = out;
+  return true;
+}
 async function syncNaz(round) {
   const leagues = await Promise.all([9806, 9807, 9808].map(async id => {
     const response = await fetch(`/api/data/leagues?id=${id}&season=2026%2F2027`);
@@ -235,6 +260,7 @@ async function syncNaz(round) {
     return [id, await response.json()];
   }));
   nazPosta = new Map(leagues.flatMap(([, j]) => [...nazStakes(j)]));
+  nazLeagues = leagues;
   const known = new Set(round.matches.map(m => m.id)), pending = new Set(round.pending.map(x => x.id));
   const horizon = now + Number(process.env.CARTELLINO_ANTICIPO_ORE || 72) * hour;
   const chosen = new Set((NAZ_SCELTE.aggiunte || []).map(Number)), skip = new Set((NAZ_SCELTE.escluse || []).map(Number));
@@ -621,6 +647,7 @@ try {
       for (const id of fixed) if (id && !trisIds.includes(id)) trisIds.push(id);
     }
   }
+  try { if (await updateTables(finished > 0)) touched = true; } catch (e) { console.warn('Classifiche:', e.message); }
   if (finished || changedIds.length || touched) {
     write(files.data,data);
     if (finished) write(files.results,results);
