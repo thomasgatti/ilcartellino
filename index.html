@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta name="build" content="2026-11-12T09:30:18Z">
+<meta name="build" content="2026-11-12T09:32:42Z">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -763,11 +763,17 @@ function classificaHtml(m) {
   if (c === 'naz') for (const gs of Object.values(C.naz || {})) for (const g of gs || []) if (g.rows.some(r => sameTeam(m.h, r[1])) && g.rows.some(r => sameTeam(m.a, r[1]))) groups = [{ ...g, name: (Object.entries(C.naz).find(([, v]) => v === gs) || [''])[0] + (g.name ? ' · ' + g.name : '') }];
   if (c === 'naz' && groups && groups.length > 1) groups = null;
   if (!groups || !groups.length) return `<p class="note">${c === 'extra' && !(C.extra || {})[m.lgname] ? 'Le coppe non hanno una classifica.' : 'Classifica non ancora disponibile.'}</p>`;
-  const hi = name => sameTeam(m.h, name) ? 'h' : sameTeam(m.a, name) ? 'a' : '';
+  // una sola riga per squadra: prima il nome identico, altrimenti la riga con più parole in comune (Paris Saint-Germain ≠ Paris FC)
+  const rowOf = (team, rows) => { const n = x => String(x).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+    const exact = rows.find(r => n(r[1]) === n(team)); if (exact) return exact;
+    const sc = r => { const x = CLW(team), y = CLW(r[1]); return x.filter(w => w.length > 2 && y.includes(w)).length / Math.max(x.length, y.length, 1); };
+    const best = rows.map(r => [sc(r), r]).sort((a, b) => b[0] - a[0]); return best[0] && best[0][0] > 0 && (!best[1] || best[1][0] < best[0][0]) ? best[0][1] : null; };
+  const hiRows = new Map(); for (const g of groups) { const h = rowOf(m.h, g.rows), a = rowOf(m.a, g.rows); if (h) hiRows.set(h, 'h'); if (a && a !== h) hiRows.set(a, 'a'); }
+  const hi = (name, r) => hiRows.get(r) || '';
   const col = side => side === 'h' ? (m.hc || [])[0] : (m.ac || [])[0];
   return groups.map(g => `<div class="cls">${g.name ? `<h4>${esc(g.name)}</h4>` : ''}
     <table><thead><tr><th class="ps">#</th><th class="tm">Squadra</th><th>G</th><th class="vnp">V</th><th class="vnp">N</th><th class="vnp">P</th><th class="gl">Gol</th><th>DR</th><th class="pt">Pt</th></tr></thead><tbody>
-    ${g.rows.map(r => { const s = hi(r[1]); return `<tr class="${s ? 'me' : ''}" ${s ? `style="--tc:${col(s) || 'var(--ink)'}"` : ''}><td class="ps"><i style="background:${r[9] || 'transparent'}"></i>${r[0]}</td><td class="tm">${s ? `<span class="dot"></span>` : ''}${esc(r[1])}</td><td>${r[2]}</td><td class="vnp">${r[3]}</td><td class="vnp">${r[4]}</td><td class="vnp">${r[5]}</td><td class="gl">${r[6]}</td><td>${r[7] > 0 ? '+' : ''}${r[7]}</td><td class="pt">${r[8]}</td></tr>`; }).join('')}
+    ${g.rows.map(r => { const s = hi(r[1], r); return `<tr class="${s ? 'me' : ''}" ${s ? `style="--tc:${col(s) || 'var(--ink)'}"` : ''}><td class="ps"><i style="background:${r[9] || 'transparent'}"></i>${r[0]}</td><td class="tm">${s ? `<span class="dot"></span>` : ''}${esc(r[1])}</td><td>${r[2]}</td><td class="vnp">${r[3]}</td><td class="vnp">${r[4]}</td><td class="vnp">${r[5]}</td><td class="gl">${r[6]}</td><td>${r[7] > 0 ? '+' : ''}${r[7]}</td><td class="pt">${r[8]}</td></tr>`; }).join('')}
     </tbody></table>
     ${g.legend && g.legend.length ? `<div class="clsleg">${g.legend.map(([t, c2]) => `<span><i style="background:${c2}"></i>${esc(t)}</span>`).join('')}</div>` : ''}</div>`).join('') +
     `<p class="note">Classifica di FotMob${C.updated ? ', aggiornata ' + fmtDay(C.updated).toLowerCase() + ' alle ' + fmtTime(C.updated) : ''}.</p>`;
