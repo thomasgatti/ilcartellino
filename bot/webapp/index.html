@@ -670,7 +670,17 @@ html { overflow-y: scroll; scrollbar-gutter: stable; }
 .clsleg { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 8px; font-size: 12.5px; color: var(--muted); }
 .clsleg i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
 @media (max-width: 560px) { .cls .vnp, .cls .gl { display: none; } .cls .tm { max-width: 150px; } }
-@media (max-width: 560px) { .sectabs { gap: 0; } .sectabs button { font-size: 13.5px; padding: 9px 8px; } }
+/* su telefono le schede stanno tutte nello schermo (due righe, niente scorrimento laterale) */
+@media (max-width: 560px) {
+  .sectabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; overflow: visible; border-bottom: 0; }
+  .sectabs button { font-size: 13.5px; padding: 8px 4px; margin: 0; border: 1px solid var(--line); border-radius: 10px; background: color-mix(in srgb, var(--surface) 70%, transparent); text-align: center; }
+  .sectabs button[aria-selected="true"] { border-width: 2px; border-color: var(--card); color: var(--ink); }
+  :root[data-comp="ucl"] .sectabs button[aria-selected="true"] { border-color: var(--uv2); }
+  :root[data-comp="naz"] .sectabs button[aria-selected="true"] { border-color: #ffd200; }
+  :root[data-comp="extra"] .sectabs button[aria-selected="true"] { border-color: var(--xa); }
+  :root[data-comp="sa"] .sectabs button[aria-selected="true"] { border-color: #00e5e0; }
+}
+#panel { overflow-anchor: none; }
 </style>
 </head>
 <body>
@@ -1032,6 +1042,7 @@ function select(id) {
       ${ps.map(x => `<tr class="${mine.includes(x.n) ? 'picked' : ''}"><td>${addBtn(m, x)}</td><td>${x.n}${tagsHtml(x)}</td><td>${x.team}</td><td>${x.pos}</td><td>${x.vs}</td><td class="n">${x.st}%</td><td class="n">${pct(x.p)}</td><td><div class="bar" style="width:${Math.min(100, Math.round(x.p / 0.3 * 100))}%"></div></td></tr>`).join('')}
     </tbody></table></div><p class="note">Il simbolo + aggiunge il giocatore al tuo tris (scheda "Il mio tris").</p>`;
   const panel = document.getElementById('panel');
+  if (panel.dataset.mid !== String(m.id)) { panel.style.minHeight = ''; panel.dataset.mid = m.id; }   // altezza tenuta solo cambiando scheda nella stessa partita
   panel.innerHTML = `
     <div class="mhead">
       <div class="mteams"><span class="mt">${teamMark(m.h, m.hc, true)}${m.h}</span><span class="mvs">–</span><span class="mt">${teamMark(m.a, m.ac, true)}${m.a}</span></div>
@@ -1051,7 +1062,11 @@ function select(id) {
       <button type="button" role="tab" data-sec="classifica" aria-selected="${sec === 'classifica'}">Classifica</button>
     </div>
     <div class="sec" role="tabpanel">${sec === 'app' ? appSec : sec === 'mio' ? mioSec : sec === 'classifica' ? classificaHtml(m) : sec === 'campo' ? campoHtml(m, waiting ? [] : (recorded || pick(m, '21', 0)).trio) : tuttiSec}</div>`;
-  panel.querySelectorAll('[data-sec]').forEach(b => b.addEventListener('click', () => { state.sec = b.dataset.sec; select(m.id); }));
+  // cambiando scheda la fila delle schede resta ferma sullo schermo (niente salti di pagina)
+  panel.querySelectorAll('[data-sec]').forEach(b => b.addEventListener('click', () => {
+    const y0 = panel.querySelector('.sectabs').getBoundingClientRect().top; panel.style.minHeight = panel.offsetHeight + 'px'; state.sec = b.dataset.sec; select(m.id);
+    const nt = panel.querySelector('.sectabs'); if (nt) window.scrollBy({ top: nt.getBoundingClientRect().top - y0, behavior: 'instant' });
+  }));
   panel.querySelectorAll('.subrule').forEach(b => b.addEventListener('click', () => { state.subRule = b.dataset.sub === '1'; saveUi(); renderList(); select(m.id); }));
   if (sec === 'app' && !recorded && !waiting) {
     document.getElementById('go').addEventListener('click', () => {
