@@ -8,6 +8,7 @@ import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { loadLib } from './lib_node.mjs';
 import { makeTagger } from './etichette.mjs';
+import { loadContesto } from './contesto.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const app = path.join(root, 'bot/webapp');
@@ -103,7 +104,7 @@ async function prepareLineup(id, raw, verifiedOut = []) {
 
 function startModel(cutoff) {
   loadLib(['fotmob_scrape.js', 'fm_model.js', 'cup_model.js', 'cup_model2.js', 'ext_model.js', 'cup_x2.js',
-    'deep_feats.js', 'cup_x3.js', 'hot_feats.js', 'sa_export.js', 'amm_boot.js']);
+    'deep_feats.js', 'cup_x3.js', 'hot_feats.js', 'ctx_feats.js', 'sa_export.js', 'amm_boot.js']);
   const all = fs.readdirSync(historic).filter(f => f.endsWith('.json.gz')).flatMap(f =>
     Object.values(JSON.parse(zlib.gunzipSync(fs.readFileSync(path.join(historic, f))))));
   const before = all.filter(m => m.ts && m.ts < cutoff && m.pl?.length > 20);
@@ -114,6 +115,8 @@ function startModel(cutoff) {
     if (name === 'amm_dom') return ![55,42].includes(m.lg) ? [[m.id,m]] : [];
     return m.x ? [[m.id,m.x]] : [];
   }));
+  try { globalThis.__CTX = loadContesto(path.dirname(historic), before); console.log(`Contesto: quote ${globalThis.__CTX.quote.size}, possesso ${globalThis.__CTX.poss.size}`); }
+  catch (e) { console.warn('Contesto non caricato:', e.message); }
   const odds = globalThis.fmOdds;
   globalThis.fmOdds = async ids => Object.fromEntries(Object.entries(await odds(ids)).filter(([,v]) => v.p));
   return globalThis.ammBuild();
