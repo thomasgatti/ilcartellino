@@ -141,7 +141,7 @@ function run(ms, key) {
   return ms.map(m => {
     const o = { ...V[key] }; if (o.kd) Object.assign(o, KD[m.comp]);
     const c = choose(m, o), h = c.t.filter(x => x.hit).length;
-    return { mid: m.mid, comp: m.comp, h, p3: Math.min(.5, c.p3), e: c.t.reduce((a, x) => a + x.sp, 0), two: c.two, names: c.t.map(x => x.n) };
+    return { mid: m.mid, comp: m.comp, h, hs: c.t.filter(x => !x.hitSelf && x.hitSub).length, p3: Math.min(.5, c.p3), e: c.t.reduce((a, x) => a + x.sp, 0), two: c.two, names: c.t.map(x => x.n) };
   });
 }
 function summ(r) {
@@ -219,3 +219,6 @@ for (const k of ['k4','k10','k20','k40']) for (const comp of ['sa', 'ucl']) for 
   const dn = boot2(r, r2, x => x.h);
   console.log(`${k} ${comp} ${nome}: ΔLL slot ${fmt((lb - la) / n, 5)}  Δtop3 ${fmt(mu)} ± ${fmt(sd / Math.sqrt(d3.length))}  Δnomi tris ${fmt(dn[0])} [${fmt(dn[1])}; ${fmt(dn[2])}]`);
 }
+
+{ const r = run(DATA, 'A'), h = r.reduce((a, x) => a + x.h, 0), hs = r.reduce((a, x) => a + x.hs, 0);
+  console.log(`\n== idea 55: nomi centrati dal solo sostituto (regola attuale, tutte le partite) == ${hs} su ${h} (${(100 * hs / h).toFixed(1)}%); tris completi grazie al sostituto: ${r.filter(x => x.h === 3 && x.hs > 0).length} su ${r.filter(x => x.h === 3).length}`); }
