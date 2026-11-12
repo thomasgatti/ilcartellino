@@ -303,6 +303,8 @@ function estimateLines(round) {
   }
   return changed;
 }
+// Medie arbitri inserite a mano (Sofascore), con precedenza su FotMob
+const ARBITRI = (() => { try { return read(path.join(app, 'arbitri.json')); } catch { return {}; } })();
 // Arbitro designato (FotMob) e nota con le sue medie; vale anche quando la formazione non cambia.
 function updateReferee(round, m, j) {
   const name = j?.content?.matchFacts?.infoBox?.Referee?.text;
@@ -310,11 +312,12 @@ function updateReferee(round, m, j) {
   if (name && name !== m.ref) { m.ref = name; delete m.refnote; delete m.refstat; changed = true; }
   // medie dell'arbitro secondo FotMob (tutte le competizioni che segue): partite, gialli a gara, rossi totali
   const st = Object.fromEntries((j?.content?.matchFacts?.infoBox?.Referee?.stats || []).map(x => [x.type, x.value]));
-  if (name && st.matches >= 5 && Number.isFinite(st.yellowCards)) {
-    const refstat = {g:st.matches, y:+st.yellowCards.toFixed(2), r:+((st.redCards || 0) / st.matches).toFixed(2)};
+  const manual = name && Object.entries(ARBITRI).find(([k]) => norm(k) === norm(name))?.[1];
+  if (name && (manual || (st.matches >= 5 && Number.isFinite(st.yellowCards)))) {
+    const refstat = manual ? {y:manual.y, r:manual.r, src:'Sofascore'} : {g:st.matches, y:+st.yellowCards.toFixed(2), r:+((st.redCards || 0) / st.matches).toFixed(2)};
     if (JSON.stringify(refstat) !== JSON.stringify(m.refstat)) { m.refstat = refstat; changed = true; }
     if (round.comp === 'naz') {
-      const note = `${dec(refstat.y)} gialli e ${refstat.r.toFixed(2).replace('.', ',')} rossi a gara · ${refstat.g} gare (FotMob)`;
+      const note = `${dec(refstat.y)} gialli e ${refstat.r.toFixed(2).replace('.', ',')} rossi a gara` + (refstat.src ? ` (${refstat.src})` : ` · ${refstat.g} gare (FotMob)`);
       if (m.refnote !== note) { m.refnote = note; changed = true; }
     }
   }
