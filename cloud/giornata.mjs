@@ -258,7 +258,10 @@ async function syncNaz(round) {
 // il 56% tra 100 e 200, il 59% tra 200 e 300, il 62% oltre (Champions: 53, 57, 63, 67%). Il modello coppe per le nazionali vede solo
 // il divario in valore assoluto: se dà alla sfavorita meno di questa quota, si spostano le probabilità (in logit, per lato) fino alla quota
 // storica, lasciando invariato il totale dei gialli attesi. Forza dalle quote 1X2 (punteggio atteso → divario Elo).
-const UNDERDOG = gap => Math.min(.64, .515 + .033 * Math.abs(gap) / 100);
+// Curva rivista sulle 1.124 partite di nazionali in archivio (12/11, ricerca/nazionali/studio.mjs): lì la sfavorita prende il 53/60/68/77% dei gialli;
+// test per anno 2023-2026 (646 partite): senza correzione log loss .41371 e top3 .666; vecchia curva .41266 / .687; questa .41246 / .687.
+// Più ripida (.49 + .08) fa ancora meglio con l'Elo dell'archivio, ma in produzione il divario viene dalle quote, che allargano le distanze: si resta prudenti.
+const UNDERDOG = gap => Math.min(.75, .5 + .05 * Math.abs(gap) / 100);
 function underdogFix(round) {
   const changed = [];
   const lg = x => Math.log(x / (1 - x)), ex = x => 1 / (1 + Math.exp(-x));

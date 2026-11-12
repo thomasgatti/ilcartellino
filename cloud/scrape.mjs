@@ -11,7 +11,7 @@ export const SPEC = { 55: S(2020, 2026), 42: S(2021, 2026), 73: S(2023, 2026), 1
   176: S(2025, 2026), 262: S(2025, 2026), 48: S(2025, 2026), 59: ['2025', '2026'] };
 // Nazionali (cartella a parte, dati/nazionali): Nations League A-D, Europei, Mondiali e qualificazioni UEFA. Uso: SCRAPE_SET=naz node cloud/scrape.mjs dati/nazionali 60
 export const SPEC_NAZ = { 9806: ['2022/2023', '2024/2025', '2026/2027'], 9807: ['2022/2023', '2024/2025', '2026/2027'], 9808: ['2022/2023', '2024/2025', '2026/2027'],
-  9809: ['2022/2023', '2024/2025', '2026/2027'], 50: ['2024'], 77: ['2022', '2026'], 10607: ['2022/2023'], 10195: ['2021/2022', '2025/2026'] };
+  9809: ['2022/2023', '2024/2025', '2026/2027'], 50: ['2024'], 77: ['2022', '2026'], 10607: ['2022/2023', '2023'], 10195: ['2021/2022', '2025/2026'] };
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const get = async u => { for (let k = 0; k < 4; k++) { try { const r = await fetch(u); if (r.status === 200) return await r.json(); if (r.status === 429) await sleep(5000); } catch (e) {} await sleep(1000); } return null; };
 const file = (lg, s) => path.join(OUT, lg + '_' + s.replace('/', '-') + '.json.gz');

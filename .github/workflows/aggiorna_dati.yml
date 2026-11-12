@@ -25,6 +25,9 @@ jobs:
           node-version: '20'
       - name: Scarica
         run: node cloud/scrape.mjs dati/fotmob 320
+      - name: Partite nuove delle nazionali
+        run: SCRAPE_SET=naz node cloud/scrape.mjs dati/nazionali 10
+        continue-on-error: true
       - name: Dati EXTRA delle partite nuove
         run: node cloud/scrape_extra.mjs dati/fotmob dati/extra 20
         continue-on-error: true
