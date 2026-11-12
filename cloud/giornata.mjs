@@ -293,7 +293,9 @@ function estimateLines(round) {
   const sum = m => m.pl.reduce((a,p) => a + (p[4] || 0), 0), mean = round.section.matches.reduce((a,m) => a + sum(m), 0) / round.section.matches.length;
   let changed = false;
   for (const m of open) {
-    const lambda = avg * Math.sqrt(sum(m) / mean);
+    let lambda = avg * Math.sqrt(sum(m) / mean);
+    // Nazionali: media geometrica con i cartellini a gara dell'arbitro designato (FotMob), quando c'è
+    if (round.comp === 'naz' && m.refstat) lambda = Math.sqrt(lambda * (m.refstat.y + m.refstat.r));
     let k = 0, term = Math.exp(-lambda), cdf = term;
     while (cdf < .5) { k++; term *= lambda / k; cdf += term; }
     const line = dec(k + .5);
@@ -305,7 +307,17 @@ function estimateLines(round) {
 function updateReferee(round, m, j) {
   const name = j?.content?.matchFacts?.infoBox?.Referee?.text;
   let changed = false;
-  if (name && name !== m.ref) { m.ref = name; delete m.refnote; changed = true; }
+  if (name && name !== m.ref) { m.ref = name; delete m.refnote; delete m.refstat; changed = true; }
+  // medie dell'arbitro secondo FotMob (tutte le competizioni che segue): partite, gialli a gara, rossi totali
+  const st = Object.fromEntries((j?.content?.matchFacts?.infoBox?.Referee?.stats || []).map(x => [x.type, x.value]));
+  if (name && st.matches >= 5 && Number.isFinite(st.yellowCards)) {
+    const refstat = {g:st.matches, y:+st.yellowCards.toFixed(2), r:+((st.redCards || 0) / st.matches).toFixed(2)};
+    if (JSON.stringify(refstat) !== JSON.stringify(m.refstat)) { m.refstat = refstat; changed = true; }
+    if (round.comp === 'naz') {
+      const note = `${dec(refstat.y)} gialli e ${refstat.r.toFixed(2).replace('.', ',')} rossi a gara · ${refstat.g} gare (FotMob)`;
+      if (m.refnote !== note) { m.refnote = note; changed = true; }
+    }
+  }
   if (m.ref && m.ref !== '–' && !m.refnote) {
     const note = refNote(m.ref, round.comp, m.ko);
     if (note) { m.refnote = note; changed = true; }
@@ -393,6 +405,10 @@ function applyForecast(round, exportRows) {
   round.section.matches = round.advance ? newMatches : [...round.matches.map(m => changed.get(m.id) || m),
     ...newMatches.filter(m => !former.has(m.id))].sort((a,b) => a.ko - b.ko || a.id - b.id);
   if (round.comp === 'naz') {
+    for (const m of newMatches) {
+      const fr = round.fifa?.[m.id];
+      if (fr?.length === 2) m.ctx = [`Ranking FIFA: ${m.h} ${fr[0]}º · ${m.a} ${fr[1]}º`, ...(m.ctx || [])];
+    }
     // restano le partite delle ultime 36 ore e le prossime; le altre sono già nello storico
     round.section.matches = round.section.matches.filter(m => m.ko > now - 36 * hour || !seen.has(m.id));
     round.section.round = String(Math.max(Number(round.section.round) || 0, round.md || 0) || '');
@@ -497,6 +513,15 @@ try {
         globalThis.__SAX = await globalThis.saExport(ids);
         exported = globalThis.saFinal();
       } else {
+        if (round.comp === 'naz') {
+          // Le nazionali non hanno Elo in archivio: forza dal ranking FIFA (1º ≈ 1950, 15º ≈ 1665, 75º ≈ 1500), scala dei club di Champions
+          const E = globalThis.__CST2?.ELO, clubs = Object.values(E || {}).filter(Number.isFinite).sort((a, b) => a - b);
+          if (clubs.length) console.log(`Elo club: 10% ${clubs[Math.floor(clubs.length * .1)].toFixed(0)}, mediana ${clubs[Math.floor(clubs.length / 2)].toFixed(0)}, 99% ${clubs[Math.floor(clubs.length * .99)].toFixed(0)}`);
+          for (const item of round.pending) for (const t of item.j.header?.teams || []) {
+            if (E && t.fifaRank > 0) E[t.id] = 1950 - 105 * Math.log(t.fifaRank);
+            if (t.fifaRank > 0) (round.fifa ??= {})[item.id] = [...((round.fifa || {})[item.id] || []), t.fifaRank];
+          }
+        }
         exported = await globalThis.cupExport3(ids);
       }
       if (exported.length !== ids.length || exported.some(m => !m.pl?.length)) throw new Error('Il modello non ha prodotto tutte le stime');
