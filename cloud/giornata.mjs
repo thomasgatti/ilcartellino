@@ -254,6 +254,33 @@ async function syncNaz(round) {
   }
   round.append = true;
 }
+// Squadra sfavorita: nell'archivio (20.722 partite, Elo con vantaggio casa) la sfavorita prende il 53% dei gialli con divario < 100,
+// il 56% tra 100 e 200, il 59% tra 200 e 300, il 62% oltre (Champions: 53, 57, 63, 67%). Il modello coppe per le nazionali vede solo
+// il divario in valore assoluto: se dà alla sfavorita meno di questa quota, si spostano le probabilità (in logit, per lato) fino alla quota
+// storica, lasciando invariato il totale dei gialli attesi. Forza dalle quote 1X2 (punteggio atteso → divario Elo).
+const UNDERDOG = gap => Math.min(.64, .515 + .033 * Math.abs(gap) / 100);
+function underdogFix(round) {
+  const changed = [];
+  const lg = x => Math.log(x / (1 - x)), ex = x => 1 / (1 + Math.exp(-x));
+  for (const m of round.section.matches) {
+    if (m.sfav || m.ko <= now || !m.odds || !m.pl?.length) continue;
+    const [ph, pa] = m.odds.split('/').map(Number), px = Math.max(0, 100 - ph - pa), E = (ph + px / 2) / 100;
+    if (!(E > 0 && E < 1)) continue;
+    const gap = -400 * Math.log10(1 / E - 1), under = gap > 0 ? 'a' : 'h', target = UNDERDOG(gap);
+    const sum = side => m.pl.filter(r => r[1] === side).reduce((a, r) => a + r[4], 0), tot = sum('h') + sum('a'), share = sum(under) / tot;
+    m.sfav = 1;
+    if (share >= target) { changed.push(0); continue; }
+    changed.push(m.id);
+    const fit = (side, goal) => { let lo = -3, hi = 3; for (let i = 0; i < 50; i++) { const mid = (lo + hi) / 2;
+      if (m.pl.filter(r => r[1] === side).reduce((a, r) => a + ex(lg(r[4]) + mid), 0) < goal) lo = mid; else hi = mid; } return (lo + hi) / 2; };
+    const d = {[under]: fit(under, tot * target), [under === 'h' ? 'a' : 'h']: fit(under === 'h' ? 'a' : 'h', tot * (1 - target))};
+    for (const r of m.pl) r[4] = +ex(lg(r[4]) + d[r[1]]).toFixed(3);
+    m.pl.sort((a, b) => b[4] - a[4]);
+    const team = under === 'h' ? m.h : m.a;
+    m.ctx = [...(m.ctx || []), `Squadra sfavorita: a ${team} va il ${Math.round(target * 100)}% dei gialli attesi (nello storico, con questo divario, la sfavorita prende il ${Math.round(target * 100)}% dei gialli; il modello le dava il ${Math.round(share * 100)}%)`];
+  }
+  return changed;
+}
 // Posta in palio sulle partite delle nazionali (ricalcolata a ogni giro dalla classifica).
 function applyStakes(round) {
   let changed = false;
@@ -547,6 +574,11 @@ try {
     }
     if (estimateLines(round)) touched = true;
     if (round.comp === 'naz' && applyStakes(round)) touched = true;
+    if (round.comp === 'naz') {
+      const fixed = underdogFix(round);
+      if (fixed.length) touched = true;
+      for (const id of fixed) if (id && !trisIds.includes(id)) trisIds.push(id);
+    }
   }
   if (finished || changedIds.length || touched) {
     write(files.data,data);
