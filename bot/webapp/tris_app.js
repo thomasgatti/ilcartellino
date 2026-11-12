@@ -30,7 +30,7 @@ async function main() {
       return result;
     },requested);
     let rows = out;
-    const revisions = new Map();
+    const revisions = new Map(), same = new Set();
     if (requested.length) {
       if (requested.some(id => !out.some(t => t.id === id))) throw new Error('Almeno un tris richiesto è assente');
       const existing = JSON.parse(fs.readFileSync(archive,'utf8'));
@@ -40,6 +40,8 @@ async function main() {
         updated.delete(t.id);
         if (lateIds.has(t.id)) {
           if (!fresh.uff) throw new Error(`Formazioni ufficiali mancanti per il tris ${t.id}`);
+          // ufficiali in ritardo ma stesso tris: nessuna revisione
+          if (!t.revised && fresh.trio.map(x => x.n).sort().join() === t.trio.map(x => x.n).sort().join()) { same.add(t.id); return t; }
           const revised = t.revised || {uff:true,late:true,p3:fresh.p3,trio:fresh.trio};
           revisions.set(t.id,revised);
           return {...t,revised};
@@ -47,7 +49,7 @@ async function main() {
         return fresh || t;
       }).concat([...updated.values()]);
     }
-    if (revisions.size !== lateIds.size) throw new Error('Almeno un tris prepartita da correggere è assente');
+    if (revisions.size + same.size !== lateIds.size) throw new Error('Almeno un tris prepartita da correggere è assente');
     if (revisions.size) {
       const file = path.join(__dirname,'vercel/risultati.json');
       const results = JSON.parse(fs.readFileSync(file,'utf8'));

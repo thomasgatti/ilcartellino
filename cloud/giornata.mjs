@@ -28,10 +28,13 @@ const data = read(files.data);
 const results = read(files.results);
 const tris = read(files.tris);
 const savedTris = new Map(tris.map(t => [t.id,t]));
+// Il tris registrato va rivisto (e, se cambia, esce dal bilancio prepartita) quando a partita iniziata uno dei tre non è titolare,
+// oppure quando le ufficiali sono arrivate solo dopo il calcio d'inizio e il tris era stato registrato sulle probabili (uff_late = 1:
+// es. Napoli-Lazio dell'8/11, Vergara non era nelle probabili). Se sulle ufficiali il tris è lo stesso, resta com'è.
 function needsTrisRevision(m) {
   const prior = savedTris.get(m.id);
   return m.uff && m.ko <= now && prior?.trio?.length === 3 && !prior.revised &&
-    prior.trio.some(t => !m.pl.some(p => p[0] === t.n && (p[6] ?? 100) === 100));
+    (prior.trio.some(t => !m.pl.some(p => p[0] === t.n && (p[6] ?? 100) === 100)) || (m.uff_late === 1 && prior.uff === false));
 }
 const seen = new Set(results.map(r => r.matchId));
 const rounds = [{comp:'sa', section:data, matches:data.matches}];
@@ -453,7 +456,7 @@ function applyForecast(round, exportRows) {
     }
     if (!old) continue;
     if (!m.uff && old.forfait?.length) m.forfait = old.forfait;
-    for (const key of ['derby','hc','ac']) if (old[key] != null) m[key] = old[key];
+    for (const key of ['derby','hc','ac','uff_late']) if (old[key] != null) m[key] = old[key];
     if (m.line == null && old.line != null) { m.line = old.line; if (old.line_est) m.line_est = 1; }
     if (!m.odds) m.odds = old.odds;
     if (m.ref === '–') m.ref = old.ref;
@@ -589,6 +592,10 @@ try {
       for (const item of round.pending) {
         field.set(item.id,item.line);
         if (item.beforeKickoff || round.advance) trisIds.push(item.id);
+        else {
+          const m = round.section.matches.find(x => x.id === item.id);
+          if (m?.uff && !m.uff_late) { m.uff_late = 1; console.warn(`Partita ${m.id}: formazioni ufficiali arrivate dopo il calcio d'inizio (${m.h}-${m.a})`); }
+        }
       }
     }
     const currentIds = new Set(rounds.flatMap(r => r.section.matches.map(m => m.id)));
@@ -619,6 +626,9 @@ try {
     if (finished) write(files.results,results);
   }
   const revisedIds = rounds.flatMap(r => r.section.matches.filter(needsTrisRevision).map(m => m.id));
+  // la revisione per ufficiali in ritardo si chiede una volta sola
+  const lateDone = rounds.flatMap(r => r.section.matches).filter(m => m.uff_late === 1);
+  if (lateDone.length) { for (const m of lateDone) m.uff_late = 2; write(files.data,data); }
   if (process.env.GITHUB_OUTPUT) {
     fs.appendFileSync(process.env.GITHUB_OUTPUT,`previsioni=${trisIds.join(',')}\nrevisioni=${revisedIds.join(',')}\n`);
   }
