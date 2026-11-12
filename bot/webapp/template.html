@@ -326,7 +326,9 @@ details.how p { margin: 8px 0 0; max-width: none; }
 .match .tag.hot { display: block; margin-top: 3px; font-size: 9.5px; padding: 1px 5px; text-align: center; }
 /* ---- Storico unico: un colore per competizione ---- */
 .cmp-sa { --cc: #1e6fe0; } .cmp-ucl { --cc: #8b3dff; } .cmp-extra { --cc: #16a34a; } .cmp-naz { --cc: #d62b36; }
-.hist-card[class*="cmp-"] { border-top: 5px solid var(--cc); }
+#storico .hist-card[class*="cmp-"] { border-color: color-mix(in srgb, var(--cc) 55%, var(--line)) !important; border-top: 6px solid var(--cc) !important;
+  box-shadow: inset 0 90px 70px -60px color-mix(in srgb, var(--cc) 45%, transparent), 0 6px 22px -14px var(--cc); }
+#storico .hist-card[class*="cmp-"] .side.app { background: color-mix(in srgb, var(--cc) 9%, transparent); }
 .ctag { font: 700 11px var(--body); text-transform: uppercase; letter-spacing: .03em; color: #fff; background: var(--cc); border-radius: 4px; padding: 1px 6px; margin-right: 6px; vertical-align: 1px; }
 .hfilter { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 4px; }
 .hfilter button { font: 700 13px var(--body); border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 5px 12px; border-radius: 999px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
