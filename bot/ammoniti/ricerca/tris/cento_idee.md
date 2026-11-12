@@ -12,7 +12,7 @@ Stati: **ADOTTATA** · **PROVATA OGGI, NO** · **GIÀ SCARTATA** (RUNBOOK) · **
 
 | # | Idea | Stato | Note |
 |---|---|---|---|
-| 1 | P(titolare) per giocatore | SERVONO DATI | Per allenarla serve lo storico delle probabili: esiste solo dal 4/11 (storia git). Oggi: ultima formazione + 5 giornate, poi consenso dei giornali, poi ufficiali. |
+| 1 | P(titolare) per giocatore | SERVONO DATI | Serve lo storico delle probabili: la Giornata usa le probabili di FotMob e ogni cambio resta nella storia git (data.json, lineups.txt) dal 4/11. Fra qualche mese sarà provabile. |
 | 2 | P(entrare dalla panchina) | PROVATA OGGI, NO | q del sostituto per giocatore: prevede meglio l'ingresso, ma sullo slot non passa (SA log loss peggiore). |
 | 3 | Minuti dei titolari | GIÀ SCARTATA | "Minuti attesi" scartati il 31/10; la parte sostituto è la 2. |
 | 4 | Minuti dei subentrati | NON PROVATA | Il minuto di ingresso c'è nell'archivio; dopo l'esito della 2 il guadagno atteso è minimo. |
@@ -22,7 +22,7 @@ Stati: **ADOTTATA** · **PROVATA OGGI, NO** · **GIÀ SCARTATA** (RUNBOOK) · **
 | 8 | Affidabilità della distinta | FATTA (in parte) | Ogni cambio di data.json resta nella storia git con l'ora; `fotografie_git.mjs` lo legge. |
 | 9 | Continuità con l'allenatore | SERVONO DATI | L'allenatore non è nell'archivio FotMob scaricato. |
 | 10 | Scenari di formazione | SERVONO DATI | Come la 6. |
-| 11 | Falli per 100 possessi avversari | SERVONO DATI | Il possesso non è nell'archivio. |
+| 11 | Falli per 100 possessi avversari | PROVATA, NO (12/11 pom.) | Il possesso c'era già nell'archivio extra (21.743 partite). Falli per minuto pesato sul possesso avversario: SA +0,00002; Champions v4 −0,00022 ma top3 −0,016 ± 0,012. |
 | 12 | Falli per azione difensiva | PROVATA OGGI, NO | Falli / (contrasti + duelli): SA +0,00010; Champions v3 −0,00009; Champions v4 −0,00068 ma tutto da una stagione (−0,00135) e una positiva. Da riverificare con nuove gare. |
 | 13 | Gialli per fallo con contesto | GIÀ SCARTATA | Conversione fallo→giallo (31/10) e studio duelli fase 3. |
 | 14 | Testa calda come variabile continua | **ADOTTATA (Serie A)** | z = gialli oltre quelli attesi dai propri falli, 3 anni, tutte le competizioni: SA −0,00023, top3 −0,003 ± 0,008, in calo in tutte e 4 le stagioni. Champions v4: −0,00018, top3 −0,017 → no. `lib/hot_feats.js`. |
@@ -42,7 +42,7 @@ Stati: **ADOTTATA** · **PROVATA OGGI, NO** · **GIÀ SCARTATA** (RUNBOOK) · **
 | 28 | Duelli in inferiorità numerica | SERVONO DATI | |
 | 29 | Incrociarsi in zona e minuto | GIÀ NEL MODELLO (in parte) | Avversario di fronte dalle posizioni; minuti condivisi richiedono dati spaziali. |
 | 30 | Stili difensivi × offensivi | GIÀ SCARTATA | Interazioni (31/10) e indici della fase 3. |
-| 31 | Possesso atteso | SERVONO DATI | |
+| 31 | Possesso atteso | **ADOTTATA (Champions)** | Medie delle ultime 10 delle due squadre: Champions v4 −0,00074, in calo in tutte e 4 le stagioni (top3 −0,014 ± 0,015; v3 +0,005). Serie A: nulla. `lib/ctx_feats.js`. |
 | 32 | Pressing | SERVONO DATI | |
 | 33 | Falli dopo perdita del pallone | SERVONO DATI | |
 | 34 | Contropiedi concessi | SERVONO DATI | |
@@ -51,7 +51,7 @@ Stati: **ADOTTATA** · **PROVATA OGGI, NO** · **GIÀ SCARTATA** (RUNBOOK) · **
 | 37 | Tiri e xG concessi in transizione | SERVONO DATI | La fase dell'azione manca. |
 | 38 | Gialli della squadra per ruolo | PROVATA OGGI, NO | SA −0,00011 (sotto soglia), Champions 0. |
 | 39 | Rischio quando insegue/difende | GIÀ NEL MODELLO / SOLO LIVE | Forza relativa per ruolo in Serie A; lo stato del punteggio è live. |
-| 40 | Lato sfavorito | GIÀ NEL MODELLO | Nazionali (correzione) ed EXTRA (divario con segno); in Champions peggiora. Nel tris: dare i due posti alla sfavorita non cambia nulla (replay). |
+| 40 | Lato sfavorito | GIÀ NEL MODELLO + **ADOTTATA (Serie A, dalle quote)** | Nazionali (correzione) ed EXTRA (divario con segno). Serie A: forza dalle quote 1X2 di chiusura (football-data) −0,00027, in calo in tutte e 4 le stagioni; il favorito prende meno gialli. Nel tris: dare i due posti alla sfavorita non cambia nulla (replay). |
 | 41 | Arbitro: gialli per fallo | PROVATA OGGI, NO | SA +0,00002, Champions +0,00009. L'indice arbitro attuale basta. |
 | 42 | Arbitro per tipo di fallo | GIÀ SCARTATA | Motivi del giallo troppo scarsi (12%). |
 | 43 | Arbitro che sanziona presto | SOLO LIVE | Non cambia chi viene ammonito prima del via. |
@@ -72,14 +72,14 @@ Stati: **ADOTTATA** · **PROVATA OGGI, NO** · **GIÀ SCARTATA** (RUNBOOK) · **
 | 58 | Espulsione e compiti | SOLO LIVE | |
 | 59 | Minuti di recupero | SOLO LIVE | |
 | 60 | Momenti di partita | SOLO LIVE | |
-| 61 | Quota del singolo ammonito con orario | SERVONO DATI | Oggi quote raccolte a mano, senza orario. Da automatizzare prima di tutto il blocco 61–70. |
+| 61 | Quota del singolo ammonito con orario | SERVONO DATI | Oggi quote raccolte a mano, senza orario. Pronta la sonda OddsPapi (storico gratuito dichiarato): serve la chiave nel segreto `ODDSPAPI_KEY`. |
 | 62 | Margine del mercato | SERVONO DATI | |
 | 63 | Più fonti di quote | SERVONO DATI | |
 | 64 | Movimento della quota | SERVONO DATI | |
 | 65 | Copertura del mercato | SERVONO DATI | |
 | 66 | Miscela FotMob/Sofascore/mercato | SERVONO DATI | Peso mercato in Champions 0,5 ancora provvisorio. |
 | 67 | Linea cartellini di mercato | SERVONO DATI | Storico della linea con definizione. |
-| 68 | Quote 1X2 contro Elo | GIÀ NEL MODELLO (in parte) | Le quote 1X2 servono nelle Nazionali; manca lo storico per i club. |
+| 68 | Quote 1X2 contro Elo | **ADOTTATA (Serie A)** | Storico recuperato da football-data.co.uk (16.400 partite abbinate, Serie A 2390/2391). Le quote battono l'Elo (che in Serie A non dava nulla). Over 2,5 e pareggio: no. |
 | 69 | Linea osservata e stimata | FATTA | `linea_stimata` in risultati.json. |
 | 70 | Confronto per blocchi di disponibilità | SERVONO DATI | |
 | 71 | Fattore fisso sulle terne scelte | FATTA | 24 tris completi contro 25,3 attesi con 1,16: tenuto. |
@@ -114,7 +114,7 @@ Stati: **ADOTTATA** · **PROVATA OGGI, NO** · **GIÀ SCARTATA** (RUNBOOK) · **
 | 100 | Scelte segnate prima del test | FATTA | Varianti e soglie fissate prima; da rifare a fine dicembre senza ritocchi. |
 
 ## In sintesi
-- Adottata: 14 (testa calda continua) nel modello Serie A.
-- Provate oggi e scartate: 2, 5, 12, 38, 41, 44, 45, 51, 54, 74, 77, 80 (e la q per giocatore in Serie A).
+- Adottate: 14 (testa calda continua) e 40/68 (forza dalle quote) nel modello Serie A; 31 (possesso atteso) nel modello Champions.
+- Provate oggi e scartate: 2, 5, 11, 12, 38, 41, 44, 45, 51, 54, 74, 77, 80 (e la q per giocatore in Serie A).
 - Da riverificare con nuove gare: 12 in Champions.
 - Il blocco che può davvero cambiare le cose è il mercato (61–70): serve prima raccogliere le quote con l'orario.

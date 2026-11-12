@@ -1,0 +1,16 @@
+name: Sonda OddsPapi
+# Verifica la copertura delle quote sui cartellini. Richiede il segreto ODDSPAPI_KEY (Settings → Secrets and variables → Actions).
+on:
+  workflow_dispatch:
+jobs:
+  sonda:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node cloud/sonda_oddspapi.mjs
+        env:
+          ODDSPAPI_KEY: ${{ secrets.ODDSPAPI_KEY }}
