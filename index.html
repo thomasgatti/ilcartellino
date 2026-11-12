@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta name="build" content="2026-11-12T02:26:23Z">
+<meta name="build" content="2026-11-12T02:41:09Z">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -335,6 +335,7 @@ details.how p { margin: 8px 0 0; max-width: none; }
 .hfilter button i { width: 10px; height: 10px; border-radius: 50%; background: var(--cc, var(--ink)); }
 .hfilter button[aria-pressed="true"] { background: var(--cc, var(--ink)); border-color: var(--cc, var(--ink)); color: #fff; }
 .hfilter button[aria-pressed="true"] i { background: #fff; }
+.hfilter button[data-f="all"][aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
 .xintro { margin: 4px 0 14px; max-width: none; }
 #extra .layout { margin-top: 0; }
 :root[data-comp="extra"] .match[aria-current="true"] { border-color: transparent; box-shadow: 0 0 0 2px var(--xa) inset, 0 4px 16px color-mix(in srgb, var(--xa) 22%, transparent); }
@@ -1167,16 +1168,16 @@ async function renderStorico() {
     const note = waiting ? trisWaitingNote : actual?.late ? 'Fuori dal bilancio prepartita' : '';
     const trio = waiting ? [] : actual?.trio || r.tris_app;
     const sc = score(trio, r, true), gio = c !== 'naz' && r.giornata ? `${r.giornata}ª giornata · ` : '';
-    items.push({ c, ko: r.ko || 0, counts: !note, hits: sc.hits, punti: sc.punti, card: `<article class="hist-card cmp-${c}"><div class="hh"><h3>${r.partita}${r.finale ? ' · ' + r.finale : ''}</h3>${note ? '' : `<span class="hits-badge ${sc.hits === 3 ? 'h3' : sc.hits === 2 ? 'h2' : ''}">${sc.hits}/3</span>`}</div>
+    items.push({ c, ko: r.ko || 0, counts: !note, hits: sc.hits, punti: sc.punti, att: trio.reduce((a, x) => a + (x.p || 0), 0), card: `<article class="hist-card cmp-${c}"><div class="hh"><h3>${r.partita}${r.finale ? ' · ' + r.finale : ''}</h3>${note ? '' : `<span class="hits-badge ${sc.hits === 3 ? 'h3' : sc.hits === 2 ? 'h2' : ''}">${sc.hits}/3</span>`}</div>
       <span class="note"><span class="ctag">${COMP_NAME[c]}</span>${gio}${r.ko ? fmtTime(r.ko) + ' · ' : ''}${note || ('tutti e tre: ' + (r.p3_app != null ? trioPct(r.p3_app) + ' previsto' : 'n/d'))}</span>
       <div class="side app"><h4>Tris dell'app</h4><ul>${sc.rows.map((x, i) => li(x, trio[i].p)).join('')}</ul>${note ? '' : `<div class="score">${sc.hits}/3 ammoniti · ${sc.falli} ${sc.falli === 1 ? 'fallo' : 'falli'} · ${sc.punti} punti</div>`}</div></article>` });
   }
-  for (const r of ALL.extra?.storico || []) { const h = extraHist(r); items.push({ c: 'extra', ko: r.ko || 0, counts: !!h.n, hits: h.hits, punti: h.hits * 3, card: h.card }); }
+  for (const r of ALL.extra?.storico || []) { const h = extraHist(r); items.push({ c: 'extra', ko: r.ko || 0, counts: !!h.n, hits: h.hits, punti: h.hits * 3, att: (r.tris || []).reduce((a, t) => a + (t.p || 0), 0), card: h.card }); }
   items.sort((a, b) => b.ko - a.ko);
   const have = ['sa', 'ucl', 'naz', 'extra'].filter(c => items.some(x => x.c === c));
   if (hstate.f !== 'all' && !have.includes(hstate.f)) hstate.f = 'all';
   const shown = items.filter(x => hstate.f === 'all' || x.c === hstate.f), judged = shown.filter(x => x.counts);
-  const n = judged.length, hits = judged.reduce((a, x) => a + x.hits, 0), two = judged.filter(x => x.hits >= 2).length, full = judged.filter(x => x.hits === 3).length, pts = judged.reduce((a, x) => a + x.punti, 0);
+  const n = judged.length, att = judged.reduce((a, x) => a + (x.att || 0), 0), hits = judged.reduce((a, x) => a + x.hits, 0), two = judged.filter(x => x.hits >= 2).length, full = judged.filter(x => x.hits === 3).length, pts = judged.reduce((a, x) => a + x.punti, 0);
   const byDay = [];
   for (const x of shown) { const d = x.ko ? fmtDay(x.ko) : 'Altre partite'; if (!byDay.length || byDay[byDay.length - 1][0] !== d) byDay.push([d, []]); byDay[byDay.length - 1][1].push(x.card); }
   el.innerHTML = `<h2>Storico tris dell'app</h2>
@@ -1186,6 +1187,7 @@ async function renderStorico() {
     <div class="tiles">
       <div class="tile"><div class="k">Partite</div><div class="v">${n}</div></div>
       <div class="tile"><div class="k">Ammoniti azzeccati</div><div class="v">${hits}<small> su ${n * 3}${n ? ' · ' + Math.round(hits / (n * 3) * 100) + '%' : ''}</small></div></div>
+      <div class="tile"><div class="k">Attesi dal modello</div><div class="v">${att.toFixed(1).replace('.', ',')}<small>${n ? ' · ' + (hits >= att ? 'sopra' : 'sotto') : ''}</small></div></div>
       <div class="tile"><div class="k">Almeno 2 su 3</div><div class="v">${two}<small> su ${n}</small></div></div>
       <div class="tile"><div class="k">Tris completi (3/3)</div><div class="v">${full}<small> su ${n}</small></div></div>
       <div class="tile"><div class="k">Punti</div><div class="v">${pts}</div></div>
