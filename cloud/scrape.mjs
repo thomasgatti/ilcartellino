@@ -9,13 +9,16 @@ export const SPEC = { 55: S(2020, 2026), 42: S(2021, 2026), 73: S(2023, 2026), 1
   47: S(2021, 2026), 87: S(2021, 2026), 54: S(2021, 2026), 53: S(2021, 2026), 57: S(2022, 2026), 61: S(2022, 2026),
   71: S(2023, 2026), 40: S(2023, 2026), 135: S(2024, 2026), 38: S(2024, 2026), 122: S(2024, 2026), 64: S(2024, 2026), 69: S(2024, 2026), 46: S(2024, 2026), 441: S(2024, 2026),
   176: S(2025, 2026), 262: S(2025, 2026), 48: S(2025, 2026), 59: ['2025', '2026'] };
+// Nazionali (cartella a parte, dati/nazionali): Nations League A-D, Europei, Mondiali e qualificazioni UEFA. Uso: SCRAPE_SET=naz node cloud/scrape.mjs dati/nazionali 60
+export const SPEC_NAZ = { 9806: ['2022/2023', '2024/2025', '2026/2027'], 9807: ['2022/2023', '2024/2025', '2026/2027'], 9808: ['2022/2023', '2024/2025', '2026/2027'],
+  9809: ['2022/2023', '2024/2025', '2026/2027'], 50: ['2024'], 77: ['2022', '2026'], 10607: ['2022/2023'], 10195: ['2021/2022', '2025/2026'] };
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const get = async u => { for (let k = 0; k < 4; k++) { try { const r = await fetch(u); if (r.status === 200) return await r.json(); if (r.status === 429) await sleep(5000); } catch (e) {} await sleep(1000); } return null; };
 const file = (lg, s) => path.join(OUT, lg + '_' + s.replace('/', '-') + '.json.gz');
 const load = f => fs.existsSync(f) ? JSON.parse(zlib.gunzipSync(fs.readFileSync(f))) : {};
 const save = (f, o) => fs.writeFileSync(f, zlib.gzipSync(JSON.stringify(o)));
 let tot = 0;
-outer: for (const [lg, seasons] of Object.entries(SPEC)) for (const s of seasons) {
+outer: for (const [lg, seasons] of Object.entries(process.env.SCRAPE_SET === 'naz' ? SPEC_NAZ : SPEC)) for (const s of seasons) {
   const f = file(lg, s), have = load(f);
   const L = await get('/api/data/leagues?id=' + lg + '&season=' + encodeURIComponent(s)); if (!L) { console.log('niente calendario', lg, s); continue; }
   const todo = (L.fixtures?.allMatches || []).filter(m => m.status?.finished && !m.status?.cancelled && !have[m.id]).map(m => +m.id);

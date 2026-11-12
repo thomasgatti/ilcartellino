@@ -1,0 +1,32 @@
+name: Dati nazionali FotMob
+# Archivio delle partite delle nazionali (Nations League A-D, Europei, Mondiali, qualificazioni UEFA) nel ramo dati, cartella nazionali/.
+# Tenuto separato dall'archivio dei club: il modello lo usa solo dove serve (sezione Nazionali e ricerca).
+on:
+  workflow_dispatch:
+    inputs:
+      minuti:
+        description: Minuti massimi di scaricamento
+        default: '90'
+concurrency: dati
+jobs:
+  nazionali:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          ref: dati
+          path: dati
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Scarica
+        run: SCRAPE_SET=naz node cloud/scrape.mjs dati/nazionali "${{ inputs.minuti }}"
+      - name: Salva
+        if: always()
+        run: |
+          cd dati && git config user.name "bot ammoniti" && git config user.email "bot@users.noreply.github.com"
+          git add -A nazionali && (git commit -qm "nazionali $(date -u +%F)" && git push -q origin HEAD:dati) || echo "niente di nuovo"
