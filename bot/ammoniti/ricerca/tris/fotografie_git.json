@@ -1,0 +1,847 @@
+[
+ {
+  "id": 6106401,
+  "comp": "ucl",
+  "partita": "AEK Athens - Real Madrid",
+  "ko": 1793814300,
+  "versioni": 4,
+  "a24h": null,
+  "ufficiali": {
+   "ore_prima": 1,
+   "uff": true,
+   "src": "fotmob",
+   "trio": [
+    "L. Majer",
+    "M. Gaćinović",
+    "E. Camavinga"
+   ],
+   "p3": 0.01413,
+   "centrati": 0
+  },
+  "ultimo": {
+   "ore_prima": 1,
+   "uff": true,
+   "src": "fotmob",
+   "trio": [
+    "L. Majer",
+    "M. Gaćinović",
+    "E. Camavinga"
+   ],
+   "p3": 0.01413,
+   "centrati": 0
+  },
+  "pubblicato": {
+   "trio": [
+    "L. Majer",
+    "M. Gaćinović",
+    "E. Camavinga"
+   ],
+   "p3": 0.0141,
+   "centrati": 0
+  }
+ },
+ {
+  "id": 6106330,
+  "comp": "ucl",
+  "partita": "Fenerbahçe - Liverpool",
+  "ko": 1793814300,
+  "versioni": 4,
+  "a24h": null,
+  "ufficiali": {
+   "ore_prima": 1,
+   "uff": true,
+   "src": "fotmob",
+   "trio": [
+    "I. Yüksek",
+    "A. Brown",
+    "A. Mac Allister"
+   ],
+   "p3": 0.01097,
+   "centrati": 2
+  },
+  "ultimo": {
+   "ore_prima": 1,
+   "uff": true,
+   "src": "fotmob",
+   "trio": [
+    "I. Yüksek",
+    "A. Brown",
+    "A. Mac Allister"
+   ],
+   "p3": 0.01097,
+   "centrati": 2
+  },
+  "pubblicato": {
+   "trio": [
+    "I. Yüksek",
+    "A. Brown",
+    "A. Mac Allister"
+   ],
+   "p3": 0.011,
+   "centrati": 2
+  }
+ },
+ {
+  "id": 6106271,
+  "comp": "ucl",
+  "partita": "Borussia Dortmund - Real Betis",
+  "ko": 1793822400,
+  "versioni": 4,
+  "a24h": null,
+  "ufficiali": {
+   "ore_prima": 0.9,
+   "uff": true,
+   "src": "fotmob",
+   "trio": [
+    "F. Bernal",
+    "N. Deossa",
+    "R. Bensebaini"
+   ],
+   "p3": 0.02971,
+   "centrati": 1
+  },
+  "ultimo": {
+   "ore_prima": 0.9,
+   "uff": true,
+   "src": "fotmob",
+   "trio": [
+    "F. Bernal",
+    "N. Deossa",
+    "R. Bensebaini"
+   ],
+   "p3": 0.02971,
+   "centrati": 1
+  },
+  "pubblicato": {
+   "trio": [
+    "F. Bernal",
+    "N. Deossa",
+    "R. Bensebaini"
+   ],
+   "p3": 0.0297,
+   "centrati": 1
+  }
+ },
+ {
+  "id": 6106288,
+  "comp": "ucl",
+  "partita": "FC Porto - Napoli",
+  "ko": 1793822400,
+  "versioni": 4,
+  "a24h": null,
+  "ufficiali": {
+   "ore_prima": 0.9,
+   "uff": true,
+   "src": "fotmob",
+   "trio": [
+    "A. Vergara",
+    "R. Marín",
+    "G. Veiga"
+   ],
+   "p3": 0.01445,
+   "centrati": 3
+  },
+  "ultimo": {
+   "ore_prima": 0.9,
+   "uff": true,
+   "src": "fotmob",
+   "trio": [
+    "A. Vergara",
+    "R. Marín",
+    "G. Veiga"
+   ],
+   "p3": 0.01445,
+   "centrati": 3
+  },
+  "pubblicato": {
+   "trio": [
+    "A. Vergara",
+    "R. Marín",
+    "G. Veiga"
+   ],
+   "p3": 0.0144,
+   "centrati": 3
+  }
+ },
+ {
+  "id": 6106416,
+  "comp": "ucl",
+  "partita": "Lens - Como",
+  "ko": 1793822400,
+  "versioni": 3,
+  "a24h": null,
+  "ufficiali": {
+   "ore_prima": 0.9,
+   "uff": true,
+   "src": "fotmob",
+   "trio": [
+    "A. Haidara",
+    "M. Skóras",
+    "M. Perrone"
+   ],
+   "p3": 0.01485,
+   "centrati": 0
+  },
+  "ultimo": {
+   "ore_prima": 0.9,
+   "uff": true,
+   "src": "fotmob",
+   "trio": [
+    "A. Haidara",
+    "M. Skóras",
+    "M. Perrone"
+   ],
+   "p3": 0.01485,
+   "centrati": 0
+  },
+  "pubblicato": {
+   "trio": [
+    "A. Haidara",
+    "M. Skóras",
+    "M. Perrone"
+   ],
+   "p3": 0.0148,
+   "centrati": 0
+  }
+ },
+ {
+  "id": 6106303,
+  "comp": "ucl",
+  "partita": "PSV Eindhoven - Club Brugge",
+  "ko": 1793822400,
+  "versioni": 3,
+  "a24h": null,
+  "ufficiali": {
+   "ore_prima": 0.9,
+   "uff": true,
+   "src": "fotmob",
+   "trio": [
+    "H. Vetlesen",
+    "F. Potts",
+    "R. van Bommel"
+   ],
+   "p3": 0.01277,
+   "centrati": 1
+  },
+  "ultimo": {
+   "ore_prima": 0.9,
+   "uff": true,
+   "src": "fotmob",
+   "trio": [
+    "H. Vetlesen",
+    "F. Potts",
+    "R. van Bommel"
+   ],
+   "p3": 0.01277,
+   "centrati": 1
+  },
+  "pubblicato": {
+   "trio": [
+    "H. Vetlesen",
+    "F. Potts",
+    "R. van Bommel"
+   ],
+   "p3": 0.0128,
+   "centrati": 1
+  }
+ },
+ {
+  "id": 6106322,
+  "comp": "ucl",
+  "partita": "RB Leipzig - Manchester City",
+  "ko": 1793822400,
+  "versioni": 4,
+  "a24h": null,
+  "ufficiali": {
+   "ore_prima": 0.9,
+   "uff": true,
+   "src": "fotmob",
+   "trio": [
+    "E. Banzuzi",
+    "C. Baumgartner",
+    "E. Anderson"
+   ],
+   "p3": 0.01714,
+   "centrati": 1
+  },
+  "ultimo": {
+   "ore_prima": 0.9,
+   "uff": true,
+   "src": "fotmob",
+   "trio": [
+    "E. Banzuzi",
+    "C. Baumgartner",
+    "E. Anderson"
+   ],
+   "p3": 0.01714,
+   "centrati": 1
+  },
+  "pubblicato": {
+   "trio": [
+    "E. Banzuzi",
+    "C. Baumgartner",
+    "E. Anderson"
+   ],
+   "p3": 0.0171,
+   "centrati": 1
+  }
+ },
+ {
+  "id": 6106389,
+  "comp": "ucl",
+  "partita": "Slavia Prague - Arsenal",
+  "ko": 1793822400,
+  "versioni": 3,
+  "a24h": null,
+  "ufficiali": {
+   "ore_prima": 0.9,
+   "uff": true,
+   "src": "fotmob",
+   "trio": [
+    "M. Merino",
+    "D. Moses",
+    "W. Nowak"
+   ],
+   "p3": 0.01117,
+   "centrati": 1
+  },
+  "ultimo": {
+   "ore_prima": 0.9,
+   "uff": true,
+   "src": "fotmob",
+   "trio": [
+    "M. Merino",
+    "D. Moses",
+    "W. Nowak"
+   ],
+   "p3": 0.01117,
+   "centrati": 1
+  },
+  "pubblicato": {
+   "trio": [
+    "M. Merino",
+    "D. Moses",
+    "W. Nowak"
+   ],
+   "p3": 0.0112,
+   "centrati": 1
+  }
+ },
+ {
+  "id": 6106420,
+  "comp": "ucl",
+  "partita": "Viking - Sabah FK",
+  "ko": 1793822400,
+  "versioni": 4,
+  "a24h": null,
+  "ufficiali": {
+   "ore_prima": 0.9,
+   "uff": true,
+   "src": "fotmob",
+   "trio": [
+    "A. Khaybulaev",
+    "I. Lepinjica",
+    "K. Askildsen"
+   ],
+   "p3": 0.01572,
+   "centrati": 0
+  },
+  "ultimo": {
+   "ore_prima": 0.9,
+   "uff": true,
+   "src": "fotmob",
+   "trio": [
+    "A. Khaybulaev",
+    "I. Lepinjica",
+    "K. Askildsen"
+   ],
+   "p3": 0.01572,
+   "centrati": 0
+  },
+  "pubblicato": {
+   "trio": [
+    "A. Khaybulaev",
+    "I. Lepinjica",
+    "K. Askildsen"
+   ],
+   "p3": 0.0157,
+   "centrati": 0
+  }
+ },
+ {
+  "id": 5749749,
+  "comp": "sa",
+  "partita": "Venezia - Udinese",
+  "ko": 1793994300,
+  "versioni": 3,
+  "a24h": {
+   "ore_prima": 57.2,
+   "uff": false,
+   "src": "provv",
+   "trio": [
+    "M. Moreno",
+    "K. Pérez",
+    "J. Karlström"
+   ],
+   "p3": 0.01082,
+   "centrati": 0
+  },
+  "ufficiali": {
+   "ore_prima": 0.8,
+   "uff": true,
+   "src": "lega",
+   "trio": [
+    "M. Moreno",
+    "K. Pérez",
+    "N. Zaniolo"
+   ],
+   "p3": 0.01429,
+   "centrati": 0
+  },
+  "ultimo": {
+   "ore_prima": 0.8,
+   "uff": true,
+   "src": "lega",
+   "trio": [
+    "M. Moreno",
+    "K. Pérez",
+    "N. Zaniolo"
+   ],
+   "p3": 0.01429,
+   "centrati": 0
+  },
+  "pubblicato": {
+   "trio": [
+    "M. Moreno",
+    "K. Pérez",
+    "N. Zaniolo"
+   ],
+   "p3": 0.014286258665876359,
+   "centrati": 0
+  }
+ },
+ {
+  "id": 5749741,
+  "comp": "sa",
+  "partita": "Cagliari - Frosinone",
+  "ko": 1794060000,
+  "versioni": 2,
+  "a24h": {
+   "ore_prima": 75.4,
+   "uff": false,
+   "src": "provv",
+   "trio": [
+    "P. Masini",
+    "A. Deiola",
+    "Z. Pedro"
+   ],
+   "p3": 0.01321,
+   "centrati": 1
+  },
+  "ufficiali": {
+   "ore_prima": 0.3,
+   "uff": true,
+   "src": "fotmob",
+   "trio": [
+    "A. Deiola",
+    "Z. Pedro",
+    "G. Bracaglia"
+   ],
+   "p3": 0.02253,
+   "centrati": 2
+  },
+  "ultimo": {
+   "ore_prima": 0.3,
+   "uff": true,
+   "src": "fotmob",
+   "trio": [
+    "A. Deiola",
+    "Z. Pedro",
+    "G. Bracaglia"
+   ],
+   "p3": 0.02253,
+   "centrati": 2
+  },
+  "pubblicato": {
+   "trio": [
+    "A. Deiola",
+    "Z. Pedro",
+    "G. Bracaglia"
+   ],
+   "p3": 0.022534654835769285,
+   "centrati": 2
+  }
+ },
+ {
+  "id": 5749748,
+  "comp": "sa",
+  "partita": "Torino - Lecce",
+  "ko": 1794060000,
+  "versioni": 2,
+  "a24h": {
+   "ore_prima": 75.4,
+   "uff": false,
+   "src": "provv",
+   "trio": [
+    "Y. Maleh",
+    "D. Veiga",
+    "R. Belghali"
+   ],
+   "p3": 0.00737,
+   "centrati": 1
+  },
+  "ufficiali": {
+   "ore_prima": 0.3,
+   "uff": true,
+   "src": "fotmob",
+   "trio": [
+    "Y. Maleh",
+    "A. Dembélé",
+    "S. Kulenović"
+   ],
+   "p3": 0.0077,
+   "centrati": 1
+  },
+  "ultimo": {
+   "ore_prima": 0.3,
+   "uff": true,
+   "src": "fotmob",
+   "trio": [
+    "Y. Maleh",
+    "A. Dembélé",
+    "S. Kulenović"
+   ],
+   "p3": 0.0077,
+   "centrati": 1
+  },
+  "pubblicato": {
+   "trio": [
+    "Y. Maleh",
+    "A. Dembélé",
+    "S. Kulenović"
+   ],
+   "p3": 0.007702038121554553,
+   "centrati": 1
+  }
+ },
+ {
+  "id": 5749747,
+  "comp": "sa",
+  "partita": "Parma - Bologna",
+  "ko": 1794070800,
+  "versioni": 2,
+  "a24h": {
+   "ore_prima": 78.4,
+   "uff": false,
+   "src": "provv",
+   "trio": [
+    "T. Pobega",
+    "M. Troilo",
+    "L. Ferguson"
+   ],
+   "p3": 0.0178,
+   "centrati": 1
+  },
+  "ufficiali": null,
+  "ultimo": {
+   "ore_prima": 3.3,
+   "uff": false,
+   "src": "fotmob",
+   "trio": [
+    "T. Pobega",
+    "M. Troilo",
+    "V. Sierro"
+   ],
+   "p3": 0.00854,
+   "centrati": 1
+  },
+  "pubblicato": {
+   "trio": [
+    "T. Pobega",
+    "M. Troilo",
+    "V. Sierro"
+   ],
+   "p3": 0.008538318212641262,
+   "centrati": 1
+  }
+ },
+ {
+  "id": 5749740,
+  "comp": "sa",
+  "partita": "Roma - Sassuolo",
+  "ko": 1794080700,
+  "versioni": 5,
+  "a24h": {
+   "ore_prima": 81.2,
+   "uff": false,
+   "src": "provv",
+   "trio": [
+    "D. Berardi",
+    "M. de Roon",
+    "D. Ćaleta-Car"
+   ],
+   "p3": 0.00321,
+   "centrati": 0
+  },
+  "ufficiali": {
+   "ore_prima": 0.8,
+   "uff": true,
+   "src": "fotmob",
+   "trio": [
+    "S. Walukiewicz",
+    "D. Ćaleta-Car",
+    "L. Balerdi"
+   ],
+   "p3": 0.00643,
+   "centrati": 0
+  },
+  "ultimo": {
+   "ore_prima": 0.8,
+   "uff": true,
+   "src": "fotmob",
+   "trio": [
+    "S. Walukiewicz",
+    "D. Ćaleta-Car",
+    "L. Balerdi"
+   ],
+   "p3": 0.00643,
+   "centrati": 0
+  },
+  "pubblicato": {
+   "trio": [
+    "S. Walukiewicz",
+    "D. Ćaleta-Car",
+    "L. Balerdi"
+   ],
+   "p3": 0.006425449565605569,
+   "centrati": 0
+  }
+ },
+ {
+  "id": 5749746,
+  "comp": "sa",
+  "partita": "Napoli - Lazio",
+  "ko": 1794137400,
+  "versioni": 3,
+  "a24h": {
+   "ore_prima": 96.9,
+   "uff": false,
+   "src": "provv",
+   "trio": [
+    "K. Taylor",
+    "R. Belahyane",
+    "R. Marín"
+   ],
+   "p3": 0.00658,
+   "centrati": 0
+  },
+  "ufficiali": null,
+  "ultimo": {
+   "ore_prima": 17.4,
+   "uff": false,
+   "src": "fotmob",
+   "trio": [
+    "R. Floriani",
+    "R. Marín",
+    "O. Provstgaard"
+   ],
+   "p3": 0.00829,
+   "centrati": 0
+  },
+  "pubblicato": {
+   "trio": [
+    "R. Floriani",
+    "R. Marín",
+    "O. Provstgaard"
+   ],
+   "p3": 0.008289366335997828,
+   "centrati": 0
+  }
+ },
+ {
+  "id": 5749743,
+  "comp": "sa",
+  "partita": "Genoa - Milan",
+  "ko": 1794146400,
+  "versioni": 3,
+  "a24h": {
+   "ore_prima": 24.3,
+   "uff": false,
+   "src": "fotmob",
+   "trio": [
+    "K. De Winter",
+    "Y. Musah",
+    "L. Østigard"
+   ],
+   "p3": 0.00827,
+   "centrati": 0
+  },
+  "ufficiali": null,
+  "ultimo": {
+   "ore_prima": 19.9,
+   "uff": false,
+   "src": "fotmob",
+   "trio": [
+    "K. De Winter",
+    "Y. Musah",
+    "L. Østigard"
+   ],
+   "p3": 0.01013,
+   "centrati": 0
+  },
+  "pubblicato": {
+   "trio": [
+    "K. De Winter",
+    "Y. Musah",
+    "L. Østigard"
+   ],
+   "p3": 0.0101255009390188,
+   "centrati": 0
+  }
+ },
+ {
+  "id": 5749745,
+  "comp": "sa",
+  "partita": "Monza - Atalanta",
+  "ko": 1794146400,
+  "versioni": 3,
+  "a24h": {
+   "ore_prima": 24.3,
+   "uff": false,
+   "src": "fotmob",
+   "trio": [
+    "L. Lucchesi",
+    "E. Kouadio",
+    "Éderson"
+   ],
+   "p3": 0.0052,
+   "centrati": 2
+  },
+  "ufficiali": null,
+  "ultimo": {
+   "ore_prima": 19.9,
+   "uff": false,
+   "src": "fotmob",
+   "trio": [
+    "L. Lucchesi",
+    "E. Kouadio",
+    "R. Obrić"
+   ],
+   "p3": 0.00602,
+   "centrati": 1
+  },
+  "pubblicato": {
+   "trio": [
+    "L. Lucchesi",
+    "E. Kouadio",
+    "R. Obrić"
+   ],
+   "p3": 0.006022002947747564,
+   "centrati": 1
+  }
+ },
+ {
+  "id": 5749744,
+  "comp": "sa",
+  "partita": "Inter - Como",
+  "ko": 1794157200,
+  "versioni": 6,
+  "a24h": {
+   "ore_prima": 27.3,
+   "uff": false,
+   "src": "fotmob",
+   "trio": [
+    "Y. Couto",
+    "N. Paz",
+    "P. Sučić"
+   ],
+   "p3": 0.00451,
+   "centrati": 0
+  },
+  "ufficiali": {
+   "ore_prima": 0.7,
+   "uff": true,
+   "src": "fotmob",
+   "trio": [
+    "Y. Couto",
+    "J. Ramón",
+    "H. Çalhanoglu"
+   ],
+   "p3": 0.00822,
+   "centrati": 0
+  },
+  "ultimo": {
+   "ore_prima": 0.7,
+   "uff": true,
+   "src": "fotmob",
+   "trio": [
+    "Y. Couto",
+    "J. Ramón",
+    "H. Çalhanoglu"
+   ],
+   "p3": 0.00822,
+   "centrati": 0
+  },
+  "pubblicato": {
+   "trio": [
+    "Y. Couto",
+    "J. Ramón",
+    "H. Çalhanoglu"
+   ],
+   "p3": 0.008215062881584275,
+   "centrati": 0
+  }
+ },
+ {
+  "id": 5749742,
+  "comp": "sa",
+  "partita": "Fiorentina - Juventus",
+  "ko": 1794167100,
+  "versioni": 4,
+  "a24h": {
+   "ore_prima": 25.7,
+   "uff": false,
+   "src": "fotmob",
+   "trio": [
+    "D. Luiz",
+    "G. Bremer",
+    "Á. Jiménez"
+   ],
+   "p3": 0.01018,
+   "centrati": 1
+  },
+  "ufficiali": {
+   "ore_prima": 0.7,
+   "uff": true,
+   "src": "fotmob",
+   "trio": [
+    "C. Inao Oulaï",
+    "D. Luiz",
+    "J. Cabal"
+   ],
+   "p3": 0.02132,
+   "centrati": 2
+  },
+  "ultimo": {
+   "ore_prima": 0.7,
+   "uff": true,
+   "src": "fotmob",
+   "trio": [
+    "C. Inao Oulaï",
+    "D. Luiz",
+    "J. Cabal"
+   ],
+   "p3": 0.02132,
+   "centrati": 2
+  },
+  "pubblicato": {
+   "trio": [
+    "C. Inao Oulaï",
+    "D. Luiz",
+    "J. Cabal"
+   ],
+   "p3": 0.021324406489909555,
+   "centrati": 2
+  }
+ }
+]

@@ -33,6 +33,8 @@ def main():
                     if b[1]: r[8] = [t for t in r[8] if not t.startswith('Quota')] + [f"Quota bookmaker per il giallo: {b[1]:.2f}".replace('.', ',')]
         pl, tags = [], {}
         for r in sorted(rows, key=lambda r: -r[4]):
+            # q sostituto = None di proposito: la pagina usa la media di ruolo (data.subq). La q per giocatore è stata provata
+            # il 12/11 (ricerca/tris/replay.mjs) e non passa il criterio in Serie A: vedi RUNBOOK «Replay della scelta del tris».
             pl.append([r[0], r[1], r[2], r[3], r[4], short(r[5]) if r[5] else '', r[6], None])
             if r[8]: tags[r[0]] = r[8]
         ctx = []
