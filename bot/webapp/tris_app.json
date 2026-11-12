@@ -752,21 +752,21 @@
   "ko": 1794512700,
   "partita": "Italia - Francia",
   "uff": false,
-  "p3": 0.021744760542272444,
+  "p3": 0.0244712747660839,
   "trio": [
    {
     "n": "R. Calafiori",
-    "p": 0.294,
+    "p": 0.3045,
     "team": "Italia"
    },
    {
     "n": "G. Scalvini",
-    "p": 0.2761,
+    "p": 0.2877,
     "team": "Italia"
    },
    {
     "n": "D. Upamecano",
-    "p": 0.231,
+    "p": 0.2408,
     "team": "Francia"
    }
   ]
