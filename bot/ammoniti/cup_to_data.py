@@ -172,6 +172,8 @@ def main():
         matches.append({'id': e['id'], 'comp': COMP, 'ko': ko, 'h': hn, 'a': an, 'hc': hc, 'ac': ac, 'ref': e.get('ref') or '–',
                         'odds': odds_app, 'line': None, 'uff': 1 if (e['lt'] != 'predicted' or e['id'] in uff) else 0, 'tags': tags, 'derby': False,
                         'src': 'fotmob'})
+        if COMP == 'naz':
+            matches[-1]['en'] = list(e['teams'][0][1:2] + e['teams'][1][1:2])   # nomi inglesi per agganciare la diretta ESPN
         matches[-1]['pl'] = pl
         if LN and LN['tot'][0] is not None:
             matches[-1]['line'] = f"{LN['tot'][0]:.1f}".replace('.', ',')

@@ -16,8 +16,8 @@ async function main() {
     await p.goto(pathToFileURL(path.join(__dirname,'index.html')).href);
     const out = await p.evaluate(ids => {
       const result = [];
-      for (const comp of ['sa','ucl']) {
-        if (comp === 'ucl' && !CUP) continue;
+      for (const comp of ['sa','ucl','naz']) {
+        if (comp !== 'sa' && !cupOf(comp)) continue;
         setComp(comp);
         for (const m of DATA.matches) {
           if (ids.length && !ids.includes(m.id)) continue;

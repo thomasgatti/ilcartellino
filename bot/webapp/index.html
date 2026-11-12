@@ -305,7 +305,34 @@ details.how p { margin: 8px 0 0; max-width: none; }
 :root[data-comp="extra"] .comps button[aria-pressed="true"] { background: linear-gradient(90deg, #0f766e, #16a34a); color: #fff; box-shadow: 0 0 14px rgba(22,163,74,.4); }
 :root[data-comp="extra"] h1 { background: linear-gradient(90deg, var(--xa), var(--xb)); -webkit-background-clip: text; background-clip: text; color: transparent; }
 :root[data-comp="extra"] h1 span { color: var(--muted); -webkit-text-fill-color: var(--muted); }
-:root[data-comp="extra"] .topbar { display: none; }
+:root[data-comp="extra"] #tab-area { display: none; }
+/* ---- Nazionali: rosso e oro ---- */
+:root[data-comp="naz"] { --na1: #7a1222; --na2: #d62b36; --na3: #e0a100; }
+:root[data-comp="naz"] body::before { content: ""; position: fixed; inset: 0 0 auto 0; height: 5px; z-index: 50; pointer-events: none; background: linear-gradient(90deg, var(--na1), var(--na2) 60%, var(--na3)); }
+:root[data-comp="naz"] h1 { background: linear-gradient(90deg, var(--na1) 0%, var(--na2) 60%, var(--na3) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+:root[data-comp="naz"][data-theme="dark"] h1 { background-image: linear-gradient(90deg, #ffffff 0%, #ff9aa2 50%, #ffd166 100%); }
+@media (prefers-color-scheme: dark) { :root[data-comp="naz"]:not([data-theme="light"]) h1 { background-image: linear-gradient(90deg, #ffffff 0%, #ff9aa2 50%, #ffd166 100%); } }
+:root[data-comp="naz"] h1 span { color: var(--muted); -webkit-text-fill-color: var(--muted); }
+:root[data-comp="naz"] .comps button[aria-pressed="true"] { background: linear-gradient(90deg, var(--na1), var(--na2) 60%, var(--na3)); color: #fff; box-shadow: 0 0 14px color-mix(in srgb, var(--na2) 45%, transparent); }
+:root[data-comp="naz"] .day { color: var(--na2); }
+:root[data-comp="naz"] .match[aria-current="true"] { border-color: transparent; box-shadow: 0 0 0 2px var(--na2) inset, 0 4px 16px color-mix(in srgb, var(--na2) 22%, transparent); }
+:root[data-comp="naz"] .panel { background: linear-gradient(90deg, var(--na1), var(--na2), var(--na3)) top / 100% 5px no-repeat, var(--surface); }
+:root[data-comp="naz"] .tabs button[aria-pressed="true"], :root[data-comp="naz"] .histbtn[aria-pressed="true"] { background: var(--na1); color: #fff; }
+:root[data-comp="naz"] .sectabs button[aria-selected="true"] { border-bottom-color: var(--na2); }
+.posta { margin: 12px 0 0; border: 1px solid color-mix(in srgb, #d62b36 35%, var(--line)); border-left: 4px solid #d62b36; background: color-mix(in srgb, #e0a100 7%, var(--surface)); border-radius: 10px; padding: 9px 12px; }
+.posta .pk { font: 800 15px var(--display); text-transform: uppercase; letter-spacing: .02em; color: #b3202c; }
+.posta ul { margin: 4px 0 0; padding-left: 18px; display: grid; gap: 3px; font-size: 14px; }
+.tag.hot { background: #d62b36; color: #fff; border-color: #d62b36; }
+.match .tag.hot { display: block; margin-top: 3px; font-size: 9.5px; padding: 1px 5px; text-align: center; }
+/* ---- Storico unico: un colore per competizione ---- */
+.cmp-sa { --cc: #1e6fe0; } .cmp-ucl { --cc: #8b3dff; } .cmp-extra { --cc: #16a34a; } .cmp-naz { --cc: #d62b36; }
+.hist-card[class*="cmp-"] { border-top: 5px solid var(--cc); }
+.ctag { font: 700 11px var(--body); text-transform: uppercase; letter-spacing: .03em; color: #fff; background: var(--cc); border-radius: 4px; padding: 1px 6px; margin-right: 6px; vertical-align: 1px; }
+.hfilter { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 4px; }
+.hfilter button { font: 700 13px var(--body); border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 5px 12px; border-radius: 999px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.hfilter button i { width: 10px; height: 10px; border-radius: 50%; background: var(--cc, var(--ink)); }
+.hfilter button[aria-pressed="true"] { background: var(--cc, var(--ink)); border-color: var(--cc, var(--ink)); color: #fff; }
+.hfilter button[aria-pressed="true"] i { background: #fff; }
 .xintro { margin: 4px 0 14px; }
 #extra .layout { margin-top: 0; }
 :root[data-comp="extra"] .match[aria-current="true"] { border-color: transparent; box-shadow: 0 0 0 2px var(--xa) inset, 0 4px 16px color-mix(in srgb, var(--xa) 22%, transparent); }
@@ -486,7 +513,8 @@ footer { font-size: 13px; color: var(--muted); display: grid; gap: 6px; }
 <div class="wrap">
   <div class="comps" role="group" aria-label="Competizione">
     <button type="button" id="comp-sa" aria-pressed="true">Serie A</button>
-    <button type="button" id="comp-ucl" aria-pressed="false"><span class="star" aria-hidden="true">✦</span> Champions League</button>
+    <button type="button" id="comp-ucl" aria-pressed="false" hidden><span class="star" aria-hidden="true">✦</span> Champions League</button>
+    <button type="button" id="comp-naz" aria-pressed="false" hidden><span class="star" aria-hidden="true">★</span> Nazionali</button>
     <button type="button" id="comp-extra" aria-pressed="false" hidden>EXTRA</button>
   </div>
   <header>
@@ -530,7 +558,14 @@ footer { font-size: 13px; color: var(--muted); display: grid; gap: 6px; }
 const ALL = JSON.parse(document.getElementById('data').textContent);
 let DATA = ALL;
 const CUP = ALL.cups && ALL.cups.ucl ? ALL.cups.ucl : null;
-const allMatches = () => [...ALL.matches, ...(CUP ? CUP.matches : [])];
+const NAZ = ALL.cups && ALL.cups.naz && ALL.cups.naz.matches && ALL.cups.naz.matches.length ? ALL.cups.naz : null;
+const cupOf = c => c === 'ucl' ? CUP : c === 'naz' ? NAZ : null;
+const allMatches = () => [...ALL.matches, ...(CUP ? CUP.matches : []), ...(NAZ ? NAZ.matches : [])];
+const compOf = id => NAZ && NAZ.matches.some(m => m.id === id) ? 'naz' : CUP && CUP.matches.some(m => m.id === id) ? 'ucl' : 'sa';
+const COMP_NAME = { sa: 'Serie A', ucl: 'Champions', extra: 'EXTRA', naz: 'Nazionali' };
+// Champions, Nazionali ed EXTRA compaiono nel menu da 2 giorni prima della prima partita fino a 36 ore dopo l'ultima
+const compVisible = c => { if (c === 'sa') return true; const ms = c === 'extra' ? ALL.extra && ALL.extra.matches : (cupOf(c) || {}).matches, now = Date.now() / 1000;
+  return !!(ms && ms.some(m => m.ko > now - 36 * 3600 && m.ko < now + 48 * 3600)); };
 // non usato più dall'interfaccia: il fattore personale manuale è stato tolto (state.boost resta vuoto)
 const ROLE = { D: 'Difensore', M: 'Centrocampista', F: 'Attaccante' };
 const fmtTime = ts => new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', hour: '2-digit', minute: '2-digit' }).format(ts * 1000);
@@ -647,7 +682,7 @@ function renderList() {
     b.setAttribute('aria-current', String(m.id === state.id));
     b.innerHTML = `<span class="time"><span class="wd">${fmtWd(m.ko)}</span>${fmtTime(m.ko)}</span>
       <span class="teams"><span class="team"><i class="chip" style="background:${m.hc[0]}"></i>${m.h}</span><span class="team"><i class="chip" style="background:${m.ac[0]}"></i>${m.a}</span></span>
-      <span class="p3"><b>${trioPct(best?.p3)}</b>trio${statusTag(m)}${myTris[m.id] ? '<span class="mysaved">✓ tuo tris</span>' : ''}</span>`;
+      <span class="p3"><b>${trioPct(best?.p3)}</b>trio${statusTag(m)}${m.hot && m.ko > Date.now() / 1000 ? '<span class="tag hot">conta</span>' : ''}${myTris[m.id] ? '<span class="mysaved">✓ tuo tris</span>' : ''}</span>`;
     b.addEventListener('click', () => { history.replaceState(null, '', '#m' + m.id); select(m.id); focusPanel(b); });
     el.appendChild(b);
   }
@@ -793,7 +828,7 @@ function select(id) {
   panel.innerHTML = `
     <div class="mhead">
       <div class="mteams"><span class="mt"><i class="chip big" style="background:${m.hc[0]}"></i>${m.h}</span><span class="mvs">–</span><span class="mt"><i class="chip big" style="background:${m.ac[0]}"></i>${m.a}</span></div>
-      <div class="mwhen"><span>${fmtDay(m.ko)}, <b>${fmtTime(m.ko)}</b></span>${statusPill(m)}${m.derby ? '<span class="tag">Derby</span>' : ''}</div>${m.uff ? '' : waiting ? '<p class="note">Undici ufficiali disponibili. Le stime dei singoli si aggiornano al prossimo calcolo del modello.</p>' : locked(m) ? '' : probNote(m)}
+      <div class="mwhen"><span>${fmtDay(m.ko)}, <b>${fmtTime(m.ko)}</b></span>${statusPill(m)}${m.derby ? '<span class="tag">Derby</span>' : ''}${m.hot ? '<span class="tag hot">Partita che conta</span>' : ''}</div>${m.posta?.length ? `<div class="posta"><div class="pk">Posta in palio${m.girone ? ' · ' + esc(m.girone) : ''}</div><ul>${m.posta.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>` : ''}${m.uff ? '' : waiting ? '<p class="note">Undici ufficiali disponibili. Le stime dei singoli si aggiornano al prossimo calcolo del modello.</p>' : locked(m) ? '' : probNote(m)}
     </div>
     <div class="stats">
       <div class="stat"><span class="k">Arbitro</span><span class="v">${m.ref}</span>${m.refnote ? `<span class="k2">${m.refnote}</span>` : ''}</div>
@@ -825,7 +860,7 @@ function select(id) {
   } else if (sec !== 'app') wireBuilder(m);
 }
 const slugT = t => String(t).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-const sisalUrl = m => m.comp === 'ucl' ? 'https://www.sisal.it/scommesse-matchpoint/quote/calcio/champions-league' : `https://www.sisal.it/scommesse-matchpoint/evento/calcio/serie-a/${slugT(m.h)}-${slugT(m.a)}`;
+const sisalUrl = m => m.comp === 'naz' ? 'https://www.sisal.it/scommesse-matchpoint' : m.comp === 'ucl' ? 'https://www.sisal.it/scommesse-matchpoint/quote/calcio/champions-league' : `https://www.sisal.it/scommesse-matchpoint/evento/calcio/serie-a/${slugT(m.h)}-${slugT(m.a)}`;
 // bottone verso la pagina Sisal della partita: copia i tre nomi negli appunti (Sisal non permette di precompilare il biglietto da siti esterni)
 const playHtml = (m, names) => names.length === 3 && !locked(m) ? `<div class="play"><a class="playbtn" href="${sisalUrl(m)}" target="_blank" rel="noopener noreferrer" data-names="${names.join(', ').replace(/"/g, '&quot;')}">Gioca su Sisal ↗</a><span class="play-note">Copia i 3 nomi e apre la partita su Sisal · 18+ · Gioca responsabilmente</span><span class="play-msg" aria-live="polite"></span></div>` : '';
 document.addEventListener('click', async e => {
@@ -887,7 +922,7 @@ function score(trio, res, subRule = true) {
 async function renderArea() {
   const el = document.getElementById('area');
   if (!UID) { el.innerHTML = `<h2>La mia area</h2><p class="note">${loaded ? 'Collegati con il tuo account Claude per avere la tua area personale con i tuoi tris.' : 'Collegamento al tuo account…'}</p>`; return; }
-  const list = Object.values(myTris).filter(t => (t.comp || (results[t.matchId] && results[t.matchId].comp) || (CUP && CUP.matches.some(x => x.id === t.matchId) ? 'ucl' : 'sa')) === state.comp).sort((a, b) => b.ko - a.ko);
+  const list = Object.values(myTris).filter(t => (t.comp || (results[t.matchId] && results[t.matchId].comp) || compOf(t.matchId)) === state.comp).sort((a, b) => b.ko - a.ko);
   el.innerHTML = `<h2>La mia area</h2><p class="note">Caricamento dei risultati…</p>`;
   await Promise.all(list.map(async t => { if (results[t.matchId] === undefined) { try { const s = await withTimeout(DB.doc('risultati/' + t.matchId).get()); if (s.exists) results[t.matchId] = s.data(); else results[t.matchId] ??= null; } catch (e) { results[t.matchId] ??= null; } } }));
   let me = { p: 0, h: 0, full: 0 }, ap = { p: 0, h: 0, full: 0 }, judged = 0, wins = 0;
@@ -927,19 +962,20 @@ async function renderArea() {
 // Stessi componenti delle altre sezioni: lista partite, scheda con riquadri, figurine del tris, titolari, storico.
 const xstate = { id: null, sec: 'tris' };
 const xcols = (m, s) => (s === 'h' ? m.hc : m.ac) || ['#13202d', '#ffffff'];
+// scheda dello storico per un big match EXTRA (cartellini: gialli e rossi, regola del sostituto)
+function extraHist(r) {
+  const sb = r.sostituzioni || {}, b = new Set((r.ammoniti || []).map(c => c[1]));
+  const rows = (r.tris || []).map(t => { const via = !b.has(t.n) && b.has(sb[t.n]); return { ...t, hit: b.has(t.n) || via, via, sub: sb[t.n] }; }), hits = rows.filter(x => x.hit).length;
+  const li = x => `<li class="${x.hit ? 'ok' : ''}"><span class="nm" title="${esc(x.n)}">${esc(x.n)}${x.sub && x.via ? `<small class="note">→ entrato ${esc(x.sub)}</small>` : ''}</span><span class="lead"></span><span class="val">${x.hit ? `<span class="hit">${x.via ? '✓ sostituto' : '✓ giallo'}</span> · ` : ''}${Math.round(x.p * 100)}%</span></li>`;
+  return { hits, n: rows.length ? 1 : 0, card: `<article class="hist-card cmp-extra"><div class="hh"><h3>${esc(r.h)} – ${esc(r.a)} · ${r.finale}</h3>${rows.length ? `<span class="hits-badge ${hits === 3 ? 'h3' : hits === 2 ? 'h2' : ''}">${hits}/3</span>` : ''}</div>
+      <span class="note"><span class="ctag">EXTRA</span>${esc(r.comp)} · ${fmtTime(r.ko)}</span>
+      <div class="side app"><h4>Tris del modello</h4><ul>${rows.map(li).join('') || '<li><span class="nm">Nessun tris</span></li>'}</ul></div></article>` };
+}
 function renderExtra() {
   const X = ALL.extra || { matches: [], storico: [] }, el = document.getElementById('extra');
-  const sub = r => r.sostituzioni || {}, booked = r => new Set((r.ammoniti || []).map(c => c[1]));
-  const hist = r => { const b = booked(r), rows = (r.tris || []).map(t => { const via = !b.has(t.n) && b.has(sub(r)[t.n]); return { ...t, hit: b.has(t.n) || via, via, sub: sub(r)[t.n] }; }), hits = rows.filter(x => x.hit).length;
-    const li = x => `<li class="${x.hit ? 'ok' : ''}"><span class="nm" title="${esc(x.n)}">${esc(x.n)}${x.sub && x.via ? `<small class="note">→ entrato ${esc(x.sub)}</small>` : ''}</span><span class="lead"></span><span class="val">${x.hit ? `<span class="hit">${x.via ? '✓ sostituto' : '✓ giallo'}</span> · ` : ''}${Math.round(x.p * 100)}%</span></li>`;
-    const ang = r.angoli ? `angoli ${r.angoli[0]}-${r.angoli[1]}${r.angoli_prev ? ` (attesi ${r.angoli_prev.map(v => v.toFixed(1).replace('.', ',')).join('-')})` : ''}` : '';
-    return { hits, card: `<article class="hist-card"><div class="hh"><h3>${esc(r.h)} – ${esc(r.a)} · ${r.finale}</h3>${rows.length ? `<span class="hits-badge ${hits === 3 ? 'h3' : hits === 2 ? 'h2' : ''}">${hits}/3</span>` : ''}</div>
-      <span class="note">${r.comp} · ${fmtDay(r.ko)}, ${fmtTime(r.ko)}${ang ? ' · ' + ang : ''}</span>
-      <div class="side app"><h4>Tris del modello</h4><ul>${rows.map(li).join('') || '<li><span class="nm">Nessun tris</span></li>'}</ul></div></article>` }; };
-  const H = X.storico.map(hist), tot = H.reduce((a, h, i) => a + ((X.storico[i].tris || []).length ? 3 : 0), 0), hits = H.reduce((a, h) => a + h.hits, 0);
   el.innerHTML = `<p class="note xintro">Big match di Premier League, LaLiga, Bundesliga e Ligue 1 (derby e sfide fra le prime 7) e delle coppe nazionali (FA Cup, EFL Cup, Copa del Rey, DFB Pokal, Coupe de France, Coppa Italia).</p>
     ${X.matches.length ? `<div class="layout"><nav class="list" id="xlist" aria-label="Big match"></nav><main class="panel" id="xpanel" aria-live="polite"></main></div>` : '<p class="note">Nessun big match nei prossimi giorni: le partite compaiono qui appena entrano in calendario.</p>'}
-    ${X.storico.length ? `<div class="gday">Esiti${tot ? ` · ${hits} gialli su ${tot}` : ''}</div><div class="hist-grid">${H.map(h => h.card).join('')}</div>` : ''}`;
+    ${X.storico.length ? `<p class="note">Gli esiti dei big match già giocati sono nello <button type="button" class="link" onclick="setView('storico')">Storico</button>.</p>` : ''}`;
   if (!X.matches.length) return;
   const list = document.getElementById('xlist'); let lastDay = '';
   for (const m of X.matches) {
@@ -994,39 +1030,53 @@ function xselect() {
   document.querySelectorAll('#xpanel [data-xsec]').forEach(b => b.addEventListener('click', () => { xstate.sec = b.dataset.xsec; xselect(); }));
 }
 function setView(v) {
+  if (v === 'area' && state.comp === 'extra') v = 'partite';
   state.view = v; document.getElementById('tab-partite').setAttribute('aria-pressed', String(v === 'partite')); document.getElementById('tab-area').setAttribute('aria-pressed', String(v === 'area'));
   document.getElementById('tab-storico').setAttribute('aria-pressed', String(v === 'storico'));
-  document.querySelector('.layout').hidden = v !== 'partite'; document.getElementById('area').hidden = v !== 'area'; document.getElementById('storico').hidden = v !== 'storico';
+  const ex = state.comp === 'extra';
+  document.querySelector('.layout').hidden = v !== 'partite' || ex; document.getElementById('extra').hidden = v !== 'partite' || !ex;
+  document.getElementById('area').hidden = v !== 'area'; document.getElementById('storico').hidden = v !== 'storico';
   if (v === 'area') { history.replaceState(null, '', '#area'); renderArea(); }
   else if (v === 'storico') { history.replaceState(null, '', '#storico'); renderStorico(); }
+  else if (ex) { renderExtra(); history.replaceState(null, '', '#extra'); }
   else if (state.id) { history.replaceState(null, '', '#m' + state.id); select(state.id); }
 }
-// Storico: il tris dell'app di ogni partita giocata, salvato nel risultato (campo tris_app) e giudicato in automatico
+// Storico unico: tutti i tris dell'app già giudicati (Serie A, Champions, Nazionali, EXTRA) in ordine di calendario,
+// un colore per competizione e un filtro per vederne una sola.
+const hstate = { f: 'all' };
 async function renderStorico() {
   const el = document.getElementById('storico');
-  if (!DB) { el.innerHTML = `<h2>Storico tris dell'app</h2><p class="note">${loaded ? 'Lo storico si legge dal database dell\'app: aprila dal link di Claude per vederlo.' : 'Caricamento…'}</p>`; return; }
-  el.innerHTML = `<h2>Storico tris dell'app</h2><p class="note">Caricamento…</p>`;
-  try { const snap = await withTimeout(DB.collection('risultati').get()); snap.docs.forEach(d => { const r = d.data(); if (r?.matchId) results[r.matchId] = r; }); }
-  catch (e) { el.innerHTML = `<h2>Storico tris dell'app</h2><p class="note">Non riesco a leggere lo storico in questo momento: riprova tra poco.</p>`; return; }
-  const docs = Object.values(results).filter(r => r?.tris_app?.length && (r.comp || 'sa') === state.comp);
-  docs.sort((a, b) => (b.ko || 0) - (a.ko || 0));
-  let n = 0, hits = 0, full = 0, two = 0, pts = 0;
+  if (DB) {
+    if (!el.innerHTML) el.innerHTML = `<h2>Storico tris dell'app</h2><p class="note">Caricamento…</p>`;
+    try { const snap = await withTimeout(DB.collection('risultati').get()); snap.docs.forEach(d => { const r = d.data(); if (r?.matchId) results[r.matchId] = r; }); }
+    catch (e) { el.innerHTML = `<h2>Storico tris dell'app</h2><p class="note">Non riesco a leggere lo storico in questo momento: riprova tra poco.</p>`; return; }
+  } else if (!Object.keys(results).length && !(ALL.extra?.storico || []).length) {
+    el.innerHTML = `<h2>Storico tris dell'app</h2><p class="note">${loaded ? 'Lo storico si legge dal database dell\'app: aprila dal link di Claude per vederlo.' : 'Caricamento…'}</p>`; return;
+  }
   const li = (r, p) => `<li class="${r.hit ? 'ok' : ''}"><span class="nm" title="${esc(r.n + (r.sub ? ' → entrato ' + r.sub : ''))}">${esc(r.n)}${r.sub ? `<small class="note">→ entrato ${esc(r.sub)}</small>` : ''}</span><span class="lead"></span><span class="val">${r.hit ? `<span class="hit">${r.viaSub ? '✓ sostituto' : '✓ giallo'}</span> · ` : ''}${Math.round(p * 100)}%${r.np ? ' · non ha giocato' : r.f != null ? ' · ' + r.f + ' f.' : ''}</span></li>`;
-  const byG = {};
-  for (const r of docs) {
-    const m = DATA.matches.find(m => m.id === r.matchId), waiting = appTrisWaiting(m);
+  const items = [];
+  for (const r of Object.values(results)) {
+    if (!r?.tris_app?.length) continue;
+    const c = r.comp || 'sa', m = allMatches().find(m => m.id === r.matchId), waiting = appTrisWaiting(m);
     const actual = m ? appTrisAtKickoff(m) : r.tris_app_revisione;
     const note = waiting ? trisWaitingNote : actual?.late ? 'Fuori dal bilancio prepartita' : '';
     const trio = waiting ? [] : actual?.trio || r.tris_app;
-    const sc = score(trio, r, true);
-    if (!note) { n++; hits += sc.hits; full += sc.hits === 3; two += sc.hits >= 2; pts += sc.punti; }
-    const card = `<article class="hist-card"><div class="hh"><h3>${r.partita}${r.finale ? ' · ' + r.finale : ''}</h3>${note ? '' : `<span class="hits-badge ${sc.hits === 3 ? 'h3' : sc.hits === 2 ? 'h2' : ''}">${sc.hits}/3</span>`}</div>
-      <span class="note">${r.ko ? fmtDay(r.ko) + ', ' + fmtTime(r.ko) + ' · ' : ''}${note || ('tutti e tre ammoniti: ' + (r.p3_app != null ? trioPct(r.p3_app) + ' previsto' : 'n/d'))}</span>
-      <div class="side app"><h4>Tris dell'app</h4><ul>${sc.rows.map((x, i) => li(x, trio[i].p)).join('')}</ul>${note ? '' : `<div class="score">${sc.hits}/3 ammoniti · ${sc.falli} ${sc.falli === 1 ? 'fallo' : 'falli'} · ${sc.punti} punti</div>`}</div></article>`;
-    (byG[r.giornata || 0] ||= []).push(card);
+    const sc = score(trio, r, true), gio = c !== 'naz' && r.giornata ? `${r.giornata}ª giornata · ` : '';
+    items.push({ c, ko: r.ko || 0, counts: !note, hits: sc.hits, punti: sc.punti, card: `<article class="hist-card cmp-${c}"><div class="hh"><h3>${r.partita}${r.finale ? ' · ' + r.finale : ''}</h3>${note ? '' : `<span class="hits-badge ${sc.hits === 3 ? 'h3' : sc.hits === 2 ? 'h2' : ''}">${sc.hits}/3</span>`}</div>
+      <span class="note"><span class="ctag">${COMP_NAME[c]}</span>${gio}${r.ko ? fmtTime(r.ko) + ' · ' : ''}${note || ('tutti e tre: ' + (r.p3_app != null ? trioPct(r.p3_app) + ' previsto' : 'n/d'))}</span>
+      <div class="side app"><h4>Tris dell'app</h4><ul>${sc.rows.map((x, i) => li(x, trio[i].p)).join('')}</ul>${note ? '' : `<div class="score">${sc.hits}/3 ammoniti · ${sc.falli} ${sc.falli === 1 ? 'fallo' : 'falli'} · ${sc.punti} punti</div>`}</div></article>` });
   }
+  for (const r of ALL.extra?.storico || []) { const h = extraHist(r); items.push({ c: 'extra', ko: r.ko || 0, counts: !!h.n, hits: h.hits, punti: h.hits * 3, card: h.card }); }
+  items.sort((a, b) => b.ko - a.ko);
+  const have = ['sa', 'ucl', 'naz', 'extra'].filter(c => items.some(x => x.c === c));
+  if (hstate.f !== 'all' && !have.includes(hstate.f)) hstate.f = 'all';
+  const shown = items.filter(x => hstate.f === 'all' || x.c === hstate.f), judged = shown.filter(x => x.counts);
+  const n = judged.length, hits = judged.reduce((a, x) => a + x.hits, 0), two = judged.filter(x => x.hits >= 2).length, full = judged.filter(x => x.hits === 3).length, pts = judged.reduce((a, x) => a + x.punti, 0);
+  const byDay = [];
+  for (const x of shown) { const d = x.ko ? fmtDay(x.ko) : 'Altre partite'; if (!byDay.length || byDay[byDay.length - 1][0] !== d) byDay.push([d, []]); byDay[byDay.length - 1][1].push(x.card); }
   el.innerHTML = `<h2>Storico tris dell'app</h2>
-    <p class="note">Il bilancio valuta i tris prepartita (2 + 1 tra le squadre, regola del sostituto).</p>
+    <p class="note">Tutte le partite giocate, dalla più recente. Il bilancio valuta i tris prepartita (2 + 1 tra le squadre, regola del sostituto); il rosso diretto vale come ammonito.</p>
+    ${have.length > 1 ? `<div class="hfilter" role="group" aria-label="Competizione">${['all', ...have].map(c => `<button type="button" class="${c === 'all' ? '' : 'cmp-' + c}" aria-pressed="${hstate.f === c}" data-f="${c}">${c === 'all' ? '' : '<i></i>'}${c === 'all' ? 'Tutte' : COMP_NAME[c]}</button>`).join('')}</div>` : ''}
     <p class="hist-legend">Per ogni giocatore: ✓ giallo (o ✓ sostituto, se il giallo l'ha preso chi è entrato al suo posto) · probabilità prevista · falli fatti (f.)</p>
     <div class="tiles">
       <div class="tile"><div class="k">Partite</div><div class="v">${n}</div></div>
@@ -1035,7 +1085,8 @@ async function renderStorico() {
       <div class="tile"><div class="k">Tris completi (3/3)</div><div class="v">${full}<small> su ${n}</small></div></div>
       <div class="tile"><div class="k">Punti</div><div class="v">${pts}</div></div>
     </div>
-    ${docs.length ? Object.keys(byG).sort((a, b) => b - a).map(g => `<div class="gday">${g > 0 ? (state.comp === 'ucl' ? 'Champions League · giornata ' : 'Giornata ') + g : 'Altre partite'}</div><div class="hist-grid">${byG[g].join('')}</div>`).join('') : '<p class="note">Ancora nessuna partita giudicata.</p>'}`;
+    ${byDay.length ? byDay.map(([d, cards]) => `<div class="gday">${d}</div><div class="hist-grid">${cards.join('')}</div>`).join('') : '<p class="note">Ancora nessuna partita giudicata.</p>'}`;
+  el.querySelectorAll('.hfilter button').forEach(b => b.addEventListener('click', () => { hstate.f = b.dataset.f; renderStorico(); }));
 }
 function focusPanel(btn) {
   const narrow = matchMedia('(max-width: 820px)').matches, smooth = matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
@@ -1045,33 +1096,28 @@ function focusPanel(btn) {
   if (top < strip || top > innerHeight * 0.5) window.scrollTo({ top: scrollY + top - strip - 8, behavior: smooth });
 }
 function paintHeader() {
-  document.getElementById('hdr-round').textContent = state.comp === 'ucl' ? `· Champions ${DATA.round}ª` : `· Giornata ${DATA.round}ª`;
-  document.getElementById('meta').innerHTML = `<span>${state.comp === 'ucl' ? 'Champions' : 'Serie A'} <b>${DATA.season}</b></span>`;
+  document.getElementById('hdr-round').textContent = state.comp === 'naz' ? '· Nazionali' : state.comp === 'ucl' ? `· Champions ${DATA.round}ª` : `· Giornata ${DATA.round}ª`;
+  document.getElementById('meta').innerHTML = `<span>${state.comp === 'naz' ? 'UEFA Nations League' : state.comp === 'ucl' ? 'Champions' : 'Serie A'} <b>${DATA.season}</b></span>`;
   document.getElementById('lnote').textContent = DATA.lineups_note || '';
 }
 function setComp(c, keepId) {
-  if (c === 'ucl' && !CUP) c = 'sa';
+  if ((c === 'ucl' || c === 'naz') && !cupOf(c)) c = 'sa';
   if (c === 'extra' && !ALL.extra) c = 'sa';
-  for (const k of ['sa', 'ucl', 'extra']) document.getElementById('comp-' + k).setAttribute('aria-pressed', String(c === k));
-  document.getElementById('extra').hidden = c !== 'extra';
+  for (const k of ['sa', 'ucl', 'naz', 'extra']) document.getElementById('comp-' + k).setAttribute('aria-pressed', String(c === k));
+  if (state.view === 'storico' || (c === 'extra' && state.view === 'area')) state.view = 'partite';   // lo storico è unico per tutte le competizioni
+  state.comp = c; document.documentElement.dataset.comp = c;
+  try { localStorage.setItem('ammoniti_comp', c); } catch (e) {}
   if (c === 'extra') {
-    state.comp = 'extra'; DATA = ALL; document.documentElement.dataset.comp = 'extra';
-    try { localStorage.setItem('ammoniti_comp', c); } catch (e) {}
-    document.querySelector('.layout').hidden = true; document.getElementById('area').hidden = true; document.getElementById('storico').hidden = true;
+    DATA = ALL;
     document.getElementById('hdr-round').textContent = '· EXTRA';
     document.getElementById('meta').innerHTML = '<span>Big match esteri e coppe nazionali</span>';
-    renderExtra(); history.replaceState(null, '', '#extra'); return;
+    setView(state.view); return;
   }
-  document.querySelector('.layout').hidden = state.view !== 'partite'; document.getElementById('area').hidden = state.view !== 'area'; document.getElementById('storico').hidden = state.view !== 'storico';
-  state.comp = c; DATA = c === 'ucl' ? { ...ALL, ...CUP } : ALL;
-  document.documentElement.dataset.comp = c;
-  document.getElementById('comp-sa').setAttribute('aria-pressed', String(c === 'sa'));
-  document.getElementById('comp-ucl').setAttribute('aria-pressed', String(c === 'ucl'));
-  try { localStorage.setItem('ammoniti_comp', c); } catch (e) {}
+  DATA = cupOf(c) ? { ...ALL, ...cupOf(c) } : ALL;
   paintHeader(); renderList();
   const now = Date.now() / 1000, next = DATA.matches.find(m => m.ko + 7200 > now) || DATA.matches[0];
   state.id = null; select(keepId && DATA.matches.some(m => m.id === keepId) ? keepId : next.id);
-  if (state.view === 'storico') renderStorico(); else if (state.view === 'area') renderArea(); else history.replaceState(null, '', '#m' + state.id);
+  setView(state.view);
 }
 // ---- formazioni e tabellini ESPN, anche se la pubblicazione da GitHub è in ritardo ----
 const LIVE_B = { sa: [-0.103, 0.891, -0.198, 0.034, 0.103, -0.015, -0.066, -0.023], ucl: [0.090, 0.894, 0.025, 0.006, 0.086, -0.063, -0.117, 0.020] };
@@ -1102,13 +1148,13 @@ async function espnJson(path) {
 }
 async function espnEvent(m) {
   if (espnId[m.id]) return espnId[m.id];
-  const lg = m.comp === 'ucl' ? 'uefa.champions' : 'ita.1', d = new Date(m.ko * 1000).toISOString().slice(0, 10).replace(/-/g, '');
+  const lg = m.comp === 'naz' ? 'uefa.nations' : m.comp === 'ucl' ? 'uefa.champions' : 'ita.1', d = new Date(m.ko * 1000).toISOString().slice(0, 10).replace(/-/g, '');
   const k = lg + d;
   sbCache[k] ||= espnJson(lg + '/scoreboard?dates=' + d).catch(error => { delete sbCache[k]; throw error; });
   const ev = (await sbCache[k]).events || [];
   const match = ev.find(e => Math.abs(Date.parse(e.date) / 1000 - m.ko) <= 1200 && teamSides.every(([sd, homeAway]) => {
     const team = e.competitions?.[0]?.competitors?.find(t => t.homeAway === homeAway)?.team;
-    return [team?.displayName, team?.shortDisplayName, team?.name].some(n => teamWordsMatch(m[sd], n));
+    return [team?.displayName, team?.shortDisplayName, team?.name].some(n => teamWordsMatch(m[sd], n) || (m.en && teamWordsMatch(m.en[sd === 'h' ? 0 : 1], n)));
   }));
   if (match) return espnId[m.id] = [lg, match.id];
   delete sbCache[k];
@@ -1144,7 +1190,7 @@ function espnFinal(m, j, xi, es, sc, cards, sub, fl) {
   if (ammoniti.some(n => !booked.has(n)) || played.some(p => p.inn && !entrants.has(p.name))) return false;
   const prior = savedAppTris.get(m.id);
   if (prior?.trio?.length === 3 && !results[m.id]) results[m.id] = {
-    matchId:m.id, comp:prior.comp, partita:prior.partita, giornata:prior.comp === 'ucl' ? CUP?.round : ALL.round, ko:m.ko,
+    matchId:m.id, comp:prior.comp, partita:prior.partita, giornata:cupOf(prior.comp)?.round ?? ALL.round, ko:m.ko,
     finale:sc.h + '-' + sc.a, p3_app:prior.p3, tris_app:prior.trio, tris_app_revisione:prior.revised, ammoniti, sostituzioni:sub,
     falli:Object.fromEntries(Object.entries(fl).map(([n, p]) => [n, p[0]])),
     falli_subiti:Object.fromEntries(Object.entries(fl).map(([n, p]) => [n, p[1]])),
@@ -1190,7 +1236,7 @@ async function liveFetch(m) {
     const x = findPl(p[0], es[p[1]] || []), s = p[1], o = s === 'h' ? 'a' : 'h';
     if (x?.y || cards.some(c => c[1] === p[0] && c[2] !== 'R')) { P[p[0]] = 1; continue; }
     if (x?.out || x?.r || cards.some(c => c[1] === p[0] && c[2] === 'R')) { P[p[0]] = 0; out.push(p[0]); continue; }
-    let q = liveProb(p[4], t, yc.h + yc.a, yc[s], yc[o], s === 'h' ? sc.h - sc.a : sc.a - sc.h, m.comp === 'ucl' ? 'ucl' : 'sa');
+    let q = liveProb(p[4], t, yc.h + yc.a, yc[s], yc[o], s === 'h' ? sc.h - sc.a : sc.a - sc.h, m.comp === 'sa' || !m.comp ? 'sa' : 'ucl');
     const f = Math.pow(1.3, Math.min(4, x ? x.fc : 0)); P[p[0]] = q * f / (1 - q + q * f);
   }
   const sub = {};
@@ -1244,15 +1290,15 @@ function start() {
   document.getElementById('tab-area').addEventListener('click', () => setView('area'));
   document.getElementById('tab-storico').addEventListener('click', () => setView('storico'));
   document.getElementById('comp-sa').addEventListener('click', () => setComp('sa'));
-  document.getElementById('comp-ucl').addEventListener('click', () => setComp('ucl'));
-  document.getElementById('comp-extra').addEventListener('click', () => setComp('extra'));
-  if (ALL.extra) document.getElementById('comp-extra').hidden = false;
-  if (!CUP && document.getElementById('comp-extra').hidden) document.querySelector('.comps').hidden = true;
+  for (const c of ['ucl', 'naz', 'extra']) document.getElementById('comp-' + c).addEventListener('click', () => setComp(c));
   const fromHash = +(location.hash || '').replace('#m', '');
   let c0 = 'sa'; try { c0 = localStorage.getItem('ammoniti_comp') || 'sa'; } catch (e) {}
-  if (location.hash === '#ucl') c0 = 'ucl';
-  if (location.hash === '#extra') c0 = 'extra';
-  if (CUP && CUP.matches.some(m => m.id === fromHash)) c0 = 'ucl'; else if (ALL.matches.some(m => m.id === fromHash)) c0 = 'sa';
+  if (['#ucl', '#naz', '#extra'].includes(location.hash)) c0 = location.hash.slice(1);
+  else if (fromHash && allMatches().some(m => m.id === fromHash)) c0 = compOf(fromHash);
+  else if (!compVisible(c0)) c0 = 'sa';
+  // nel menu solo le competizioni con partite vicine (più quella aperta da un link)
+  for (const c of ['ucl', 'naz', 'extra']) document.getElementById('comp-' + c).hidden = !(compVisible(c) || (c === c0 && (c === 'extra' ? ALL.extra : cupOf(c))));
+  document.querySelector('.comps').hidden = ['ucl', 'naz', 'extra'].every(c => document.getElementById('comp-' + c).hidden);
   setComp(c0, fromHash);
   setTimeout(liveLoop, 1000);
   const chip = document.getElementById('b' + state.id), strip = document.getElementById('list');
@@ -1260,7 +1306,7 @@ function start() {
   if (location.hash === '#area') setView('area');
   if (location.hash === '#storico') setView('storico');
 }
-window.addEventListener('hashchange', () => { if (location.hash === '#extra') { if (state.comp !== 'extra') setComp('extra'); return; } if (location.hash === '#storico') { if (state.view !== 'storico') setView('storico'); return; } if (location.hash === '#area') { if (state.view !== 'area') setView('area'); return; } const id = +(location.hash || '').replace('#m', ''); if (!DATA.matches.some(m => m.id === id) && allMatches().some(m => m.id === id)) setComp(state.comp === 'ucl' ? 'sa' : 'ucl', id); if (DATA.matches.some(m => m.id === id)) { if (state.view !== 'partite') setView('partite'); select(id); } });
+window.addEventListener('hashchange', () => { if (location.hash === '#extra') { if (state.comp !== 'extra') setComp('extra'); return; } if (location.hash === '#storico') { if (state.view !== 'storico') setView('storico'); return; } if (location.hash === '#area') { if (state.view !== 'area') setView('area'); return; } const id = +(location.hash || '').replace('#m', ''); if (!DATA.matches.some(m => m.id === id) && allMatches().some(m => m.id === id)) setComp(compOf(id), id); if (DATA.matches.some(m => m.id === id)) { if (state.view !== 'partite') setView('partite'); select(id); } });
 start();
 </script>
 </body>

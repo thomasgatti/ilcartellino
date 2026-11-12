@@ -1,6 +1,6 @@
 # Il cartellino
 
-Per ogni partita di **Serie A** e di **Champions League**: probabilità di ammonizione di ogni giocatore, i **3 ammoniti più probabili** (il "tris dell'app"), formazioni, riquadro live, storico dei tris e area personale dove ognuno crea e salva i propri tris.
+Per ogni partita di **Serie A**, **Champions League** e **Nations League A** (sezione Nazionali): probabilità di ammonizione di ogni giocatore, i **3 ammoniti più probabili** (il "tris dell'app"), formazioni, riquadro live, storico dei tris e area personale dove ognuno crea e salva i propri tris.
 
 - Sito: **https://ilcartellino.vercel.app** (Vercel, progetto `ilcartellino`). Ogni push su `main` viene ripubblicato in automatico, quindi **`main` = sito degli amici**.
 - Repository privato, ramo `main` (codice e sito) + ramo `dati` (storico FotMob compresso, usato dal bot nel cloud).
@@ -19,7 +19,7 @@ template.html + data.json + lineups.txt ──build.py──▶ bot/webapp/index
 |---|---|
 | `index.html` (radice) | **Generato**, è il sito pubblicato. Non modificarlo a mano. |
 | `bot/webapp/template.html` | **Sorgente dell'interfaccia**: HTML, CSS e JavaScript in un file solo. Le modifiche grafiche si fanno qui. |
-| `bot/webapp/data.json` | Partite e probabilità (Serie A in `matches`, Champions in `cups.ucl.matches`). |
+| `bot/webapp/data.json` | Partite e probabilità (Serie A in `matches`, Champions in `cups.ucl.matches`, Nazionali in `cups.naz.matches`). |
 | `bot/webapp/vercel/risultati.json` | Esiti delle partite finite: ammoniti, falli, sostituzioni (uscito → entrato), tris dell'app. |
 | `bot/webapp/lineups.txt` | Formazioni per la scheda "Formazioni" (campo). |
 | `bot/webapp/build.py`, `build_vercel.py` | Costruiscono le pagine (vedi sopra). |
@@ -42,6 +42,7 @@ Sul sito Vercel il live arriva da solo dal browser (ESPN, ogni 30 s). Sull'artif
 
 ### Il modello, in breve
 - **Serie A** (v0.7): regressione logistica su FotMob (6 stagioni + quella in corso). Variabili: ruolo, gialli/90 e falli/90 personali con shrinkage, casa, livello di ammonizioni della stagione, gialli della squadra, falli subiti dall'avversario e dagli avversari diretti, posizione in campo. Media in logit con il modello Sofascore v0.5 e con il mercato ("+ Cartellino") quando ci sono le quote.
+- **Nazionali** (Nations League A, FotMob 9806): stesso modello coppe v4 della Champions sulla storia dei giocatori nei club; mancano solo forza e falli di squadra delle nazionali (valori medi). Ogni partita entra 72 ore prima, con la "posta in palio" calcolata dalla classifica del girone (quarti, spareggio, retrocessione).
 - **Champions** (coppe v4): storia di ogni giocatore in tutti i campionati (~21.000 partite), indici personali per ruolo e campionato, dribbling subiti, duelli, palloni persi, quote bet365 "Player to be Booked".
 - **Tris**: di default "2 + 1" (due di una squadra, uno dell'altra), con la **regola del sostituto**: vale anche il giallo di chi entra al posto del giocatore scelto. `jointK` corregge la probabilità congiunta (×1,164 per i 2+1).
 - **Regola per ogni modifica del modello**: si tiene solo se migliora la log loss sul test temporale (stagione dopo stagione) di almeno ~0,0002, senza peggiorare i primi 3 per partita. Nel RUNBOOK c'è l'elenco delle idee già provate e scartate: arbitro, derby, forma, diffida in Serie A, posta in palio, ruoli dalla formazione e altre. Prima di riprovarne una, controllare lì.
@@ -73,7 +74,8 @@ Controllare sempre **computer e telefono** (390 px di larghezza) e i due temi: S
 - Niente foto di giocatori, loghi o figurine ufficiali: le "figurine" sono illustrazioni originali (colori sociali, numero, iniziali).
 - Niente correzioni manuali "+" sulle probabilità dei giocatori e niente etichetta "partita a senso unico": le letture personali vanno nel tris dell'utente, non nel modello.
 - Il modello deve guardare il **singolo giocatore** (carattere, momento, duello specifico), non solo medie generiche, ma ogni idea passa dal test temporale.
-- Per ora solo Serie A e Champions: niente Europa League né Conference.
+- Per ora Serie A, Champions, Nazionali (Lega A) ed EXTRA: niente Europa League né Conference.
+- Menu: Champions, Nazionali ed EXTRA compaiono solo da 2 giorni prima della prima partita a 36 ore dopo l'ultima (calcolato nel browser). Lo Storico è unico, in ordine di calendario, con un colore per competizione (Serie A blu, Champions viola, Nazionali rosso, EXTRA verde) e un filtro.
 - Colori nel riquadro live: arancione = tris dell'app, blu = tris dell'utente, giallo = ammoniti.
 - I tris degli amici restano nel loro browser (`localStorage`, chiave `ammoniti_tris_v1`): non rompere quel formato (`{t<id>: {matchId, comp, partita, ko, savedAt, mio:[{n,p}], app:[{n,p}], …}}`).
 

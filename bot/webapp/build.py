@@ -11,7 +11,7 @@ if lu_path.exists():
         hs, as_ = (sides.split('^') + [''])[:2]
         side = lambda txt: [[r.split('~')[0], r.split('~')[1], float(r.split('~')[2]), float(r.split('~')[3]), int(r.split('~')[4])] for r in txt.split(';') if r]
         LU[int(mid)] = {'t': t, 'f': f.split('/'), 'h': side(hs), 'a': side(as_)}
-    for m in data['matches'] + data.get('cups', {}).get('ucl', {}).get('matches', []):
+    for m in data['matches'] + data.get('cups', {}).get('ucl', {}).get('matches', []) + data.get('cups', {}).get('naz', {}).get('matches', []):
         if m['id'] in LU and LU[m['id']]['h']: m['lu'] = LU[m['id']]
 html = (here / 'template.html').read_text(encoding='utf-8').replace('/*__DATA__*/', json.dumps(data, ensure_ascii=False).replace('</', '<\\/'))
 (here / 'index.html').write_text(html, encoding='utf-8')

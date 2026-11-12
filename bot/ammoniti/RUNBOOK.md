@@ -409,3 +409,12 @@ Diffidati in Serie A (5/11, 2021/22→oggi, __SAM3 senza diffida): diffidati amm
 - Prova del 10/11 con ora simulata 6/11 22:00: scelte Borussia Dortmund-Elversberg e Atlético Madrid-Barcelona; tris Atlético-Barça M. Bernal, J. Cancelo, Á. Baena; angoli attesi 5,4-5,0.
 - Interfaccia: terzo pulsante "EXTRA" (compare solo quando ci sono partite o esiti), schede con tris, titolari per squadra, tabella angoli e barra "chi ne batte di più".
 - 10/11: pulsante EXTRA sempre visibile; input "extra" della Giornata automatica per ricalcolare subito (EXTRA_FORZA).
+
+## Nazionali e Storico unico (12/11/2026)
+- Nuova sezione **Nazionali**: Nations League A (FotMob 9806, gironi 920741…). In `cloud/giornata.mjs` è il terzo turno (`comp:'naz'`, `data.cups.naz`): `syncNaz` aggiunge ogni partita nelle 72 ore prima del calcio d'inizio appena FotMob ha una formazione (probabile o ufficiale); le partite archiviate da più di 36 ore escono dalla sezione (restano nello Storico).
+- Modello: coppe v4 della Champions (`cupExport3`) invariato. Per le nazionali valgono le variabili del giocatore (falli e gialli nei club, avversari diretti per zona, dribbling subiti, duelli, palloni persi, ruolo, esperienza, arbitro); quelle di squadra (Elo, falli di squadra recenti) vanno al valore medio perché le nazionali non sono in archivio. Niente diffidati (contano solo in Champions) e niente linea cartellini stimata (nessuno storico di Nations League).
+- `cup_to_data.py` con `CUP_COMP=naz`: nomi delle nazionali in italiano, `en` con i nomi inglesi per agganciare la diretta ESPN (`uefa.nations`).
+- Posta in palio: dalla classifica FotMob, tutte le combinazioni V/N/P delle gare rimaste → posizione migliore/peggiore di ogni squadra; prime 2 quarti, 3ª spareggio, 4ª retrocessa. `hot` (etichetta "Partita che conta") se entrambe hanno ancora qualcosa da decidere.
+- Interfaccia: pulsante Nazionali (rosso e oro); Champions, Nazionali ed EXTRA visibili nel menu solo vicino alle partite; Storico unico per tutte le competizioni, compresi gli esiti EXTRA (prima erano dentro la sezione EXTRA).
+- Prima prova (12/11, 01:30 UTC): 4 partite della 5ª giornata con le probabili, top3 Italia-Francia Upamecano 25%, Calafiori 25%, Scalvini 23%.
+- Il giovedì è escluso da cron-job.org: nelle settimane delle nazionali va riattivato (o lanciato a mano) perché le formazioni ufficiali entrino in tempo.
