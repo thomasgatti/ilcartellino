@@ -133,12 +133,21 @@ for (const [country, list] of Object.entries(byCountry)) {
   const ms = archive(HIST, lg).filter(m => m.pl?.length > 20 && m.ts < now);
   window.__FMM = Object.fromEntries(ms.map(m => [m.id, m])); fmBuild();
   const seasons = [...new Set(window.__ROWS.map(d => d.season))].sort();
-  const fin = fmFinal(['base', 'lega', 'squadre', 'duelli'], seasons.slice(0, -1), seasons.at(-1));
+  // + divario di forza con il segno (Elo del campionato, casa +60): la sfavorita prende più gialli di quanto dicono le sole variabili di squadra.
+  // Studio 12/11 (ricerca/nazionali/sfavorita_campionati.mjs, test per stagione): log loss Premier −0,00068, LaLiga −0,00040, Bundesliga −0,00023,
+  // Ligue 1 −0,00043, Serie A −0,00097 con questo modello (nel modello Serie A di produzione invece non aggiunge nulla: c'è già forza_ruolo).
+  const ELO = {}, GAP = {};
+  for (const m of [...ms].filter(m => m.ts && m.hs != null).sort((a, b) => a.ts - b.ts)) { const eh = ELO[m.h[0]] ?? 1500, ea = ELO[m.a[0]] ?? 1500; GAP[m.id] = ea - eh - 60;
+    const e = 1 / (1 + 10 ** ((ea - eh - 60) / 400)), r = m.hs > m.as ? 1 : m.hs === m.as ? .5 : 0; ELO[m.h[0]] = eh + 20 * (r - e); ELO[m.a[0]] = ea - 20 * (r - e); }
+  const sg = d => (d.home ? 1 : -1) * (GAP[d.mid] ?? globalThis.__CURGAP ?? 0) / 100;
+  const G = fmGroups(window.__ROWS), FS = [...G.filter(g => ['base', 'lega', 'squadre', 'duelli'].includes(g[0])).flatMap(g => g[1]), d => Math.max(0, sg(d)), d => Math.max(0, -sg(d))];
+  const fin = { model: fitLogit(window.__ROWS.filter(d => seasons.slice(0, -1).includes(d.season)), FS) };
   const cm = cornerModel(lg);
   for (const c of list) {
     const old = ex.matches.find(m => m.id === c.id);
     let pl = [], lt = null, ref = null;
     try {
+      globalThis.__CURGAP = (ELO[c.aid] ?? 1500) - (ELO[c.hid] ?? 1500) - 60;   // squadre di altri campionati (coppe): 1500
       const r = await fmPredictMatch(c.id, fin.model);
       lt = r.lineupType || null; ref = r.ref || null;
       const num = {}; const j = await get('/api/data/matchDetails?matchId=' + c.id);
