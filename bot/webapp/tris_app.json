@@ -751,22 +751,22 @@
   "id": 5181797,
   "ko": 1794512700,
   "partita": "Italia - Francia",
-  "uff": false,
-  "p3": 0.0244712747660839,
+  "uff": true,
+  "p3": 0.024212934081799333,
   "trio": [
    {
     "n": "R. Calafiori",
-    "p": 0.3045,
+    "p": 0.3035,
     "team": "Italia"
    },
    {
     "n": "G. Scalvini",
-    "p": 0.2877,
+    "p": 0.2867,
     "team": "Italia"
    },
    {
     "n": "D. Upamecano",
-    "p": 0.2408,
+    "p": 0.2398,
     "team": "Francia"
    }
   ]
@@ -776,22 +776,22 @@
   "id": 5181857,
   "ko": 1794512700,
   "partita": "Rep. Ceca - Spagna",
-  "uff": false,
-  "p3": 0.011950688310916571,
+  "uff": true,
+  "p3": 0.010238231744983319,
   "trio": [
    {
-    "n": "S. Chaloupek",
-    "p": 0.2572,
+    "n": "V. Coufal",
+    "p": 0.2349,
     "team": "Rep. Ceca"
    },
    {
-    "n": "T. Souček",
-    "p": 0.2268,
+    "n": "L. Krejcí",
+    "p": 0.2337,
     "team": "Rep. Ceca"
    },
    {
     "n": "Y. Pino",
-    "p": 0.1767,
+    "p": 0.1608,
     "team": "Spagna"
    }
   ]
@@ -801,22 +801,22 @@
   "id": 5181858,
   "ko": 1794512700,
   "partita": "Inghilterra - Croazia",
-  "uff": false,
-  "p3": 0.011896648635825308,
+  "uff": true,
+  "p3": 0.01380995661579142,
   "trio": [
    {
-    "n": "D. Ćaleta-Car",
-    "p": 0.2541,
+    "n": "I. Smolčić",
+    "p": 0.2802,
     "team": "Croazia"
    },
    {
-    "n": "M. Kovačić",
-    "p": 0.2415,
+    "n": "J. Mišić",
+    "p": 0.24,
     "team": "Croazia"
    },
    {
     "n": "D. Burn",
-    "p": 0.1671,
+    "p": 0.1771,
     "team": "Inghilterra"
    }
   ]
@@ -893,6 +893,31 @@
     "n": "F. Nmecha",
     "p": 0.1772,
     "team": "Germania"
+   }
+  ]
+ },
+ {
+  "comp": "naz",
+  "id": 5181902,
+  "ko": 1794512700,
+  "partita": "Albania - Finlandia",
+  "uff": true,
+  "p3": 0.010634780263689383,
+  "trio": [
+   {
+    "n": "A. Markhiev",
+    "p": 0.2599,
+    "team": "Finlandia"
+   },
+   {
+    "n": "M. Tenho",
+    "p": 0.2003,
+    "team": "Finlandia"
+   },
+   {
+    "n": "Y. Ramadani",
+    "p": 0.1761,
+    "team": "Albania"
    }
   ]
  }
