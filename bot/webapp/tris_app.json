@@ -727,16 +727,16 @@
   "ko": 1794502800,
   "partita": "Turchia - Belgio",
   "uff": false,
-  "p3": 0.02190847112136678,
+  "p3": 0.022394033212908726,
   "trio": [
    {
     "n": "O. Kabak",
-    "p": 0.2932,
+    "p": 0.2942,
     "team": "Turchia"
    },
    {
     "n": "N. Raskin",
-    "p": 0.264,
+    "p": 0.269,
     "team": "Belgio"
    },
    {
@@ -752,21 +752,21 @@
   "ko": 1794512700,
   "partita": "Italia - Francia",
   "uff": false,
-  "p3": 0.021362544417261466,
+  "p3": 0.021744760542272444,
   "trio": [
    {
     "n": "R. Calafiori",
-    "p": 0.2959,
+    "p": 0.294,
     "team": "Italia"
    },
    {
     "n": "G. Scalvini",
-    "p": 0.2741,
+    "p": 0.2761,
     "team": "Italia"
    },
    {
     "n": "D. Upamecano",
-    "p": 0.227,
+    "p": 0.231,
     "team": "Francia"
    }
   ]
@@ -777,21 +777,21 @@
   "ko": 1794512700,
   "partita": "Rep. Ceca - Spagna",
   "uff": false,
-  "p3": 0.010249693323105567,
+  "p3": 0.011950688310916571,
   "trio": [
    {
     "n": "S. Chaloupek",
-    "p": 0.2474,
+    "p": 0.2572,
     "team": "Rep. Ceca"
    },
    {
     "n": "T. Souček",
-    "p": 0.2171,
+    "p": 0.2268,
     "team": "Rep. Ceca"
    },
    {
-    "n": "F. López",
-    "p": 0.1646,
+    "n": "Y. Pino",
+    "p": 0.1767,
     "team": "Spagna"
    }
   ]
@@ -802,22 +802,97 @@
   "ko": 1794512700,
   "partita": "Inghilterra - Croazia",
   "uff": false,
-  "p3": 0.011883117780727516,
+  "p3": 0.011896648635825308,
   "trio": [
    {
     "n": "D. Ćaleta-Car",
-    "p": 0.263,
+    "p": 0.2541,
     "team": "Croazia"
    },
    {
-    "n": "L. Vušković",
-    "p": 0.2494,
+    "n": "M. Kovačić",
+    "p": 0.2415,
     "team": "Croazia"
    },
    {
     "n": "D. Burn",
-    "p": 0.1562,
+    "p": 0.1671,
     "team": "Inghilterra"
+   }
+  ]
+ },
+ {
+  "comp": "naz",
+  "id": 5181785,
+  "ko": 1794599100,
+  "partita": "Slovenia - Svizzera",
+  "uff": false,
+  "p3": 0.01673488378655022,
+  "trio": [
+   {
+    "n": "J. Bijol",
+    "p": 0.2967,
+    "team": "Slovenia"
+   },
+   {
+    "n": "S. Kuzmić",
+    "p": 0.2309,
+    "team": "Slovenia"
+   },
+   {
+    "n": "V. Sierro",
+    "p": 0.2106,
+    "team": "Svizzera"
+   }
+  ]
+ },
+ {
+  "comp": "naz",
+  "id": 5181833,
+  "ko": 1794599100,
+  "partita": "Olanda - Grecia",
+  "uff": false,
+  "p3": 0.012436733483208935,
+  "trio": [
+   {
+    "n": "D. Kourbelis",
+    "p": 0.2586,
+    "team": "Grecia"
+   },
+   {
+    "n": "G. Vagiannidis",
+    "p": 0.2342,
+    "team": "Grecia"
+   },
+   {
+    "n": "J. Paul van Hecke",
+    "p": 0.177,
+    "team": "Olanda"
+   }
+  ]
+ },
+ {
+  "comp": "naz",
+  "id": 5181834,
+  "ko": 1794599100,
+  "partita": "Serbia - Germania",
+  "uff": false,
+  "p3": 0.015041395292448781,
+  "trio": [
+   {
+    "n": "S. Lukić",
+    "p": 0.2985,
+    "team": "Serbia"
+   },
+   {
+    "n": "Milinković-Savić",
+    "p": 0.2451,
+    "team": "Serbia"
+   },
+   {
+    "n": "F. Nmecha",
+    "p": 0.1772,
+    "team": "Germania"
    }
   ]
  }
