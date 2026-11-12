@@ -643,6 +643,8 @@ footer { font-size: 13px; color: var(--muted); display: grid; gap: 6px; }
 
 :root[data-comp="sa"] .chip, :root[data-comp="ucl"] .chip, :root[data-lg="pl"] .chip, :root[data-lg="liga"] .chip, :root[data-lg="l1"] .chip, :root[data-comp="naz"] .chip, :root[data-lg="cdr"] .chip, :root[data-lg="cit"] .chip, :root[data-lg="efl"] .chip, :root[data-lg="dfb"] .chip, :root[data-lg="cdf"] .chip { box-shadow: 0 0 0 1px rgba(255,255,255,.4); }
 .pill.wait, .ltag.wait { background: color-mix(in srgb, var(--muted) 22%, transparent); color: var(--ink); border-color: transparent; }
+.bandiera { width: 18px; height: 13.5px; border-radius: 2px; flex: none; object-fit: cover; box-shadow: 0 0 0 1px rgba(127,127,127,.45); }
+.bandiera.big { width: 26px; height: 19.5px; border-radius: 3px; }
 </style>
 </head>
 <body>
@@ -701,6 +703,8 @@ const XADAPT = m => ({ ...m, comp: 'extra', lgname: m.comp, hc: m.hc || ['#13202
 const XCUP = ALL.extra && ALL.extra.matches && ALL.extra.matches.length ? { name: 'EXTRA', round: '', season: '2026-27', matches: ALL.extra.matches.map(XADAPT),
   lineups_note: "EXTRA: big match esteri e coppe nazionali. Probabilità dal modello della Serie A riallenato sul campionato di ogni paese (falli, gialli, duelli, avversari diretti, arbitro); formazioni probabili di FotMob fino a circa un'ora prima, poi le ufficiali. Linea cartellini stimata dal modello." } : null;
 const cupOf = c => c === 'ucl' ? CUP : c === 'naz' ? NAZ : c === 'extra' ? XCUP : null;
+// bandiera per le nazionali, quadratino con il colore sociale per i club
+const teamMark = (name, cols, big) => ALL.bandiere && ALL.bandiere[name] ? `<img class="bandiera${big ? ' big' : ''}" src="${ALL.bandiere[name]}" alt="" aria-hidden="true">` : `<i class="chip${big ? ' big' : ''}" style="background:${cols[0]}"></i>`;
 const allMatches = () => [...ALL.matches, ...(CUP ? CUP.matches : []), ...(NAZ ? NAZ.matches : []), ...(XCUP ? XCUP.matches : [])];
 const compOf = id => NAZ && NAZ.matches.some(m => m.id === id) ? 'naz' : CUP && CUP.matches.some(m => m.id === id) ? 'ucl' : XCUP && XCUP.matches.some(m => m.id === id) ? 'extra' : 'sa';
 const COMP_NAME = { sa: 'Serie A', ucl: 'Champions', extra: 'EXTRA', naz: 'Nazionali' };
@@ -828,7 +832,7 @@ function renderList() {
     const b = document.createElement('button'); b.className = 'match'; b.type = 'button'; b.id = 'b' + m.id;
     b.setAttribute('aria-current', String(m.id === state.id));
     b.innerHTML = `<span class="time"><span class="wd">${fmtWd(m.ko)}</span>${fmtTime(m.ko)}</span>
-      <span class="teams"><span class="team"><i class="chip" style="background:${m.hc[0]}"></i>${m.h}</span><span class="team"><i class="chip" style="background:${m.ac[0]}"></i>${m.a}</span></span>
+      <span class="teams"><span class="team">${teamMark(m.h, m.hc)}${m.h}</span><span class="team">${teamMark(m.a, m.ac)}${m.a}</span></span>
       <span class="p3"><b>${trioPct(best?.p3)}</b>trio${statusTag(m)}${m.hot && m.ko > Date.now() / 1000 ? '<span class="tag hot">conta</span>' : ''}${m.lgname ? `<span class="pill lgpill">${esc(m.lgname)}</span>` : ''}${myTris[m.id] ? '<span class="mysaved">✓ tuo tris</span>' : ''}</span>`;
     b.addEventListener('click', () => { history.replaceState(null, '', '#m' + m.id); select(m.id); focusPanel(b); });
     el.appendChild(b);
@@ -975,7 +979,7 @@ function select(id) {
   const panel = document.getElementById('panel');
   panel.innerHTML = `
     <div class="mhead">
-      <div class="mteams"><span class="mt"><i class="chip big" style="background:${m.hc[0]}"></i>${m.h}</span><span class="mvs">–</span><span class="mt"><i class="chip big" style="background:${m.ac[0]}"></i>${m.a}</span></div>
+      <div class="mteams"><span class="mt">${teamMark(m.h, m.hc, true)}${m.h}</span><span class="mvs">–</span><span class="mt">${teamMark(m.a, m.ac, true)}${m.a}</span></div>
       <div class="mwhen"><span>${fmtDay(m.ko)}, <b>${fmtTime(m.ko)}</b></span>${statusPill(m)}${m.derby ? '<span class="tag">Derby</span>' : ''}${m.hot ? '<span class="tag hot">Partita che conta</span>' : ''}${m.lgname ? `<span class="tag">${esc(m.lgname)}</span>` : ''}</div>${m.posta?.length ? `<div class="posta"><div class="pk">Posta in palio${m.girone ? ' · ' + esc(m.girone) : ''}</div><ul>${m.posta.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>` : ''}${!m.pl.length ? '<p class="note">Il tris compare quando FotMob pubblica le formazioni (di solito 1-2 giorni prima della partita).</p>' : m.uff ? '' : waiting ? '<p class="note">Undici ufficiali disponibili. Le stime dei singoli si aggiornano al prossimo calcolo del modello.</p>' : locked(m) ? '' : probNote(m)}
     </div>
     <div class="stats">

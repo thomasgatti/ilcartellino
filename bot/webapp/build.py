@@ -13,6 +13,21 @@ if lu_path.exists():
         LU[int(mid)] = {'t': t, 'f': f.split('/'), 'h': side(hs), 'a': side(as_)}
     for m in data['matches'] + data.get('cups', {}).get('ucl', {}).get('matches', []) + data.get('cups', {}).get('naz', {}).get('matches', []):
         if m['id'] in LU and LU[m['id']]['h']: m['lu'] = LU[m['id']]
+# Bandiere delle nazionali (flag-icons, MIT; le bandiere sono di pubblico dominio): solo quelle delle partite in pagina, come PNG incorporati
+import base64
+FLAG = {'Italia': 'it', 'Francia': 'fr', 'Belgio': 'be', 'Turchia': 'tr', 'Olanda': 'nl', 'Grecia': 'gr', 'Germania': 'de', 'Serbia': 'rs', 'Spagna': 'es',
+        'Inghilterra': 'gb-eng', 'Croazia': 'hr', 'Rep. Ceca': 'cz', 'Portogallo': 'pt', 'Danimarca': 'dk', 'Galles': 'gb-wls', 'Norvegia': 'no', 'Scozia': 'gb-sct',
+        'Svizzera': 'ch', 'Austria': 'at', 'Polonia': 'pl', 'Ungheria': 'hu', 'Ucraina': 'ua', 'Svezia': 'se', 'Slovenia': 'si', 'Slovacchia': 'sk', 'Romania': 'ro',
+        'Irlanda': 'ie', 'Irlanda del Nord': 'gb-nir', 'Islanda': 'is', 'Finlandia': 'fi', 'Albania': 'al', 'Bosnia': 'ba', 'Georgia': 'ge', 'Israele': 'il',
+        'Kosovo': 'xk', 'Macedonia del Nord': 'mk', 'Montenegro': 'me', 'Bulgaria': 'bg', 'Bielorussia': 'by', 'San Marino': 'sm', 'Lussemburgo': 'lu',
+        'Armenia': 'am', 'Azerbaigian': 'az', 'Cipro': 'cy', 'Estonia': 'ee', 'Lettonia': 'lv', 'Lituania': 'lt', 'Kazakistan': 'kz', 'Moldavia': 'md',
+        'Malta': 'mt', 'Andorra': 'ad', 'Gibilterra': 'gi', 'Liechtenstein': 'li', 'Isole Faroe': 'fo', 'Russia': 'ru'}
+flags = {}
+for m in data.get('cups', {}).get('naz', {}).get('matches', []):
+    for n in (m['h'], m['a']):
+        f = here / 'bandiere' / f"{FLAG.get(n, '-')}.png"
+        if f.exists(): flags[n] = 'data:image/png;base64,' + base64.b64encode(f.read_bytes()).decode()
+data['bandiere'] = flags
 html = (here / 'template.html').read_text(encoding='utf-8').replace('/*__DATA__*/', json.dumps(data, ensure_ascii=False).replace('</', '<\\/'))
 (here / 'index.html').write_text(html, encoding='utf-8')
 print('index.html', len(html), 'byte,', len(data['matches']), 'partite')
