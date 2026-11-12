@@ -1,0 +1,28 @@
+name: Prova modello (senza pubblicare)
+# Costruisce i modelli come la Giornata e stima le partite indicate, solo nel log. Si può lanciare su un ramo di prova.
+on:
+  workflow_dispatch:
+    inputs:
+      sa:
+        description: Id FotMob Serie A (separati da spazio)
+        default: ''
+      coppe:
+        description: Id FotMob Champions/Nazionali (separati da spazio)
+        default: ''
+jobs:
+  prova:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          ref: dati
+          path: dati
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node cloud/prova_modello.mjs "$SA" "$COPPE"
+        env:
+          SA: ${{ inputs.sa }}
+          COPPE: ${{ inputs.coppe }}
