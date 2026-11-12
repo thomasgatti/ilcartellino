@@ -727,21 +727,21 @@
   "ko": 1794502800,
   "partita": "Turchia - Belgio",
   "uff": false,
-  "p3": 0.02108173019730865,
+  "p3": 0.02182927214772308,
   "trio": [
    {
     "n": "O. Kabak",
-    "p": 0.2803,
+    "p": 0.2922,
     "team": "Turchia"
    },
    {
     "n": "N. Raskin",
-    "p": 0.2778,
+    "p": 0.265,
     "team": "Belgio"
    },
    {
     "n": "S. Özcan",
-    "p": 0.2334,
+    "p": 0.243,
     "team": "Turchia"
    }
   ]
@@ -752,22 +752,22 @@
   "ko": 1794512700,
   "partita": "Italia - Francia",
   "uff": false,
-  "p3": 0.019846072984010657,
+  "p3": 0.021455070945531028,
   "trio": [
    {
     "n": "R. Calafiori",
-    "p": 0.271,
+    "p": 0.2959,
+    "team": "Italia"
+   },
+   {
+    "n": "G. Scalvini",
+    "p": 0.2741,
     "team": "Italia"
    },
    {
     "n": "D. Upamecano",
-    "p": 0.2526,
+    "p": 0.228,
     "team": "Francia"
-   },
-   {
-    "n": "G. Scalvini",
-    "p": 0.2499,
-    "team": "Italia"
    }
   ]
  },
@@ -777,22 +777,22 @@
   "ko": 1794512700,
   "partita": "Rep. Ceca - Spagna",
   "uff": false,
-  "p3": 0.010475317633781253,
+  "p3": 0.009898778494407607,
   "trio": [
    {
-    "n": "F. López",
-    "p": 0.2252,
-    "team": "Spagna"
-   },
-   {
-    "n": "M. Cucurella",
-    "p": 0.216,
-    "team": "Spagna"
-   },
-   {
     "n": "S. Chaloupek",
-    "p": 0.1856,
+    "p": 0.2336,
     "team": "Rep. Ceca"
+   },
+   {
+    "n": "T. Souček",
+    "p": 0.2054,
+    "team": "Rep. Ceca"
+   },
+   {
+    "n": "F. López",
+    "p": 0.1778,
+    "team": "Spagna"
    }
   ]
  },
@@ -802,21 +802,21 @@
   "ko": 1794512700,
   "partita": "Inghilterra - Croazia",
   "uff": false,
-  "p3": 0.01107693736562291,
+  "p3": 0.011789383989628123,
   "trio": [
    {
     "n": "D. Ćaleta-Car",
-    "p": 0.2166,
+    "p": 0.2472,
     "team": "Croazia"
    },
    {
     "n": "M. Kovačić",
-    "p": 0.2101,
+    "p": 0.2348,
     "team": "Croazia"
    },
    {
     "n": "D. Burn",
-    "p": 0.2099,
+    "p": 0.1751,
     "team": "Inghilterra"
    }
   ]
