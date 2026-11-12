@@ -155,8 +155,32 @@ for (const [country, list] of Object.entries(byCountry)) {
     }
     if (!pl.length) lt = null;           // FotMob segna 'standard' anche quando non ci sono ancora titolari
     const uff = lt === 'standard' ? 1 : 0;
-    out.push({ id: c.id, comp: c.comp, ko: c.ko, h: c.h, a: c.a, hc: c.hc || old?.hc || null, ac: c.ac || old?.ac || null, derby: c.derby ? 1 : 0, scelta: c.chosen ? 1 : 0, lt, uff, ref,
+    // 1X2 dalle quote FotMob (bet365, senza margine), come per Serie A e Champions
+    let odds = old?.odds || null;
+    const oj = await get('/api/data/matchOdds?matchId=' + c.id + '&ccode3=ESP');
+    const r1 = (oj?.odds?.oddsTabMarkets || []).flatMap(x => x.markets || []).find(x => x.headerTranslationKey === 'who_will_win');
+    if (r1?.selections?.length === 3) { const q = r1.selections.map(x => 1 / +x.oddsDecimal), t = q.reduce((a, b) => a + b, 0); odds = `${Math.round(q[0] / t * 100)}/${Math.round(q[2] / t * 100)}`; }
+    const lgAvg = ms.slice(-380).reduce((a, m) => a + (m.cards || []).length, 0) / Math.max(1, ms.slice(-380).length);
+    out.push({ id: c.id, comp: c.comp, ko: c.ko, h: c.h, a: c.a, hc: c.hc || old?.hc || null, ac: c.ac || old?.ac || null, derby: c.derby ? 1 : 0, scelta: c.chosen ? 1 : 0, lt, uff, ref, odds, lgAvg,
       tris: tris.length ? tris : old?.tris || [], pl: pl.length ? pl.slice(0, 22) : old?.pl || [], corners: cornerOut(cm && cm(c.hid, c.aid)) || old?.corners || null });
+  }
+}
+// linea cartellini stimata (come in giornata.mjs): media cartellini del campionato × √(somma probabilità titolari / media delle partite EXTRA)
+const sumP = m => (m.pl || []).reduce((a, p) => a + p[2], 0), withPl = out.filter(m => m.pl?.length >= 20), meanP = withPl.reduce((a, m) => a + sumP(m), 0) / Math.max(1, withPl.length);
+for (const m of out) {
+  const lambda = m.lgAvg * (m.pl?.length >= 20 && meanP ? Math.sqrt(sumP(m) / meanP) : 1); delete m.lgAvg;
+  if (!(lambda > 0)) continue;
+  let k = 0, term = Math.exp(-lambda), cdf = term; while (cdf < .5) { k++; term *= lambda / k; cdf += term; }
+  m.line = (k + .5).toFixed(1).replace('.', ','); m.line_est = 1;
+}
+// arbitro: cartellini e gialli a gara in tutto l'archivio
+if (out.some(m => m.ref)) {
+  const all = fs.readdirSync(HIST).filter(f => f.endsWith('.json.gz')).flatMap(f => Object.values(loadGz(path.join(HIST, f))));
+  const nrm = n => String(n).normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/[^\p{L}]/gu, '');
+  for (const m of out.filter(m => m.ref)) {
+    const g = all.filter(x => x.ref?.[1] && nrm(x.ref[1]) === nrm(m.ref) && x.ts < m.ko); if (!g.length) continue;
+    const c = g.reduce((a, x) => a + (x.cards || []).length, 0), y = g.reduce((a, x) => a + (x.cards || []).filter(k => k[2] !== 'Red').length, 0), d = v => v.toFixed(1).replace('.', ',');
+    m.refnote = `${d(c / g.length)} cartellini/gara · ${d(y / g.length)} gialli · ${g.length} gare in archivio`;
   }
 }
 ex.matches = out.sort((a, b) => a.ko - b.ko);
