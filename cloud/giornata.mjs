@@ -103,7 +103,7 @@ async function prepareLineup(id, raw, verifiedOut = []) {
 
 function startModel(cutoff) {
   loadLib(['fotmob_scrape.js', 'fm_model.js', 'cup_model.js', 'cup_model2.js', 'ext_model.js', 'cup_x2.js',
-    'deep_feats.js', 'cup_x3.js', 'sa_export.js', 'amm_boot.js']);
+    'deep_feats.js', 'cup_x3.js', 'hot_feats.js', 'sa_export.js', 'amm_boot.js']);
   const all = fs.readdirSync(historic).filter(f => f.endsWith('.json.gz')).flatMap(f =>
     Object.values(JSON.parse(zlib.gunzipSync(fs.readFileSync(path.join(historic, f))))));
   const before = all.filter(m => m.ts && m.ts < cutoff && m.pl?.length > 20);

@@ -2,7 +2,7 @@
 // Caricamento di tutto il codice (una riga, nella console della scheda FotMob):
 //   for (const f of AMM_FILES) (0, eval)('{' + await (await fetch('https://ilcartellino.vercel.app/lib/' + f + '?v=' + Date.now())).text() + '\n}');
 // poi:  await ammBuild()  → dati da IndexedDB, modelli Serie A v0.7 (__SAM3) e coppe v3 (__CUPM3 = __CUPM4), funzioni di previsione.
-window.AMM_FILES = ['fotmob_scrape.js', 'fm_model.js', 'cup_model.js', 'cup_model2.js', 'ext_model.js', 'cup_x2.js', 'deep_scrape.js', 'deep_feats.js', 'cup_x3.js', 'field_lineups.js', 'uff_lineup.js', 'sa_export.js', 'oc_scrape.js', 'amm_boot.js'];
+window.AMM_FILES = ['fotmob_scrape.js', 'fm_model.js', 'cup_model.js', 'cup_model2.js', 'ext_model.js', 'cup_x2.js', 'deep_scrape.js', 'deep_feats.js', 'cup_x3.js', 'hot_feats.js', 'field_lineups.js', 'uff_lineup.js', 'sa_export.js', 'oc_scrape.js', 'amm_boot.js'];
 window.idbAll = (name, store) => new Promise((res, rej) => { const r = indexedDB.open(name); r.onerror = () => rej(r.error);
   r.onsuccess = () => { const db = r.result; if (!db.objectStoreNames.contains(store)) { db.close(); return res({}); } const out = {}; const c = db.transaction(store).objectStore(store).openCursor();
     c.onsuccess = e => { const cur = e.target.result; if (cur) { out[cur.key] = cur.value; cur.continue(); } else { db.close(); res(out); } }; c.onerror = () => rej(c.error); }; });
@@ -71,4 +71,5 @@ window.ammBuild = async () => { const st = window.__AMMB = { fase: 'dati' }; con
   st.fase = 'modelli'; st.m3 = extMakeModels2(); extPatchPredict(); await sleep(10);
   st.fase = 'coppe v3'; st.m4 = cupX2Build(); st.subq = subqBuild();
   if (typeof deepFeatBuild === 'function' && typeof cupX3Build === 'function') { st.fase = 'coppe v4'; st.x3 = await deepFeatBuild(); st.m5 = cupX3Build(); }
+  if (typeof hotBuild === 'function') { st.fase = 'testa calda'; try { st.hot = hotBuild(); } catch (e) { st.hot = { errore: String(e) }; console.warn('hotBuild:', e); } }
   st.fase = 'fatto'; return st; };
