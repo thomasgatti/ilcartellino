@@ -155,9 +155,12 @@ async function syncRound(round, archived) {
 // Nazionali: classifica dei gironi e posta in palio (quarti per le prime due, spareggio per la terza, retrocessione per la quarta).
 const NAZ_IT = {Italy:'Italia', France:'Francia', Belgium:'Belgio', Turkiye:'Turchia', Turkey:'Turchia', Netherlands:'Olanda', Greece:'Grecia',
   Germany:'Germania', Serbia:'Serbia', Spain:'Spagna', England:'Inghilterra', Croatia:'Croazia', Czechia:'Rep. Ceca', 'Czech Republic':'Rep. Ceca',
-  Portugal:'Portogallo', Denmark:'Danimarca', Wales:'Galles', Norway:'Norvegia'};
+  Portugal:'Portogallo', Denmark:'Danimarca', Wales:'Galles', Norway:'Norvegia', Albania:'Albania', Finland:'Finlandia', Belarus:'Bielorussia',
+  'San Marino':'San Marino', Switzerland:'Svizzera', Scotland:'Scozia', Slovenia:'Slovenia', 'North Macedonia':'Macedonia del Nord', Sweden:'Svezia',
+  Poland:'Polonia', Romania:'Romania', Austria:'Austria', Ireland:'Irlanda', Hungary:'Ungheria', Ukraine:'Ucraina', 'Northern Ireland':'Irlanda del Nord',
+  Georgia:'Georgia', Kosovo:'Kosovo', Israel:'Israele', 'Bosnia and Herzegovina':'Bosnia', Iceland:'Islanda', Slovakia:'Slovacchia', Montenegro:'Montenegro'};
 const it = n => NAZ_IT[n] || n;
-const ART = {Italia:"l'", Inghilterra:"l'", Olanda:"l'", Belgio:'il ', Portogallo:'il ', Galles:'il '};
+const ART = {Italia:"l'", Inghilterra:"l'", Olanda:"l'", Belgio:'il ', Portogallo:'il ', Galles:'il ', Albania:"l'", Austria:"l'", Irlanda:"l'", Ungheria:"l'", Ucraina:"l'", Islanda:"l'", Israele:"l'", Kosovo:'il ', Montenegro:'il ', Lussemburgo:'il ', 'San Marino':'', 'Irlanda del Nord':"l'"};
 const art = n => (ART[n] ?? 'la ') + n;
 // Per ogni squadra la posizione finale migliore e peggiore su tutti gli esiti (V/N/P) delle partite rimaste; a pari punti vale il caso peggiore/migliore.
 function groupRanks(table, left) {
@@ -173,20 +176,26 @@ function groupRanks(table, left) {
   }
   return range;
 }
-function stakeOf([best, worst]) {
-  if (worst <= 1) return 'già prima del girone';
-  if (worst <= 2) return best === 1 ? 'già ai quarti, si gioca il primo posto' : 'già ai quarti';
-  if (best >= 4) return 'già retrocessa';
-  if (best <= 2) return worst >= 4 ? 'in corsa per i quarti, ma rischia anche la retrocessione' : 'in corsa per i quarti';
-  if (best === 3 && worst === 3) return 'terza: andrà allo spareggio per restare in Lega A';
-  return 'lotta per evitare la retrocessione diretta';
+// Zone della classifica dalla legenda FotMob del girone (Lega A: quarti, spareggio, retrocessione; Lega B e C: promozione e spareggi).
+const ZONE = {championship_playoff:['i quarti', 1], promotion:['la promozione', 1], promotionqual:['lo spareggio promozione', 1],
+  relegationqual:['lo spareggio salvezza', -1], relegation:['la retrocessione', -1]};
+function stakeOf([best, worst], zoneAt) {
+  const bz = zoneAt(best), wz = zoneAt(worst), lab = z => ZONE[z][0];
+  if (best === worst) return `già ${best}ª` + (bz ? `: ${lab(bz)}` : '');
+  if (bz && bz === wz && ZONE[bz][1] > 0) return (bz === 'championship_playoff' ? 'già ai quarti' : `${lab(bz).replace(/^\S+ /, '')} già sicura`) + (best === 1 ? ', si gioca il primo posto' : '');
+  if (bz && ZONE[bz][1] > 0) return `in corsa per ${lab(bz)}` + (wz && ZONE[wz][1] < 0 ? `, ma rischia anche ${lab(wz)}` : '');
+  if (wz && ZONE[wz][1] < 0) return `lotta per evitare ${lab(wz)}` + (bz && bz !== wz ? `, al massimo ${lab(bz)}` : '');
+  return 'senza obiettivi di classifica';
 }
 function nazStakes(j) {
   const out = new Map();
   const fixtures = j.fixtures?.allMatches || [];
+  const lega = (j.details?.name || '').replace(/^UEFA Nations League /, 'Lega ');
   for (const g of j.table?.[0]?.data?.tables || []) {
     const table = g.table?.all || [];
     if (table.length !== 4) continue;
+    const legend = g.legend || j.table[0].data.legend || [];
+    const zoneAt = pos => legend.find(l => ZONE[l.tKey] && l.indices.includes(pos - 1))?.tKey || null;
     const ids = new Set(table.map(t => t.id)), name = Object.fromEntries(table.map(t => [t.id, it(t.name)]));
     const pts = Object.fromEntries(table.map(t => [t.id, t.pts])), pos = Object.fromEntries(table.map(t => [t.id, t.idx]));
     const left = fixtures.filter(m => ids.has(+m.home.id) && ids.has(+m.away.id) && !m.status?.finished && !m.status?.cancelled)
@@ -194,8 +203,8 @@ function nazStakes(j) {
     const range = groupRanks(table, left);
     for (const m of left) {
       const lines = [];
-      for (const [me, vs] of [[m.h, m.a], [m.a, m.h]]) {
-        let line = `${name[me]} (${pos[me]}ª, ${pts[me]} punti): ${stakeOf(range[me])}`;
+      for (const me of [m.h, m.a]) {
+        let line = `${name[me]} (${pos[me]}ª, ${pts[me]} punti): ${stakeOf(range[me], zoneAt)}`;
         if (range[me][0] !== range[me][1]) {
           const above = table.filter(t => t.id !== me && t.pts > pts[me] && t.pts <= pts[me] + 3);
           const reach = above.filter(t => t.pts === pts[me] + 3), pass = above.filter(t => t.pts < pts[me] + 3);
@@ -206,21 +215,28 @@ function nazStakes(j) {
         lines.push(line);
       }
       const open = side => range[side][0] !== range[side][1];
-      out.set(m.id, {posta:lines, hot:open(m.h) && open(m.a), group:g.leagueName?.replace('Grp.', 'Girone')});
+      const group = g.leagueName?.replace('Grp.', 'Girone');
+      out.set(m.id, {posta:lines, hot:open(m.h) && open(m.a), group:lega && lega !== 'Lega A' ? `${lega} · ${group}` : group});
     }
   }
   return out;
 }
+// Lega A tutta; dalle altre leghe solo le partite scelte in bot/webapp/naz_scelte.json ({"aggiunte":[id FotMob], "escluse":[]}).
+const NAZ_SCELTE = (() => { try { return read(path.join(app, 'naz_scelte.json')); } catch { return {aggiunte:[], escluse:[]}; } })();
 let nazPosta = new Map();
 async function syncNaz(round) {
-  const response = await fetch(`/api/data/leagues?id=${LEAGUE.naz.id}&season=2026%2F2027`);
-  if (!response.ok) throw new Error(`Calendario nazionali: FotMob ${response.status}`);
-  const j = await response.json();
-  nazPosta = nazStakes(j);
+  const leagues = await Promise.all([9806, 9807, 9808].map(async id => {
+    const response = await fetch(`/api/data/leagues?id=${id}&season=2026%2F2027`);
+    if (!response.ok) throw new Error(`Calendario nazionali ${id}: FotMob ${response.status}`);
+    return [id, await response.json()];
+  }));
+  nazPosta = new Map(leagues.flatMap(([, j]) => [...nazStakes(j)]));
   const known = new Set(round.matches.map(m => m.id)), pending = new Set(round.pending.map(x => x.id));
   const horizon = now + Number(process.env.CARTELLINO_ANTICIPO_ORE || 72) * hour;
-  const todo = (j.fixtures?.allMatches || []).filter(m => !m.status?.cancelled && !known.has(+m.id) && !pending.has(+m.id) &&
-    Date.parse(m.status.utcTime) / 1000 > now && Date.parse(m.status.utcTime) / 1000 <= horizon);
+  const chosen = new Set((NAZ_SCELTE.aggiunte || []).map(Number)), skip = new Set((NAZ_SCELTE.escluse || []).map(Number));
+  const todo = leagues.flatMap(([id, j]) => (j.fixtures?.allMatches || []).filter(m => (id === LEAGUE.naz.id || chosen.has(+m.id)) && !skip.has(+m.id)))
+    .filter(m => !m.status?.cancelled && !known.has(+m.id) && !pending.has(+m.id) &&
+      Date.parse(m.status.utcTime) / 1000 > now && Date.parse(m.status.utcTime) / 1000 <= horizon);
   if (!todo.length) return;
   const loaded = await Promise.allSettled(todo.map(m => matchDetails(+m.id)));
   const ready = loaded.flatMap((r, i) => {

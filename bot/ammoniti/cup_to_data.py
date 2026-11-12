@@ -56,7 +56,7 @@ NAZ_IT = {'Italy': 'Italia', 'France': 'Francia', 'Belgium': 'Belgio', 'Turkiye'
           'Ukraine': 'Ucraina', 'Sweden': 'Svezia', 'Slovenia': 'Slovenia', 'Slovakia': 'Slovacchia', 'Romania': 'Romania', 'Ireland': 'Irlanda',
           'Republic of Ireland': 'Irlanda', 'Northern Ireland': 'Irlanda del Nord', 'Iceland': 'Islanda', 'Finland': 'Finlandia', 'Albania': 'Albania',
           'Bosnia and Herzegovina': 'Bosnia', 'Georgia': 'Georgia', 'Israel': 'Israele', 'Kosovo': 'Kosovo', 'North Macedonia': 'Macedonia del Nord',
-          'Montenegro': 'Montenegro', 'Bulgaria': 'Bulgaria'}
+          'Montenegro': 'Montenegro', 'Bulgaria': 'Bulgaria', 'Belarus': 'Bielorussia', 'San Marino': 'San Marino'}
 DATA = pathlib.Path(__file__).resolve().parent.parent / 'webapp' / 'data.json'
 IT_COLORS = {}  # colori delle italiane presi dalla Serie A
 NAMES_IT = {}
