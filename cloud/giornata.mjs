@@ -285,8 +285,8 @@ function refNote(name, comp, ko) {
 function estimateLines(round) {
   const open = round.section.matches.filter(m => m.line == null || m.line_est);
   if (!open.length) return false;
-  if (round.comp === 'naz') return false;   // nessuno storico di Nations League in archivio
-  const lg = LEAGUE[round.comp].id, cut = Math.min(...round.section.matches.map(m => m.ko));
+  // Nazionali: nessuno storico di Nations League in archivio, si parte dalla media della Champions (stessa scala del modello coppe)
+  const lg = round.comp === 'naz' ? 42 : LEAGUE[round.comp].id, cut = Math.min(...round.section.matches.map(m => m.ko));
   const past = archive().filter(m => m.lg === lg && m.ts < cut).sort((a,b) => b.ts - a.ts).slice(0, round.comp === 'sa' ? 380 : 250);
   if (past.length < 50) return false;
   const avg = past.reduce((a,m) => a + (m.cards || []).length, 0) / past.length;
