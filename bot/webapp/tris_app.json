@@ -726,22 +726,22 @@
   "id": 5181796,
   "ko": 1794502800,
   "partita": "Turchia - Belgio",
-  "uff": false,
-  "p3": 0.022394033212908726,
+  "uff": true,
+  "p3": 0.02269661916999643,
   "trio": [
    {
     "n": "O. Kabak",
-    "p": 0.2942,
+    "p": 0.2922,
     "team": "Turchia"
    },
    {
     "n": "N. Raskin",
-    "p": 0.269,
+    "p": 0.268,
     "team": "Belgio"
    },
    {
-    "n": "S. Özcan",
-    "p": 0.244,
+    "n": "İ. Yüksek",
+    "p": 0.2499,
     "team": "Turchia"
    }
   ]
