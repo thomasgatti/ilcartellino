@@ -7,6 +7,7 @@ import zlib from 'node:zlib';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { loadLib } from './lib_node.mjs';
+import { makeTagger } from './etichette.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const app = path.join(root, 'bot/webapp');
@@ -388,6 +389,26 @@ async function inspect(round) {
   }
 }
 
+// Etichette dei giocatori dall'archivio FotMob (come quelle della prima versione su Sofascore): "Ex <squadra>",
+// "N gialli in M gare contro <squadra>" (N ≥ 2), "Rientra da squalifica", "Testa calda" (più gialli di quanti ne dicano i suoi falli).
+// Informative: le probabilità restano quelle del modello.
+let tagger = null;
+const playerTags = (...a) => (tagger ??= makeTagger(archive()))(...a);
+function addTags(round, m) {
+  const item = prepared.get(m.id), H = item?.j?.header?.teams, lu = item?.j?.content?.lineup;
+  if (!H || !lu) return;
+  const ids = {};
+  for (const [side, T] of [['h', lu.homeTeam], ['a', lu.awayTeam]]) for (const x of [...(T?.starters || []), ...(T?.subs || [])]) if (x.name) ids[side + '|' + norm(short(x.name))] = +x.id;
+  const lastName = n => norm(n.split(' ').pop());
+  const club = round.comp !== 'naz';
+  for (const r of m.pl) {
+    const side = r[1], pid = ids[side + '|' + norm(r[0])] ?? Object.entries(ids).find(([k]) => k.startsWith(side + '|') && k.endsWith(lastName(r[0])))?.[1];
+    if (!pid) continue;
+    const team = +H[side === 'h' ? 0 : 1].id, opp = +H[side === 'h' ? 1 : 0].id, oppName = side === 'h' ? m.a : m.h;
+    const extra = playerTags(pid, team, opp, oppName, m.ko, club).filter(t => !(m.tags?.[r[0]] || []).includes(t));
+    if (extra.length) (m.tags ||= {})[r[0]] = [...extra, ...(m.tags?.[r[0]] || [])];
+  }
+}
 function applyForecast(round, exportRows) {
   const sa = round.comp === 'sa', day = round.advance || (round.comp === 'naz' ? round.md || round.section.round : round.section.round);
   const filename = path.join(temp, round.comp + '.json');
@@ -434,6 +455,7 @@ function applyForecast(round, exportRows) {
     if (old.ref === m.ref && old.refnote) m.refnote = old.refnote;
     if (old.live) m.live = old.live;
   }
+  for (const m of newMatches) { try { addTags(round, m); } catch (e) { warn(m, e); } }
   const changed = new Map(newMatches.map(m => [m.id,m]));
   round.section.matches = round.advance ? newMatches : [...round.matches.map(m => changed.get(m.id) || m),
     ...newMatches.filter(m => !former.has(m.id))].sort((a,b) => a.ko - b.ko || a.id - b.id);

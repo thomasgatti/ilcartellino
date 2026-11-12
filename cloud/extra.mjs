@@ -5,6 +5,7 @@
 // Uso: node cloud/extra.mjs [archivio fotmob] [archivio extra]
 import fs from 'node:fs'; import path from 'node:path'; import zlib from 'node:zlib';
 import { loadLib } from './lib_node.mjs';
+import { makeTagger } from './etichette.mjs';
 
 const HIST = process.argv[2] || 'dati/fotmob', XDIR = process.argv[3] || 'dati/extra';
 const DATA = 'bot/webapp/data.json', CFG = 'bot/webapp/extra_scelte.json';
@@ -88,6 +89,7 @@ const picked = [...cand.filter(c => c.chosen), ...cand.filter(c => !c.chosen).sl
 console.log('EXTRA partite:', picked.map(c => `${c.h}-${c.a} (${c.comp})`).join(', ') || 'nessuna');
 
 // --- 3. modelli per paese
+let tagger = null;
 const LINES = [2.5, 3.5, 4.5, 5.5, 6.5, 7.5];
 function cornerModel(lg) {
   const ms = archive(XDIR, lg).filter(m => ['angoli', 'tiri', 'tocchi_area', 'xg', 'possesso'].every(k => m.t?.[k])).sort((a, b) => a.ts - b.ts);
@@ -145,7 +147,7 @@ for (const [country, list] of Object.entries(byCountry)) {
   const cm = cornerModel(lg);
   for (const c of list) {
     const old = ex.matches.find(m => m.id === c.id);
-    let pl = [], lt = null, ref = null;
+    let pl = [], lt = null, ref = null; const tags = {};
     try {
       globalThis.__CURGAP = (ELO[c.aid] ?? 1500) - (ELO[c.hid] ?? 1500) - 60;   // squadre di altri campionati (coppe): 1500
       const r = await fmPredictMatch(c.id, fin.model);
@@ -154,6 +156,12 @@ for (const [country, list] of Object.entries(byCountry)) {
       for (const T of [j?.content?.lineup?.homeTeam, j?.content?.lineup?.awayTeam]) for (const p of [...(T?.starters || []), ...(T?.subs || [])]) num[p.id] = p.shirtNumber;
       const tc = j?.general?.teamColors?.lightMode; if (tc) { c.hc = [tc.home, '#ffffff']; c.ac = [tc.away, '#ffffff']; }
       pl = r.out.filter(x => x.st).map(x => [short(x.name), x.side ? 'h' : 'a', +x.p.toFixed(4), x.role, num[x.id] ?? null]).sort((a, b) => b[2] - a[2]);
+      // etichette (ex di turno, gialli contro l'avversaria, rientro da squalifica, testa calda) dall'archivio di tutti i campionati
+      tagger ??= makeTagger(fs.readdirSync(HIST).filter(f => f.endsWith('.json.gz')).flatMap(f => Object.values(loadGz(path.join(HIST, f)))));
+      for (const x of r.out.filter(x => x.st)) {
+        const t = tagger(+x.id, +(x.side ? c.hid : c.aid), +(x.side ? c.aid : c.hid), x.side ? c.a : c.h, c.ko, true);
+        if (t.length) tags[short(x.name)] = t;
+      }
     } catch (e) { console.log('EXTRA senza formazioni', c.h, c.a, String(e).slice(0, 80)); }
     const best = side => pl.filter(p => p[1] === side);
     let tris = [];
@@ -171,7 +179,7 @@ for (const [country, list] of Object.entries(byCountry)) {
     if (r1?.selections?.length === 3) { const q = r1.selections.map(x => 1 / +x.oddsDecimal), t = q.reduce((a, b) => a + b, 0); odds = `${Math.round(q[0] / t * 100)}/${Math.round(q[2] / t * 100)}`; }
     const lgAvg = ms.slice(-380).reduce((a, m) => a + (m.cards || []).length, 0) / Math.max(1, ms.slice(-380).length);
     out.push({ id: c.id, comp: c.comp, ko: c.ko, h: c.h, a: c.a, hc: c.hc || old?.hc || null, ac: c.ac || old?.ac || null, derby: c.derby ? 1 : 0, scelta: c.chosen ? 1 : 0, lt, uff, ref, odds, lgAvg,
-      tris: tris.length ? tris : old?.tris || [], pl: pl.length ? pl.slice(0, 22) : old?.pl || [], corners: cornerOut(cm && cm(c.hid, c.aid)) || old?.corners || null });
+      tags: Object.keys(tags).length ? tags : old?.tags || {}, tris: tris.length ? tris : old?.tris || [], pl: pl.length ? pl.slice(0, 22) : old?.pl || [], corners: cornerOut(cm && cm(c.hid, c.aid)) || old?.corners || null });
   }
 }
 // linea cartellini stimata (come in giornata.mjs): media cartellini del campionato × √(somma probabilità titolari / media delle partite EXTRA)

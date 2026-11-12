@@ -696,7 +696,7 @@ let DATA = ALL;
 const CUP = ALL.cups && ALL.cups.ucl ? ALL.cups.ucl : null;
 const NAZ = ALL.cups && ALL.cups.naz && ALL.cups.naz.matches && ALL.cups.naz.matches.length ? ALL.cups.naz : null;
 // EXTRA con la stessa interfaccia delle altre sezioni: le righe giocatore [nome, lato, p, ruolo, maglia] diventano [nome, lato, ruolo, maglia, p, di fronte, titolare %, q]
-const XADAPT = m => ({ ...m, comp: 'extra', lgname: m.comp, hc: m.hc || ['#13202d', '#ffffff'], ac: m.ac || ['#13202d', '#ffffff'], ref: m.ref || '–', src: 'fotmob', tags: {},
+const XADAPT = m => ({ ...m, comp: 'extra', lgname: m.comp, hc: m.hc || ['#13202d', '#ffffff'], ac: m.ac || ['#13202d', '#ffffff'], ref: m.ref || '–', src: 'fotmob', tags: m.tags || {},
   pl: (m.pl || []).map(r => [r[0], r[1], r[3], r[4] ?? '', r[2], '', 100, null]) });
 const XCUP = ALL.extra && ALL.extra.matches && ALL.extra.matches.length ? { name: 'EXTRA', round: '', season: '2026-27', matches: ALL.extra.matches.map(XADAPT),
   lineups_note: "EXTRA: big match esteri e coppe nazionali. Probabilità dal modello della Serie A riallenato sul campionato di ogni paese (falli, gialli, duelli, avversari diretti, arbitro); formazioni probabili di FotMob fino a circa un'ora prima, poi le ufficiali. Linea cartellini stimata dal modello." } : null;
