@@ -29,6 +29,7 @@ let nomi = {};
   const teams = WANT.map(w => w.toLowerCase()), next = fx.filter(f => teams.some(t => JSON.stringify(f).toLowerCase().includes(t)));
   console.log('prossime partite delle due squadre:', next.map(f => f.participant1Name + ' - ' + f.participant2Name + ' ' + f.startTime).join(' | '));
   for (const f of next.slice(0, 3)) { await sleep(2500); const o = await get('/odds', { fixtureId: f.fixtureId, bookmakers: 'betfred' });
+    { const t = JSON.stringify(o || {}), i = t.indexOf('"players"'); console.log('struttura:', t.slice(0, 300), '…', i >= 0 ? t.slice(i, i + 900) : 'nessun players'); }
     (function walk(x) { if (x && typeof x === 'object') for (const [k, v] of Object.entries(x)) { if (v && typeof v === 'object' && typeof v.playerName === 'string') nomi[k] = v.playerName; walk(v); } })(o); }
   console.log('nomi trovati:', Object.keys(nomi).length); }
 console.log('QUOTE CARTELLINO (ultima prima del via):');
