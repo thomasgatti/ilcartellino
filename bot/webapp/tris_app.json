@@ -920,5 +920,130 @@
     "team": "Albania"
    }
   ]
+ },
+ {
+  "comp": "naz",
+  "id": 5181904,
+  "ko": 1794762000,
+  "partita": "Bielorussia - Albania",
+  "uff": false,
+  "p3": 0.017555521760843698,
+  "trio": [
+   {
+    "n": "M. Ebong",
+    "p": 0.2717,
+    "team": "Bielorussia"
+   },
+   {
+    "n": "V. Bocherov",
+    "p": 0.2451,
+    "team": "Bielorussia"
+   },
+   {
+    "n": "Y. Ramadani",
+    "p": 0.2273,
+    "team": "Albania"
+   }
+  ]
+ },
+ {
+  "comp": "naz",
+  "id": 5181798,
+  "ko": 1794771900,
+  "partita": "Belgio - Italia",
+  "uff": false,
+  "p3": 0.01996564274751165,
+  "trio": [
+   {
+    "n": "G. Scalvini",
+    "p": 0.2703,
+    "team": "Italia"
+   },
+   {
+    "n": "R. Calafiori",
+    "p": 0.2576,
+    "team": "Italia"
+   },
+   {
+    "n": "N. Raskin",
+    "p": 0.2472,
+    "team": "Belgio"
+   }
+  ]
+ },
+ {
+  "comp": "naz",
+  "id": 5181799,
+  "ko": 1794771900,
+  "partita": "Francia - Turchia",
+  "uff": false,
+  "p3": 0.012789040038413869,
+  "trio": [
+   {
+    "n": "İ. Yüksek",
+    "p": 0.2844,
+    "team": "Turchia"
+   },
+   {
+    "n": "M. Demiral",
+    "p": 0.2839,
+    "team": "Turchia"
+   },
+   {
+    "n": "D. Upamecano",
+    "p": 0.1366,
+    "team": "Francia"
+   }
+  ]
+ },
+ {
+  "comp": "naz",
+  "id": 5181859,
+  "ko": 1794771900,
+  "partita": "Croazia - Rep. Ceca",
+  "uff": false,
+  "p3": 0.014043073742644126,
+  "trio": [
+   {
+    "n": "V. Coufal",
+    "p": 0.2684,
+    "team": "Rep. Ceca"
+   },
+   {
+    "n": "L. Červ",
+    "p": 0.2543,
+    "team": "Rep. Ceca"
+   },
+   {
+    "n": "I. Smolčić",
+    "p": 0.1774,
+    "team": "Croazia"
+   }
+  ]
+ },
+ {
+  "comp": "naz",
+  "id": 5181860,
+  "ko": 1794771900,
+  "partita": "Spagna - Inghilterra",
+  "uff": false,
+  "p3": 0.016309936978916882,
+  "trio": [
+   {
+    "n": "D. Burn",
+    "p": 0.2666,
+    "team": "Inghilterra"
+   },
+   {
+    "n": "E. Anderson",
+    "p": 0.2581,
+    "team": "Inghilterra"
+   },
+   {
+    "n": "F. López",
+    "p": 0.2044,
+    "team": "Spagna"
+   }
+  ]
  }
 ]
