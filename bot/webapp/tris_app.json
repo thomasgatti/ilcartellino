@@ -826,22 +826,22 @@
   "id": 5181785,
   "ko": 1794599100,
   "partita": "Slovenia - Svizzera",
-  "uff": false,
-  "p3": 0.013066296866795607,
+  "uff": true,
+  "p3": 0.012973736036860122,
   "trio": [
    {
     "n": "J. Bijol",
-    "p": 0.2849,
+    "p": 0.2878,
     "team": "Slovenia"
    },
    {
     "n": "S. Kuzmić",
-    "p": 0.2201,
+    "p": 0.2348,
     "team": "Slovenia"
    },
    {
-    "n": "R. Freuler",
-    "p": 0.1796,
+    "n": "Z. Athekame",
+    "p": 0.1655,
     "team": "Svizzera"
    }
   ]
@@ -851,22 +851,22 @@
   "id": 5181833,
   "ko": 1794599100,
   "partita": "Olanda - Grecia",
-  "uff": false,
-  "p3": 0.01214298265889312,
+  "uff": true,
+  "p3": 0.011815049712597912,
   "trio": [
    {
     "n": "D. Kourbelis",
-    "p": 0.2518,
+    "p": 0.2459,
     "team": "Grecia"
    },
    {
-    "n": "G. Vagiannidis",
-    "p": 0.2323,
+    "n": "L. Rota",
+    "p": 0.2264,
     "team": "Grecia"
    },
    {
     "n": "J. Paul van Hecke",
-    "p": 0.179,
+    "p": 0.183,
     "team": "Olanda"
    }
   ]
@@ -876,22 +876,22 @@
   "id": 5181834,
   "ko": 1794599100,
   "partita": "Serbia - Germania",
-  "uff": false,
-  "p3": 0.010229253555877666,
+  "uff": true,
+  "p3": 0.012122936180947213,
   "trio": [
    {
     "n": "Milinković-Savić",
-    "p": 0.2489,
+    "p": 0.271,
     "team": "Serbia"
    },
    {
     "n": "S. Džodić",
-    "p": 0.2162,
+    "p": 0.2378,
     "team": "Serbia"
    },
    {
-    "n": "F. Nmecha",
-    "p": 0.1639,
+    "n": "M. Mittelstädt",
+    "p": 0.1622,
     "team": "Germania"
    }
   ]
