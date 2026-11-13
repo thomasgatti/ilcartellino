@@ -1,0 +1,40 @@
+name: Quote NBA doppia e tripla doppia (OddsPapi)
+# Archivia nel ramo dati (nba/quote_<stagione>.json) l'ultima quota prima della palla a due sui mercati «doppia doppia» e «tripla doppia» del giocatore.
+on:
+  schedule:
+    - cron: '23 11 * * *'   # dopo «Dati NBA (ESPN)»
+  workflow_dispatch:
+    inputs:
+      max:
+        description: Partite al massimo in questo giro
+        default: '60'
+      stagione:
+        description: Stagione (es. 2026-2027)
+        default: '2026-2027'
+concurrency: dati
+jobs:
+  quote:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 100
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          ref: dati
+          path: dati
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --max-old-space-size=6000 cloud/nba/quote.mjs dati/nba "${MAX:-60}" "${STAGIONE:-2026-2027}"
+        env:
+          ODDSPAPI_KEY: ${{ secrets.ODDSPAPI_KEY }}
+          MAX: ${{ inputs.max }}
+          STAGIONE: ${{ inputs.stagione }}
+          MINUTI: '85'
+      - name: Salva
+        if: always()
+        run: |
+          cd dati && git config user.name "bot ammoniti" && git config user.email "bot@users.noreply.github.com"
+          git add -A nba && (git commit -qm "quote nba $(date -u +%F)" && git push -q origin HEAD:dati) || echo "niente di nuovo"
