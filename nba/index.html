@@ -61,8 +61,13 @@ header { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content:
 .row { display: grid; grid-template-columns: 1fr auto auto; gap: 14px; align-items: center; padding: 12px 16px; border-top: 1px solid var(--line); }
 .row:first-child { border-top: 0; }
 .row .who { font-weight: 600; min-width: 0; }
-.row .who small { display: block; font-weight: 400; color: var(--muted); font-size: 13px; }
-.row .p { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tier { display: block; font: 800 13px var(--display); text-transform: uppercase; letter-spacing: .9px; color: var(--or2); margin-bottom: 4px; }
+.leg { padding: 2px 0; }
+.leg small { display: inline; font-weight: 400; color: var(--muted); font-size: 13px; margin-left: 6px; white-space: nowrap; }
+.leg .k { font: 700 11px var(--body); text-transform: uppercase; letter-spacing: .4px; padding: 1px 6px; border-radius: 4px; background: rgba(255,138,31,.16); color: var(--or2); margin-left: 4px; white-space: nowrap; }
+.leg .k.td { background: rgba(55,214,230,.16); color: var(--cy); }
+.row .p small { display: block; font-size: 12px; color: var(--muted); }
+.row .p { color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; text-align: right; }
 .row .q { font: 900 24px/1 var(--display); color: var(--warn); font-variant-numeric: tabular-nums; min-width: 62px; text-align: right; }
 details { border-top: 1px solid var(--line); }
 details:first-child { border-top: 0; }
@@ -96,7 +101,7 @@ details[open] summary { background: rgba(255,138,31,.07); }
   summary .arrow { grid-row: 1 / span 2; grid-column: 3; }
   summary .time { grid-row: 1 / span 2; }
   .pl { grid-template-columns: 1fr 52px 52px; } .pl .bar { display: none; }
-  .row { grid-template-columns: 1fr auto; gap: 2px 10px; padding: 12px 14px; } .row .p { grid-column: 1; grid-row: 2; font-size: 13px; color: var(--or2); } .row .q { grid-column: 2; grid-row: 1 / span 2; min-width: 54px; }
+  .row { grid-template-columns: 1fr auto; gap: 2px 10px; padding: 12px 14px; } .row .p { grid-column: 2; grid-row: 2; font-size: 13px; } .row .q { grid-column: 2; grid-row: 1; min-width: 54px; align-self: end; } .row .who { grid-row: 1 / span 2; }
 }
 </style>
 </head>
@@ -130,8 +135,8 @@ function disegna() {
     + giocata('', 'Doppia doppia · quota bassa', (C.bassa || [])[0], 'dd', 'Nessuna quota sotto 2,00.')
     + giocata('', 'Doppia doppia · quota alta', (C.alta || [])[0], 'dd', 'Nessuna quota alta adatta.')
     + giocata('td', 'Tripla doppia', (C.td || [])[0], 'td', 'Nessun candidato sopra il 3%.') + '</div>';
-  if ((C.accoppiate || []).length) h += '<div class="sec">Accoppiate<small>due doppie doppie in partite diverse</small></div><div class="rows">'
-    + C.accoppiate.map(a => `<div class="row"><div class="who">${esc(a.a.n)} + ${esc(a.b.n)}<small>${pc(a.a.p_dd)} e ${pc(a.b.p_dd)} · quote ${nq(a.a.q_dd)} e ${nq(a.b.q_dd)}</small></div><div class="p">entrambe ${pc(a.p)}</div><div class="q">${nq(a.q)}</div></div>`).join('') + '</div>';
+  if ((C.combinazioni || []).length) h += '<div class="sec">Combinazioni<small>giocatori di partite diverse · per ogni fascia di quota la più probabile</small></div><div class="rows">'
+    + C.combinazioni.map(a => `<div class="row"><div class="who"><span class="tier">${esc(a.tipo)}</span>${a.gambe.map(g => `<div class="leg">${esc(g.n)} <span class="k ${g.cosa}">${g.cosa === 'td' ? 'tripla doppia' : 'doppia doppia'}</span><small>${pc(g.p)} · quota ${nq(g.q)}</small></div>`).join('')}</div><div class="p">esce ${pc(a.p)}<small>2 € → ${(2 * a.q).toFixed(0)} €</small></div><div class="q">${nq(a.q)}</div></div>`).join('') + '</div>';
   h += '<div class="sec">Partite<small>tocca una partita per vedere gli altri giocatori</small></div><div class="rows">';
   for (const P of Ps) {
     const c = k => P.giocatori.find(g => g.n === P.candidati[k]);

@@ -11,6 +11,44 @@ from dataset import carica, costruisci
 from prova import prepara, colonne, gbm, logit_, LG, GRUPPI
 from mercato import norm
 
+
+# Combinazioni: per ogni fascia di quota, la combinazione PIÙ PROBABILE che paga almeno quella quota.
+# Gambe = doppia doppia o tripla doppia di giocatori di partite diverse (indipendenti: vedi RUNBOOK), 2 o 3 gambe; quota = prodotto delle singole.
+FASCE = (('Sicura', 1.5), ('Media', 3), ('Alta', 10), ('Altissima', 30), ('Colpo grosso', 100))
+def combinazioni(tutti):
+    gambe = []
+    for g in tutti:
+        if g.get('q_dd') and g['p_dd'] >= 0.08: gambe.append(dict(n=g['n'], sq=g['sq'], cosa='dd', p=g['p_dd'], q=g['q_dd'], partita=g['partita'], dubbio=g.get('dubbio', 0)))
+        if g.get('q_td') and g['p_td'] >= 0.03: gambe.append(dict(n=g['n'], sq=g['sq'], cosa='td', p=g['p_td'], q=g['q_td'], partita=g['partita'], dubbio=g.get('dubbio', 0)))
+    gambe = sorted(gambe, key=lambda x: -x['p'])[:40]; cand = []
+    for k in (2, 3):
+        for c in itertools.combinations(gambe, k):
+            if len({x['partita'] for x in c}) < k: continue
+            cand.append((float(np.prod([x['p'] for x in c])), float(np.prod([x['q'] for x in c])), c))
+    out, visti = [], set()
+    for i, (nome, minimo) in enumerate(FASCE):
+        tetto = FASCE[i + 1][1] if i + 1 < len(FASCE) else 1e9
+        buone = sorted([c for c in cand if minimo <= c[1] < tetto], key=lambda c: (-c[0], len(c[2])))
+        for p, q, c in buone:
+            k = frozenset((x['n'], x['cosa']) for x in c)
+            if k in visti: continue
+            visti.add(k); out.append(dict(tipo=nome, p=round(p, 4), q=round(q, 2), gambe=[{a: x[a] for a in ('n', 'sq', 'cosa', 'p', 'q', 'dubbio')} for x in c])); break
+    # con le triple doppie (le più probabili non ne contengono mai: sono le quote col margine più alto): la più probabile con una tripla, e con due
+    for nome, quante in (('Con una tripla doppia', 1), ('Due triple doppie', 2)):
+        buone = sorted([c for c in cand if len(c[2]) == 2 and sum(x['cosa'] == 'td' for x in c[2]) == quante], key=lambda c: -c[0])
+        for p, q, c in buone:
+            k = frozenset((x['n'], x['cosa']) for x in c)
+            if k in visti: continue
+            visti.add(k); out.append(dict(tipo=nome, p=round(p, 4), q=round(q, 2), gambe=[{a: x[a] for a in ('n', 'sq', 'cosa', 'p', 'q', 'dubbio')} for x in c])); break
+    return out
+
+def ricombina(f):
+    """ricalcola solo le combinazioni da un oggi.json già pubblicato (senza richiedere di nuovo le quote)"""
+    D = json.load(open(f)); tutti = [dict(g, partita=P['id']) for P in D['partite'] for g in P['giocatori']]
+    D['consigli'].pop('accoppiate', None); D['consigli']['combinazioni'] = combinazioni(tutti)
+    json.dump(D, open(f, 'w'), ensure_ascii=False)
+    for c in D['consigli']['combinazioni']: print(f"{c['tipo']:13s} quota {c['q']:8.2f}  prob {c['p']:.1%}  " + ' + '.join(f"{x['n']} {x['cosa'].upper()} ({x['p']:.0%} @ {x['q']})" for x in c['gambe']))
+
 def main(cartella, f_in, f_out):
     partite, gioc = carica(cartella); I = json.load(open(f_in)); stato = {}; nomi = {}
     for P in I['partite']:
@@ -57,18 +95,9 @@ def main(cartella, f_in, f_out):
     C = dict(
         bassa=[breve(g) for g in sorted([g for g in con if g['q_dd'] < 2.0], key=lambda g: -g['p_dd'])[:3]],
         alta=[breve(g) for g in sorted([g for g in con if g['q_dd'] >= 3.0 and g['p_dd'] >= 0.10], key=lambda g: -g['v_dd'])[:3]],
-        td=[breve(g) for g in sorted([g for g in tutti if g['p_td'] >= 0.03], key=lambda g: -g['p_td'])[:4]], accoppiate=[])
+        td=[breve(g) for g in sorted([g for g in tutti if g['p_td'] >= 0.03], key=lambda g: -g['p_td'])[:4]])
     if not con: C['bassa'] = [breve(g) for g in sorted(tutti, key=lambda g: -g['p_dd'])[:3]]
-    def coppia(tipo, a, b): return dict(tipo=tipo, a=breve(a), b=breve(b), p=round(a['p_dd'] * b['p_dd'], 4), q=round(a['q_dd'] * b['q_dd'], 2), v=round(a['p_dd'] * b['p_dd'] * a['q_dd'] * b['q_dd'], 3))
-    coppie = [(a, b) for a, b in itertools.combinations([g for g in con if g['p_dd'] >= 0.15], 2) if a['partita'] != b['partita']]   # partite diverse: indipendenti
-    if coppie:
-        visti = set()
-        for tipo, lista in (('la più probabile', sorted(coppie, key=lambda ab: -ab[0]['p_dd'] * ab[1]['p_dd'])),
-                            ('quota media', sorted([ab for ab in coppie if 3 <= ab[0]['q_dd'] * ab[1]['q_dd'] < 8], key=lambda ab: -ab[0]['p_dd'] * ab[1]['p_dd'])),
-                            ('quota alta', sorted([ab for ab in coppie if ab[0]['q_dd'] * ab[1]['q_dd'] >= 8], key=lambda ab: -ab[0]['v_dd'] * ab[1]['v_dd']))):
-            for a, b in lista:
-                k = frozenset((a['n'], b['n']))
-                if k not in visti: visti.add(k); C['accoppiate'].append(coppia(tipo, a, b)); break
+    C['combinazioni'] = combinazioni(tutti)
     out['consigli'] = C
     json.dump(out, open(f_out, 'w'), ensure_ascii=False)
     for P in out['partite']:
@@ -76,4 +105,6 @@ def main(cartella, f_in, f_out):
         for g in P['giocatori'][:5]: print(f"   {g['n']:26s} {g['sq']:4s} DD {g['p_dd']:.0%}  TD {g['p_td']:.1%}  quota DD {g.get('q_dd', '-')} {g.get('b_dd', '')}  valore {g.get('v_dd', '-')}")
     print('\nconsigli:', json.dumps(C, ensure_ascii=False)[:1500])
 
-if __name__ == '__main__': main(*sys.argv[1:4])
+if __name__ == '__main__':
+    if sys.argv[1] == '--ricombina': ricombina(sys.argv[2])
+    else: main(*sys.argv[1:4])
