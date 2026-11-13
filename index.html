@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta name="build" content="2026-11-13T03:16:49Z">
+<meta name="build" content="2026-11-13T03:33:34Z">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -302,6 +302,7 @@ details.how p { margin: 8px 0 0; max-width: none; }
 .who .name { font: 800 26px var(--display); text-transform: uppercase; line-height: 1; letter-spacing: .3px; overflow-wrap: anywhere; }
 .who .role { font-size: 13px; color: var(--muted); }
 .who .duel { font-size: 13px; }
+.mutuo { display: inline-block; font-size: 11px; font-weight: 700; padding: 1px 6px; border-radius: 999px; background: var(--card); color: var(--card-ink, #1b1b1b); white-space: nowrap; vertical-align: 1px; }
 .summary { display: flex; flex-wrap: wrap; gap: 8px 22px; align-items: baseline; font-size: 15px; }
 .summary .big { font: 900 34px var(--display); font-variant-numeric: tabular-nums; }
 .note { font-size: 13px; color: var(--muted); margin: 0; }
@@ -877,7 +878,7 @@ const saveUi = () => { try { localStorage.setItem('amm_ui', JSON.stringify({ mod
 const SUBQ = DATA.subq || { D: 0.019, M: 0.042, F: 0.039 };
 const slotP = (p, pos, q, subRule = state.subRule) => subRule ? 1 - (1 - p) * (1 - (q ?? SUBQ[pos] ?? 0.03)) : p;   // titolare O chi entra al suo posto
 
-function players(m, raw = false, subRule = state.subRule) { return m.pl.map(([n, side, pos, num, p0, vs, st = 100, q = null]) => { const b = !raw && !!state.boost[bkey(m, n)]; return { n, side, pos, num, st, q, p: slotP(adj(p0, b), pos, q, subRule), p0, b, vs, tags: (m.tags && m.tags[n]) || [], team: side === 'h' ? m.h : m.a, cols: side === 'h' ? m.hc : m.ac }; }).sort((x, y) => y.p - x.p); }
+function players(m, raw = false, subRule = state.subRule) { return m.pl.map(([n, side, pos, num, p0, vs, st = 100, q = null]) => { const b = !raw && !!state.boost[bkey(m, n)]; return { n, side, pos, num, st, q, p: slotP(adj(p0, b), pos, q, subRule), p0, b, vs, mutuo: !!vs && m.pl.some(o => o[0] === vs && o[1] !== side && o[5] === n), tags: (m.tags && m.tags[n]) || [], team: side === 'h' ? m.h : m.a, cols: side === 'h' ? m.hc : m.ac }; }).sort((x, y) => y.p - x.p); }
 function combos(m, mode, raw = false, subRule = state.subRule) {
   const ps = players(m, raw, subRule).filter(p => !m.uff || p.st === 100), out = [];
   if (mode === 'free') {
@@ -967,7 +968,7 @@ function sticker(x, hidden) {
   return `<article class="sticker ${hidden ? 'hidden' : ''}">
     <div class="band" style="background:linear-gradient(115deg, ${c1} 0 58%, ${c2} 58% 70%, ${c1} 70%)"><span class="club">${x.team}</span><span class="pct">${pct(x.p)}</span></div>
     <div class="face"><div class="badge" style="background:${ink}">${initials(x.n)}</div><div class="num" style="color:${readable(ink, x.cols)}">${x.num || ''}</div></div>
-    <div class="who"><div class="name">${x.n}</div>${x.tags.length ? `<div class="tags">${x.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>` : ''}<div class="role">${ROLE[x.pos] || ''}</div>${x.vs ? `<div class="duel">Di fronte: <b>${x.vs}</b></div>` : ''}</div>
+    <div class="who"><div class="name">${x.n}</div>${x.tags.length ? `<div class="tags">${x.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>` : ''}<div class="role">${ROLE[x.pos] || ''}</div>${x.vs ? `<div class="duel">Di fronte: <b>${x.vs}</b>${x.mutuo ? ' <span class="mutuo" title="Ognuno è il «di fronte» dell\'altro">⇄ si marcano</span>' : ''}</div>` : ''}</div>
   </article>`;
 }
 function campoHtml(m, trio) {
@@ -1094,8 +1095,8 @@ function select(id) {
     ${locked(m) ? '' : `<div class="mybar"><span class="cnt">${mine.length}/3 scelti<small>${mine.join(', ') || 'tocca + per aggiungere'}</small></span>
       <button type="button" class="save" id="savemine2" ${mine.length === 3 && DB && UID && !same ? '' : 'disabled'}>${same ? 'Salvato ✓' : 'Salva'}</button></div>`}`;
   const tuttiSec = `<div class="tablebox"><table><thead><tr><th><span class="sr">Scegli per il mio tris</span></th><th>Giocatore</th><th>Squadra</th><th>Ruolo</th><th>Di fronte</th><th class="n">Titolare</th><th class="n">Giallo</th><th style="width:20%"></th></tr></thead><tbody>
-      ${ps.map(x => `<tr class="${mine.includes(x.n) ? 'picked' : ''}"><td>${addBtn(m, x)}</td><td>${x.n}${tagsHtml(x)}</td><td>${x.team}</td><td>${x.pos}</td><td>${x.vs}</td><td class="n">${x.st}%</td><td class="n">${pct(x.p)}</td><td><div class="bar" style="width:${Math.min(100, Math.round(x.p / 0.3 * 100))}%"></div></td></tr>`).join('')}
-    </tbody></table></div><p class="note">Il simbolo + aggiunge il giocatore al tuo tris (scheda "Il mio tris").</p>`;
+      ${ps.map(x => `<tr class="${mine.includes(x.n) ? 'picked' : ''}"><td>${addBtn(m, x)}</td><td>${x.n}${tagsHtml(x)}</td><td>${x.team}</td><td>${x.pos}</td><td>${x.vs}${x.mutuo ? ' <span class="mutuo" title="Si marcano a vicenda">⇄</span>' : ''}</td><td class="n">${x.st}%</td><td class="n">${pct(x.p)}</td><td><div class="bar" style="width:${Math.min(100, Math.round(x.p / 0.3 * 100))}%"></div></td></tr>`).join('')}
+    </tbody></table></div><p class="note">Il simbolo + aggiunge il giocatore al tuo tris (scheda "Il mio tris"). ⇄ accanto all'avversario: i due si marcano a vicenda (ognuno è il «di fronte» dell'altro).</p>`;
   const panel = document.getElementById('panel');
   if (panel.dataset.mid !== String(m.id)) { panel.style.minHeight = ''; panel.dataset.mid = m.id; }   // altezza tenuta solo cambiando scheda nella stessa partita
   panel.innerHTML = `
