@@ -479,3 +479,10 @@ Valutazione del documento «100 idee» (proposte 1–3). Script in `bot/ammoniti
 - Champions (575): 1,231 [1,091; 1,431]; sviluppo 2023-25 1,289 [1,103; 1,550], verifica 2025-27 1,151 [0,677; 1,579].
 - Nazionali (`coppie_fronte_naz.mjs`, 1.354 partite, atteso dal tasso del ruolo): 0,953 [0,858; 1,077] → nessun effetto.
 - Non adottato: l'effetto c'è solo in Champions e nella verifica è incerto. Da rifare in Champions a fine stagione; se tiene, va nella scelta del tris come fattore per la coppia di fronte (non nelle probabilità individuali).
+
+## OddsPapi: quote "giocatore ammonito" storiche (13/11)
+- Chiave gratuita nel segreto `ODDSPAPI_KEY`; sonda `sonda_oddspapi.yml` (input `script`) con `cloud/sonda_oddspapi.mjs`. Base `https://api.oddspapi.io/v4`, parametro `apiKey`; limite di frequenza stretto (429): almeno 2 s tra le chiamate.
+- Mercati: "Player To Be Carded (incl. overtime)" (`players-cards`, id 102732 e varianti 102733/102736/102738) e anche falli, tiri, tackle del giocatore; mercati squadra sui cartellini (over/under, handicap, 1X2 bookings).
+- `/fixtures?tournamentId=23755` (Nations League UEFA) con `from`/`to`; gli id esterni includono betradar, sofascore, flashscore, pinnacle.
+- `/historical-odds?fixtureId=…&bookmakers=` (massimo 3 bookmaker): ogni giocatore ha la serie di prezzi con orario (`createdAt`, `active`). Nomi dei giocatori: `/players?sportId=10` (anagrafica completa, ~29.000 nomi). Per Albania-Finlandia (12/11) c'è Betfred (bet365, William Hill, Unibet senza mercato cartellino).
+- Albania-Finlandia, ultima quota Betfred prima del via: Markhiev 3,10 · Tenho 3,50 · Ramadani 3,50 (tutti e tre ammoniti); Daku 2,90 il più basso.
