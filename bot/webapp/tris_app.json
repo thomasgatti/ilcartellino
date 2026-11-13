@@ -1145,5 +1145,30 @@
     "team": "Irlanda del Nord"
    }
   ]
+ },
+ {
+  "comp": "naz",
+  "id": 5181870,
+  "ko": 1794685500,
+  "partita": "Portogallo - Danimarca",
+  "uff": false,
+  "p3": 0.01484420279175887,
+  "trio": [
+   {
+    "n": "R. Kristensen",
+    "p": 0.2436,
+    "team": "Danimarca"
+   },
+   {
+    "n": "J. Andersen",
+    "p": 0.2376,
+    "team": "Danimarca"
+   },
+   {
+    "n": "J. Palhinha",
+    "p": 0.2211,
+    "team": "Portogallo"
+   }
+  ]
  }
 ]
