@@ -472,3 +472,10 @@ Valutazione del documento «100 idee» (proposte 1–3). Script in `bot/ammoniti
 - Probabili per fonte: la Giornata usa solo le probabili di FotMob; ogni cambio resta nella storia git dal 4/11, che è già la raccolta.
 - Quote "giocatore ammonito": `sonda_oddspapi.yml` + `cloud/sonda_oddspapi.mjs` controllano mercati e storico di OddsPapi; serve il segreto `ODDSPAPI_KEY` (chiave gratuita del proprietario).
 - Rami remoti da cancellare da GitHub: `prova/testa-calda`, `prova/contesto`, `immagini`.
+
+## Coppie "di fronte" (13/11, idea dell'utente su Italia-Francia: Jacquet e Pio Esposito ammoniti tutti e due)
+- `ricerca/tris/coppie_fronte.mjs`: coppie di avversari vicini reciproci sulle posizioni della partita (specchiate), gialli/rossi di entrambi osservati contro attesi dal modello fuori campione (2023/24 → 2026/27).
+- Serie A (1.250 partite): di fronte / altri avversari 0,995 [0,907; 1,084] → nessun effetto. Compagni 0,93 (si ammoniscono insieme meno del prodotto).
+- Champions (575): 1,231 [1,091; 1,431]; sviluppo 2023-25 1,289 [1,103; 1,550], verifica 2025-27 1,151 [0,677; 1,579].
+- Nazionali (`coppie_fronte_naz.mjs`, 1.354 partite, atteso dal tasso del ruolo): 0,953 [0,858; 1,077] → nessun effetto.
+- Non adottato: l'effetto c'è solo in Champions e nella verifica è incerto. Da rifare in Champions a fine stagione; se tiene, va nella scelta del tris come fattore per la coppia di fronte (non nelle probabilità individuali).
