@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta name="build" content="2026-11-12T22:21:02Z">
+<meta name="build" content="2026-11-13T03:16:49Z">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -1022,7 +1022,7 @@ function liveHtml(m) {
   setTimeout(() => needRis(m), 0);
   const waiting = appTrisWaiting(m), recorded = appTrisAtKickoff(m);
   const app = waiting ? [] : (recorded || pick(m, '21', 0)).trio.map(t => t.n);
-  const mine = current(m), bk = new Set(L.cards.filter(c => c[2] !== 'R').map(c => c[1]));
+  const mine = current(m), bk = new Set(L.cards.map(c => c[1]));   // anche il rosso diretto vale come ammonito (regola del gioco)
   const mineRule = myTris[m.id]?.regolaSostituto ?? state.subRule;
   const sub = { ...((results[m.id] || {}).sostituzioni || {}), ...(L.sub || {}) }, inFor = {};   // sub: uscito → entrato
   Object.entries(sub).forEach(([o, i]) => { if (i) inFor[i] = o; });
@@ -1397,8 +1397,8 @@ function espnFinal(m, j, xi, es, sc, cards, sub, fl) {
     const stats = es[sd].filter(p => p.start || p.inn);
     return value('foulsCommitted') === stats.reduce((sum, p) => sum + p.fc, 0) && value('yellowCards') === stats.reduce((sum, p) => sum + p.y, 0);
   })) return false;
-  const booked = new Set(cards.filter(c => c[2] !== 'R').map(c => c[1]));
-  const ammoniti = played.filter(p => p.y > 0).map(p => p.name);
+  const booked = new Set(cards.map(c => c[1]));                     // il rosso diretto vale come ammonito
+  const ammoniti = played.filter(p => p.y > 0 || p.r > 0).map(p => p.name);
   const entrants = new Set(Object.values(sub));
   if (ammoniti.some(n => !booked.has(n)) || played.some(p => p.inn && !entrants.has(p.name))) return false;
   const prior = savedAppTris.get(m.id);
@@ -1447,8 +1447,8 @@ async function liveFetch(m) {
   for (const [s] of teamSides) for (const x of es[s] || []) if (x.name && (x.start || x.inn || x.fc || x.fs)) fl[x.name] = [x.fc ?? 0, x.fs ?? 0, s];
   for (const p of m.pl) {
     const x = findPl(p[0], es[p[1]] || []), s = p[1], o = s === 'h' ? 'a' : 'h';
-    if (x?.y || cards.some(c => c[1] === p[0] && c[2] !== 'R')) { P[p[0]] = 1; continue; }
-    if (x?.out || x?.r || cards.some(c => c[1] === p[0] && c[2] === 'R')) { P[p[0]] = 0; out.push(p[0]); continue; }
+    if (x?.y || x?.r || cards.some(c => c[1] === p[0])) { P[p[0]] = 1; continue; }   // giallo o rosso diretto: preso
+    if (x?.out) { P[p[0]] = 0; out.push(p[0]); continue; }
     let q = liveProb(p[4], t, yc.h + yc.a, yc[s], yc[o], s === 'h' ? sc.h - sc.a : sc.a - sc.h, m.comp === 'sa' || m.comp === 'extra' || !m.comp ? 'sa' : 'ucl');
     const f = Math.pow(1.3, Math.min(4, x ? x.fc : 0)); P[p[0]] = q * f / (1 - q + q * f);
   }
