@@ -58,6 +58,14 @@ export async function updateQuoteLive(rounds, now) {
           }
         }
         m.qg = { agg: now, uff: m.uff ? 1 : 0, q }; touched = true;
+        // linea cartellini della partita: la più equilibrata fra Over/Under (mercati 10914 + 4·(linea − 0,5); Over = id, Under = id + 1)
+        for (const b of ['sisal.it', 'bet365.it', 'eurobet.it']) {
+          const mk = o.bookmakerOdds?.[b]?.markets; if (!mk) continue; let best = null;
+          for (let h = .5; h <= 14.5; h += .5) { const id = 10914 + 4 * (h - .5), oc = mk[id]?.outcomes; if (!oc) continue;
+            const pr = k => { const x = Object.values(oc[k]?.players || {})[0]; return x?.active !== false && x?.price > 1 ? x.price : null; }, ov = pr(id), un = pr(id + 1);
+            if (ov && un && (!best || Math.abs(Math.log(ov / un)) < Math.abs(Math.log(best[1] / best[2])))) best = [h, ov, un]; }
+          if (best) { const line = String(best[0]).replace('.', ','); if (m.line !== line || m.line_src !== LABEL[b]) { m.line = line; delete m.line_est; m.line_src = { sisal: 'Sisal', bet365: 'bet365', eurobet: 'Eurobet' }[LABEL[b]]; m.line_q = [best[1], best[2]]; } break; }
+        }
         console.log(`Quote giocatore ${m.h}-${m.a}: ${Object.keys(q).length} giocatori (${[...new Set(Object.values(q).flatMap(Object.keys))].join(', ') || 'nessun bookmaker'})`);
       }
     }

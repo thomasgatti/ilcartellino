@@ -1092,7 +1092,7 @@ function select(id) {
     <div class="stats">
       <div class="stat"><span class="k">Arbitro</span><span class="v">${m.ref}</span>${m.refnote ? `<span class="k2">${m.refnote}</span>` : ''}</div>
       <div class="stat"><span class="k">Pronostico 1X2</span>${m.odds ? `<div class="odds" aria-hidden="true"><span style="width:${oh}%;background:${strong(m.hc)}"></span><span style="width:${od}%;background:var(--line)"></span><span style="width:${oa}%;background:${strong(m.ac)}"></span></div><span class="v">${oh}% · X ${od}% · ${oa}%</span>` : '<span class="v">–</span>'}</div>
-      <div class="stat"><span class="k">Linea cartellini</span><span class="v">${m.line ?? '–'}</span></div>
+      <div class="stat"><span class="k">Linea cartellini</span><span class="v">${m.line ?? '–'}</span>${m.line_src ? `<span class="k2">Quota ${esc(m.line_src)}: over ${String(m.line_q[0].toFixed(2)).replace('.', ',')} · under ${String(m.line_q[1].toFixed(2)).replace('.', ',')}</span>` : ''}</div>
       <div class="stat"><span class="k">Il mio tris</span><span class="v">${saved ? 'Salvato ✓' : locked(m) ? 'Non creato' : 'Da creare'}</span></div>
     </div>${m.ctx?.length ? `<ul class="note ctx">${m.ctx.map(x => `<li>${x}</li>`).join('')}</ul>` : ''}${liveHtml(m)}
     <div class="sectabs" role="tablist" aria-label="Sezioni della partita">

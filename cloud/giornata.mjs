@@ -522,7 +522,7 @@ function applyForecast(round, exportRows) {
     }
     if (!old) continue;
     if (!m.uff && old.forfait?.length) m.forfait = old.forfait;
-    for (const key of ['derby','hc','ac','uff_late','qg']) if (old[key] != null) m[key] = old[key];
+    for (const key of ['derby','hc','ac','uff_late','qg','line_src','line_q']) if (old[key] != null) m[key] = old[key];
     if (m.line == null && old.line != null) { m.line = old.line; if (old.line_est) m.line_est = 1; }
     if (!m.odds) m.odds = old.odds;
     if (m.ref === '–') m.ref = old.ref;
