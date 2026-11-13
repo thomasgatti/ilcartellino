@@ -1,0 +1,40 @@
+name: Dati NBA (ESPN)
+# Statistiche NBA per giocatore e per partita (stagione regolare, play-in, playoff) nel ramo dati, cartella nba/.
+# Ogni giorno dopo l'ultima partita della notte americana; a mano per recuperare lo storico (riparte da dove si era fermato).
+on:
+  schedule:
+    - cron: '43 10 * * *'   # 10:43 UTC: le partite della costa ovest finiscono entro le 07:00 UTC
+  workflow_dispatch:
+    inputs:
+      minuti:
+        description: Minuti massimi di scaricamento
+        default: '25'
+      dal:
+        description: Primo giorno dello storico (AAAAMMGG)
+        default: '20201201'
+concurrency: dati
+jobs:
+  nba:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          ref: dati
+          path: dati
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Scarica
+        run: node cloud/nba/scrape.mjs dati/nba "${MINUTI:-25}" "${DAL:-20201201}"
+        env:
+          MINUTI: ${{ inputs.minuti }}
+          DAL: ${{ inputs.dal }}
+      - name: Salva
+        if: always()
+        run: |
+          cd dati && git config user.name "bot ammoniti" && git config user.email "bot@users.noreply.github.com"
+          git add -A nba && (git commit -qm "nba $(date -u +%F)" && git push -q origin HEAD:dati) || echo "niente di nuovo"
