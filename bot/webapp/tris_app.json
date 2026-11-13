@@ -1120,5 +1120,30 @@
     "team": "Austria"
    }
   ]
+ },
+ {
+  "comp": "naz",
+  "id": 5181809,
+  "ko": 1794685500,
+  "partita": "Irlanda del Nord - Ucraina",
+  "uff": false,
+  "p3": 0.018106041716529183,
+  "trio": [
+   {
+    "n": "I. Varfolomeev",
+    "p": 0.3077,
+    "team": "Ucraina"
+   },
+   {
+    "n": "O. Ocheretko",
+    "p": 0.247,
+    "team": "Ucraina"
+   },
+   {
+    "n": "T. Hume",
+    "p": 0.2053,
+    "team": "Irlanda del Nord"
+   }
+  ]
  }
 ]
