@@ -481,6 +481,17 @@ function applyForecast(round, exportRows) {
   const qdir = path.join(bot,'data/quote');
   const quote = fs.readdirSync(qdir).filter(f => new RegExp(`^${prefix}${day}(?:_|\\.)`).test(f) && !f.includes('live')).sort().at(-1);
   if (quote) args.push(path.join(qdir,quote));
+  else if (round.comp === 'ucl') {
+    // 13/11: senza file Oddschecker a mano, il peso di mercato della Champions usa le quote «giocatore ammonito» di OddsPapi già in
+    // pagina (m.qg: Sisal, bet365.it, Eurobet), una sola quota per giocatore = 1 / media delle probabilità implicite dei bookmaker.
+    // Prova del 13/11 (ricerca/tris/mercato.mjs): in Champions il mercato prevede meglio del modello, la miscela 0,5–0,7 è la migliore.
+    const lines = exportRows.flatMap(e => {
+      const qg = round.matches.find(m => m.id === e.id)?.qg?.q; if (!qg || !Object.keys(qg).length || !e.teams) return [];
+      const bets = Object.entries(qg).map(([n, b]) => { const v = Object.values(b).filter(x => x > 1); return v.length ? `${n}:${(v.length / v.reduce((a, x) => a + 1 / x, 0)).toFixed(3)}` : null; }).filter(Boolean);
+      return bets.length >= 10 ? [`${e.teams.map(t => t[1]).join(' ').toLowerCase().replace(/[^a-z0-9à-ÿ]+/g, '-')}|${bets.join(';')}`] : [];
+    });
+    if (lines.length) { const f = path.join(temp, 'oc_ucl_oddspapi.txt'); fs.writeFileSync(f, lines.join('\n') + '\n'); args.push(f); console.log(`Champions: quote OddsPapi per ${lines.length} partite nella miscela col mercato`); }
+  }
   const previous = fs.readFileSync(files.data);
   let newMatches;
   try {
