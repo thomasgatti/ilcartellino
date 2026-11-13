@@ -1,8 +1,7 @@
 name: Quote NBA doppia e tripla doppia (OddsPapi)
 # Archivia nel ramo dati (nba/quote_<stagione>.json) l'ultima quota prima della palla a due sui mercati «doppia doppia» e «tripla doppia» del giocatore.
+# SOLO A MANO: la chiave gratuita OddsPapi ha 250 richieste al mese in comune con le quote dei cartellini (ogni giorno di partite NBA costa ~1 richiesta /fixtures).
 on:
-  schedule:
-    - cron: '23 11 * * *'   # dopo «Dati NBA (ESPN)»
   workflow_dispatch:
     inputs:
       max:
