@@ -576,6 +576,9 @@ Obiettivo dell'utente: per ogni giocatore e partita NBA la probabilità di doppi
 - **I bookmaker italiani hanno questi mercati**: `sisal.it`, `bet365.it`, `eurobet.it` rispondono su 112602/112603 (14-33 quote a partita contro 31-50 degli americani). La pagina mostra la quota migliore fra gli italiani e ricade sugli americani solo se in Italia il giocatore non è quotato.
 - Costo: 1 richiesta `/fixtures` + 2 `/odds` per partita (19 richieste per 9 partite) sulla chiave `ODDSPAPI_KEY_NBA` (250 al mese): **non regge un giro al giorno** con le quote (input `quote=no` per farlo senza).
 
+- **Accoppiate: partite diverse o stessa partita?** (13/11 sera, stagioni di prova 2023/24-2026/27, giocatori con almeno il 15% dal modello «con il referto»). Uscite insieme rispetto al prodotto delle due probabilità: **partite diverse della stessa notte ×1,03** (179.570 coppie: previsto 12,1%, reale 12,5%) · stessa partita, avversari ×1,02 (12.344) · stessa partita, compagni ×0,98 (8.299). Quindi le coppie di partite diverse si comportano da indipendenti: la probabilità dell'accoppiata è il prodotto delle due, e i compagni di squadra si tolgono appena qualcosa. La pagina propone solo partite diverse.
+- Su richiesta dell'utente («troppo confusionaria») la pagina è stata semplificata: tre giocate (una per tipo), tre accoppiate in riga, partite a comparsa con i due candidati e, aprendole, i primi sette giocatori. Tolti valore, minuti, medie e le liste secondarie.
+
 ### Prossimi passi
 1. Rifare `mercato.py` fra qualche settimana (più partite; per la tripla doppia servono mesi).
 2. Previsione delle partite del giorno (calendario ESPN, rosa, lista infortuni → «assenze del giorno», poi i quintetti) e solo dopo la sezione nel sito.
