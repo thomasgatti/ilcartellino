@@ -33,14 +33,17 @@ def main(cartella, f_in, f_out):
             for bk, d in P['quote'][y].items():
                 for nome, prezzo in d.items():
                     pid = per_nome.get(norm(nome))
-                    if pid is not None and prezzo > q[y].get(pid, (0, ''))[0]: q[y][pid] = (prezzo, bk)
+                    if pid is None: continue
+                    # l'utente gioca in Italia: vale la quota migliore fra i bookmaker italiani; quelli americani solo se in Italia non è quotato
+                    it = bk.endswith('.it'); vecchia = q[y].get(pid)
+                    if vecchia is None or (it and not vecchia[2]) or (it == vecchia[2] and prezzo > vecchia[0]): q[y][pid] = (prezzo, bk.replace('.it', ''), it)
         G = []
         for r in Z.itertuples():
             if r.emin < 12 or r.gg_fermo > 30: continue
             g = dict(n=nomi[r.pid], sq=P['h'][1] if r.casa else P['a'][1], ruolo=r.ruolo, dubbio=int(stato[r.pid][0] == 'dubbio'), min=round(r.emin, 1), pts=round(r.pts_stag, 1), reb=round(r.reb_stag, 1), ast=round(r.ast_stag, 1),
                      p_dd=round(float(r.p_dd), 4), p_td=round(float(r.p_td), 4))
             for y in ('dd', 'td'):
-                if r.pid in q[y]: g['q_' + y], g['b_' + y] = q[y][r.pid]; g['v_' + y] = round(g['p_' + y] * g['q_' + y], 3)
+                if r.pid in q[y]: g['q_' + y], g['b_' + y] = q[y][r.pid][:2]; g['v_' + y] = round(g['p_' + y] * g['q_' + y], 3)
             G.append(g); tutti.append(dict(g, partita=P['id']))
         G.sort(key=lambda g: -g['p_dd'])
         cand = {k: next((g['n'] for g in G if g['sq'] == P[k][1]), None) for k in ('h', 'a')}
