@@ -52,6 +52,8 @@ jobs:
       - name: Controlla formazioni ed esiti
         id: partite
         run: node cloud/giornata.mjs
+        env:
+          ODDSPAPI_KEY: ${{ secrets.ODDSPAPI_KEY }}
       - name: Sezione EXTRA (big match esteri e coppe nazionali)
         run: node cloud/extra.mjs
         continue-on-error: true

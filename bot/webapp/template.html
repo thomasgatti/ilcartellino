@@ -859,7 +859,7 @@ const saveUi = () => { try { localStorage.setItem('amm_ui', JSON.stringify({ mod
 const SUBQ = DATA.subq || { D: 0.019, M: 0.042, F: 0.039 };
 const slotP = (p, pos, q, subRule = state.subRule) => subRule ? 1 - (1 - p) * (1 - (q ?? SUBQ[pos] ?? 0.03)) : p;   // titolare O chi entra al suo posto
 
-function players(m, raw = false, subRule = state.subRule) { return m.pl.map(([n, side, pos, num, p0, vs, st = 100, q = null]) => { const b = !raw && !!state.boost[bkey(m, n)]; return { n, side, pos, num, st, q, p: slotP(adj(p0, b), pos, q, subRule), p0, b, vs, tags: (m.tags && m.tags[n]) || [], team: side === 'h' ? m.h : m.a, cols: side === 'h' ? m.hc : m.ac }; }).sort((x, y) => y.p - x.p); }
+function players(m, raw = false, subRule = state.subRule) { return m.pl.map(([n, side, pos, num, p0, vs, st = 100, q = null]) => { const b = !raw && !!state.boost[bkey(m, n)]; return { n, side, pos, num, st, q, p: slotP(adj(p0, b), pos, q, subRule), p0, b, vs, qg: m.qg?.q?.[n] || null, tags: (m.tags && m.tags[n]) || [], team: side === 'h' ? m.h : m.a, cols: side === 'h' ? m.hc : m.ac }; }).sort((x, y) => y.p - x.p); }
 function combos(m, mode, raw = false, subRule = state.subRule) {
   const ps = players(m, raw, subRule).filter(p => !m.uff || p.st === 100), out = [];
   if (mode === 'free') {
@@ -944,12 +944,16 @@ const lumOf = h => { const m = String(h).replace('#', ''); if (m.length < 6) ret
 const isDark = () => ['sa', 'ucl', 'naz'].includes(document.documentElement.dataset.comp) || ['pl', 'liga', 'l1', 'cdr', 'cit', 'efl', 'dfb', 'cdf'].includes(document.documentElement.dataset.lg) || document.documentElement.dataset.theme === 'dark' || (document.documentElement.dataset.theme !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
 // numero di maglia leggibile sullo sfondo della scheda: se il colore della squadra è troppo scuro (o troppo chiaro) usa l'altro colore sociale
 const readable = (ink, cols) => { const bgDark = isDark(), l = lumOf(ink); if ((bgDark && l < .08) || (!bgDark && l > .7)) { const alt = (cols || []).find(c => c && (bgDark ? lumOf(c) >= .08 : lumOf(c) <= .7)); return alt || `color-mix(in srgb, ${ink} ${bgDark ? 45 : 60}%, ${bgDark ? '#ffffff' : '#000000'})`; } return ink; };
+// quote "giocatore ammonito": Sisal per prima (dove gioca il proprietario), poi bet365 ed Eurobet; short = solo la prima disponibile
+const QG_NAME = { sisal: 'Sisal', bet365: 'bet365', eurobet: 'Eurobet' };
+const qgText = (q, short) => { const k = ['sisal', 'bet365', 'eurobet'].filter(b => q[b]); const f = b => `${QG_NAME[b]} <b>${String(q[b].toFixed(2)).replace('.', ',')}</b>`;
+  return short ? f(k[0]) : k.map(f).join(' · '); };
 function sticker(x, hidden) {
   const c1 = x.cols[0] || '#13202d', c2 = x.cols[1] || '#ffffff', ink = strong(x.cols);
   return `<article class="sticker ${hidden ? 'hidden' : ''}">
     <div class="band" style="background:linear-gradient(115deg, ${c1} 0 58%, ${c2} 58% 70%, ${c1} 70%)"><span class="club">${x.team}</span><span class="pct">${pct(x.p)}</span></div>
     <div class="face"><div class="badge" style="background:${ink}">${initials(x.n)}</div><div class="num" style="color:${readable(ink, x.cols)}">${x.num || ''}</div></div>
-    <div class="who"><div class="name">${x.n}</div>${x.tags.length ? `<div class="tags">${x.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>` : ''}<div class="role">${ROLE[x.pos] || ''}</div>${x.vs ? `<div class="duel">Di fronte: <b>${x.vs}</b></div>` : ''}</div>
+    <div class="who"><div class="name">${x.n}</div>${x.tags.length ? `<div class="tags">${x.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>` : ''}<div class="role">${ROLE[x.pos] || ''}</div>${x.vs ? `<div class="duel">Di fronte: <b>${x.vs}</b></div>` : ''}${x.qg ? `<div class="duel qg">Quota giallo: ${qgText(x.qg)}</div>` : ''}</div>
   </article>`;
 }
 function campoHtml(m, trio) {
@@ -1075,9 +1079,9 @@ function select(id) {
   const mioSec = `${builderHtml(m)}<p class="note">${state.subRule ? 'Percentuali con la regola del sostituto: vale anche il giallo di chi entra al posto del giocatore scelto.' : 'Percentuali solo per il titolare.'} Si cambia dalla scheda "Tris dell\'app".</p><div class="picker">${col('h')}${col('a')}</div>
     ${locked(m) ? '' : `<div class="mybar"><span class="cnt">${mine.length}/3 scelti<small>${mine.join(', ') || 'tocca + per aggiungere'}</small></span>
       <button type="button" class="save" id="savemine2" ${mine.length === 3 && DB && UID && !same ? '' : 'disabled'}>${same ? 'Salvato ✓' : 'Salva'}</button></div>`}`;
-  const tuttiSec = `<div class="tablebox"><table><thead><tr><th><span class="sr">Scegli per il mio tris</span></th><th>Giocatore</th><th>Squadra</th><th>Ruolo</th><th>Di fronte</th><th class="n">Titolare</th><th class="n">Giallo</th><th style="width:20%"></th></tr></thead><tbody>
-      ${ps.map(x => `<tr class="${mine.includes(x.n) ? 'picked' : ''}"><td>${addBtn(m, x)}</td><td>${x.n}${tagsHtml(x)}</td><td>${x.team}</td><td>${x.pos}</td><td>${x.vs}</td><td class="n">${x.st}%</td><td class="n">${pct(x.p)}</td><td><div class="bar" style="width:${Math.min(100, Math.round(x.p / 0.3 * 100))}%"></div></td></tr>`).join('')}
-    </tbody></table></div><p class="note">Il simbolo + aggiunge il giocatore al tuo tris (scheda "Il mio tris").</p>`;
+  const tuttiSec = `<div class="tablebox"><table><thead><tr><th><span class="sr">Scegli per il mio tris</span></th><th>Giocatore</th><th>Squadra</th><th>Ruolo</th><th>Di fronte</th><th class="n">Quota giallo</th><th class="n">Titolare</th><th class="n">Giallo</th><th style="width:20%"></th></tr></thead><tbody>
+      ${ps.map(x => `<tr class="${mine.includes(x.n) ? 'picked' : ''}"><td>${addBtn(m, x)}</td><td>${x.n}${tagsHtml(x)}</td><td>${x.team}</td><td>${x.pos}</td><td>${x.vs}</td><td class="n">${x.qg ? qgText(x.qg, 1) : '·'}</td><td class="n">${x.st}%</td><td class="n">${pct(x.p)}</td><td><div class="bar" style="width:${Math.min(100, Math.round(x.p / 0.3 * 100))}%"></div></td></tr>`).join('')}
+    </tbody></table></div><p class="note">Il simbolo + aggiunge il giocatore al tuo tris (scheda "Il mio tris").${m.qg?.agg && Object.keys(m.qg.q || {}).length ? ` Quote "giocatore ammonito" di Sisal, bet365 ed Eurobet (OddsPapi), aggiornate alle ${fmtTime(m.qg.agg)}: si aggiornano fino al via, controllale sul sito del bookmaker.` : ''}</p>`;
   const panel = document.getElementById('panel');
   if (panel.dataset.mid !== String(m.id)) { panel.style.minHeight = ''; panel.dataset.mid = m.id; }   // altezza tenuta solo cambiando scheda nella stessa partita
   panel.innerHTML = `

@@ -9,6 +9,7 @@ import { fileURLToPath } from 'node:url';
 import { loadLib } from './lib_node.mjs';
 import { makeTagger } from './etichette.mjs';
 import { loadContesto } from './contesto.mjs';
+import { updateQuoteLive } from './quote_live.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const app = path.join(root, 'bot/webapp');
@@ -510,7 +511,7 @@ function applyForecast(round, exportRows) {
     }
     if (!old) continue;
     if (!m.uff && old.forfait?.length) m.forfait = old.forfait;
-    for (const key of ['derby','hc','ac','uff_late']) if (old[key] != null) m[key] = old[key];
+    for (const key of ['derby','hc','ac','uff_late','qg']) if (old[key] != null) m[key] = old[key];
     if (m.line == null && old.line != null) { m.line = old.line; if (old.line_est) m.line_est = 1; }
     if (!m.odds) m.odds = old.odds;
     if (m.ref === '–') m.ref = old.ref;
@@ -676,6 +677,7 @@ try {
       for (const id of fixed) if (id && !trisIds.includes(id)) trisIds.push(id);
     }
   }
+  if (await updateQuoteLive(rounds, now)) touched = true;
   try { if (await updateTables(finished > 0)) touched = true; } catch (e) { console.warn('Classifiche:', e.message); }
   if (finished || changedIds.length || touched) {
     write(files.data,data);
