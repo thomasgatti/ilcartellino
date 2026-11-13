@@ -1070,5 +1070,30 @@
     "team": "Norvegia"
    }
   ]
+ },
+ {
+  "comp": "naz",
+  "id": 5181846,
+  "ko": 1794685500,
+  "partita": "Svezia - Bosnia",
+  "uff": false,
+  "p3": 0.015119330490661734,
+  "trio": [
+   {
+    "n": "S. Kolašinac",
+    "p": 0.2542,
+    "team": "Bosnia"
+   },
+   {
+    "n": "I. Bašić",
+    "p": 0.2346,
+    "team": "Bosnia"
+   },
+   {
+    "n": "G. Lagerbielke",
+    "p": 0.2186,
+    "team": "Svezia"
+   }
+  ]
  }
 ]
