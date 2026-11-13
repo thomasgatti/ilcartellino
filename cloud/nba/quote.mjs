@@ -2,7 +2,7 @@
 // Per ogni partita NBA già giocata della stagione in archivio: ultima quota attiva prima della palla a due, per bookmaker.
 // Uso: ODDSPAPI_KEY=… node cloud/nba/quote.mjs <cartella nba> [MAX partite] [stagione, es. 2026-2027]
 // Scrive <nba>/quote_<stagione>.json: { "<id ESPN>": { fx, ko, dd: { bookmaker: { idGiocatoreOddsPapi: quota } }, td: {...} } | { nessuna, tentativi, provato }, "_nomi": { idGiocatoreOddsPapi: nome } }
-import fs from 'node:fs'; import path from 'node:path'; import zlib from 'node:zlib';
+import fs from 'node:fs'; import path from 'node:path'; import zlib from 'node:zlib'; import { NOMI } from './squadre.mjs';
 const K = process.env.ODDSPAPI_KEY, OUT = process.argv[2] || 'dati/nba', MAX = +(process.argv[3] || 60), ST = process.argv[4] || '2026-2027', B = 'https://api.oddspapi.io/v4';
 if (!K) { console.log('Manca ODDSPAPI_KEY'); process.exit(0); }
 const BOOKS = process.env.NBA_BOOK || 'fanduel,bet365,draftkings', FINE = Date.now() + (+process.env.MINUTI || 40) * 60000, DD = '112602', TD = '112603';
@@ -10,7 +10,6 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 async function get(p, q = {}) { for (let k = 0; k < 6; k++) { await sleep(3600); const u = new URL(B + p); for (const [a, v] of Object.entries({ ...q, apiKey: K })) u.searchParams.set(a, v);
     const r = await fetch(u); if (r.status === 429) { await sleep(6000 * (k + 1)); continue; } const t = await r.text(); if (r.status === 404) return null; if (!r.ok) throw new Error(`${r.status} ${p}: ${t.slice(0, 200)}`); return JSON.parse(t); }
   throw new Error('troppi 429 su ' + p); }
-const NOMI = { 1: 'Hawks', 2: 'Celtics', 3: 'Pelicans', 4: 'Bulls', 5: 'Cavaliers', 6: 'Mavericks', 7: 'Nuggets', 8: 'Pistons', 9: 'Warriors', 10: 'Rockets', 11: 'Pacers', 12: 'Clippers', 13: 'Lakers', 14: 'Heat', 15: 'Bucks', 16: 'Timberwolves', 17: 'Nets', 18: 'Knicks', 19: 'Magic', 20: '76ers', 21: 'Suns', 22: 'Blazers', 23: 'Kings', 24: 'Spurs', 25: 'Thunder', 26: 'Jazz', 27: 'Wizards', 28: 'Raptors', 29: 'Grizzlies', 30: 'Hornets' };
 const fA = path.join(OUT, ST + '.json.gz'), fQ = path.join(OUT, `quote_${ST}.json`);
 const A = fs.existsSync(fA) ? JSON.parse(zlib.gunzipSync(fs.readFileSync(fA))) : {}, S = fs.existsSync(fQ) ? JSON.parse(fs.readFileSync(fQ, 'utf8')) : {};
 const ora = Date.now() / 1000, todo = Object.entries(A).filter(([id]) => id !== '_nomi').filter(([id, m]) => m.ts < ora - 4 * 3600 && (!S[id] || (S[id].nessuna && (S[id].tentativi || 0) < 3 && ora - (S[id].provato || 0) > 86400))).sort((a, b) => b[1].ts - a[1].ts);

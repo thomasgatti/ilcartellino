@@ -1,0 +1,39 @@
+name: NBA partite della notte (prova)
+# Previsione di doppie e triple doppie per le partite NBA ancora da giocare oggi (giorno USA) e pagina di prova /nba/ (non collegata al sito).
+# SOLO A MANO per ora: ogni giro pubblica nba/oggi.json su main e usa ~2 richieste OddsPapi per partita (chiave ODDSPAPI_KEY_NBA, 250 al mese).
+on:
+  workflow_dispatch:
+    inputs:
+      quote:
+        description: Chiedere le quote a OddsPapi (si/no)
+        default: 'si'
+jobs:
+  oggi:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          ref: dati
+          path: dati
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -q pandas scikit-learn
+      - name: Calendario, rose, infortuni, quote
+        run: node cloud/nba/oggi.mjs /tmp/oggi_input.json
+        env:
+          ODDSPAPI_KEY: ${{ secrets.ODDSPAPI_KEY_NBA }}
+          NBA_SENZA_QUOTE: ${{ inputs.quote == 'no' && '1' || '' }}
+      - name: Modello
+        run: python3 bot/nba/oggi.py dati/nba /tmp/oggi_input.json nba/oggi.json
+      - name: Pubblica
+        run: |
+          git config user.name "bot ammoniti" && git config user.email "bot@users.noreply.github.com"
+          git add nba/oggi.json && (git commit -qm "NBA: partite della notte $(date -u +%F)" && git pull -q --rebase origin main && git push -q origin HEAD:main) || echo "niente di nuovo"

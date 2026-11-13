@@ -98,7 +98,7 @@ def costruisci(partite, gioc):
                 val = dict(pts=pts, reb=reb, ast=ast, stl=stl, blk=blk)
                 n10 = sum(1 for k in CAT if val[k] >= 10)
                 g = G.get(pid); rl = ruolo((gioc.get(str(pid)) or ['', ''])[1])
-                riga = dict(id=m['id'], ts=ts, st=st, tipo=m['tipo'], pid=pid, sq=tid, avv=oid, casa=L, ruolo=rl, tit=tit,
+                riga = dict(id=m['id'], ts=ts, st=st, tipo=m['tipo'], pid=pid, sq=tid, avv=oid, casa=L, ruolo=rl, tit=tit, futura=int(bool(m.get('futura'))),
                             min=mn, pts=pts, reb=reb, ast=ast, stl=stl, blk=blk, dd=int(n10 >= 2), td=int(n10 >= 3), n_prec=0 if g is None else g['n'])
                 if g is not None and g['n'] > 0:
                     ns = g['ns'].get(st, 0); em = g['emin'].m
@@ -133,6 +133,7 @@ def costruisci(partite, gioc):
                     riga[nome + '_n'] = len(lista)
                     for k in ('min', 'pts', 'reb', 'ast'): riga[f'{nome}_{k}'] = sum(mm[k].m or 0 for _, mm in lista)
                 righe.append(riga)
+        if m.get('futura'): continue                   # partita ancora da giocare: solo le righe, lo stato non cambia
         # ---- aggiornamento dello stato, DOPO aver scritto le righe ----
         for L in (0, 1):
             tid, oid = lati[L][0], lati[1 - L][0]; a = T[tid]; a['n'] += 1; a['ult'] = ts

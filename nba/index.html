@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="icon" href="../favicon.png">
+<title>NBA · doppie e triple doppie (prova)</title>
+<style>
+  :root { --bg:#0f1115; --card:#181b22; --line:#272c37; --tx:#eceef2; --mu:#98a0ae; --ac:#f08a24; --ok:#4cc38a; --warn:#e5b454; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--tx); font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+  main { max-width:1080px; margin:0 auto; padding:20px 14px 60px; }
+  h1 { font-size:22px; margin:0 0 2px; letter-spacing:-.01em; }
+  h1 span { color:var(--ac); }
+  .sub { color:var(--mu); font-size:13px; margin-bottom:18px; }
+  h2 { font-size:13px; text-transform:uppercase; letter-spacing:.08em; color:var(--mu); margin:26px 0 10px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:10px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px 14px; }
+  .card h3 { margin:0 0 8px; font-size:14px; color:var(--ac); }
+  .pick { display:flex; justify-content:space-between; gap:8px; padding:6px 0; border-top:1px solid var(--line); }
+  .pick:first-of-type { border-top:0; }
+  .pick b { font-weight:600; }
+  .pick small, .mu { color:var(--mu); font-size:12px; }
+  .num { text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; }
+  .q { color:var(--warn); }
+  .game { margin-top:12px; padding:0; overflow:hidden; }
+  .gh { display:flex; justify-content:space-between; align-items:baseline; gap:10px; padding:12px 14px 4px; flex-wrap:wrap; }
+  .gh strong { font-size:16px; }
+  .out { padding:0 14px 8px; font-size:12px; color:var(--mu); }
+  .scroll { overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; font-variant-numeric:tabular-nums; }
+  th, td { padding:7px 8px; text-align:right; border-top:1px solid var(--line); white-space:nowrap; }
+  th { font-size:11px; font-weight:500; color:var(--mu); text-transform:uppercase; letter-spacing:.05em; }
+  th:first-child, td:first-child { text-align:left; padding-left:14px; }
+  td:last-child, th:last-child { padding-right:14px; }
+  .bar { display:inline-block; width:54px; height:6px; border-radius:3px; background:var(--line); vertical-align:middle; margin-right:6px; overflow:hidden; }
+  .bar i { display:block; height:100%; background:var(--ac); }
+  .tag { display:inline-block; font-size:10px; padding:1px 6px; border-radius:99px; border:1px solid var(--line); color:var(--mu); margin-left:6px; vertical-align:1px; }
+  .tag.c { color:var(--ac); border-color:var(--ac); }
+  .tag.d { color:var(--warn); border-color:var(--warn); }
+  .note { margin-top:28px; font-size:12.5px; color:var(--mu); border-top:1px solid var(--line); padding-top:14px; }
+  @media (max-width:560px) { .hide-s { display:none; } th, td { padding:7px 5px; } .bar { width:34px; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>NBA · <span>doppie e triple doppie</span></h1>
+  <div class="sub" id="sub">Carico…</div>
+  <div id="app"></div>
+  <div class="note">
+    Pagina di prova, non collegata al resto del sito. Le percentuali vengono dal modello (statistiche ESPN dal 2020, assenze dalla lista infortuni del momento); i quintetti non sono ancora noti.
+    «Valore» = probabilità del modello × quota: sopra 1 la quota pagherebbe più del rischio stimato. Nelle prove su 174 partite il mercato è risultato più preciso del modello e le quote di questi mercati hanno un margine del 30–35%: nessun vantaggio dimostrato. Le accoppiate uniscono solo giocatori di partite diverse; la quota indicata è il prodotto delle due singole.
+    Il gioco è vietato ai minori e può causare dipendenza.
+  </div>
+</main>
+<script>
+const pc = (p, d = 0) => (p * 100).toFixed(p < 0.095 && d === 0 ? 1 : d) + '%';
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const quota = (g, y) => g['q_' + y] ? `<span class="q">${g['q_' + y].toFixed(2)}</span> <small class="mu">${esc(g['b_' + y])}</small>` : '<span class="mu">–</span>';
+const pick = (g, y = 'dd') => `<div class="pick"><div><b>${esc(g.n)}</b> <small>${esc(g.sq)}${g.dubbio ? ' · in dubbio' : ''}</small><br><small>${y === 'dd' ? 'doppia doppia' : 'tripla doppia'} ${pc(g['p_' + y])}${g['v_' + y] ? ' · valore ' + g['v_' + y].toFixed(2) : ''}</small></div><div class="num">${quota(g, y)}</div></div>`;
+const vuoto = t => `<div class="mu" style="font-size:13px">${t}</div>`;
+fetch('oggi.json?' + Date.now()).then(r => r.json()).then(D => {
+  const fmtG = new Intl.DateTimeFormat('it-IT', { weekday: 'long', day: 'numeric', month: 'long' }), fmtO = new Intl.DateTimeFormat('it-IT', { hour: '2-digit', minute: '2-digit' });
+  const primo = D.partite.length ? new Date(Math.min(...D.partite.map(p => p.ts)) * 1000) : null;
+  document.getElementById('sub').textContent = primo ? `${D.partite.length} partite · notte di ${fmtG.format(primo)} · aggiornato ${fmtG.format(new Date(D.creato * 1000))} alle ${fmtO.format(new Date(D.creato * 1000))}` : 'Nessuna partita in programma';
+  const C = D.consigli || {}; let h = '';
+  h += '<h2>Consigli della notte</h2><div class="grid">';
+  h += `<div class="card"><h3>Quota bassa</h3>${(C.bassa || []).map(g => pick(g)).join('') || vuoto('Nessuna quota sotto 2,00')}</div>`;
+  h += `<div class="card"><h3>Quota alta</h3>${(C.alta || []).map(g => pick(g)).join('') || vuoto('Nessuna quota alta con abbastanza probabilità')}</div>`;
+  h += `<div class="card"><h3>Tripla doppia</h3>${(C.td || []).map(g => pick(g, 'td')).join('') || vuoto('Nessun candidato sopra il 3%')}</div>`;
+  h += '</div><h2>Accoppiate (partite diverse)</h2><div class="grid">';
+  h += (C.accoppiate || []).map(a => `<div class="card"><h3>${esc(a.tipo)}</h3><div class="pick"><div><b>${esc(a.a.n)}</b> <small>${esc(a.a.sq)} · ${pc(a.a.p_dd)}</small><br><b>${esc(a.b.n)}</b> <small>${esc(a.b.sq)} · ${pc(a.b.p_dd)}</small><br><small>entrambe ${pc(a.p)} · valore ${a.v.toFixed(2)}</small></div><div class="num"><span class="q">${a.q.toFixed(2)}</span></div></div></div>`).join('') || `<div class="card">${vuoto('Servono le quote per proporre accoppiate')}</div>`;
+  h += '</div><h2>Partite</h2>';
+  for (const P of [...D.partite].sort((a, b) => a.ts - b.ts)) {
+    const fuori = ['a', 'h'].flatMap(k => (P.fuori[k] || []).map(x => `${esc(x.n)} (${P[k].sigla})`));
+    h += `<div class="card game"><div class="gh"><strong>${esc(P.a.nome)} <span class="mu">@</span> ${esc(P.h.nome)}</strong><span class="mu">${fmtO.format(new Date(P.ts * 1000))}</span></div>`;
+    h += `<div class="out">${fuori.length ? 'Fuori: ' + fuori.join(', ') : 'Nessun assente di peso in elenco'}</div><div class="scroll"><table><tr><th>Giocatore</th><th class="hide-s">Min</th><th class="hide-s">Pt / Rb / As</th><th>Doppia doppia</th><th>Quota</th><th>Tripla</th><th class="hide-s">Quota</th></tr>`;
+    for (const g of P.giocatori.filter(g => g.p_dd >= 0.02).slice(0, 10)) {
+      const cand = g.n === P.candidati.h || g.n === P.candidati.a;
+      h += `<tr><td>${esc(g.n)} <small class="mu">${esc(g.sq)}</small>${cand ? '<span class="tag c">candidato</span>' : ''}${g.dubbio ? '<span class="tag d">in dubbio</span>' : ''}</td><td class="hide-s">${g.min.toFixed(0)}</td><td class="hide-s">${g.pts.toFixed(1)} / ${g.reb.toFixed(1)} / ${g.ast.toFixed(1)}</td><td><span class="bar"><i style="width:${Math.round(g.p_dd * 100)}%"></i></span>${pc(g.p_dd)}</td><td>${quota(g, 'dd')}</td><td>${pc(g.p_td)}</td><td class="hide-s">${quota(g, 'td')}</td></tr>`;
+    }
+    h += '</table></div></div>';
+  }
+  document.getElementById('app').innerHTML = h;
+}).catch(() => { document.getElementById('sub').textContent = 'Dati non ancora disponibili.'; });
+</script>
+</body>
+</html>

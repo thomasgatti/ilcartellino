@@ -1,0 +1,2 @@
+// Soprannomi delle squadre NBA per id ESPN (1-30): servono per riconoscere le partite su OddsPapi.
+export const NOMI = { 1: 'Hawks', 2: 'Celtics', 3: 'Pelicans', 4: 'Bulls', 5: 'Cavaliers', 6: 'Mavericks', 7: 'Nuggets', 8: 'Pistons', 9: 'Warriors', 10: 'Rockets', 11: 'Pacers', 12: 'Clippers', 13: 'Lakers', 14: 'Heat', 15: 'Bucks', 16: 'Timberwolves', 17: 'Nets', 18: 'Knicks', 19: 'Magic', 20: '76ers', 21: 'Suns', 22: 'Blazers', 23: 'Kings', 24: 'Spurs', 25: 'Thunder', 26: 'Jazz', 27: 'Wizards', 28: 'Raptors', 29: 'Grizzlies', 30: 'Hornets' };
