@@ -24,13 +24,8 @@ for (const g of (process.env.SONDA_BOOK || 'betfred,coral').split(';')) {
 }
 const pids = Object.keys(last); console.log('giocatori con quota:', pids.length);
 let nomi = {};
-// i nomi ci sono solo nelle quote correnti (/odds): li prendo dalle prossime partite delle stesse squadre
-{ await sleep(1500); const fx = arr(await get('/fixtures', { tournamentId: 23755, from: new Date().toISOString().slice(0, 10), to: '2026-11-20' }));
-  const teams = WANT.map(w => w.toLowerCase()), next = fx.filter(f => teams.some(t => JSON.stringify(f).toLowerCase().includes(t)));
-  console.log('prossime partite delle due squadre:', next.map(f => f.participant1Name + ' - ' + f.participant2Name + ' ' + f.startTime).join(' | '));
-  for (const f of next.slice(0, 3)) { await sleep(2500); const o = await get('/odds', { fixtureId: f.fixtureId, bookmakers: 'betfred' });
-    { const t = JSON.stringify(o || {}), i = t.indexOf('"players"'); console.log('struttura:', t.slice(0, 300), '…', i >= 0 ? t.slice(i, i + 900) : 'nessun players'); }
-    (function walk(x) { if (x && typeof x === 'object') for (const [k, v] of Object.entries(x)) { if (v && typeof v === 'object' && typeof v.playerName === 'string') nomi[k] = v.playerName; walk(v); } })(o); }
-  console.log('nomi trovati:', Object.keys(nomi).length); }
+{ await sleep(2500); const r = await get('/players', { sportId: 10 });
+  for (const t of Object.values(r?.participants || {})) for (const x of t.players || []) nomi[x.playerId] = x.playerName;
+  console.log('giocatori in anagrafica:', Object.keys(nomi).length, '· trovati:', pids.filter(p => nomi[p]).length, 'su', pids.length); }
 console.log('QUOTE CARTELLINO (ultima prima del via):');
 for (const [pid, q] of Object.entries(last).sort((a, b) => Math.min(...Object.values(a[1])) - Math.min(...Object.values(b[1])))) console.log(pid, nomi[pid] || '?', JSON.stringify(q));
