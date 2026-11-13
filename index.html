@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta name="build" content="2026-11-13T22:01:40Z">
+<meta name="build" content="2026-11-13T22:02:07Z">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -224,6 +224,19 @@ details.how p { margin: 8px 0 0; max-width: none; }
 .hist-card .side ul, .hist-card .side li { min-width: 0; }
 .hist-card .side li .nm small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .hist-legend { font-size: 12px; color: var(--muted); }
+/* Storico a tendine (13/11/2026): un gruppo per giornata e competizione, si apre al clic */
+.hgroup { margin-top: 10px; border: 1px solid color-mix(in srgb, var(--cc) 45%, var(--line)); border-left: 6px solid var(--cc); border-radius: 12px; background: color-mix(in srgb, var(--surface) 92%, transparent); }
+.hgroup > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 6px 14px; flex-wrap: wrap; padding: 13px 16px; border-radius: 10px; }
+.hgroup > summary::-webkit-details-marker { display: none; }
+.hgroup > summary:focus-visible { outline: 2px solid var(--cc); outline-offset: 2px; }
+.hgroup > summary b { font: 800 20px/1.1 var(--display); text-transform: uppercase; letter-spacing: .02em; }
+.hgroup > summary span { color: var(--muted); font-size: 13px; }
+.hgroup > summary::after { content: ""; margin-left: auto; width: 9px; height: 9px; border-right: 2.5px solid currentColor; border-bottom: 2.5px solid currentColor; transform: rotate(45deg); transition: transform .15s; flex: none; }
+.hgroup[open] > summary::after { transform: rotate(-135deg); }
+.hgroup > .hbody { padding: 0 14px 14px; }
+.hgroup .gday { font-size: 15px; margin: 10px 0 8px; }
+@media (prefers-reduced-motion: reduce) { .hgroup > summary::after { transition: none; } }
+@media (max-width: 560px) { .hgroup > summary { padding: 12px; } .hgroup > summary b { font-size: 18px; } .hgroup > .hbody { padding: 0 8px 10px; } }
 .gday { font: 800 18px var(--display); text-transform: uppercase; color: var(--muted); margin: 18px 0 8px; }
 
 .who-chip b { color: var(--ink); }
@@ -1404,7 +1417,7 @@ function setView(v) {
 }
 // Storico unico: tutti i tris dell'app già giudicati (Serie A, Champions, Nazionali, EXTRA) in ordine di calendario,
 // un colore per competizione e un filtro per vederne una sola.
-const hstate = { f: 'all' };
+const hstate = { f: 'all', open: null };   // open: gruppi aperti (null = solo il più recente)
 async function renderStorico() {
   const el = document.getElementById('storico');
   if (DB) {
@@ -1423,7 +1436,7 @@ async function renderStorico() {
     const note = waiting ? trisWaitingNote : actual?.late ? 'Fuori dal bilancio prepartita' : '';
     const trio = waiting ? [] : actual?.trio || r.tris_app;
     const sc = score(trio, r, true), gio = c !== 'naz' && r.giornata ? `${r.giornata}ª giornata · ` : '';
-    items.push({ c, ko: r.ko || 0, counts: !note, hits: sc.hits, punti: sc.punti, att: trio.reduce((a, x) => a + (x.p || 0), 0), card: `<article class="hist-card cmp-${c}"><div class="hh"><h3>${r.partita}${r.finale ? ' · ' + r.finale : ''}</h3>${note ? '' : `<span class="hits-badge ${sc.hits === 3 ? 'h3' : sc.hits === 2 ? 'h2' : ''}">${sc.hits}/3</span>`}</div>
+    items.push({ c, g: r.giornata || '', ko: r.ko || 0, counts: !note, hits: sc.hits, punti: sc.punti, att: trio.reduce((a, x) => a + (x.p || 0), 0), card: `<article class="hist-card cmp-${c}"><div class="hh"><h3>${r.partita}${r.finale ? ' · ' + r.finale : ''}</h3>${note ? '' : `<span class="hits-badge ${sc.hits === 3 ? 'h3' : sc.hits === 2 ? 'h2' : ''}">${sc.hits}/3</span>`}</div>
       <span class="note"><span class="ctag">${COMP_NAME[c]}</span>${gio}${r.ko ? fmtTime(r.ko) + ' · ' : ''}${note || ('tutti e tre: ' + (r.p3_app != null ? trioPct(r.p3_app) + ' previsto' : 'n/d'))}</span>
       <div class="side app"><h4>Tris dell'app</h4><ul>${sc.rows.map((x, i) => li(x, trio[i].p)).join('')}</ul>${note ? '' : `<div class="score">${sc.hits}/3 ammoniti · ${sc.falli} ${sc.falli === 1 ? 'fallo' : 'falli'} · ${sc.punti} punti</div>`}</div></article>` });
   }
@@ -1433,10 +1446,25 @@ async function renderStorico() {
   if (hstate.f !== 'all' && !have.includes(hstate.f)) hstate.f = 'all';
   const shown = items.filter(x => hstate.f === 'all' || x.c === hstate.f), judged = shown.filter(x => x.counts);
   const n = judged.length, att = judged.reduce((a, x) => a + (x.att || 0), 0), hits = judged.reduce((a, x) => a + x.hits, 0), two = judged.filter(x => x.hits >= 2).length, full = judged.filter(x => x.hits === 3).length, pts = judged.reduce((a, x) => a + x.punti, 0);
-  const byDay = [];
-  for (const x of shown) { const d = x.ko ? fmtDay(x.ko) : 'Altre partite'; if (!byDay.length || byDay[byDay.length - 1][0] !== d) byDay.push([d, []]); byDay[byDay.length - 1][1].push(x.card); }
+  // tendine: una per giornata e competizione (EXTRA: una per settimana, da martedì a lunedì), dalla più recente
+  const dm = ts => new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', day: 'numeric', month: 'short' }).format(ts * 1000);
+  const groups = [], gmap = {};
+  for (const x of shown) {
+    const key = x.c + '|' + (x.c === 'extra' ? 'w' + Math.floor((x.ko - 5 * 86400) / (7 * 86400)) : x.g || '-');
+    (gmap[key] || (groups.push(gmap[key] = { key, c: x.c, g: x.g, items: [] }), gmap[key])).items.push(x);
+  }
+  if (!hstate.open) hstate.open = new Set();
+  if (groups.length && !groups.some(G => hstate.open.has(G.key))) hstate.open.add(groups[0].key);   // almeno la più recente è aperta
+  const gHtml = G => {
+    const kos = G.items.map(x => x.ko).filter(Boolean), a = Math.min(...kos), b = Math.max(...kos), per = !kos.length ? '' : dm(a) === dm(b) ? dm(a) : dm(a) + ' – ' + dm(b);
+    const jd = G.items.filter(x => x.counts), hh = jd.reduce((s, x) => s + x.hits, 0), byDay = [];
+    for (const x of G.items) { const d = x.ko ? fmtDay(x.ko) : 'Altre partite'; if (!byDay.length || byDay[byDay.length - 1][0] !== d) byDay.push([d, []]); byDay[byDay.length - 1][1].push(x.card); }
+    const titolo = G.c === 'extra' ? `EXTRA · ${per}` : `${G.g ? 'Giornata ' + esc(String(G.g)) : 'Altre partite'} · ${G.c === 'ucl' ? 'Champions League' : COMP_NAME[G.c]}`;
+    return `<details class="hgroup cmp-${G.c}" data-k="${esc(G.key)}"${hstate.open.has(G.key) ? ' open' : ''}><summary><b>${titolo}</b><span>${G.c === 'extra' ? '' : per + ' · '}${G.items.length} ${G.items.length === 1 ? 'partita' : 'partite'}${jd.length ? ` · ${hh} ammoniti su ${jd.length * 3}` : ''}</span></summary>
+      <div class="hbody">${byDay.map(([d, cards]) => `<div class="gday">${d}</div><div class="hist-grid">${cards.join('')}</div>`).join('')}</div></details>`;
+  };
   el.innerHTML = `<h2>Storico tris dell'app</h2>
-    <p class="note">Tutte le partite giocate, dalla più recente. Il bilancio valuta i tris prepartita (2 + 1 tra le squadre, regola del sostituto); il rosso diretto vale come ammonito.</p>
+    <p class="note">Tutte le partite giocate, raccolte per giornata: tocca un titolo per aprire le sue partite. Il bilancio valuta i tris prepartita (2 + 1 tra le squadre, regola del sostituto); il rosso diretto vale come ammonito.</p>
     ${have.length > 1 ? `<div class="hfilter" role="group" aria-label="Competizione">${['all', ...have].map(c => `<button type="button" class="${c === 'all' ? '' : 'cmp-' + c}" aria-pressed="${hstate.f === c}" data-f="${c}">${c === 'all' ? '' : '<i></i>'}${c === 'all' ? 'Tutte' : COMP_NAME[c]}</button>`).join('')}</div>` : ''}
     <p class="hist-legend">Per ogni giocatore: ✓ giallo (o ✓ sostituto, se il giallo l'ha preso chi è entrato al suo posto) · probabilità prevista · falli fatti (f.)</p>
     <div class="tiles">
@@ -1447,7 +1475,8 @@ async function renderStorico() {
       <div class="tile"><div class="k">Tris completi (3/3)</div><div class="v">${full}<small> su ${n}</small></div></div>
       <div class="tile"><div class="k">Punti</div><div class="v">${pts}</div></div>
     </div>
-    ${byDay.length ? byDay.map(([d, cards]) => `<div class="gday">${d}</div><div class="hist-grid">${cards.join('')}</div>`).join('') : '<p class="note">Ancora nessuna partita giudicata.</p>'}`;
+    ${groups.length ? groups.map(gHtml).join('') : '<p class="note">Ancora nessuna partita giudicata.</p>'}`;
+  el.querySelectorAll('.hgroup').forEach(d => d.addEventListener('toggle', () => { d.open ? hstate.open.add(d.dataset.k) : hstate.open.delete(d.dataset.k); }));
   el.querySelectorAll('.hfilter button').forEach(b => b.addEventListener('click', () => { hstate.f = b.dataset.f; renderStorico(); }));
 }
 function focusPanel(btn) {

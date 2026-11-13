@@ -585,3 +585,7 @@ Obiettivo dell'utente: per ogni giocatore e partita NBA la probabilità di doppi
 1. Rifare `mercato.py` fra qualche settimana (più partite; per la tripla doppia servono mesi).
 2. Previsione delle partite del giorno (calendario ESPN, rosa, lista infortuni → «assenze del giorno», poi i quintetti) e solo dopo la sezione nel sito.
 3. Termine di livello della stagione; minuti attesi più fini (rientri da infortunio, limiti di minutaggio).
+
+## Storico a tendine (13/11/2026, sera)
+- Richiesta dell'utente: lo storico era una lista unica troppo lunga. Ora le partite sono raccolte in tendine `<details class="hgroup">`, una per giornata e competizione («Giornata 11 · Serie A», «Giornata 4 · Champions League», «Giornata 6 · Nazionali»; gli EXTRA, che non hanno giornata, una per settimana da martedì a lunedì), dalla più recente. Nel titolo: date, numero di partite e ammoniti azzeccati sul totale. Si apre al clic; la più recente parte aperta e i gruppi aperti restano tali quando la pagina si ridisegna (`hstate.open`). Riquadri del bilancio e filtro per competizione invariati.
+- Nota: Serbia-Germania «mancante» alle 22:49 non era un guasto: la Giornata automatica delle 22:40 ha trovato finita solo Olanda-Grecia, le altre due sono entrate al giro delle 23:00 (il controllo passa ogni 20 minuti).
