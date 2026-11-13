@@ -852,21 +852,21 @@
   "ko": 1794599100,
   "partita": "Olanda - Grecia",
   "uff": false,
-  "p3": 0.012436733483208935,
+  "p3": 0.01214298265889312,
   "trio": [
    {
     "n": "D. Kourbelis",
-    "p": 0.2586,
+    "p": 0.2518,
     "team": "Grecia"
    },
    {
     "n": "G. Vagiannidis",
-    "p": 0.2342,
+    "p": 0.2323,
     "team": "Grecia"
    },
    {
     "n": "J. Paul van Hecke",
-    "p": 0.177,
+    "p": 0.179,
     "team": "Olanda"
    }
   ]
