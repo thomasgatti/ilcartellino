@@ -28,7 +28,7 @@ jobs:
           node-version: '22'
       - run: node --max-old-space-size=6000 cloud/nba/quote.mjs dati/nba "${MAX:-60}" "${STAGIONE:-2026-2027}"
         env:
-          ODDSPAPI_KEY: ${{ secrets.ODDSPAPI_KEY }}
+          ODDSPAPI_KEY: ${{ secrets.ODDSPAPI_KEY_NBA }}   # chiave separata: la quota mensile dei cartellini resta intatta
           MAX: ${{ inputs.max }}
           STAGIONE: ${{ inputs.stagione }}
           MINUTI: '85'
