@@ -15,11 +15,17 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 const bk = arr(await get('/bookmakers')); console.log('bookmaker:', bk.length, bk.map(b => b.slug || b.bookmakerSlug || b.name).join(', ').slice(0, 3000));
 const cardIds = new Set(mk.filter(m => m.marketType === 'players-cards' || m.marketType === 'playertotals-cards').map(m => String(m.marketId))); console.log('id mercati cartellino giocatore:', [...cardIds].join(', '));
 const FID = process.env.SONDA_FIXTURE || 'id1002375568932518';
-const slugs = bk.map(b => b.slug || b.bookmakerSlug).filter(Boolean), pref = ['bet365', 'williamhill', 'unibet', 'paddypower', 'skybet', 'betfair-sb', 'betway', 'pinnacle', 'snai', 'sisal', 'eurobet', 'bwin', '888sport', 'ladbrokes', 'betfred', 'coral'];
-const groups = []; const cand = pref.filter(x => slugs.includes(x)); for (let i = 0; i < cand.length; i += 3) groups.push(cand.slice(i, i + 3));
-for (const g of groups.slice(0, 4)) {
-  await sleep(1500); const o = await get('/historical-odds', { fixtureId: FID, bookmakers: g.join(',') });
-  const s = JSON.stringify(o || {}); console.log('estratto:', s.slice(0, 600));
-  const hits = []; (function walk(x, path) { if (x && typeof x === 'object') for (const [k, v] of Object.entries(x)) { if (cardIds.has(k)) hits.push(path + '/' + k + ' ' + JSON.stringify(v).slice(0, 1500)); walk(v, path + '/' + k); } })(o, '');
-  console.log(g.join(','), '→ mercati cartellino giocatore:', hits.length, '\n' + hits.slice(0, 6).join('\n'));
+// quote "giocatore ammonito" dell'ultimo momento prima del via, per bookmaker; nomi dei giocatori dagli endpoint dei giocatori
+const KO = Date.parse(process.env.SONDA_KO || '2026-11-12T19:45:00Z'), last = {};
+for (const g of (process.env.SONDA_BOOK || 'betfred,coral').split(';')) {
+  await sleep(2500); const o = await get('/historical-odds', { fixtureId: FID, bookmakers: g });
+  for (const [b, v] of Object.entries(o?.bookmakers || {})) for (const mid of cardIds) for (const out of Object.values(v.markets?.[mid]?.outcomes || {}))
+    for (const [pid, hist] of Object.entries(out.players || {})) { const h = hist.filter(x => x.active && Date.parse(x.createdAt) <= KO).pop(); if (h) (last[pid] ||= {})[b + (mid === '102732' ? '' : '#' + mid)] = h.price; }
 }
+const pids = Object.keys(last); console.log('giocatori con quota:', pids.length);
+let nomi = {};
+for (const [p, q] of [['/players', { playerIds: pids.join(',') }], ['/players', { fixtureId: FID }], ['/participants', { participantIds: pids.join(',') }]]) {
+  await sleep(1500); const r = await get(p, q); const a = arr(r); if (a.length || (r && typeof r === 'object' && !r.error)) { console.log(JSON.stringify(r).slice(0, 600)); for (const x of (a.length ? a : Object.values(r || {}))) { const id = x?.playerId ?? x?.id ?? x?.participantId; const nm = x?.playerName ?? x?.name ?? x?.participantName; if (id != null && nm) nomi[id] = nm; } if (Object.keys(nomi).length) break; }
+}
+console.log('QUOTE CARTELLINO (ultima prima del via):');
+for (const [pid, q] of Object.entries(last).sort((a, b) => Math.min(...Object.values(a[1])) - Math.min(...Object.values(b[1])))) console.log(pid, nomi[pid] || '?', JSON.stringify(q));
