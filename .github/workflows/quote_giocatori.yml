@@ -1,0 +1,36 @@
+name: Quote giocatore ammonito (OddsPapi)
+# Archivia nel ramo "dati" (cartella quote_giocatori/) le quote "giocatore ammonito" delle partite giocate di Serie A, Champions e Nazionali:
+# quota all'ultimo aggiornamento prima del via e 24 ore prima, per bookmaker (Sisal, bet365.it, Eurobet, Betfred, Betway, Paddy Power).
+# Ogni giorno all'alba e su richiesta; al massimo "max" partite per giro (piano gratuito con limite di frequenza).
+on:
+  schedule:
+    - cron: '23 4 * * *'
+  workflow_dispatch:
+    inputs:
+      max:
+        description: Partite al massimo in questo giro
+        default: '40'
+concurrency: dati
+jobs:
+  quote:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          ref: dati
+          path: dati
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node cloud/quote_giocatori.mjs dati "${MAX:-40}"
+        env:
+          ODDSPAPI_KEY: ${{ secrets.ODDSPAPI_KEY }}
+          MAX: ${{ inputs.max }}
+      - name: Salva
+        run: |
+          cd dati && git config user.name "bot ammoniti" && git config user.email "bot@users.noreply.github.com"
+          git add -A quote_giocatori && (git commit -qm "quote giocatore ammonito $(date -u +%F)" && git push -q origin HEAD:dati) || echo "niente di nuovo"
