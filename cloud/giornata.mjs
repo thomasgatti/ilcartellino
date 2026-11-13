@@ -423,6 +423,8 @@ async function inspect(round) {
       const j = await matchDetails(m.id), status = j.header.status;
       if (status.cancelled || status.awarded) continue;
       if (!status.started && updateReferee(round,m,j)) round.touched = true;
+      if (!status.started && m.pl?.length) { const before = JSON.stringify(m.pl.map(r => r[5])); try { applyLayoutVs(m, j); } catch (err) { warn(m, err); }
+        if (JSON.stringify(m.pl.map(r => r[5])) !== before) round.touched = true; }
       if (now < m.ko - 36 * hour) continue;            // tra 60 e 36 ore prima: solo l'arbitro
       if (status.finished && !seen.has(m.id)) round.finished.push({m,j});
       // nelle 48 ore dopo la fine FotMob a volte corregge i cartellini (9/11: giallo di Musah passato a Diawara): riarchivia
