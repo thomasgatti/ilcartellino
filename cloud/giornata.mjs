@@ -72,6 +72,28 @@ const validLineup = (lineup, type) => lineup?.lineupType === type && [lineup.hom
   team.starters.every(p => p.id && p.name && p.usualPlayingPositionId != null));
 const warn = (m, e) => console.warn(`Partita ${m.id}: ${e.message}`);
 const short = n => n.includes(' ') ? n[0] + '. ' + n.slice(n.indexOf(' ') + 1) : n;
+// «Di fronte» dalla formazione di questa partita (13/11): FotMob disegna ogni squadra nella sua metà campo (verticalLayout x laterale,
+// y profondità). La profondità si normalizza fra i giocatori di movimento della squadra (0 = linea più arretrata, 1 = più avanzata)
+// e si specchia sull'avversario: i difensori centrali trovano la punta, i terzini le ali. Prima si usavano le posizioni abituali nel
+// club (anche per le nazionali, dove i ruoli cambiano). È solo l'etichetta mostrata: la variabile del modello resta quella di prima.
+function layoutVs(j) {
+  const T = [j?.content?.lineup?.homeTeam, j?.content?.lineup?.awayTeam].map(t => (t?.starters || []).filter(p => p.usualPlayingPositionId !== 0 && Number.isFinite(p.verticalLayout?.x) && Number.isFinite(p.verticalLayout?.y)));
+  if (T.some(t => t.length < 8)) return null;
+  const pts = T.map(t => { const ys = t.map(p => p.verticalLayout.y), lo = Math.min(...ys), hi = Math.max(...ys);
+    return t.map(p => ({ name: p.name, x: p.verticalLayout.x, d: hi > lo ? (p.verticalLayout.y - lo) / (hi - lo) : .5 })); });
+  const out = new Map();
+  for (const [a, b] of [[0, 1], [1, 0]]) for (const p of pts[a]) {
+    let best = null, bd = Infinity;
+    for (const o of pts[b]) { const dd = Math.hypot(p.x - (1 - o.x), p.d - (1 - o.d)); if (dd < bd) { bd = dd; best = o; } }
+    if (best) out.set(p.name, best.name);
+  }
+  return out;
+}
+function applyLayoutVs(m, j) {
+  const V = layoutVs(j); if (!V) return;
+  const rowOf = full => m.pl.find(r => r[0] === short(full)) || m.pl.find(r => full.endsWith(' ' + r[0].replace(/^\S+\.\s/, '')));
+  for (const [full, opp] of V) { const r = rowOf(full), o = rowOf(opp); if (r && o && o[1] !== r[1]) r[5] = o[0]; }
+}
 const norm = n => n.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/[^\p{L}]/gu, '');
 loadLib(['field_lineups.js']);
 
@@ -478,6 +500,7 @@ function applyForecast(round, exportRows) {
     m.uff = Number(e.lt === 'standard');
     m.src = e.lt === 'lastStarting11' ? 'provv' : 'fotmob';
     if (abs.length) m.abs = abs;
+    try { applyLayoutVs(m, prepared.get(m.id).j); } catch (err) { warn(m, err); }
     if (!m.ref || m.ref === '–') m.ref = prepared.get(m.id).j.content?.matchFacts?.infoBox?.Referee?.text || m.ref;
     if (m.uff && (m.pl.filter(p => p[1] === 'h' && p[6] === 100).length !== 10 ||
         m.pl.filter(p => p[1] === 'a' && p[6] === 100).length !== 10)) {
