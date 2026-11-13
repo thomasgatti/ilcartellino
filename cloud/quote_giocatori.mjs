@@ -34,6 +34,7 @@ const al = s => s;
 
 const outDir = path.join(ROOT, 'quote_giocatori'); fs.mkdirSync(outDir, { recursive: true });
 let names = null, fatte = 0;
+const FINE = Date.now() + (+process.env.MINUTI || 40) * 60000;   // si ferma in tempo per salvare
 // mercati: id → [tipo, linea, Over/Under]; falli del giocatore 102699 (Sì = almeno 1), 102702 (2+), 102708 (Over 1,5)
 const MK = new Map();
 { const r = await get('/markets', { sportId: 10 }); for (const m of (Array.isArray(r) ? r : r?.data || [])) if (m.period === 'fulltime' && /^(totals-bookings|teamtotals-bookings-team[12])$/.test(m.marketType))
@@ -47,7 +48,7 @@ for (const [comp, C] of Object.entries(COMP)) {
     .sort((a, b) => b.ts - a.ts);
   console.log(`${comp}: ${ms.length} partite da cercare`);
   for (const m of ms) {
-    if (fatte >= MAX) break;
+    if (fatte >= MAX || Date.now() > FINE) break;
     const day = new Date(m.ts * 1000), d0 = new Date(day - 86400000).toISOString().slice(0, 10), d1 = new Date(+day + 86400000).toISOString().slice(0, 10);
     let fx = [];
     for (const t of C.t) { const k = t + d0; if (!fixCache.has(k)) { const r = await get('/fixtures', { tournamentId: t, from: d0, to: d1 }); fixCache.set(k, Array.isArray(r) ? r : r?.data || []); } fx.push(...fixCache.get(k)); }

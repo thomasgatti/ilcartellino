@@ -14,7 +14,7 @@ concurrency: dati
 jobs:
   quote:
     runs-on: ubuntu-24.04
-    timeout-minutes: 40
+    timeout-minutes: 55
     permissions:
       contents: write
     steps:
@@ -30,7 +30,9 @@ jobs:
         env:
           ODDSPAPI_KEY: ${{ secrets.ODDSPAPI_KEY }}
           MAX: ${{ inputs.max }}
+          MINUTI: '42'
       - name: Salva
+        if: always()
         run: |
           cd dati && git config user.name "bot ammoniti" && git config user.email "bot@users.noreply.github.com"
           git add -A quote_giocatori && (git commit -qm "quote giocatore ammonito $(date -u +%F)" && git push -q origin HEAD:dati) || echo "niente di nuovo"
