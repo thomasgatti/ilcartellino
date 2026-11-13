@@ -1095,5 +1095,30 @@
     "team": "Svezia"
    }
   ]
+ },
+ {
+  "comp": "naz",
+  "id": 5181821,
+  "ko": 1794685500,
+  "partita": "Austria - Irlanda",
+  "uff": false,
+  "p3": 0.015628779147361074,
+  "trio": [
+   {
+    "n": "C. Coventry",
+    "p": 0.2501,
+    "team": "Irlanda"
+   },
+   {
+    "n": "L. Scales",
+    "p": 0.2468,
+    "team": "Irlanda"
+   },
+   {
+    "n": "K. Laimer",
+    "p": 0.2183,
+    "team": "Austria"
+   }
+  ]
  }
 ]
