@@ -24,8 +24,12 @@ for (const g of (process.env.SONDA_BOOK || 'betfred,coral').split(';')) {
 }
 const pids = Object.keys(last); console.log('giocatori con quota:', pids.length);
 let nomi = {};
-for (const [p, q] of [['/players', { playerIds: pids.join(',') }], ['/players', { fixtureId: FID }], ['/participants', { participantIds: pids.join(',') }]]) {
-  await sleep(1500); const r = await get(p, q); const a = arr(r); if (a.length || (r && typeof r === 'object' && !r.error)) { console.log(JSON.stringify(r).slice(0, 600)); for (const x of (a.length ? a : Object.values(r || {}))) { const id = x?.playerId ?? x?.id ?? x?.participantId; const nm = x?.playerName ?? x?.name ?? x?.participantName; if (id != null && nm) nomi[id] = nm; } if (Object.keys(nomi).length) break; }
-}
+// i nomi ci sono solo nelle quote correnti (/odds): li prendo dalle prossime partite delle stesse squadre
+{ await sleep(1500); const fx = arr(await get('/fixtures', { tournamentId: 23755, from: new Date().toISOString().slice(0, 10), to: '2026-11-20' }));
+  const teams = WANT.map(w => w.toLowerCase()), next = fx.filter(f => teams.some(t => JSON.stringify(f).toLowerCase().includes(t)));
+  console.log('prossime partite delle due squadre:', next.map(f => f.participant1Name + ' - ' + f.participant2Name + ' ' + f.startTime).join(' | '));
+  for (const f of next.slice(0, 3)) { await sleep(2500); const o = await get('/odds', { fixtureId: f.fixtureId, bookmakers: 'betfred' });
+    (function walk(x) { if (x && typeof x === 'object') for (const [k, v] of Object.entries(x)) { if (v && typeof v === 'object' && typeof v.playerName === 'string') nomi[k] = v.playerName; walk(v); } })(o); }
+  console.log('nomi trovati:', Object.keys(nomi).length); }
 console.log('QUOTE CARTELLINO (ultima prima del via):');
 for (const [pid, q] of Object.entries(last).sort((a, b) => Math.min(...Object.values(a[1])) - Math.min(...Object.values(b[1])))) console.log(pid, nomi[pid] || '?', JSON.stringify(q));
