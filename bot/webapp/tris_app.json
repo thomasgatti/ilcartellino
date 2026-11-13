@@ -827,21 +827,21 @@
   "ko": 1794599100,
   "partita": "Slovenia - Svizzera",
   "uff": false,
-  "p3": 0.01673488378655022,
+  "p3": 0.013040549803985705,
   "trio": [
    {
     "n": "J. Bijol",
-    "p": 0.2967,
+    "p": 0.2859,
     "team": "Slovenia"
    },
    {
     "n": "S. Kuzmić",
-    "p": 0.2309,
+    "p": 0.2201,
     "team": "Slovenia"
    },
    {
-    "n": "V. Sierro",
-    "p": 0.2106,
+    "n": "R. Freuler",
+    "p": 0.1787,
     "team": "Svizzera"
    }
   ]
@@ -877,21 +877,21 @@
   "ko": 1794599100,
   "partita": "Serbia - Germania",
   "uff": false,
-  "p3": 0.015041395292448781,
+  "p3": 0.010229253555877666,
   "trio": [
    {
-    "n": "S. Lukić",
-    "p": 0.2985,
+    "n": "Milinković-Savić",
+    "p": 0.2489,
     "team": "Serbia"
    },
    {
-    "n": "Milinković-Savić",
-    "p": 0.2451,
+    "n": "S. Džodić",
+    "p": 0.2162,
     "team": "Serbia"
    },
    {
     "n": "F. Nmecha",
-    "p": 0.1772,
+    "p": 0.1639,
     "team": "Germania"
    }
   ]
