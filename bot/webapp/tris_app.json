@@ -827,11 +827,11 @@
   "ko": 1794599100,
   "partita": "Slovenia - Svizzera",
   "uff": false,
-  "p3": 0.013040549803985705,
+  "p3": 0.013066296866795607,
   "trio": [
    {
     "n": "J. Bijol",
-    "p": 0.2859,
+    "p": 0.2849,
     "team": "Slovenia"
    },
    {
@@ -841,7 +841,7 @@
    },
    {
     "n": "R. Freuler",
-    "p": 0.1787,
+    "p": 0.1796,
     "team": "Svizzera"
    }
   ]
