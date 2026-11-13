@@ -11,19 +11,15 @@ const names = new Map(); for (const m of mk) { const k = m.marketName + ' · ' +
 const cardish = [...names].filter(([k]) => /card|book|player/i.test(k));
 console.log('mercati con card/book/player (nome · tipo · varianti):\n' + cardish.map(([k, n]) => `${k} · ${n}`).join('\n'));
 console.log('esempio mercato giocatore:', JSON.stringify(mk.find(m => /player/i.test(m.marketName) && /card|book/i.test(m.marketName)) || null).slice(0, 800));
-const tn = arr(await get('/tournaments', { sportId: 10 }));
-const nl = tn.filter(t => /nations league/i.test(JSON.stringify(t))); console.log('tornei Nations League:', JSON.stringify(nl).slice(0, 1500));
-for (const t of nl.slice(0, 4)) {
-  const fx = arr(await get('/fixtures', { tournamentId: t.tournamentId ?? t.id, from: '2026-11-11', to: '2026-11-14' }));
-  console.log('partite:', fx.length, JSON.stringify(fx.slice(0, 2)).slice(0, 1200));
-  const f = fx.find(x => WANT.every(w => JSON.stringify(x).includes(w)));
-  if (!f) continue;
-  const fid = f.fixtureId ?? f.id; console.log('TROVATA', fid, JSON.stringify(f).slice(0, 600));
-  for (const [p, q] of [['/odds', { fixtureId: fid }], ['/historical-odds', { fixtureId: fid }]]) {
-    const o = await get(p, q); const s = JSON.stringify(o || {});
-    console.log('estratto:', s.slice(0, 1500));
-    const ids = new Set(mk.filter(m => /player/i.test(m.marketName) && /card|book/i.test(m.marketName)).map(m => String(m.marketId)));
-    const hits = []; (function walk(x, path) { if (x && typeof x === 'object') for (const [k, v] of Object.entries(x)) { if (ids.has(k)) hits.push(path + '/' + k + ' ' + JSON.stringify(v).slice(0, 600)); walk(v, path + '/' + k); } })(o, '');
-    console.log('mercati cartellino giocatore trovati:', hits.length, '\n' + hits.slice(0, 12).join('\n'));
-  }
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const bk = arr(await get('/bookmakers')); console.log('bookmaker:', bk.length, bk.map(b => b.slug || b.bookmakerSlug || b.name).join(', ').slice(0, 3000));
+const cardIds = new Set(mk.filter(m => m.marketType === 'players-cards' || m.marketType === 'playertotals-cards').map(m => String(m.marketId))); console.log('id mercati cartellino giocatore:', [...cardIds].join(', '));
+const FID = process.env.SONDA_FIXTURE || 'id1002375568932518';
+const slugs = bk.map(b => b.slug || b.bookmakerSlug).filter(Boolean), pref = ['bet365', 'williamhill', 'unibet', 'paddypower', 'skybet', 'betfair-sb', 'betway', 'pinnacle', 'snai', 'sisal', 'eurobet', 'bwin', '888sport', 'ladbrokes', 'betfred', 'coral'];
+const groups = []; const cand = pref.filter(x => slugs.includes(x)); for (let i = 0; i < cand.length; i += 3) groups.push(cand.slice(i, i + 3));
+for (const g of groups.slice(0, 4)) {
+  await sleep(1500); const o = await get('/historical-odds', { fixtureId: FID, bookmakers: g.join(',') });
+  const s = JSON.stringify(o || {}); console.log('estratto:', s.slice(0, 600));
+  const hits = []; (function walk(x, path) { if (x && typeof x === 'object') for (const [k, v] of Object.entries(x)) { if (cardIds.has(k)) hits.push(path + '/' + k + ' ' + JSON.stringify(v).slice(0, 1500)); walk(v, path + '/' + k); } })(o, '');
+  console.log(g.join(','), '→ mercati cartellino giocatore:', hits.length, '\n' + hits.slice(0, 6).join('\n'));
 }
