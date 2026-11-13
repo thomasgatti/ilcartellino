@@ -703,6 +703,78 @@ html { overflow-y: scroll; scrollbar-gutter: stable; }
 @keyframes spText { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 @keyframes spOut { to { opacity: 0; visibility: hidden; } }
 @media (prefers-reduced-motion: reduce) { .splash-on #splash { animation-duration: .2s; animation-delay: .9s; } .sp-ycard, .sp-ycard::after, .sp-ring, .sp-title, .sp-sub { animation-duration: .01s !important; animation-delay: 0s !important; } }
+/* ---- Sezione ANGOLI (13/11/2026): prato di sera, gesso bianco delle lunette e arancione della bandierina. Solo forme originali. ---- */
+:root[data-comp="angoli"] { --paper: #0a2217; --surface: #10301f; --ink: #f2f8ef; --muted: #a8c4b1; --line: #235039; --good: #5fe39a; --ag: #ff8a1f; --ag2: #ffc04a; color-scheme: dark; }
+:root[data-comp="angoli"] body { background-color: var(--paper); background-size: auto; background-attachment: fixed; background-image:
+  radial-gradient(circle at 0 0, transparent 0 138px, rgba(255,255,255,.26) 139px 142px, transparent 143px),
+  radial-gradient(circle at 100% 0, transparent 0 138px, rgba(255,255,255,.26) 139px 142px, transparent 143px),
+  repeating-linear-gradient(90deg, rgba(255,255,255,.035) 0 90px, transparent 90px 180px); }
+:root[data-comp="angoli"] body::before { content: ""; position: fixed; inset: 0 0 auto 0; height: 5px; z-index: 50; pointer-events: none; background: linear-gradient(90deg, #ff6a1a, var(--ag) 50%, var(--ag2)); }
+:root[data-comp="angoli"] h1 { background: linear-gradient(90deg, #ffffff 0%, #ffe2b8 45%, var(--ag) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+:root[data-comp="angoli"] h1 span { color: var(--muted); -webkit-text-fill-color: var(--muted); }
+:root[data-comp="angoli"] .comps button[aria-pressed="true"] { background: linear-gradient(90deg, #ff6a1a, var(--ag) 55%, var(--ag2)); color: #1c0f00; box-shadow: 0 0 14px color-mix(in srgb, var(--ag) 45%, transparent); }
+.comps { max-width: 100%; overflow-x: auto; scrollbar-width: none; } .comps::-webkit-scrollbar { display: none; }
+.comps button { white-space: nowrap; flex: none; }
+#sez-angoli { display: grid; gap: 18px; }
+:root[data-comp="angoli"] footer .how { display: none; }
+.ang-teams .chip { box-shadow: 0 0 0 1px rgba(255,255,255,.4); }
+#sez-angoli h2 { font: 800 24px/1 var(--display); text-transform: uppercase; letter-spacing: .5px; margin: 6px 0 0; }
+.ang-lead { margin: 0; max-width: 68ch; color: var(--muted); }
+.ang-lead b { color: var(--ink); }
+.ang-bar { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; }
+.ang-seg { display: inline-flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+.ang-seg button { font: 700 13px var(--body); border: 0; background: transparent; color: var(--muted); padding: 6px 12px; border-radius: 999px; cursor: pointer; white-space: nowrap; }
+.ang-seg button[aria-pressed="true"] { background: var(--ag); color: #1c0f00; }
+.ang-seg button:focus-visible, .ang-more:focus-visible, .ang-open:focus-visible { outline: 2px solid var(--ag2); outline-offset: 2px; }
+.ang-list { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 480px), 1fr)); align-items: start; }
+.ang-card { background: color-mix(in srgb, var(--surface) 94%, transparent); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; display: grid; gap: 12px; }
+.ang-card.top { border-color: transparent; box-shadow: 0 0 0 2px var(--ag) inset, 0 4px 18px color-mix(in srgb, var(--ag) 18%, transparent); }
+.ang-head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 12px; align-items: center; }
+.ang-rank { font: 900 24px/1 var(--display); color: var(--muted); min-width: 22px; text-align: center; }
+.ang-card.top .ang-rank { color: var(--ag); }
+.ang-teams { display: grid; gap: 3px; font-weight: 700; font-size: 16px; min-width: 0; }
+.ang-teams span { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.ang-teams em { font-style: normal; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ang-pct { text-align: right; }
+.ang-pct b { display: block; font: 900 40px/0.95 var(--display); color: var(--ag2); font-variant-numeric: tabular-nums; }
+.ang-pct small { color: var(--muted); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .4px; }
+.ang-meter { position: relative; height: 10px; border-radius: 999px; background: color-mix(in srgb, var(--ink) 10%, transparent); }
+.ang-meter i { position: absolute; inset: 0 auto 0 0; border-radius: 999px; background: linear-gradient(90deg, #ff6a1a, var(--ag2)); }
+.ang-meter u { position: absolute; top: -4px; bottom: -4px; width: 2px; margin-left: -1px; background: var(--ink); border-radius: 2px; }
+.ang-meta { display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: 13px; color: var(--muted); align-items: center; }
+.ang-meta .lg { font-weight: 700; color: var(--ink); }
+.ang-nums { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.ang-nums .stat { background: color-mix(in srgb, var(--paper) 55%, transparent); }
+.ang-nums .v small { font-weight: 500; color: var(--muted); font-size: 12px; }
+.ang-sq { font-size: 13.5px; color: var(--muted); display: grid; gap: 4px; }
+.ang-sq div { display: flex; flex-wrap: wrap; gap: 2px 8px; align-items: baseline; }
+.ang-sq b { color: var(--ink); }
+.ang-open { justify-self: start; font: 700 13px var(--body); color: var(--ag2); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.ang-tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.ang-tiles .stat { background: color-mix(in srgb, var(--surface) 94%, transparent); padding: 12px 14px; }
+.ang-tiles .v { font: 800 26px/1 var(--display); }
+.ang-tiles .v small { font: 500 13px var(--body); color: var(--muted); }
+.ang-ver { display: grid; gap: 6px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 480px), 1fr)); }
+.ang-row { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 12px; align-items: center; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; background: color-mix(in srgb, var(--surface) 94%, transparent); font-size: 14px; }
+.ang-row.hit { border-color: color-mix(in srgb, var(--good) 65%, var(--line)); }
+.ang-row .who { min-width: 0; display: grid; gap: 1px; }
+.ang-row .who b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 700; }
+.ang-row .who small { color: var(--muted); font-size: 12px; }
+.ang-row .pp { color: var(--muted); font-variant-numeric: tabular-nums; text-align: right; }
+.ang-row .tot { font: 800 20px/1 var(--display); min-width: 74px; text-align: right; font-variant-numeric: tabular-nums; }
+.ang-row .tot small { font: 500 12px var(--body); color: var(--muted); display: block; margin-top: 2px; }
+.ang-row.hit .tot { color: var(--good); }
+.ang-more { justify-self: start; font: 700 14px var(--body); border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 8px 14px; border-radius: 999px; cursor: pointer; }
+.ang-how { border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; background: color-mix(in srgb, var(--surface) 94%, transparent); }
+.ang-how summary { cursor: pointer; font-weight: 700; }
+.ang-how p { color: var(--muted); margin: 8px 0 0; max-width: 75ch; }
+@media (max-width: 560px) {
+  :root[data-comp="angoli"] body { background-image: repeating-linear-gradient(90deg, rgba(255,255,255,.035) 0 60px, transparent 60px 120px); }
+  .ang-card { padding: 12px; } .ang-pct b { font-size: 34px; } .ang-teams { font-size: 15px; }
+  .ang-tiles { grid-template-columns: 1fr 1fr; } .ang-tiles .stat:first-child { grid-column: 1 / -1; }
+  .ang-nums .stat .k { font-size: 10px; letter-spacing: 0; }
+  .ang-nums .v small, .ang-tiles .v small { display: block; }
+}
 </style>
 </head>
 <body>
@@ -722,6 +794,7 @@ html { overflow-y: scroll; scrollbar-gutter: stable; }
     <button type="button" id="comp-ucl" aria-pressed="false" hidden><span class="star" aria-hidden="true">✦</span> Champions League</button>
     <button type="button" id="comp-naz" aria-pressed="false" hidden><span class="star" aria-hidden="true">★</span> Nazionali</button>
     <button type="button" id="comp-extra" aria-pressed="false" hidden>EXTRA</button>
+    <button type="button" id="comp-angoli" aria-pressed="false" hidden><span class="star" aria-hidden="true">⚑</span> Angoli</button>
   </div>
   <header>
     <h1>I miei ammoniti <span id="hdr-round"></span></h1>
@@ -739,6 +812,7 @@ html { overflow-y: scroll; scrollbar-gutter: stable; }
   </div>
   <section class="area" id="area" hidden></section>
   <section class="area" id="storico" hidden></section>
+  <section id="sez-angoli" aria-label="Angoli" hidden></section>
   <footer>
     <details class="how"><summary>Come funziona</summary>
       <p id="lnote"></p>
@@ -813,7 +887,7 @@ const COMP_NAME = { sa: 'Serie A', ucl: 'Champions', extra: 'EXTRA', naz: 'Nazio
 // Champions, Nazionali ed EXTRA compaiono nel menu da 2 giorni prima della prima partita fino a 36 ore dopo l'ultima
 // anteprima: con ?tutte nell'indirizzo (e fino a sabato 14/11, per la revisione grafica) si vedono tutte le sezioni
 const ANTEPRIMA = /[?&]tutte\b/.test(location.search) || Date.now() < Date.parse('2026-11-14T00:00:00Z');
-const compVisible = c => { if (c === 'sa') return true; if (ANTEPRIMA) return !!cupOf(c); const ms = (cupOf(c) || {}).matches, now = Date.now() / 1000;
+const compVisible = c => { if (c === 'sa') return true; if (c === 'angoli') return !!ANG; if (ANTEPRIMA) return !!cupOf(c); const ms = (cupOf(c) || {}).matches, now = Date.now() / 1000;
   return !!(ms && ms.some(m => m.ko > now - 36 * 3600 && m.ko < now + 48 * 3600)); };
 // non usato più dall'interfaccia: il fattore personale manuale è stato tolto (state.boost resta vuoto)
 const ROLE = { D: 'Difensore', M: 'Centrocampista', F: 'Attaccante' };
@@ -1236,6 +1310,71 @@ function extraHist(r) {
       <span class="note"><span class="ctag">EXTRA</span>${esc(r.comp)} · ${fmtTime(r.ko)}</span>
       <div class="side app"><h4>Tris del modello</h4><ul>${rows.map(li).join('') || '<li><span class="nm">Nessun tris</span></li>'}</ul></div></article>` };
 }
+// ---- Sezione ANGOLI: probabilità di almeno 14 angoli nella partita (data.json → angoli, scritto da cloud/angoli.mjs) ----
+const ANG = ALL.angoli && ((ALL.angoli.matches || []).length || (ALL.angoli.storico || []).length) ? ALL.angoli : null;
+const astate = { f: 'all', sort: 'p', all: false };
+const itn = (v, d = 1) => Number(v).toFixed(d).replace('.', ',');
+const ANG_COMP = { sa: 'Serie A', ucl: 'Champions', extra: 'EXTRA' };
+const angCols = c => c || ['#5d6c7b', '#ffffff'];
+function angCard(m, rank, top) {
+  const S = ANG.soglia || 14, now = Date.now() / 1000, w = v => Math.max(2, Math.min(100, v / .3 * 100)).toFixed(1), tot = m.mu[0] + m.mu[1];
+  const sq = (name, s) => s ? `<div><b>${esc(name)}</b><span>${itn(s[0])} a favore · ${itn(s[1])} contro a gara</span><span>${S}+ in ${s[2]} delle ultime ${s[3]}</span></div>` : '';
+  const stato = m.ko <= now ? `<span class="pill ${now > m.ko + 115 * 60 ? 'done' : 'live'}">${now > m.ko + 115 * 60 ? 'In attesa degli angoli finali' : 'In corso'}</span>` : '';
+  return `<article class="ang-card${top ? ' top' : ''}">
+    <div class="ang-head"><span class="ang-rank" aria-hidden="true">${rank}</span>
+      <div class="ang-teams"><span>${teamMark(m.h, angCols(m.hc))}<em>${esc(m.h)}</em></span><span>${teamMark(m.a, angCols(m.ac))}<em>${esc(m.a)}</em></span></div>
+      <div class="ang-pct"><b>${itn(m.p * 100, 0)}%</b><small>${S}+ angoli</small></div></div>
+    <div class="ang-meter" role="img" aria-label="Probabilità ${itn(m.p * 100, 0)} per cento; media della competizione ${itn(m.base * 100, 0)} per cento"><i style="width:${w(m.p)}%"></i><u style="left:${w(m.base)}%"></u></div>
+    <div class="ang-meta"><span class="lg">${esc(m.lega)}</span><span>${fmtWd(m.ko)} ${new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', day: 'numeric', month: 'short' }).format(m.ko * 1000)} · ${fmtTime(m.ko)}</span>${stato}<span>la tacca è la media della competizione: ${itn(m.base * 100, 0)}%</span></div>
+    <div class="ang-nums">
+      <div class="stat"><span class="k">Angoli attesi</span><span class="v">${itn(tot)} <small>${itn(m.mu[0])} + ${itn(m.mu[1])}</small></span></div>
+      <div class="stat"><span class="k">Quota equa</span><span class="v">${itn(1 / m.p, 2)}</span></div>
+      <div class="stat"><span class="k">Sulla media</span><span class="v">${m.p >= m.base ? '+' : '−'}${itn(Math.abs(m.p - m.base) * 100, 0)} <small>punti</small></span></div>
+    </div>
+    ${m.sq ? `<div class="ang-sq">${sq(m.h, m.sq.h)}${sq(m.a, m.sq.a)}</div>` : ''}
+    ${allMatches().some(x => x.id === m.id) ? `<button type="button" class="ang-open" data-id="${m.id}">Apri la partita nei cartellini ›</button>` : ''}
+  </article>`;
+}
+function renderAngoli() {
+  const el = document.getElementById("sez-angoli"), S = ANG.soglia || 14, now = Date.now() / 1000;
+  const comps = ['sa', 'ucl', 'extra'].filter(c => ANG.matches.some(m => m.c === c));
+  if (astate.f !== 'all' && !comps.includes(astate.f)) astate.f = 'all';
+  const list = ANG.matches.filter(m => astate.f === 'all' || m.c === astate.f);
+  const order = [...list].sort((a, b) => astate.sort === 'p' ? b.p - a.p || a.ko - b.ko : a.ko - b.ko || b.p - a.p);
+  const best = new Set([...list].filter(m => m.ko > now).sort((a, b) => b.p - a.p).slice(0, 3).map(m => m.id));
+  const st = ANG.storico || [], hit = r => r.ang[0] + r.ang[1] >= S, hits = st.filter(hit).length, att = st.reduce((s, r) => s + r.p, 0);
+  const alto = [...st].sort((a, b) => b.p - a.p).slice(0, Math.round(st.length / 3)), retro = st.filter(r => r.retro).length;
+  const shown = astate.all ? st : st.slice(0, 12);
+  const giorno = ts => new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', day: 'numeric', month: 'short' }).format(ts * 1000);
+  el.innerHTML = `
+    <p class="ang-lead">Per ogni partita, la probabilità che si battano <b>almeno ${S} angoli in totale</b>. È una giocata da quota alta: succede in media in una partita su sette, quindi anche le partite in cima alla lista restano più spesso sotto i ${S}.</p>
+    ${ANG.matches.length ? `<div class="ang-bar">
+      ${comps.length > 1 ? `<div class="ang-seg" role="group" aria-label="Competizione">${['all', ...comps].map(c => `<button type="button" data-f="${c}" aria-pressed="${astate.f === c}">${c === 'all' ? 'Tutte' : ANG_COMP[c]}</button>`).join('')}</div>` : ''}
+      <div class="ang-seg" role="group" aria-label="Ordine"><button type="button" data-s="p" aria-pressed="${astate.sort === 'p'}">Più probabili</button><button type="button" data-s="t" aria-pressed="${astate.sort === 't'}">Per orario</button></div>
+    </div>
+    <div class="ang-list">${order.map((m, i) => angCard(m, i + 1, best.has(m.id))).join('')}</div>` : `<p class="note">Nessuna partita in programma nei prossimi giorni: le stime tornano con il prossimo turno.</p>`}
+    <h2>Verifica</h2>
+    ${st.length ? `<div class="ang-tiles">
+      <div class="stat"><span class="k">Partite verificate</span><span class="v">${st.length}</span></div>
+      <div class="stat"><span class="k">Finite con ${S}+ angoli</span><span class="v">${hits} <small>attese ${itn(att)}</small></span></div>
+      <div class="stat"><span class="k">Nel terzo più alto</span><span class="v">${alto.filter(hit).length} su ${alto.length} <small>attese ${itn(alto.reduce((s, r) => s + r.p, 0))}</small></span></div>
+    </div>
+    <div class="ang-ver">${shown.map(r => `<div class="ang-row${hit(r) ? ' hit' : ''}"><span class="who"><b>${esc(r.h)} – ${esc(r.a)}</b><small>${esc(r.lega)} · ${giorno(r.ko)}${r.retro ? ' · ricalcolata' : ''}</small></span>
+      <span class="pp">${itn(r.p * 100, 0)}%</span><span class="tot">${hit(r) ? '✓ ' : ''}${r.ang[0] + r.ang[1]}<small>${r.ang[0]} + ${r.ang[1]}</small></span></div>`).join('')}</div>
+    ${st.length > 12 && !astate.all ? `<button type="button" class="ang-more" id="ang-more">Mostra tutte le ${st.length} partite</button>` : ''}
+    ${retro ? `<p class="note">«Ricalcolata»: partita giocata prima che nascesse la sezione; la stima è stata rifatta dopo, usando solo i dati disponibili prima del calcio d'inizio.</p>` : ''}`
+      : `<p class="note">Qui compariranno gli angoli veri delle partite finite, accanto alla probabilità stimata prima del calcio d'inizio.</p>`}
+    <details class="ang-how"><summary>Come si legge</summary>
+      <p>La stima parte dalle ultime 20 gare di ciascuna squadra: angoli battuti e concessi, tiri, tocchi in area avversaria, xG e possesso, insieme alla media della competizione. Non servono le formazioni, quindi la probabilità è disponibile già giorni prima e si ferma al calcio d'inizio.</p>
+      <p>«Quota equa» è la quota a cui la giocata sarebbe in pari secondo il modello (1 diviso la probabilità): una quota del bookmaker più alta è a favore, una più bassa no. «Sulla media» dice di quanti punti percentuali la partita supera la frequenza abituale della competizione.</p>
+      <p>Nelle prove sul passato (13.291 partite dal 2023/24, ogni stagione stimata solo con i dati precedenti) il 10% di partite con la probabilità più alta è finito con ${S}+ angoli il 23,6% delle volte, contro il 14,3% di tutte le partite. Il vantaggio c'è ma è piccolo, e sulle singole giornate conta molto il caso.</p>
+      ${ANG.updated ? `<p>Ultimo aggiornamento: ${fmtDay(ANG.updated).toLowerCase()} alle ${fmtTime(ANG.updated)}.</p>` : ''}
+    </details>`;
+  for (const b of el.querySelectorAll('[data-f]')) b.addEventListener('click', () => { astate.f = b.dataset.f; renderAngoli(); });
+  for (const b of el.querySelectorAll('[data-s]')) b.addEventListener('click', () => { astate.sort = b.dataset.s; renderAngoli(); });
+  for (const b of el.querySelectorAll('.ang-open')) b.addEventListener('click', () => { const id = +b.dataset.id; setComp(compOf(id), id); scrollTo({ top: 0 }); });
+  const more = document.getElementById('ang-more'); if (more) more.addEventListener('click', () => { astate.all = true; renderAngoli(); });
+}
 function setView(v) {
   state.view = v; document.getElementById('tab-partite').setAttribute('aria-pressed', String(v === 'partite')); document.getElementById('tab-area').setAttribute('aria-pressed', String(v === 'area'));
   document.getElementById('tab-storico').setAttribute('aria-pressed', String(v === 'storico'));
@@ -1305,14 +1444,28 @@ function paintHeader() {
   document.getElementById('meta').innerHTML = state.comp === 'extra' ? '<span>Big match esteri e coppe nazionali</span>' : `<span>${state.comp === 'naz' ? 'UEFA Nations League' : state.comp === 'ucl' ? 'Champions' : 'Serie A'} <b>${DATA.season}</b></span>`;
   document.getElementById('lnote').textContent = DATA.lineups_note || '';
 }
+const compInView = c => { const b = document.getElementById('comp-' + c), bar = b.parentElement; bar.scrollLeft = b.offsetLeft - bar.offsetLeft - (bar.clientWidth - b.clientWidth) / 2; };
 function setComp(c, keepId) {
+  const ang = c === 'angoli' && !!ANG;
+  document.getElementById('comp-angoli').setAttribute('aria-pressed', String(ang));
+  document.getElementById("sez-angoli").hidden = !ang; document.querySelector('.topbar').hidden = ang;
+  document.querySelector('h1').firstChild.textContent = ang ? 'Angoli ' : 'I miei ammoniti ';
+  if (ang) {   // sezione a parte: niente elenco partite, area personale o storico dei tris
+    for (const k of ['sa', 'ucl', 'naz', 'extra']) document.getElementById('comp-' + k).setAttribute('aria-pressed', 'false');
+    state.comp = c; document.documentElement.dataset.comp = c; delete document.documentElement.dataset.lg;
+    try { localStorage.setItem('ammoniti_comp', c); } catch (e) {}
+    for (const q of ['.layout', '#area', '#storico', '#xintro']) document.querySelector(q).hidden = true;
+    document.getElementById('hdr-round').textContent = `· ${ANG.soglia || 14} o più`;
+    document.getElementById('meta').innerHTML = '<span>Serie A, Champions e big match EXTRA</span>';
+    history.replaceState(null, '', '#angoli'); renderAngoli(); compInView(c); return;
+  }
   if (c !== 'sa' && !cupOf(c)) c = 'sa';
   for (const k of ['sa', 'ucl', 'naz', 'extra']) document.getElementById('comp-' + k).setAttribute('aria-pressed', String(c === k));
   if (state.view === 'storico') state.view = 'partite';   // lo storico è unico per tutte le competizioni
   state.comp = c; document.documentElement.dataset.comp = c; if (c !== 'extra') delete document.documentElement.dataset.lg;
   try { localStorage.setItem('ammoniti_comp', c); } catch (e) {}
   DATA = cupOf(c) ? { ...ALL, ...cupOf(c) } : ALL;
-  paintHeader(); renderList();
+  paintHeader(); renderList(); compInView(c);
   const now = Date.now() / 1000, next = DATA.matches.find(m => m.ko + 7200 > now) || DATA.matches[0];
   state.id = null; select(keepId && DATA.matches.some(m => m.id === keepId) ? keepId : next.id);
   setView(state.view);
@@ -1489,15 +1642,16 @@ function start() {
   document.getElementById('tab-area').addEventListener('click', () => setView('area'));
   document.getElementById('tab-storico').addEventListener('click', () => setView('storico'));
   document.getElementById('comp-sa').addEventListener('click', () => setComp('sa'));
-  for (const c of ['ucl', 'naz', 'extra']) document.getElementById('comp-' + c).addEventListener('click', () => setComp(c));
+  for (const c of ['ucl', 'naz', 'extra', 'angoli']) document.getElementById('comp-' + c).addEventListener('click', () => setComp(c));
   const fromHash = +(location.hash || '').replace('#m', '');
   let c0 = 'sa'; try { c0 = localStorage.getItem('ammoniti_comp') || 'sa'; } catch (e) {}
-  if (['#ucl', '#naz', '#extra'].includes(location.hash)) c0 = location.hash.slice(1);
+  if (['#ucl', '#naz', '#extra', '#angoli'].includes(location.hash)) c0 = location.hash.slice(1);
   else if (fromHash && allMatches().some(m => m.id === fromHash)) c0 = compOf(fromHash);
   else if (!compVisible(c0)) c0 = 'sa';
   // nel menu solo le competizioni con partite vicine (più quella aperta da un link)
   for (const c of ['ucl', 'naz', 'extra']) document.getElementById('comp-' + c).hidden = !(compVisible(c) || (c === c0 && cupOf(c)));
-  document.querySelector('.comps').hidden = ['ucl', 'naz', 'extra'].every(c => document.getElementById('comp-' + c).hidden);
+  document.getElementById('comp-angoli').hidden = !ANG;
+  document.querySelector('.comps').hidden = ['ucl', 'naz', 'extra', 'angoli'].every(c => document.getElementById('comp-' + c).hidden);
   setComp(c0, fromHash);
   setTimeout(liveLoop, 1000);
   const chip = document.getElementById('b' + state.id), strip = document.getElementById('list');
@@ -1505,7 +1659,7 @@ function start() {
   if (location.hash === '#area') setView('area');
   if (location.hash === '#storico') setView('storico');
 }
-window.addEventListener('hashchange', () => { if (['#ucl', '#naz', '#extra'].includes(location.hash)) { if (state.comp !== location.hash.slice(1)) setComp(location.hash.slice(1)); return; } if (location.hash === '#storico') { if (state.view !== 'storico') setView('storico'); return; } if (location.hash === '#area') { if (state.view !== 'area') setView('area'); return; } const id = +(location.hash || '').replace('#m', ''); if (!DATA.matches.some(m => m.id === id) && allMatches().some(m => m.id === id)) setComp(compOf(id), id); if (DATA.matches.some(m => m.id === id)) { if (state.view !== 'partite') setView('partite'); select(id); } });
+window.addEventListener('hashchange', () => { if (state.comp === 'angoli' && /^#m\d+$/.test(location.hash)) { const id = +location.hash.slice(2); if (allMatches().some(m => m.id === id)) setComp(compOf(id), id); return; } if (['#ucl', '#naz', '#extra', '#angoli'].includes(location.hash)) { if (state.comp !== location.hash.slice(1)) setComp(location.hash.slice(1)); return; } if (location.hash === '#storico') { if (state.view !== 'storico') setView('storico'); return; } if (location.hash === '#area') { if (state.view !== 'area') setView('area'); return; } const id = +(location.hash || '').replace('#m', ''); if (!DATA.matches.some(m => m.id === id) && allMatches().some(m => m.id === id)) setComp(compOf(id), id); if (DATA.matches.some(m => m.id === id)) { if (state.view !== 'partite') setView('partite'); select(id); } });
 start();
 </script>
 </body>

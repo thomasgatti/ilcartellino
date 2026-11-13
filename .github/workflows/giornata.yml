@@ -9,6 +9,7 @@ on:
     paths:
       - '.github/workflows/giornata.yml'
       - 'cloud/giornata.mjs'
+      - 'cloud/angoli.mjs'
   workflow_run:
     workflows: ['Aggiorna dati FotMob']
     branches: [main]
@@ -59,6 +60,11 @@ jobs:
         continue-on-error: true
         env:
           EXTRA_FORZA: ${{ github.event_name == 'workflow_dispatch' && (inputs.prova || inputs.extra) && '1' || '' }}
+      - name: Sezione ANGOLI (almeno 14 angoli nella partita)
+        run: node cloud/angoli.mjs
+        continue-on-error: true
+        env:
+          ANGOLI_FORZA: ${{ github.event_name == 'workflow_dispatch' && inputs.prova && '1' || '' }}
       - name: Rigenera l'interfaccia
         run: |
           if git diff --quiet -- bot/webapp/data.json bot/webapp/lineups.txt bot/webapp/vercel/risultati.json; then exit 0; fi

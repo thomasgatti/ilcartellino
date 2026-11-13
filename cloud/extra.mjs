@@ -178,7 +178,7 @@ for (const [country, list] of Object.entries(byCountry)) {
     const r1 = (oj?.odds?.oddsTabMarkets || []).flatMap(x => x.markets || []).find(x => x.headerTranslationKey === 'who_will_win');
     if (r1?.selections?.length === 3) { const q = r1.selections.map(x => 1 / +x.oddsDecimal), t = q.reduce((a, b) => a + b, 0); odds = `${Math.round(q[0] / t * 100)}/${Math.round(q[2] / t * 100)}`; }
     const lgAvg = ms.slice(-380).reduce((a, m) => a + (m.cards || []).length, 0) / Math.max(1, ms.slice(-380).length);
-    out.push({ id: c.id, comp: c.comp, ko: c.ko, h: c.h, a: c.a, hc: c.hc || old?.hc || null, ac: c.ac || old?.ac || null, derby: c.derby ? 1 : 0, scelta: c.chosen ? 1 : 0, lt, uff, ref, odds, lgAvg,
+    out.push({ id: c.id, comp: c.comp, ko: c.ko, h: c.h, a: c.a, hid: c.hid, aid: c.aid, hc: c.hc || old?.hc || null, ac: c.ac || old?.ac || null, derby: c.derby ? 1 : 0, scelta: c.chosen ? 1 : 0, lt, uff, ref, odds, lgAvg,
       tags: Object.keys(tags).length ? tags : old?.tags || {}, tris: tris.length ? tris : old?.tris || [], pl: pl.length ? pl.slice(0, 22) : old?.pl || [], corners: cornerOut(cm && cm(c.hid, c.aid)) || old?.corners || null });
   }
 }
