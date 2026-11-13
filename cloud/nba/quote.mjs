@@ -8,15 +8,18 @@ if (!K) { console.log('Manca ODDSPAPI_KEY'); process.exit(0); }
 const BOOKS = process.env.NBA_BOOK || 'fanduel,bet365,draftkings', FINE = Date.now() + (+process.env.MINUTI || 40) * 60000, DD = '112602', TD = '112603';
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 async function get(p, q = {}) { for (let k = 0; k < 6; k++) { await sleep(3600); const u = new URL(B + p); for (const [a, v] of Object.entries({ ...q, apiKey: K })) u.searchParams.set(a, v);
-    const r = await fetch(u); if (r.status === 429) { await sleep(4000); continue; } const t = await r.text(); if (r.status === 404) return null; if (!r.ok) throw new Error(`${r.status} ${p}: ${t.slice(0, 200)}`); return JSON.parse(t); }
+    const r = await fetch(u); if (r.status === 429) { await sleep(6000 * (k + 1)); continue; } const t = await r.text(); if (r.status === 404) return null; if (!r.ok) throw new Error(`${r.status} ${p}: ${t.slice(0, 200)}`); return JSON.parse(t); }
   throw new Error('troppi 429 su ' + p); }
 const NOMI = { 1: 'Hawks', 2: 'Celtics', 3: 'Pelicans', 4: 'Bulls', 5: 'Cavaliers', 6: 'Mavericks', 7: 'Nuggets', 8: 'Pistons', 9: 'Warriors', 10: 'Rockets', 11: 'Pacers', 12: 'Clippers', 13: 'Lakers', 14: 'Heat', 15: 'Bucks', 16: 'Timberwolves', 17: 'Nets', 18: 'Knicks', 19: 'Magic', 20: '76ers', 21: 'Suns', 22: 'Blazers', 23: 'Kings', 24: 'Spurs', 25: 'Thunder', 26: 'Jazz', 27: 'Wizards', 28: 'Raptors', 29: 'Grizzlies', 30: 'Hornets' };
 const fA = path.join(OUT, ST + '.json.gz'), fQ = path.join(OUT, `quote_${ST}.json`);
 const A = fs.existsSync(fA) ? JSON.parse(zlib.gunzipSync(fs.readFileSync(fA))) : {}, S = fs.existsSync(fQ) ? JSON.parse(fs.readFileSync(fQ, 'utf8')) : {};
-const ora = Date.now() / 1000, todo = Object.entries(A).filter(([id, m]) => m.ts < ora - 4 * 3600 && (!S[id] || (S[id].nessuna && (S[id].tentativi || 0) < 3 && ora - (S[id].provato || 0) > 86400))).sort((a, b) => b[1].ts - a[1].ts);
+const ora = Date.now() / 1000, todo = Object.entries(A).filter(([id]) => id !== '_nomi').filter(([id, m]) => m.ts < ora - 4 * 3600 && (!S[id] || (S[id].nessuna && (S[id].tentativi || 0) < 3 && ora - (S[id].provato || 0) > 86400))).sort((a, b) => b[1].ts - a[1].ts);
 console.log(`${ST}: ${todo.length} partite da cercare (in archivio quote: ${Object.keys(S).length})`);
 const cache = new Map(); let fatte = 0, con = 0;
+// anagrafica dei giocatori (id OddsPapi → nome): prima delle partite, e rinfrescata quando ci sono partite nuove
+const anagrafica = async () => { const r = await get('/players', { sportId: 11 }), N = S._nomi || {}; for (const t of Object.values(r?.participants || {})) for (const x of t.players || []) N[x.playerId] = x.playerName; S._nomi = N; console.log('anagrafica giocatori:', Object.keys(N).length); };
 try {
+  if (!S._nomi || todo.length) await anagrafica();
   for (const [id, m] of todo) { if (fatte >= MAX || Date.now() > FINE) break;
     const d0 = new Date((m.ts - 86400) * 1000).toISOString().slice(0, 10), d1 = new Date((m.ts + 86400) * 1000).toISOString().slice(0, 10);
     if (!cache.has(d0)) { const r = await get('/fixtures', { tournamentId: 132, from: d0, to: d1 }); cache.set(d0, Array.isArray(r) ? r : r?.data || []); }
@@ -29,7 +32,6 @@ try {
     if (!Object.keys(rec.dd).length && !Object.keys(rec.td).length) { no('nessuna quota'); continue; }
     S[id] = rec; con++; if (con % 10 === 0) { console.log(`  ${con} partite con quote · ${fatte} cercate`); fs.writeFileSync(fQ, JSON.stringify(S)); }
   }
-  if (con || !S._nomi) { const r = await get('/players', { sportId: 11 }), N = S._nomi || {}; for (const t of Object.values(r?.participants || {})) for (const x of t.players || []) N[x.playerId] = x.playerName; S._nomi = N; console.log('anagrafica giocatori:', Object.keys(N).length); }
 } catch (e) { console.log('INTERROTTO:', e.message); }
 fs.writeFileSync(fQ, JSON.stringify(S));
 const V = Object.entries(S).filter(([k]) => k !== '_nomi').map(([, v]) => v), cnt = k => V.filter(v => v[k] && Object.keys(v[k]).length).length;
