@@ -952,21 +952,21 @@
   "ko": 1794771900,
   "partita": "Belgio - Italia",
   "uff": false,
-  "p3": 0.019439355735824716,
+  "p3": 0.020036631283137225,
   "trio": [
    {
     "n": "G. Scalvini",
-    "p": 0.2683,
+    "p": 0.2703,
     "team": "Italia"
    },
    {
     "n": "R. Calafiori",
-    "p": 0.2557,
+    "p": 0.2576,
     "team": "Italia"
    },
    {
-    "n": "N. Raskin",
-    "p": 0.2443,
+    "n": "R. Lavia",
+    "p": 0.2481,
     "team": "Belgio"
    }
   ]
@@ -977,21 +977,21 @@
   "ko": 1794771900,
   "partita": "Francia - Turchia",
   "uff": false,
-  "p3": 0.012789040038413869,
+  "p3": 0.02254355553032292,
   "trio": [
    {
-    "n": "İ. Yüksek",
-    "p": 0.2844,
+    "n": "E. Topçu",
+    "p": 0.3266,
     "team": "Turchia"
    },
    {
     "n": "M. Demiral",
-    "p": 0.2839,
+    "p": 0.2809,
     "team": "Turchia"
    },
    {
-    "n": "D. Upamecano",
-    "p": 0.1366,
+    "n": "E. Camavinga",
+    "p": 0.2118,
     "team": "Francia"
    }
   ]
@@ -1002,21 +1002,21 @@
   "ko": 1794771900,
   "partita": "Croazia - Rep. Ceca",
   "uff": false,
-  "p3": 0.014395572301820087,
+  "p3": 0.013394310893041897,
   "trio": [
    {
-    "n": "V. Coufal",
-    "p": 0.2674,
+    "n": "T. Vlček",
+    "p": 0.2461,
     "team": "Rep. Ceca"
    },
    {
-    "n": "L. Červ",
-    "p": 0.2534,
+    "n": "V. Coufal",
+    "p": 0.2408,
     "team": "Rep. Ceca"
    },
    {
     "n": "I. Smolčić",
-    "p": 0.1832,
+    "p": 0.1948,
     "team": "Croazia"
    }
   ]
