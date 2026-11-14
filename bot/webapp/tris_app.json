@@ -1027,21 +1027,21 @@
   "ko": 1794771900,
   "partita": "Spagna - Inghilterra",
   "uff": false,
-  "p3": 0.016309936978916882,
+  "p3": 0.016221332980674852,
   "trio": [
    {
     "n": "D. Burn",
-    "p": 0.2666,
+    "p": 0.2696,
     "team": "Inghilterra"
    },
    {
     "n": "E. Anderson",
-    "p": 0.2581,
+    "p": 0.2405,
     "team": "Inghilterra"
    },
    {
     "n": "F. López",
-    "p": 0.2044,
+    "p": 0.2157,
     "team": "Spagna"
    }
   ]
