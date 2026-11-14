@@ -952,21 +952,21 @@
   "ko": 1794771900,
   "partita": "Belgio - Italia",
   "uff": false,
-  "p3": 0.01996564274751165,
+  "p3": 0.019439355735824716,
   "trio": [
    {
     "n": "G. Scalvini",
-    "p": 0.2703,
+    "p": 0.2683,
     "team": "Italia"
    },
    {
     "n": "R. Calafiori",
-    "p": 0.2576,
+    "p": 0.2557,
     "team": "Italia"
    },
    {
     "n": "N. Raskin",
-    "p": 0.2472,
+    "p": 0.2443,
     "team": "Belgio"
    }
   ]
@@ -1002,21 +1002,21 @@
   "ko": 1794771900,
   "partita": "Croazia - Rep. Ceca",
   "uff": false,
-  "p3": 0.014043073742644126,
+  "p3": 0.014395572301820087,
   "trio": [
    {
     "n": "V. Coufal",
-    "p": 0.2684,
+    "p": 0.2674,
     "team": "Rep. Ceca"
    },
    {
     "n": "L. Červ",
-    "p": 0.2543,
+    "p": 0.2534,
     "team": "Rep. Ceca"
    },
    {
     "n": "I. Smolčić",
-    "p": 0.1774,
+    "p": 0.1832,
     "team": "Croazia"
    }
   ]
@@ -1168,6 +1168,56 @@
     "n": "J. Palhinha",
     "p": 0.2211,
     "team": "Portogallo"
+   }
+  ]
+ },
+ {
+  "comp": "naz",
+  "id": 5181835,
+  "ko": 1794858300,
+  "partita": "Germania - Olanda",
+  "uff": false,
+  "p3": 0.016912155174613468,
+  "trio": [
+   {
+    "n": "J. Paul van Hecke",
+    "p": 0.2657,
+    "team": "Olanda"
+   },
+   {
+    "n": "D. Dumfries",
+    "p": 0.2501,
+    "team": "Olanda"
+   },
+   {
+    "n": "M. Thiaw",
+    "p": 0.2194,
+    "team": "Germania"
+   }
+  ]
+ },
+ {
+  "comp": "naz",
+  "id": 5181836,
+  "ko": 1794858300,
+  "partita": "Grecia - Serbia",
+  "uff": false,
+  "p3": 0.01767526091559657,
+  "trio": [
+   {
+    "n": "S. Džodić",
+    "p": 0.2868,
+    "team": "Serbia"
+   },
+   {
+    "n": "N. Milenković",
+    "p": 0.2614,
+    "team": "Serbia"
+   },
+   {
+    "n": "K. Tsimikas",
+    "p": 0.2033,
+    "team": "Grecia"
    }
   ]
  }
