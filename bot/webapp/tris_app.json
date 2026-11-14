@@ -1051,22 +1051,22 @@
   "id": 5181869,
   "ko": 1794675600,
   "partita": "Norvegia - Galles",
-  "uff": false,
-  "p3": 0.012122693137409218,
+  "uff": true,
+  "p3": 0.012193303310796664,
   "trio": [
    {
     "n": "E. Ampadu",
-    "p": 0.2642,
+    "p": 0.2672,
     "team": "Galles"
    },
    {
-    "n": "N. Williams",
-    "p": 0.2292,
+    "n": "L. Cullen",
+    "p": 0.223,
     "team": "Galles"
    },
    {
     "n": "K. Ajer",
-    "p": 0.1726,
+    "p": 0.1765,
     "team": "Norvegia"
    }
   ]
