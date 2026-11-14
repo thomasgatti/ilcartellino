@@ -1076,23 +1076,23 @@
   "id": 5181846,
   "ko": 1794685500,
   "partita": "Svezia - Bosnia",
-  "uff": false,
-  "p3": 0.015196281930202879,
+  "uff": true,
+  "p3": 0.012836418187534357,
   "trio": [
    {
     "n": "S. Kolašinac",
-    "p": 0.2571,
-    "team": "Bosnia"
-   },
-   {
-    "n": "I. Bašić",
-    "p": 0.2374,
+    "p": 0.2407,
     "team": "Bosnia"
    },
    {
     "n": "G. Lagerbielke",
-    "p": 0.2146,
+    "p": 0.2176,
     "team": "Svezia"
+   },
+   {
+    "n": "A. Gigović",
+    "p": 0.2112,
+    "team": "Bosnia"
    }
   ]
  },
@@ -1101,23 +1101,23 @@
   "id": 5181821,
   "ko": 1794685500,
   "partita": "Austria - Irlanda",
-  "uff": false,
-  "p3": 0.015355257291925951,
+  "uff": true,
+  "p3": 0.011622922237221046,
   "trio": [
    {
-    "n": "C. Coventry",
-    "p": 0.2453,
-    "team": "Irlanda"
-   },
-   {
     "n": "L. Scales",
-    "p": 0.2408,
+    "p": 0.2319,
     "team": "Irlanda"
    },
    {
-    "n": "K. Laimer",
-    "p": 0.2241,
+    "n": "C. Baumgartner",
+    "p": 0.213,
     "team": "Austria"
+   },
+   {
+    "n": "J. Molumby",
+    "p": 0.2028,
+    "team": "Irlanda"
    }
   ]
  },
@@ -1126,22 +1126,22 @@
   "id": 5181809,
   "ko": 1794685500,
   "partita": "Irlanda del Nord - Ucraina",
-  "uff": false,
-  "p3": 0.018106041716529183,
+  "uff": true,
+  "p3": 0.018234666244101177,
   "trio": [
    {
-    "n": "I. Varfolomeev",
-    "p": 0.3077,
+    "n": "Y. Yarmoliuk",
+    "p": 0.2714,
     "team": "Ucraina"
    },
    {
     "n": "O. Ocheretko",
-    "p": 0.247,
+    "p": 0.2538,
     "team": "Ucraina"
    },
    {
-    "n": "T. Hume",
-    "p": 0.2053,
+    "n": "T. Atcheson",
+    "p": 0.2282,
     "team": "Irlanda del Nord"
    }
   ]
@@ -1151,22 +1151,22 @@
   "id": 5181870,
   "ko": 1794685500,
   "partita": "Portogallo - Danimarca",
-  "uff": false,
-  "p3": 0.015223337489799583,
+  "uff": true,
+  "p3": 0.012055482842346844,
   "trio": [
    {
-    "n": "R. Kristensen",
-    "p": 0.2456,
+    "n": "A. Bah",
+    "p": 0.2426,
     "team": "Danimarca"
    },
    {
     "n": "J. Andersen",
-    "p": 0.2396,
+    "p": 0.2406,
     "team": "Danimarca"
    },
    {
-    "n": "J. Palhinha",
-    "p": 0.223,
+    "n": "R. Neves",
+    "p": 0.178,
     "team": "Portogallo"
    }
   ]
