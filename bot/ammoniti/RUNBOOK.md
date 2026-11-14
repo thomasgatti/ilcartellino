@@ -583,6 +583,8 @@ Obiettivo dell'utente: per ogni giocatore e partita NBA la probabilità di doppi
 
 - **Live nella pagina `/nba/`** (14/11, notte; come per gli ammoniti, tutto nel browser): ogni 30 secondi `scoreboard?dates=<giorno>` di ESPN (stato, quarto e cronometro, punteggio) e, per le partite in corso, `summary?event=<id>` (tabellino); le partite finite si scaricano una volta sola; fermo a scheda nascosta. Mostra punti-rimbalzi-assist che salgono (verdi da 10 in su), ✓ quando la doppia/tripla doppia è fatta, e l'esito di giocate e combinazioni: «in corso», «presa», «non presa» (a partita finita), «non ha giocato». Giocatori collegati per nome (in `oggi.json` non c'è l'id ESPN). **Nessuna probabilità live**: solo i numeri veri. Provato con risposte ESPN simulate (dal cloud ESPN non è raggiungibile dal mio ambiente di prova): da controllare su una notte vera.
 
+- Tema della pagina `/nba/` (14/11, 05:30): l'utente ha chiesto lo stemma NBA come sfondo. **Non usato** (marchio ufficiale: regola 8 di AGENTS.md); al suo posto la stessa aria con colori soltanto: fondo blu sfumato, rosso e bianco, linee del campo.
+
 ### Prossimi passi
 1. Rifare `mercato.py` fra qualche settimana (più partite; per la tripla doppia servono mesi).
 2. Previsione delle partite del giorno (calendario ESPN, rosa, lista infortuni → «assenze del giorno», poi i quintetti) e solo dopo la sezione nel sito.
