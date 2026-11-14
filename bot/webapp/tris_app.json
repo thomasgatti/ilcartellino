@@ -1077,21 +1077,21 @@
   "ko": 1794685500,
   "partita": "Svezia - Bosnia",
   "uff": false,
-  "p3": 0.015119330490661734,
+  "p3": 0.015196281930202879,
   "trio": [
    {
     "n": "S. Kolašinac",
-    "p": 0.2542,
+    "p": 0.2571,
     "team": "Bosnia"
    },
    {
     "n": "I. Bašić",
-    "p": 0.2346,
+    "p": 0.2374,
     "team": "Bosnia"
    },
    {
     "n": "G. Lagerbielke",
-    "p": 0.2186,
+    "p": 0.2146,
     "team": "Svezia"
    }
   ]
@@ -1102,21 +1102,21 @@
   "ko": 1794685500,
   "partita": "Austria - Irlanda",
   "uff": false,
-  "p3": 0.015628779147361074,
+  "p3": 0.015355257291925951,
   "trio": [
    {
     "n": "C. Coventry",
-    "p": 0.2501,
+    "p": 0.2453,
     "team": "Irlanda"
    },
    {
     "n": "L. Scales",
-    "p": 0.2468,
+    "p": 0.2408,
     "team": "Irlanda"
    },
    {
     "n": "K. Laimer",
-    "p": 0.2183,
+    "p": 0.2241,
     "team": "Austria"
    }
   ]
@@ -1152,21 +1152,21 @@
   "ko": 1794685500,
   "partita": "Portogallo - Danimarca",
   "uff": false,
-  "p3": 0.01484420279175887,
+  "p3": 0.015223337489799583,
   "trio": [
    {
     "n": "R. Kristensen",
-    "p": 0.2436,
+    "p": 0.2456,
     "team": "Danimarca"
    },
    {
     "n": "J. Andersen",
-    "p": 0.2376,
+    "p": 0.2396,
     "team": "Danimarca"
    },
    {
     "n": "J. Palhinha",
-    "p": 0.2211,
+    "p": 0.223,
     "team": "Portogallo"
    }
   ]
