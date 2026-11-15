@@ -97,7 +97,9 @@ details[open] summary { background: rgba(255,255,255,.07); }
 /* live */
 .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #ff4d4d; margin-right: 6px; animation: batte 1.4s infinite; vertical-align: 1px; }
 @keyframes batte { 50% { opacity: .25; } }
-.livemeta { margin-top: 2px; color: var(--ink); font-weight: 600; min-height: 1.2em; }
+.livemeta { margin-top: 5px; color: var(--ink); font-weight: 600; min-height: 1.2em; }
+.nba-refresh-live { margin: 8px 0 5px; border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; background: var(--surface); color: var(--ink); font: 600 13px var(--body); cursor: pointer; }
+.nba-refresh-live:focus-visible { outline: 2px solid var(--or2); outline-offset: 2px; }
 .es { font: 800 10px var(--body); text-transform: uppercase; letter-spacing: .5px; padding: 2px 7px; border-radius: 4px; margin-left: 8px; white-space: nowrap; vertical-align: 1px; }
 .es.si { background: rgba(76,195,138,.2); color: var(--good); } .es.no { background: rgba(255,77,77,.16); color: #ff8080; } .es.live { background: rgba(255,77,77,.14); color: #ffb3b3; } .es.ng { background: rgba(255,255,255,.1); color: var(--muted); }
 .tick { font-weight: 800; margin-right: 5px; } .tick.si { color: var(--good); } .tick.no { color: #ff8080; }
@@ -152,7 +154,7 @@ function esito(n, cosa) { const s = statoG(n); if (!s) return null; const serve 
 const SEGNO = { si: '<span class="es si">✓ presa</span>', no: '<span class="es no">✗ non presa</span>', ng: '<span class="es ng">non ha giocato</span>', live: '<span class="es live">in corso</span>' };
 const cifre = (x, corto) => { const v = (k, u) => `<b class="${x[k] >= 10 ? 'ok' : ''}">${x[k]}</b>${corto ? '' : ' ' + u}`; return corto ? `${v('pts')}-${v('reb')}-${v('ast')}` : `${v('pts', 'pt')} · ${v('reb', 'rb')} · ${v('ast', 'as')}${x.stl >= 5 ? ` · ${v('stl', 'rec')}` : ''}${x.blk >= 5 ? ` · ${v('blk', 'st')}` : ''}`; };
 const riga = (n, corto) => { const s = statoG(n); return s?.x ? `<span class="lv">${cifre(s.x, corto)}</span>` : ''; };
-async function espn(path) { const r = await fetch(ESPN + path, { signal: AbortSignal.timeout(9000) }); if (!r.ok) throw new Error('ESPN ' + r.status); return r.json(); }
+async function espn(path) { const sep = path.includes('?') ? '&' : '?'; const r = await fetch(ESPN + path + sep + '_=' + Date.now(), { cache: 'no-store', signal: AbortSignal.timeout(9000) }); if (!r.ok) throw new Error('ESPN HTTP ' + r.status); return r.json(); }
 function tabellino(j) { const pl = {};
   for (const T of j.boxscore?.players || []) { const S = T.statistics?.[0]; if (!S) continue; const nomi = S.names || S.labels || [], ix = k => nomi.indexOf(k);
     for (const a of S.athletes || []) { const st = a.stats || []; if (a.didNotPlay || !st.length) continue; const v = k => parseInt(st[ix(k)], 10) || 0;
@@ -162,16 +164,19 @@ let inGiro = false;
 async function aggiornaLive() {
   if (!D || inGiro || document.hidden) return; inGiro = true;
   try {
-    const sb = await espn('scoreboard?dates=' + D.giorno + '&limit=100'), miei = new Set(D.partite.map(P => String(P.id))), giri = [];
-    for (const e of sb.events || []) { if (!miei.has(String(e.id))) continue; const t = e.status?.type || {}, c = e.competitions?.[0], L = LIVE[e.id] ||= {};
+    const sb = await espn('scoreboard?dates=' + D.giorno + '&limit=100'), miei = new Set(D.partite.map(P => String(P.id))), giri = []; let trovate = 0;
+    for (const e of sb.events || []) { if (!miei.has(String(e.id))) continue; trovate++; const t = e.status?.type || {}, c = e.competitions?.[0], L = LIVE[e.id] ||= {};
       const sc = k => c?.competitors?.find(x => x.homeAway === k)?.score ?? '';
       L.stato = t.state || 'pre'; L.det = t.state === 'post' ? 'Finale' : (t.shortDetail || '').replace(/ - /, ' · ').replace(/(\d)(st|nd|rd|th)( Quarter)?/, 'Q$1').replace('Halftime', 'Intervallo').replace('End of', 'Fine'); L.sc = [sc('away'), sc('home')];
       if (L.stato === 'in' || (L.stato === 'post' && !L.chiusa)) giri.push(espn('summary?event=' + e.id).then(j => { L.pl = tabellino(j); if (L.stato === 'post') L.chiusa = true; }).catch(() => {})); }
     await Promise.all(giri);
+    if (!trovate) throw new Error('nessuna delle partite previste trovata nel tabellone ESPN');
     const vive = Object.values(LIVE).filter(L => L.stato === 'in').length, finite = Object.values(LIVE).filter(L => L.stato === 'post').length;
-    document.getElementById('livemeta').innerHTML = vive ? `<span class="dot"></span>${vive} in corso · si aggiorna da solo ogni 30 secondi` : finite && finite === D.partite.length ? 'Tutte le partite sono finite' : finite ? `${finite} finite` : '';
+    const attesa = trovate - vive - finite, ora = fmtO.format(new Date());
+    const stato = vive ? `${vive} in corso · ${finite} finite · ${attesa} da iniziare` : finite === D.partite.length ? 'Tutte le partite sono finite' : `${attesa} da iniziare · ${finite} finite`;
+    document.getElementById('livemeta').textContent = `Live ESPN · ultimo controllo ${ora} · ${stato} · aggiornamento automatico ogni 30 secondi`;
     disegna();
-  } catch (e) { /* ESPN non risponde: si riprova al prossimo giro */ }
+  } catch (e) { const meta = document.getElementById('livemeta'); if (meta) meta.textContent = `Live ESPN non disponibile (${e?.message || 'errore di rete'}). Riprovo tra 30 secondi.`; }
   inGiro = false;
 }
 function giocata(cls, etichetta, g, y, vuoto) {
@@ -188,7 +193,7 @@ function disegna() {
     + giocata('td', 'Tripla doppia', (C.td || [])[0], 'td', 'Nessun candidato sopra il 3%.') + '</div>';
   if ((C.combinazioni || []).length) h += '<div class="sec">Combinazioni<small>giocatori di partite diverse · per ogni fascia di quota la più probabile</small></div><div class="rows">'
     + C.combinazioni.map(a => { const es = a.gambe.map(g => esito(g.n, g.cosa)), tot = es.some(e => e === 'no') ? 'no' : es.every(e => e === 'si') ? 'si' : es.some(e => e) ? 'live' : null;
-      return `<div class="row ${tot ? 'e-' + tot : ''}"><div class="who"><span class="tier">${esc(a.tipo)}${tot ? SEGNO[tot] : ''}</span>${a.gambe.map((g, i) => `<div class="leg">${es[i] === 'si' ? '<span class="tick si">✓</span>' : es[i] === 'no' ? '<span class="tick no">✗</span>' : ''}${esc(g.n)} <span class="k ${g.cosa}">${g.cosa === 'td' ? 'tripla doppia' : 'doppia doppia'}</span><small>${es[i] ? riga(g.n) || (es[i] === 'ng' ? 'non ha giocato' : '') : `${pc(g.p)} · quota ${nq(g.q)}`}</small></div>`).join('')}</div><div class="p">${tot ? '' : 'esce ' + pc(a.p)}<small>2 € → ${(2 * a.q).toFixed(0)} €</small></div><div class="q">${nq(a.q)}</div></div>`; }).join('') + '</div>';
+      return `<div class="row ${tot ? 'e-' + tot : ''}"><div class="who"><span class="tier">${esc(a.tipo)}${tot ? SEGNO[tot] : ''}</span>${a.gambe.map((g, i) => `<div class="leg">${es[i] === 'si' ? '<span class="tick si">✓</span>' : es[i] === 'no' ? '<span class="tick no">✗</span>' : ''}${esc(g.n)}${g.dubbio ? '<span class="dub">in dubbio</span>' : ''} <span class="k ${g.cosa}">${g.cosa === 'td' ? 'tripla doppia' : 'doppia doppia'}</span><small>${es[i] ? riga(g.n) || (es[i] === 'ng' ? 'non ha giocato' : '') : `${pc(g.p)} · quota ${nq(g.q)}`}</small></div>`).join('')}</div><div class="p">${tot ? '' : 'esce ' + pc(a.p)}<small>2 € → ${(2 * a.q).toFixed(0)} €</small></div><div class="q">${nq(a.q)}</div></div>`; }).join('') + '</div>';
   h += '<div class="sec">Partite<small>tocca una partita per vedere gli altri giocatori</small></div><div class="rows">';
   for (const P of Ps) {
     const c = k => P.giocatori.find(g => g.n === P.candidati[k]), L = LIVE[P.id], viva = L && L.stato !== 'pre';
@@ -211,7 +216,10 @@ fetch('oggi.json?' + Date.now()).then(r => r.json()).then(j => { D = j;
   for (const P of D.partite) for (const g of P.giocatori) partitaDi[g.n] = P.id;
   const primo = new Date(Math.min(...D.partite.map(p => p.ts)) * 1000), agg = new Date(D.creato * 1000);
   document.getElementById('titolo').textContent = 'Doppie doppie';
-  document.getElementById('meta').innerHTML = `Notte del <b>${fmtG.format(primo).replace(/^\S+\s/, '')}</b> · ${D.partite.length} partite · previsioni delle ${fmtO.format(agg)}<div id="livemeta" class="livemeta"></div>`;
+  const ritirate = (D.quote_non_disponibili || []).map(x => esc(x.n + ' ' + (x.cosa || '').toUpperCase())).join(', ');
+  const segnalate = (D.quote_segnalate || []).map(x => `${esc(x.n)} ${esc((x.cosa || '').toUpperCase())} quota ${nq(Number(x.q))} (segnalata, non verificata)`).join('; ');
+  document.getElementById('meta').innerHTML = `Notte del <b>${fmtG.format(primo).replace(/^\S+\s/, '')}</b> · ${D.partite.length} partite · previsioni delle ${fmtO.format(agg)}<div id="livemeta" class="livemeta" role="status" aria-live="polite">Controllo ESPN in corso...</div><button type="button" class="nba-refresh-live" id="nba-refresh-live">Aggiorna live</button><div class="note">Quote fotografate alle ${fmtO.format(agg)}, non in tempo reale. Verifica la disponibilità dal bookmaker.${ritirate ? ' Segnalate come non disponibili: ' + ritirate + '.' : ''}${segnalate ? ' Aggiornamento: ' + segnalate + '.' : ''}</div>`;
+  document.getElementById('nba-refresh-live').addEventListener('click', aggiornaLive);
   disegna(); aggiornaLive(); setInterval(aggiornaLive, 30000); document.addEventListener('visibilitychange', () => { if (!document.hidden) aggiornaLive(); });
 }).catch(() => { document.getElementById('meta').textContent = 'Dati non ancora disponibili.'; });
 </script>
