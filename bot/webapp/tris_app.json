@@ -927,21 +927,21 @@
   "ko": 1794762000,
   "partita": "Bielorussia - Albania",
   "uff": false,
-  "p3": 0.017555521760843698,
+  "p3": 0.012223578518138432,
   "trio": [
    {
     "n": "M. Ebong",
-    "p": 0.2717,
+    "p": 0.2354,
     "team": "Bielorussia"
    },
    {
     "n": "V. Bocherov",
-    "p": 0.2451,
+    "p": 0.2164,
     "team": "Bielorussia"
    },
    {
-    "n": "Y. Ramadani",
-    "p": 0.2273,
+    "n": "R. Manaj",
+    "p": 0.2069,
     "team": "Albania"
    }
   ]
@@ -1027,21 +1027,21 @@
   "ko": 1794771900,
   "partita": "Spagna - Inghilterra",
   "uff": false,
-  "p3": 0.016221332980674852,
+  "p3": 0.01588039804688229,
   "trio": [
    {
     "n": "D. Burn",
-    "p": 0.2696,
+    "p": 0.2636,
     "team": "Inghilterra"
    },
    {
     "n": "E. Anderson",
-    "p": 0.2405,
+    "p": 0.2356,
     "team": "Inghilterra"
    },
    {
     "n": "F. López",
-    "p": 0.2157,
+    "p": 0.2205,
     "team": "Spagna"
    }
   ]
@@ -1177,21 +1177,21 @@
   "ko": 1794858300,
   "partita": "Germania - Olanda",
   "uff": false,
-  "p3": 0.016912155174613468,
+  "p3": 0.015385977668768076,
   "trio": [
    {
     "n": "J. Paul van Hecke",
-    "p": 0.2657,
+    "p": 0.2637,
     "team": "Olanda"
    },
    {
     "n": "D. Dumfries",
-    "p": 0.2501,
+    "p": 0.2472,
     "team": "Olanda"
    },
    {
     "n": "M. Thiaw",
-    "p": 0.2194,
+    "p": 0.2035,
     "team": "Germania"
    }
   ]
@@ -1218,6 +1218,131 @@
     "n": "K. Tsimikas",
     "p": 0.2033,
     "team": "Grecia"
+   }
+  ]
+ },
+ {
+  "comp": "naz",
+  "id": 5181810,
+  "ko": 1794944700,
+  "partita": "Ungheria - Irlanda del Nord",
+  "uff": false,
+  "p3": 0.015396635062518125,
+  "trio": [
+   {
+    "n": "T. Hume",
+    "p": 0.2416,
+    "team": "Irlanda del Nord"
+   },
+   {
+    "n": "M. Csinger",
+    "p": 0.2386,
+    "team": "Ungheria"
+   },
+   {
+    "n": "T. Atcheson",
+    "p": 0.2302,
+    "team": "Irlanda del Nord"
+   }
+  ]
+ },
+ {
+  "comp": "naz",
+  "id": 5181823,
+  "ko": 1794944700,
+  "partita": "Irlanda - Kosovo",
+  "uff": false,
+  "p3": 0.016058736879838203,
+  "trio": [
+   {
+    "n": "K. Hajrizi",
+    "p": 0.3306,
+    "team": "Kosovo"
+   },
+   {
+    "n": "D. Gallapeni",
+    "p": 0.2288,
+    "team": "Kosovo"
+   },
+   {
+    "n": "L. Scales",
+    "p": 0.183,
+    "team": "Irlanda"
+   }
+  ]
+ },
+ {
+  "comp": "naz",
+  "id": 5181848,
+  "ko": 1794944700,
+  "partita": "Polonia - Svezia",
+  "uff": false,
+  "p3": 0.01665925697094983,
+  "trio": [
+   {
+    "n": "G. Lagerbielke",
+    "p": 0.2823,
+    "team": "Svezia"
+   },
+   {
+    "n": "G. Gudmundsson",
+    "p": 0.2279,
+    "team": "Svezia"
+   },
+   {
+    "n": "O. Kubiak",
+    "p": 0.2232,
+    "team": "Polonia"
+   }
+  ]
+ },
+ {
+  "comp": "naz",
+  "id": 5181871,
+  "ko": 1794944700,
+  "partita": "Danimarca - Norvegia",
+  "uff": false,
+  "p3": 0.01408363363228914,
+  "trio": [
+   {
+    "n": "K. Ajer",
+    "p": 0.2418,
+    "team": "Norvegia"
+   },
+   {
+    "n": "A. Bah",
+    "p": 0.2281,
+    "team": "Danimarca"
+   },
+   {
+    "n": "J. Ryerson",
+    "p": 0.2202,
+    "team": "Norvegia"
+   }
+  ]
+ },
+ {
+  "comp": "naz",
+  "id": 5181872,
+  "ko": 1794944700,
+  "partita": "Galles - Portogallo",
+  "uff": false,
+  "p3": 0.013018427546022535,
+  "trio": [
+   {
+    "n": "B. Davies",
+    "p": 0.2538,
+    "team": "Galles"
+   },
+   {
+    "n": "N. Williams",
+    "p": 0.251,
+    "team": "Galles"
+   },
+   {
+    "n": "R. Neves",
+    "p": 0.1761,
+    "team": "Portogallo"
    }
   ]
  }
