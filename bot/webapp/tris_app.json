@@ -976,22 +976,22 @@
   "id": 5181799,
   "ko": 1794771900,
   "partita": "Francia - Turchia",
-  "uff": false,
-  "p3": 0.016367817649727816,
+  "uff": true,
+  "p3": 0.015832469532843674,
   "trio": [
    {
-    "n": "M. Demiral",
-    "p": 0.2809,
+    "n": "E. Topçu",
+    "p": 0.2754,
     "team": "Turchia"
    },
    {
-    "n": "E. Ünal",
-    "p": 0.2427,
+    "n": "İ. Yüksek",
+    "p": 0.269,
     "team": "Turchia"
    },
    {
-    "n": "E. Camavinga",
-    "p": 0.207,
+    "n": "S. Kumbedi",
+    "p": 0.1842,
     "team": "Francia"
    }
   ]
