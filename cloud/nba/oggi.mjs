@@ -20,16 +20,22 @@ for (const e of sb?.events || []) { const c = e.competitions?.[0]; if (![2, 3, 5
 console.log(`giorno ${giorno}: ${partite.length} partite da giocare · infortunati in elenco ${Object.keys(inf).length}`);
 // ---- quote ----
 const K = process.env.ODDSPAPI_KEY;
-if (K && partite.length && !process.env.NBA_SENZA_QUOTE) { const B = 'https://api.oddspapi.io/v4'; let chiamate = 0;
+// Per il giro automatico: limita le partite quotate e usa soltanto i bookmaker italiani.
+// Il workflow manuale conserva il comportamento originale se le variabili non sono impostate.
+const cap = Math.max(0, Math.min(partite.length, Number(process.env.NBA_QUOTE_MAX_PARTITE ?? partite.length) || 0));
+const soloItaliani = process.env.NBA_QUOTE_SOLO_ITALIA === '1';
+const daQuotare = cap >= partite.length ? partite : Array.from({ length: cap }, (_, i) => partite[Math.floor((i + 0.5) * partite.length / cap)]);
+console.log(`quote: ${daQuotare.length}/${partite.length} partite${soloItaliani ? ' · solo bookmaker italiani' : ''}`);
+if (K && daQuotare.length && !process.env.NBA_SENZA_QUOTE) { const B = 'https://api.oddspapi.io/v4'; let chiamate = 0;
   const op = async (p, q) => { for (let k = 0; k < 4; k++) { await sleep(3600); const u = new URL(B + p); for (const [a, v] of Object.entries({ ...q, apiKey: K })) u.searchParams.set(a, v); const r = await fetch(u, { signal: AbortSignal.timeout(60000) }).catch(() => null); if (!r) continue; if (r.status === 429) { const t = await r.text(); if (/REQUEST_LIMIT/.test(t)) { console.log('quota OddsPapi finita'); return null; } await sleep(5000); continue; } chiamate++; if (!r.ok) return null; return r.json(); } return null; };
   const t0 = Math.min(...partite.map(p => p.ts)), d = x => new Date(x * 1000).toISOString().slice(0, 10);
   const fx = await op('/fixtures', { tournamentId: 132, from: d(t0 - 43200), to: d(t0 + 86400) }), F = Array.isArray(fx) ? fx : fx?.data || [];
   const leggi = (o, P) => { let n = 0; for (const [b, v] of Object.entries(o?.bookmakerOdds || {})) for (const [mid, key] of [['112602', 'dd'], ['112603', 'td']]) for (const out of Object.values(v.markets?.[mid]?.outcomes || {})) for (const x of Object.values(out.players || {})) { if (!x?.active || !x.playerName || !(x.price > 1)) continue; (P.quote[key][b] ||= {})[x.playerName] = x.price; n++; } return n; };
   let italiani = null;
-  for (const P of partite) { const f = F.find(f => Math.abs(Date.parse(f.startTime) / 1000 - P.ts) < 5 * 3600 && String(f.participant1Name).includes(NOMI[P.h[0]]) && String(f.participant2Name).includes(NOMI[P.a[0]])); if (!f) { console.log('  non trovata su OddsPapi:', P.a[1], '@', P.h[1]); continue; }
-    const n = leggi(await op('/odds', { fixtureId: f.fixtureId, bookmakers: 'fanduel,bet365,draftkings' }), P); let ni = 0;
-    if (italiani !== false) { ni = leggi(await op('/odds', { fixtureId: f.fixtureId, bookmakers: 'sisal.it,bet365.it,eurobet.it' }), P); if (italiani === null) italiani = ni > 0; }
-    console.log(`  ${P.a[1]} @ ${P.h[1]}: quote ${n}${italiani !== null ? ' · bookmaker italiani ' + ni : ''}`); }
+  for (const P of daQuotare) { const f = F.find(f => Math.abs(Date.parse(f.startTime) / 1000 - P.ts) < 5 * 3600 && String(f.participant1Name).includes(NOMI[P.h[0]]) && String(f.participant2Name).includes(NOMI[P.a[0]])); if (!f) { console.log('  non trovata su OddsPapi:', P.a[1], '@', P.h[1]); continue; }
+    const n = soloItaliani ? 0 : leggi(await op('/odds', { fixtureId: f.fixtureId, bookmakers: 'fanduel,bet365,draftkings' }), P); let ni = 0;
+    if (soloItaliani || italiani !== false) { ni = leggi(await op('/odds', { fixtureId: f.fixtureId, bookmakers: 'sisal.it,bet365.it,eurobet.it' }), P); if (italiani === null) italiani = ni > 0; }
+    console.log(`  ${P.a[1]} @ ${P.h[1]}: quote ${n}${soloItaliani || italiani !== null ? ' · bookmaker italiani ' + ni : ''}`); }
   console.log('richieste OddsPapi usate:', chiamate, '· bookmaker italiani con questi mercati:', italiani);
 }
 fs.writeFileSync(OUT, JSON.stringify({ giorno, creato: Math.floor(Date.now() / 1000), partite }));
