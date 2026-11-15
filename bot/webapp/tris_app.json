@@ -951,8 +951,8 @@
   "id": 5181798,
   "ko": 1794771900,
   "partita": "Belgio - Italia",
-  "uff": false,
-  "p3": 0.01996110400382319,
+  "uff": true,
+  "p3": 0.019205831210682787,
   "trio": [
    {
     "n": "G. Scalvini",
@@ -966,7 +966,7 @@
    },
    {
     "n": "R. Lavia",
-    "p": 0.2472,
+    "p": 0.2378,
     "team": "Belgio"
    }
   ]
@@ -1001,12 +1001,12 @@
   "id": 5181859,
   "ko": 1794771900,
   "partita": "Croazia - Rep. Ceca",
-  "uff": false,
-  "p3": 0.011639633057575321,
+  "uff": true,
+  "p3": 0.011400204286940826,
   "trio": [
    {
     "n": "V. Coufal",
-    "p": 0.2438,
+    "p": 0.2428,
     "team": "Rep. Ceca"
    },
    {
@@ -1016,7 +1016,7 @@
    },
    {
     "n": "M. Kovačić",
-    "p": 0.172,
+    "p": 0.1692,
     "team": "Croazia"
    }
   ]
@@ -1026,23 +1026,23 @@
   "id": 5181860,
   "ko": 1794771900,
   "partita": "Spagna - Inghilterra",
-  "uff": false,
-  "p3": 0.010600445468258992,
+  "uff": true,
+  "p3": 0.011704850096741744,
   "trio": [
    {
     "n": "E. Anderson",
-    "p": 0.2346,
+    "p": 0.2502,
     "team": "Inghilterra"
    },
    {
-    "n": "D. Huijsen",
-    "p": 0.2005,
+    "n": "M. Merino",
+    "p": 0.2162,
     "team": "Spagna"
    },
    {
-    "n": "M. Cucurella",
-    "p": 0.1943,
-    "team": "Spagna"
+    "n": "B. White",
+    "p": 0.1865,
+    "team": "Inghilterra"
    }
   ]
  },
