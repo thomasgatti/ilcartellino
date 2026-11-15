@@ -926,22 +926,22 @@
   "id": 5181904,
   "ko": 1794762000,
   "partita": "Bielorussia - Albania",
-  "uff": false,
-  "p3": 0.012223578518138432,
+  "uff": true,
+  "p3": 0.011245699831157906,
   "trio": [
    {
     "n": "M. Ebong",
-    "p": 0.2354,
+    "p": 0.2334,
     "team": "Bielorussia"
    },
    {
-    "n": "V. Bocherov",
-    "p": 0.2164,
+    "n": "R. Begunov",
+    "p": 0.2096,
     "team": "Bielorussia"
    },
    {
     "n": "R. Manaj",
-    "p": 0.2069,
+    "p": 0.1981,
     "team": "Albania"
    }
   ]
