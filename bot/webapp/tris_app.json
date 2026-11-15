@@ -1177,21 +1177,21 @@
   "ko": 1794858300,
   "partita": "Germania - Olanda",
   "uff": false,
-  "p3": 0.015385977668768076,
+  "p3": 0.012174940012887095,
   "trio": [
    {
     "n": "J. Paul van Hecke",
-    "p": 0.2637,
+    "p": 0.2497,
     "team": "Olanda"
    },
    {
     "n": "D. Dumfries",
-    "p": 0.2472,
+    "p": 0.2336,
     "team": "Olanda"
    },
    {
-    "n": "M. Thiaw",
-    "p": 0.2035,
+    "n": "A. Pavlović",
+    "p": 0.18,
     "team": "Germania"
    }
   ]
@@ -1202,21 +1202,21 @@
   "ko": 1794858300,
   "partita": "Grecia - Serbia",
   "uff": false,
-  "p3": 0.01767526091559657,
+  "p3": 0.017763955240144222,
   "trio": [
    {
     "n": "S. Džodić",
-    "p": 0.2868,
+    "p": 0.2888,
     "team": "Serbia"
    },
    {
     "n": "N. Milenković",
-    "p": 0.2614,
+    "p": 0.2634,
     "team": "Serbia"
    },
    {
     "n": "K. Tsimikas",
-    "p": 0.2033,
+    "p": 0.2014,
     "team": "Grecia"
    }
   ]
