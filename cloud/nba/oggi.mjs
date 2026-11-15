@@ -8,6 +8,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 const get = async u => { for (let k = 0; k < 3; k++) { try { const r = await fetch(u, { headers: { 'User-Agent': UA }, signal: AbortSignal.timeout(30000) }); if (r.ok) return await r.json(); } catch {} await sleep(1500); } return null; };
 const giorno = process.argv[3] || new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York' }).format(new Date()).replace(/-/g, '');
 const sb = await get(E + 'scoreboard?dates=' + giorno + '&limit=100'), partite = [];
+if (!Array.isArray(sb?.events)) throw new Error('Calendario ESPN non disponibile: non pubblicare dati NBA incompleti');
 const stato = s => /out|suspen/i.test(s || '') ? 'out' : /day|doubt|question|probable|game time/i.test(s || '') ? 'dubbio' : '';
 const inf = {}; { const j = await get(E + 'injuries'); for (const T of j?.injuries || []) for (const x of T.injuries || []) { const id = +x.athlete?.id || +(x.athlete?.links?.[0]?.href?.match(/id\/(\d+)/)?.[1] || 0); if (id) inf[id] = [stato(x.status), x.details?.type || x.shortComment?.slice(0, 60) || '']; } }
 const rose = {};
