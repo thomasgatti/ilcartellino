@@ -1,0 +1,107 @@
+name: NBA - aggiornamento automatico quotidiano
+# Avvio giornaliero nel primo pomeriggio americano, prima delle eventuali partite domenicali.
+# Quote limitate: massimo 1 richiesta fixtures + 5 richieste bookmaker italiani al giorno
+# (~186 richieste in un mese di 31 giorni, rispetto a 250 disponibili).
+on:
+  schedule:
+    - cron: '30 15 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: nba-aggiornamento-quotidiano
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  nba:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/checkout@v4
+        with:
+          ref: dati
+          path: dati
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Controlla se la data NBA è già stata pubblicata
+        id: giorno
+        run: |
+          GIORNO=$(TZ=America/New_York date +%Y%m%d)
+          echo "giorno=$GIORNO" >> "$GITHUB_OUTPUT"
+          if python3 - "$GIORNO" <<'PY'
+          import json, sys
+          try:
+              d = json.load(open('nba/oggi.json'))
+              assert d.get('giorno') == sys.argv[1]
+          except (OSError, ValueError, AssertionError):
+              sys.exit(1)
+          PY
+          then
+            echo "genera=no" >> "$GITHUB_OUTPUT"
+            echo "La pagina NBA è già aggiornata per $GIORNO"
+          else
+            echo "genera=si" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Dipendenze del modello
+        if: steps.giorno.outputs.genera == 'si'
+        run: pip install -q pandas scikit-learn
+      - name: Calendario, rose, infortuni e quote (limite mensile)
+        if: steps.giorno.outputs.genera == 'si'
+        env:
+          ODDSPAPI_KEY: ${{ secrets.ODDSPAPI_KEY_NBA }}
+          NBA_QUOTE_SOLO_ITALIA: '1'
+          NBA_QUOTE_MAX_PARTITE: '5'
+        run: node cloud/nba/oggi.mjs /tmp/nba_auto_input.json "${{ steps.giorno.outputs.giorno }}"
+      - name: Probabilità DD/TD e combinazioni
+        if: steps.giorno.outputs.genera == 'si'
+        run: |
+          if node -e "process.exit(require('/tmp/nba_auto_input.json').partite.length ? 0 : 1)"; then
+            python3 bot/nba/oggi.py dati/nba /tmp/nba_auto_input.json nba/oggi.json
+          else
+            python3 - <<'PY'
+          import json, time
+          with open('/tmp/nba_auto_input.json') as f:
+              d = json.load(f)
+          with open('nba/oggi.json', 'w') as f:
+              json.dump({'giorno': d['giorno'], 'creato': int(time.time()), 'partite': [],
+                         'consigli': {'bassa': [], 'alta': [], 'td': [], 'combinazioni': []}}, f)
+          PY
+          fi
+          python3 - "${{ steps.giorno.outputs.giorno }}" <<'PY'
+          import json, sys
+          d = json.load(open('nba/oggi.json'))
+          assert d.get('giorno') == sys.argv[1], 'Data NBA errata'
+          assert 'partite' in d and 'consigli' in d, 'Dati incompleti'
+          assert all(p.get('giocatori') for p in d['partite']), 'Candidati mancanti'
+          print('NBA:',len(d['partite']),'partite,',
+                len(d['consigli'].get('combinazioni', [])),'combinazioni')
+          PY
+      - name: Pubblica soltanto i dati NBA
+        if: steps.giorno.outputs.genera == 'si'
+        run: |
+          git add -- nba/oggi.json
+          if git diff --cached --quiet; then
+            echo 'Nessun cambiamento NBA'
+            exit 0
+          fi
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m "NBA: aggiornamento automatico ${{ steps.giorno.outputs.giorno }}"
+          for i in 1 2 3; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then
+              echo 'Pagina NBA pubblicata'
+              exit 0
+            fi
+            sleep 3
+          done
+          echo 'Errore nella pubblicazione' >&2
+          exit 1
