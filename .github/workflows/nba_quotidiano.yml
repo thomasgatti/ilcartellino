@@ -81,6 +81,14 @@ jobs:
       - name: Probabilità DD/TD e combinazioni
         if: steps.giorno.outputs.genera == 'si'
         run: |
+          # la pagina della notte prima resta visibile come «Notte scorsa» (nba/ieri.json)
+          python3 - "${{ steps.giorno.outputs.giorno }}" <<'PY'
+          import json, shutil, sys
+          try:
+              v = json.load(open('nba/oggi.json'))
+              if v.get('giorno') != sys.argv[1] and v.get('partite'): shutil.copy('nba/oggi.json', 'nba/ieri.json')
+          except (OSError, ValueError): pass
+          PY
           if node -e "process.exit(require('/tmp/nba_auto_input.json').partite.length ? 0 : 1)"; then
             python3 bot/nba/oggi.py dati/nba /tmp/nba_auto_input.json nba/oggi.json ${{ steps.giorno.outputs.riusa == '1' && '/tmp/nba_quote_salvate.json' || '' }}
           else
@@ -105,7 +113,7 @@ jobs:
       - name: Pubblica soltanto i dati NBA
         if: steps.giorno.outputs.genera == 'si'
         run: |
-          git add -- nba/oggi.json
+          git add -- nba/oggi.json nba/ieri.json
           if git diff --cached --quiet; then
             echo 'Nessun cambiamento NBA'
             exit 0

@@ -44,6 +44,10 @@ h1 { font: 900 clamp(38px, 9vw, 60px)/.9 var(--display); margin: 12px 0 8px; let
 .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #ff4d4d; margin-right: 6px; animation: batte 1.4s infinite; vertical-align: 1px; }
 @keyframes batte { 50% { opacity: .25; } }
 
+.tabs { display: inline-flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--card); border: 1px solid var(--line); margin: 2px 0 12px; }
+.tabs button { border: 0; background: transparent; color: var(--muted); font: 700 14px var(--body); padding: 7px 16px; border-radius: 999px; cursor: pointer; }
+.tabs button.on { background: var(--red); color: #fff; }
+.tabs button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 /* sezioni: tutte uguali */
 section { margin-top: 28px; }
 .sec { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; margin: 0 0 10px; }
@@ -184,6 +188,7 @@ details.ieri > summary small { display: block; font-weight: 400; color: var(--mu
   <header>
     <span class="crumb">NBA</span>
     <h1>Il tabellino</h1>
+    <div class="tabs" id="tabs" hidden><button type="button" data-v="oggi" class="on">Stanotte</button><button type="button" data-v="ieri">Notte scorsa</button></div>
     <div class="meta" id="meta">Carico…</div>
     <div class="status" id="status" hidden><span class="livemeta" id="livemeta" role="status" aria-live="polite"></span><button type="button" class="btn" id="aggiorna">Aggiorna live</button></div>
   </header>
@@ -227,14 +232,15 @@ let inGiro = false;
 async function aggiornaLive() {
   if (!D || !D.partite.length || inGiro || document.hidden) return; inGiro = true; const meta = document.getElementById('livemeta');
   try {
-    const sb = await espn('scoreboard?dates=' + D.giorno + '&limit=100'), miei = new Set(D.partite.map(P => String(P.id))), giri = []; let trovate = 0;
+    const Dg = D, sb = await espn('scoreboard?dates=' + D.giorno + '&limit=100'), miei = new Set(D.partite.map(P => String(P.id))), giri = []; let trovate = 0;
     for (const e of sb.events || []) { if (!miei.has(String(e.id))) continue; trovate++; const t = e.status?.type || {}, c = e.competitions?.[0], L = LIVE[e.id] ||= {};
       const sc = k => c?.competitors?.find(x => x.homeAway === k)?.score ?? '';
       L.stato = t.state || 'pre'; L.det = t.state === 'post' ? 'Finale' : (t.shortDetail || '').replace(/ - /, ' · ').replace(/(\d)(st|nd|rd|th)( Quarter)?/, 'Q$1').replace('Halftime', 'Intervallo').replace('End of', 'Fine'); L.sc = [sc('away'), sc('home')];
       if (L.stato === 'in' || (L.stato === 'post' && !L.chiusa)) giri.push(espn('summary?event=' + e.id).then(j => { L.pl = tabellino(j); if (L.stato === 'post') L.chiusa = true; }).catch(() => {})); }
     await Promise.all(giri);
+    if (Dg !== D) { inGiro = false; return aggiornaLive(); }
     if (!trovate) throw new Error('partite non trovate nel tabellone');
-    const vive = Object.values(LIVE).filter(L => L.stato === 'in').length, finite = Object.values(LIVE).filter(L => L.stato === 'post').length, attesa = trovate - vive - finite;
+    const mie = D.partite.map(P => LIVE[P.id]).filter(Boolean), vive = mie.filter(L => L.stato === 'in').length, finite = mie.filter(L => L.stato === 'post').length, attesa = trovate - vive - finite;
     meta.innerHTML = vive ? `<span class="dot"></span>${vive} in corso · ${finite} finite · ${attesa} da iniziare` : finite === D.partite.length ? 'Tutte le partite sono finite' : finite ? `${finite} finite · ${attesa} da iniziare` : `Si parte alle ${fmtO.format(new Date(Math.min(...D.partite.map(p => p.ts)) * 1000))}`;
     meta.title = 'Ultimo controllo ' + fmtO.format(new Date()) + ' · si aggiorna da solo ogni 30 secondi';
     disegna();
@@ -290,17 +296,30 @@ function disegna() {
   document.getElementById('app').innerHTML = h;
   document.querySelectorAll('details').forEach(d => d.addEventListener('toggle', () => d.open ? aperte.add(d.dataset.id) : aperte.delete(d.dataset.id)));
 }
-fetch('oggi.json?' + Date.now()).then(r => r.json()).then(j => { D = j; const agg = new Date(D.creato * 1000);
-  if (!D.partite.length) { document.getElementById('meta').innerHTML = `Nessuna partita in programma stanotte · aggiornato alle ${fmtO.format(agg)}`; disegna(); return; }
+// due viste con la stessa impaginazione: «Stanotte» (oggi.json) e «Notte scorsa» (ieri.json, la pagina della notte prima con i risultati finali)
+const DATI = {}; let vista = 'oggi', notaBase = null;
+function mostra(v) { vista = v; D = DATI[v]; for (const k in partitaDi) delete partitaDi[k];
+  document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.v === v));
+  const agg = new Date(D.creato * 1000), nota = document.getElementById('note'); notaBase ??= nota.innerHTML; nota.innerHTML = notaBase;
+  document.getElementById('livemeta').textContent = '';
+  if (!D.partite.length) { document.getElementById('meta').innerHTML = `Nessuna partita in programma ${v === 'oggi' ? 'stanotte' : ''} · aggiornato alle ${fmtO.format(agg)}`; document.getElementById('status').hidden = true; disegna(); return; }
   for (const P of D.partite) for (const g of P.giocatori) partitaDi[g.n] = P.id;
   const primo = new Date(Math.min(...D.partite.map(p => p.ts)) * 1000);
   const ritirate = (D.quote_non_disponibili || []).map(x => esc(x.n + ' ' + (x.cosa || '').toUpperCase())).join(', ');
   const segnalate = (D.quote_segnalate || []).map(x => `${esc(x.n)} ${esc((x.cosa || '').toUpperCase())} quota ${nq(x.q)} (segnalata, non verificata)`).join('; ');
-  document.getElementById('meta').innerHTML = `Notte del <b>${fmtG.format(primo).replace(/^\S+\s/, '')}</b> · ${D.partite.length} partite · previsioni e quote delle ${fmtO.format(agg)}`;
-  if (ritirate || segnalate) document.getElementById('note').insertAdjacentHTML('afterbegin', `${ritirate ? 'Quote segnalate come non disponibili: ' + ritirate + '. ' : ''}${segnalate ? 'Aggiornamento: ' + segnalate + '. ' : ''}`);
-  document.getElementById('status').hidden = false; document.getElementById('aggiorna').addEventListener('click', aggiornaLive);
-  disegna(); aggiornaLive(); setInterval(aggiornaLive, 30000); document.addEventListener('visibilitychange', () => { if (!document.hidden) aggiornaLive(); });
-}).catch(() => { document.getElementById('meta').textContent = 'Dati non ancora disponibili.'; });
+  document.getElementById('meta').innerHTML = `Notte del <b>${fmtG.format(primo).replace(/^\S+\s/, '')}</b> · ${D.partite.length} partite · ${v === 'oggi' ? 'previsioni e quote delle ' + fmtO.format(agg) : 'le proposte di allora e com\'è andata'}`;
+  if (ritirate || segnalate) nota.insertAdjacentHTML('afterbegin', `${ritirate ? 'Quote segnalate come non disponibili: ' + ritirate + '. ' : ''}${segnalate ? 'Aggiornamento: ' + segnalate + '. ' : ''}`);
+  document.getElementById('status').hidden = false; disegna(); aggiornaLive();
+}
+const leggi = f => fetch(f + '?' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null);
+Promise.all([leggi('oggi.json'), leggi('ieri.json')]).then(([oggi, ieri]) => {
+  if (!oggi) { document.getElementById('meta').textContent = 'Dati non ancora disponibili.'; return; }
+  DATI.oggi = oggi; if (ieri && ieri.partite?.length && ieri.giorno !== oggi.giorno) { DATI.ieri = ieri; document.getElementById('tabs').hidden = false; }
+  document.querySelectorAll('#tabs button').forEach(b => b.addEventListener('click', () => { if (DATI[b.dataset.v]) mostra(b.dataset.v); }));
+  document.getElementById('aggiorna').addEventListener('click', aggiornaLive);
+  mostra(new URLSearchParams(location.search).get('v') === 'ieri' && DATI.ieri ? 'ieri' : 'oggi');
+  setInterval(aggiornaLive, 30000); document.addEventListener('visibilitychange', () => { if (!document.hidden) aggiornaLive(); });
+});
 </script>
 </body>
 </html>

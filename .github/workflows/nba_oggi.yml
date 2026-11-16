@@ -32,8 +32,10 @@ jobs:
           ODDSPAPI_KEY: ${{ secrets.ODDSPAPI_KEY_NBA }}
           NBA_SENZA_QUOTE: ${{ inputs.quote == 'no' && '1' || '' }}
       - name: Modello
-        run: python3 bot/nba/oggi.py dati/nba /tmp/oggi_input.json nba/oggi.json
+        run: |
+          python3 -c "import json,shutil;v=json.load(open('nba/oggi.json'));n=json.load(open('/tmp/oggi_input.json'));v.get('giorno')!=n['giorno'] and v.get('partite') and shutil.copy('nba/oggi.json','nba/ieri.json')" || true
+          python3 bot/nba/oggi.py dati/nba /tmp/oggi_input.json nba/oggi.json
       - name: Pubblica
         run: |
           git config user.name "bot ammoniti" && git config user.email "bot@users.noreply.github.com"
-          git add nba/oggi.json && (git commit -qm "NBA: partite della notte $(date -u +%F)" && git pull -q --rebase origin main && git push -q origin HEAD:main) || echo "niente di nuovo"
+          git add nba/oggi.json nba/ieri.json && (git commit -qm "NBA: partite della notte $(date -u +%F)" && git pull -q --rebase origin main && git push -q origin HEAD:main) || echo "niente di nuovo"
