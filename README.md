@@ -24,6 +24,7 @@ template.html + data.json + lineups.txt ──build.py──▶ bot/webapp/index
 | `bot/webapp/lineups.txt` | Formazioni per la scheda "Formazioni" (campo). |
 | `bot/webapp/build.py`, `build_vercel.py` | Costruiscono le pagine (vedi sopra). |
 | `bot/webapp/tris_app.js` | Calcola il tris dell'app di ogni partita → `tris_app.json` (serve Playwright). |
+| `bot/webapp/registro_previsioni.jsonl` | **Registro delle previsioni** (dal ramo `codex/registro-previsioni`): una riga JSON per ogni tris calcolato dalla Giornata automatica, solo in aggiunta. Orario, commit, ufficiali o probabili, modello, tris, probabilità e rosa eleggibile `[nome, lato, ruolo, p0, q, % titolare, p dello slot]`; `varianti` per i tris in prova. La pagina non lo legge. |
 | `bot/ammoniti/` | Modello, script Python di conversione, test, RUNBOOK, dati di lavoro (`data/`, `tmp/`). |
 | `lib/` | Copie dei `.js` del modello servite su `/lib/` del sito (CORS aperto, `vercel.json`): le usano la scheda FotMob nel browser e il bot nel cloud. |
 | `cloud/` | Bot per GitHub Actions (Node 20): scarica FotMob, formazioni ufficiali, esiti. |
