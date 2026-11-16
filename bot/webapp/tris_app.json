@@ -1252,21 +1252,21 @@
   "ko": 1794944700,
   "partita": "Irlanda - Kosovo",
   "uff": false,
-  "p3": 0.016058736879838203,
+  "p3": 0.016842878228165593,
   "trio": [
    {
     "n": "K. Hajrizi",
-    "p": 0.3306,
+    "p": 0.3355,
     "team": "Kosovo"
    },
    {
     "n": "D. Gallapeni",
-    "p": 0.2288,
+    "p": 0.2326,
     "team": "Kosovo"
    },
    {
     "n": "L. Scales",
-    "p": 0.183,
+    "p": 0.186,
     "team": "Irlanda"
    }
   ]
@@ -1277,21 +1277,21 @@
   "ko": 1794944700,
   "partita": "Polonia - Svezia",
   "uff": false,
-  "p3": 0.01665925697094983,
+  "p3": 0.01845217359816889,
   "trio": [
    {
     "n": "G. Lagerbielke",
-    "p": 0.2823,
+    "p": 0.2923,
     "team": "Svezia"
    },
    {
     "n": "G. Gudmundsson",
-    "p": 0.2279,
+    "p": 0.2357,
     "team": "Svezia"
    },
    {
     "n": "O. Kubiak",
-    "p": 0.2232,
+    "p": 0.2309,
     "team": "Polonia"
    }
   ]
@@ -1302,21 +1302,21 @@
   "ko": 1794944700,
   "partita": "Danimarca - Norvegia",
   "uff": false,
-  "p3": 0.01408363363228914,
+  "p3": 0.012339121651834649,
   "trio": [
    {
     "n": "K. Ajer",
-    "p": 0.2418,
+    "p": 0.2457,
     "team": "Norvegia"
    },
    {
-    "n": "A. Bah",
-    "p": 0.2281,
+    "n": "R. Kristensen",
+    "p": 0.2239,
     "team": "Danimarca"
    },
    {
-    "n": "J. Ryerson",
-    "p": 0.2202,
+    "n": "T. Aasgaard",
+    "p": 0.1934,
     "team": "Norvegia"
    }
   ]
@@ -1327,7 +1327,7 @@
   "ko": 1794944700,
   "partita": "Galles - Portogallo",
   "uff": false,
-  "p3": 0.013018427546022535,
+  "p3": 0.010151818482017962,
   "trio": [
    {
     "n": "B. Davies",
@@ -1335,13 +1335,13 @@
     "team": "Galles"
    },
    {
-    "n": "N. Williams",
-    "p": 0.251,
+    "n": "L. Cullen",
+    "p": 0.2183,
     "team": "Galles"
    },
    {
-    "n": "R. Neves",
-    "p": 0.1761,
+    "n": "A. Costa",
+    "p": 0.158,
     "team": "Portogallo"
    }
   ]
