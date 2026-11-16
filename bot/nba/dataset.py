@@ -129,6 +129,15 @@ def costruisci(partite, gioc):
                     a_, l_ = c['conc'][k]; riga['conc_' + k] = None if a_ is None or l_ is None else a_ - l_
                     cr = c['conc_r'][rl][k].m; riga['concr_' + k] = cr
                     riga['sq_' + k] = c['sq'][k]
+                # ex di turno: ha giocato almeno 10 partite (in archivio, dal 2020/21) con la squadra avversaria
+                exn = 0 if g is None else g['sqn'].get(oid, 0)
+                riga['ex'] = int(exn >= 10); riga['ex_n'] = exn; riga['ex_primo'] = int(exn >= 10 and g is not None and oid not in g['exvisti'])
+                # riposi: seconde serate di back-to-back in cui poteva giocare (aveva giocato la sera prima) e quante ne ha giocate
+                riga['b2b_occ'] = 0 if g is None else g['b2b'][0]; riga['b2b_gio'] = 0 if g is None else g['b2b'][1]
+                # assenze dello stesso ruolo (chi gioca al suo posto)
+                stesso = [(p_, mm) for p_, mm, _ in c['ass'] if p_ != pid and ruolo((gioc.get(str(p_)) or ['', ''])[1]) == rl]
+                riga['assr_n'] = len(stesso)
+                for k in ('min', 'reb', 'ast'): riga['assr_' + k] = sum(mm[k].m or 0 for _, mm in stesso)
                 for nome, lista in (('ass', [(p_, mm) for p_, mm, _ in c['ass'] if p_ != pid]), ('gia', [(p_, mm) for p_, mm in c['gia'] if p_ != pid])):
                     riga[nome + '_n'] = len(lista)
                     for k in ('min', 'pts', 'reb', 'ast'): riga[f'{nome}_{k}'] = sum(mm[k].m or 0 for _, mm in lista)
@@ -136,7 +145,12 @@ def costruisci(partite, gioc):
         if m.get('futura'): continue                   # partita ancora da giocare: solo le righe, lo stato non cambia
         # ---- aggiornamento dello stato, DOPO aver scritto le righe ----
         for L in (0, 1):
-            tid, oid = lati[L][0], lati[1 - L][0]; a = T[tid]; a['n'] += 1; a['ult'] = ts
+            tid, oid = lati[L][0], lati[1 - L][0]; a = T[tid]
+            if ctx[L]['ripo'] is not None and ctx[L]['ripo'] < 1.6:      # seconda serata di un back-to-back: chi aveva giocato ieri, gioca anche oggi?
+                oggi_ = {r[0] for r in per_lato[L]}
+                for pid_, (ult_, _) in a['rot'].items():
+                    if ult_ and ult_[-1] == a['n'] and pid_ in G: G[pid_]['b2b'][0] += 1; G[pid_]['b2b'][1] += int(pid_ in oggi_)
+            a['n'] += 1; a['ult'] = ts
             a['poss'].agg((tot[0]['poss'] + tot[1]['poss']) / 2, 0.08)
             for k in ('pts', 'reb', 'ast'): a['fatti'][k].agg(tot[L][k], 0.08); a['conc'][k].agg(tot[1 - L][k], 0.08)
             # concesso per ruolo: somma dei giocatori avversari di quel ruolo
@@ -149,10 +163,12 @@ def costruisci(partite, gioc):
                 val = dict(min=r[3], pts=r[4], reb=r[5], ast=r[6], stl=r[7], blk=r[8]); n10 = sum(1 for k in CAT if val[k] >= 10)
                 g = G.get(pid)
                 if g is None:
-                    g = G[pid] = dict(n=0, ns={}, ult=ts, sq=tid, emin=Mobile(), etit=Mobile(), tit_ult=0, dd=Mobile(), td=Mobile(), cdd=0, ctd=0, sdd={}, std={}, ssum={},
+                    g = G[pid] = dict(n=0, ns={}, ult=ts, sq=tid, sqn={}, exvisti=set(), b2b=[0, 0], emin=Mobile(), etit=Mobile(), tit_ult=0, dd=Mobile(), td=Mobile(), cdd=0, ctd=0, sdd={}, std={}, ssum={},
                                       lenta={k: Mobile() for k in CAT + ('min',)}, vel={k: Mobile() for k in CAT}, u10dd=deque(maxlen=10), u10td=deque(maxlen=10), u10min=deque(maxlen=10),
                                       u10={k: deque(maxlen=10) for k in ('pts', 'reb', 'ast')})
                 st = m['st']; g['n'] += 1; g['ns'][st] = g['ns'].get(st, 0) + 1; g['ult'] = ts; g['sq'] = tid
+                g['sqn'][tid] = g['sqn'].get(tid, 0) + 1
+                if g['sqn'].get(oid, 0) >= 10: g['exvisti'].add(oid)
                 g['emin'].agg(val['min'], A_MIN); g['etit'].agg(r[2], 0.3); g['tit_ult'] = r[2]
                 g['dd'].agg(int(n10 >= 2), A_LENTA); g['td'].agg(int(n10 >= 3), A_LENTA); g['cdd'] += int(n10 >= 2); g['ctd'] += int(n10 >= 3)
                 g['sdd'][st] = g['sdd'].get(st, 0) + int(n10 >= 2); g['std'][st] = g['std'].get(st, 0) + int(n10 >= 3)
