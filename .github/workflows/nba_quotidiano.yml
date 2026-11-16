@@ -50,7 +50,8 @@ jobs:
               sys.exit(1)
           PY
           then
-            if [ "${{ inputs.rifai }}" = "si" ]; then
+            # si rifà solo se nessuna partita della notte è già cominciata: il calendario contiene solo quelle da giocare, le altre sparirebbero dalla pagina
+            if [ "${{ inputs.rifai }}" = "si" ] && python3 -c "import json,time,sys; sys.exit(0 if min(p['ts'] for p in json.load(open('nba/oggi.json'))['partite']) > time.time() + 600 else 1)"; then
               echo "genera=si" >> "$GITHUB_OUTPUT"; echo "riusa=1" >> "$GITHUB_OUTPUT"; cp nba/oggi.json /tmp/nba_quote_salvate.json
               echo "Rifaccio la pagina di $GIORNO riusando le quote già salvate"
             else
