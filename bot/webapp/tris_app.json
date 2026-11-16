@@ -1252,16 +1252,16 @@
   "ko": 1794944700,
   "partita": "Irlanda - Kosovo",
   "uff": false,
-  "p3": 0.016842878228165593,
+  "p3": 0.018533344369663605,
   "trio": [
    {
     "n": "K. Hajrizi",
-    "p": 0.3355,
+    "p": 0.3306,
     "team": "Kosovo"
    },
    {
-    "n": "D. Gallapeni",
-    "p": 0.2326,
+    "n": "L. Emërllahu",
+    "p": 0.2598,
     "team": "Kosovo"
    },
    {
@@ -1277,21 +1277,21 @@
   "ko": 1794944700,
   "partita": "Polonia - Svezia",
   "uff": false,
-  "p3": 0.01845217359816889,
+  "p3": 0.018450597942490852,
   "trio": [
    {
     "n": "G. Lagerbielke",
-    "p": 0.2923,
+    "p": 0.2972,
     "team": "Svezia"
    },
    {
     "n": "G. Gudmundsson",
-    "p": 0.2357,
+    "p": 0.2367,
     "team": "Svezia"
    },
    {
     "n": "O. Kubiak",
-    "p": 0.2309,
+    "p": 0.2261,
     "team": "Polonia"
    }
   ]
