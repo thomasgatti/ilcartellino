@@ -1201,22 +1201,22 @@
   "id": 5181836,
   "ko": 1794858300,
   "partita": "Grecia - Serbia",
-  "uff": false,
-  "p3": 0.017763955240144222,
+  "uff": true,
+  "p3": 0.02084979232643208,
   "trio": [
    {
-    "n": "S. Džodić",
-    "p": 0.2888,
+    "n": "S. Lukić",
+    "p": 0.3504,
     "team": "Serbia"
    },
    {
     "n": "N. Milenković",
-    "p": 0.2634,
+    "p": 0.2524,
     "team": "Serbia"
    },
    {
     "n": "K. Tsimikas",
-    "p": 0.2014,
+    "p": 0.2033,
     "team": "Grecia"
    }
   ]
