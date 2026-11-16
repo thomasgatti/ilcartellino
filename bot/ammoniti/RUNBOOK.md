@@ -597,6 +597,12 @@ Obiettivo dell'utente: per ogni giocatore e partita NBA la probabilità di doppi
 - **Anteprima** come nei cartellini: tabellone e canestro disegnati in SVG, il pallone fa la parabola ed entra, la retina si muove, poi il titolo; una volta per visita (`sessionStorage` `nba_splash`), si salta toccando, rispetta «riduci animazioni». Disegno originale, nessuna immagine presa dal web.
 - Controllo: 1300 e 390 px, prima della partita e con live simulato, nessun errore in console, nessuno scorrimento orizzontale.
 
+### Controllo dell'ambiente dopo le sessioni con ChatGPT/Codex (16/11/2026, 11:00)
+- Entrati in `main` dal 14 al 16/11 tramite PR 17 e 18 e due commit diretti: live ESPN con anti-cache e pulsante «Aggiorna live», note sulle quote (`quote_non_disponibili`, `quote_segnalate` in `oggi.json`), limite di partite quotate e solo bookmaker italiani in `cloud/nba/oggi.mjs` (`NBA_QUOTE_MAX_PARTITE`, `NBA_QUOTE_SOLO_ITALIA`), e il workflow **`nba_quotidiano.yml`** (15:30 UTC; salta se `nba/oggi.json` ha già il giorno USA di oggi: quindi un giro a mano di `nba_oggi.yml` prima delle 15:30 UTC fa saltare quello automatico). Queste modifiche non erano documentate qui.
+- Tutto in ordine: nessuna PR aperta; `main` allineato; negli ultimi tre giorni tutti i giri riusciti (Giornata automatica 80 su 80, fra le 10 e le 23 UTC; Dati NBA 2 su 2; FotMob 2 su 2); le 18 copie `lib/` ↔ `bot/ammoniti/` identiche; pagina `/nba/` e cartellini non si toccano (file e workflow separati).
+- Da sapere: **«Quote giocatore ammonito» fallisce ogni giorno** (429 su `/markets`): è la quota mensile finita della chiave dei cartellini, si riprende da sola all'azzeramento. Chiave NBA: **76 richieste su 250** al 16/11 (circa 6 al giorno col giro automatico: ci sta fino all'azzeramento solo senza altri giri a mano con tutte le quote, che ne costano ~19).
+- Resti da pulire (non toccati, decide il proprietario): rami `codex/nba-notte-20261114` e `codex/nba-aggiorna-20261115`, ciascuno con un workflow usa-e-getta che parte solo a un nuovo push su quel ramo; compaiono fra i workflow «attivi» nella scheda Actions ma non sono in `main`.
+
 ### Prossimi passi
 1. Rifare `mercato.py` fra qualche settimana (più partite; per la tripla doppia servono mesi).
 2. Previsione delle partite del giorno (calendario ESPN, rosa, lista infortuni → «assenze del giorno», poi i quintetti) e solo dopo la sezione nel sito.
