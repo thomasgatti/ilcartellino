@@ -8,10 +8,13 @@ const { chromium } = require('playwright');
 // Serve a ricontrollare che cosa era pubblicato prima del via senza passare dalla storia git, e a confrontare
 // le varianti in prova (campo `varianti`, per ora vuoto) con il tris dell'app sulle stesse righe giocatore.
 // rosa: [nome, lato, ruolo, p0, q, % titolare, p dello slot con la regola del sostituto], solo i giocatori eleggibili.
+// Una riga uguale all'ultima della stessa partita non si riscrive; conta come diversa anche se cambiano solo distinta o varianti.
 const registro = path.join(__dirname, 'registro_previsioni.jsonl');
 function registra(out, rosa, lateIds) {
   const prima = fs.existsSync(registro) ? fs.readFileSync(registro,'utf8').split('\n').filter(Boolean).map(l => JSON.parse(l)) : [];
-  const firma = r => JSON.stringify([r.uff,r.tipo,r.p3,r.trio,r.rosa]);
+  const firma = r => JSON.stringify([r.uff,r.tipo,r.p3,r.trio,r.rosa,r.distinta ?? null,r.varianti ?? {}]);
+  // distinta: la riga di lineups.txt del giro (nomi, maglia, posizione x/y in campo), copiata così com'è
+  const campo = new Map(fs.readFileSync(path.join(__dirname,'lineups.txt'),'utf8').split(/\r?\n/).filter(Boolean).map(l => [+l.split('|')[0],l]));
   const ultima = new Map(prima.map(r => [r.id,firma(r)]));
   const creato = new Date().toISOString(), adesso = Date.now() / 1000;
   const righe = [];
@@ -19,7 +22,7 @@ function registra(out, rosa, lateIds) {
     const r = {v:1,id:t.id,comp:t.comp,partita:t.partita,ko:t.ko,creato,prima_del_via:adesso < t.ko,
       commit:process.env.GITHUB_SHA || null,giro:process.env.GITHUB_RUN_ID || null,
       tipo:lateIds.has(t.id) ? 'revisione' : 'previsione',uff:t.uff,src:rosa[t.id]?.src ?? null,modello:rosa[t.id]?.modello ?? null,
-      p3:t.p3,trio:t.trio,rosa:rosa[t.id]?.rosa || [],varianti:{}};
+      p3:t.p3,trio:t.trio,rosa:rosa[t.id]?.rosa || [],distinta:campo.get(t.id) || null,varianti:{}};
     if (ultima.get(t.id) !== firma(r)) righe.push(JSON.stringify(r));
   }
   if (righe.length) fs.appendFileSync(registro,righe.join('\n') + '\n');
