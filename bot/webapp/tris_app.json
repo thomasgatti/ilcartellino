@@ -1176,8 +1176,8 @@
   "id": 5181835,
   "ko": 1794858300,
   "partita": "Germania - Olanda",
-  "uff": false,
-  "p3": 0.012174940012887095,
+  "uff": true,
+  "p3": 0.012695901602768893,
   "trio": [
    {
     "n": "J. Paul van Hecke",
@@ -1191,7 +1191,7 @@
    },
    {
     "n": "A. Pavlović",
-    "p": 0.18,
+    "p": 0.1876,
     "team": "Germania"
    }
   ]
