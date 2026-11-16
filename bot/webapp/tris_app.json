@@ -1227,22 +1227,22 @@
   "ko": 1794944700,
   "partita": "Ungheria - Irlanda del Nord",
   "uff": false,
-  "p3": 0.015396635062518125,
+  "p3": 0.013987567323459158,
   "trio": [
    {
     "n": "T. Hume",
-    "p": 0.2416,
+    "p": 0.2357,
     "team": "Irlanda del Nord"
-   },
-   {
-    "n": "M. Csinger",
-    "p": 0.2386,
-    "team": "Ungheria"
    },
    {
     "n": "T. Atcheson",
     "p": 0.2302,
     "team": "Irlanda del Nord"
+   },
+   {
+    "n": "M. Csinger",
+    "p": 0.2222,
+    "team": "Ungheria"
    }
   ]
  },
