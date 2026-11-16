@@ -610,6 +610,8 @@ Obiettivo dell'utente: per ogni giocatore e partita NBA la probabilità di doppi
 
 - **Orari del giro NBA** (16/11): le partite cominciano fra mezzanotte e le 4 italiane, quindi conta avere infortuni freschi la sera. Schema consigliato su cron-job.org (del proprietario): `35 16,18 * * *` con corpo `{"ref":"main"}` (prima pubblicazione, con le quote: 6 richieste) e `5 23 * * *` con corpo `{"ref":"main","inputs":{"rifai":"si"}}` (rifà la pagina con infortuni e modello aggiornati **riusando le quote del pomeriggio**, 0 richieste). `rifai` non fa nulla se una partita della notte è già cominciata o sta per cominciare (meno di 10 minuti), per non farla sparire dalla pagina. Aggiornare anche le quote la sera costerebbe altre 6 richieste al giorno: con 250 al mese non ci sta.
 
+- **Pagina vuota all'indirizzo senza barra finale** (16/11, 16:30): l'utente apriva `ilcartellino.vercel.app/nba` (senza `/`) e vedeva solo «Dati non ancora disponibili»: `oggi.json` era chiesto con un percorso relativo, che senza la barra punta alla radice del sito. Era questo il «non vedo nulla» dei giorni scorsi; le mie prove usavano sempre `/nba/`. Ora i dati si leggono da un percorso costruito sull'indirizzo (`BASE`), valido con e senza barra.
+
 ### Prossimi passi
 1. Rifare `mercato.py` fra qualche settimana (più partite; per la tripla doppia servono mesi).
 2. Previsione delle partite del giorno (calendario ESPN, rosa, lista infortuni → «assenze del giorno», poi i quintetti) e solo dopo la sezione nel sito.

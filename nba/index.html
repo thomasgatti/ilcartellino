@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#1d3f94">
-<link rel="icon" href="../favicon.png">
+<link rel="icon" href="/favicon.png">
 <title>Il tabellino · NBA, doppie e triple doppie</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -311,7 +311,9 @@ function mostra(v) { vista = v; D = DATI[v]; for (const k in partitaDi) delete p
   if (ritirate || segnalate) nota.insertAdjacentHTML('afterbegin', `${ritirate ? 'Quote segnalate come non disponibili: ' + ritirate + '. ' : ''}${segnalate ? 'Aggiornamento: ' + segnalate + '. ' : ''}`);
   document.getElementById('status').hidden = false; disegna(); aggiornaLive();
 }
-const leggi = f => fetch(f + '?' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null);
+// l'indirizzo può essere /nba oppure /nba/: senza la barra finale un percorso relativo punterebbe alla radice del sito (16/11: «Dati non ancora disponibili»)
+const BASE = location.pathname.replace(/index\.html$/, '').replace(/\/?$/, '/');
+const leggi = f => fetch(BASE + f + '?' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null);
 Promise.all([leggi('oggi.json'), leggi('ieri.json')]).then(([oggi, ieri]) => {
   if (!oggi) { document.getElementById('meta').textContent = 'Dati non ancora disponibili.'; return; }
   DATI.oggi = oggi; if (ieri && ieri.partite?.length && ieri.giorno !== oggi.giorno) { DATI.ieri = ieri; document.getElementById('tabs').hidden = false; }
