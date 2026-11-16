@@ -6,6 +6,10 @@ on:
   schedule:
     - cron: '30 15 * * *'
   workflow_dispatch:
+    inputs:
+      rifai:
+        description: Rifare la pagina anche se la notte è già pubblicata, riusando le quote già salvate (non spende richieste OddsPapi) — si/no
+        default: 'no'
 
 concurrency:
   group: nba-aggiornamento-quotidiano
@@ -46,26 +50,39 @@ jobs:
               sys.exit(1)
           PY
           then
-            echo "genera=no" >> "$GITHUB_OUTPUT"
-            echo "La pagina NBA è già aggiornata per $GIORNO"
+            if [ "${{ inputs.rifai }}" = "si" ]; then
+              echo "genera=si" >> "$GITHUB_OUTPUT"; echo "riusa=1" >> "$GITHUB_OUTPUT"; cp nba/oggi.json /tmp/nba_quote_salvate.json
+              echo "Rifaccio la pagina di $GIORNO riusando le quote già salvate"
+            else
+              echo "genera=no" >> "$GITHUB_OUTPUT"
+              echo "La pagina NBA è già aggiornata per $GIORNO"
+            fi
           else
             echo "genera=si" >> "$GITHUB_OUTPUT"
           fi
       - name: Dipendenze del modello
         if: steps.giorno.outputs.genera == 'si'
         run: pip install -q pandas scikit-learn
+      # Il giro programmato di «Dati NBA (ESPN)» arriva spesso con ore di ritardo: qui l'archivio viene portato alla notte scorsa
+      # (solo nella copia di lavoro, senza salvarlo nel ramo dati), così riposi, back-to-back e «ultima notte» sono giusti.
+      - name: Archivio aggiornato alla notte scorsa
+        if: steps.giorno.outputs.genera == 'si'
+        env:
+          NBA_SENZA_INFORTUNI: '1'
+        run: node cloud/nba/scrape.mjs dati/nba 5
       - name: Calendario, rose, infortuni e quote (limite mensile)
         if: steps.giorno.outputs.genera == 'si'
         env:
           ODDSPAPI_KEY: ${{ secrets.ODDSPAPI_KEY_NBA }}
           NBA_QUOTE_SOLO_ITALIA: '1'
           NBA_QUOTE_MAX_PARTITE: '5'
+          NBA_SENZA_QUOTE: ${{ steps.giorno.outputs.riusa }}
         run: node cloud/nba/oggi.mjs /tmp/nba_auto_input.json "${{ steps.giorno.outputs.giorno }}"
       - name: Probabilità DD/TD e combinazioni
         if: steps.giorno.outputs.genera == 'si'
         run: |
           if node -e "process.exit(require('/tmp/nba_auto_input.json').partite.length ? 0 : 1)"; then
-            python3 bot/nba/oggi.py dati/nba /tmp/nba_auto_input.json nba/oggi.json
+            python3 bot/nba/oggi.py dati/nba /tmp/nba_auto_input.json nba/oggi.json ${{ steps.giorno.outputs.riusa == '1' && '/tmp/nba_quote_salvate.json' || '' }}
           else
             python3 - <<'PY'
           import json, time

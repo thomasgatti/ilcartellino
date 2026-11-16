@@ -90,8 +90,15 @@ def diario(partite, gioc, D):
     spazio.sort(key=lambda x: x['prima'] - x['ora'])
     return dict(giorno=giorno, dd=sorted(dd, key=lambda x: x['n']), td=td, spazio=spazio[:8])
 
-def main(cartella, f_in, f_out):
+def main(cartella, f_in, f_out, f_quote=None):
     partite, gioc = carica(cartella); I = json.load(open(f_in)); stato = {}; nomi = {}
+    if f_quote:                                        # rifacimento della stessa notte: le quote si riprendono dalla pagina già pubblicata
+        V = json.load(open(f_quote)); vecchie = {str(P['id']): P for P in V.get('partite', [])} if V.get('giorno') == I['giorno'] else {}
+        for P in I['partite']:
+            if P['quote']['dd'] or P['quote']['td'] or str(P['id']) not in vecchie: continue
+            for g in vecchie[str(P['id'])]['giocatori']:
+                for y in ('dd', 'td'):
+                    if g.get('q_' + y): P['quote'][y].setdefault(g['b_' + y] + '.it', {})[g['n']] = g['q_' + y]
     for P in I['partite']:
         righe = []
         for k, L in (('h', 1), ('a', 0)):
@@ -155,4 +162,4 @@ def main(cartella, f_in, f_out):
 
 if __name__ == '__main__':
     if sys.argv[1] == '--ricombina': ricombina(sys.argv[2])
-    else: main(*sys.argv[1:4])
+    else: main(*[x for x in sys.argv[1:5] if x])

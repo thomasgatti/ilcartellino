@@ -3,7 +3,7 @@ name: Dati NBA (ESPN)
 # Ogni giorno dopo l'ultima partita della notte americana; a mano per recuperare lo storico (riparte da dove si era fermato).
 on:
   schedule:
-    - cron: '43 10 * * *'   # 10:43 UTC: le partite della costa ovest finiscono entro le 07:00 UTC
+    - cron: '17 7 * * *'   # 07:17 UTC: le partite della costa ovest finiscono entro le 07:00 UTC; GitHub parte anche con 6 ore di ritardo (16/11)
   workflow_dispatch:
     inputs:
       minuti:
