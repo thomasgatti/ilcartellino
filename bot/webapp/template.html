@@ -728,13 +728,14 @@ html { overflow-y: scroll; scrollbar-gutter: stable; }
 :root[data-comp="angoli"] .comps button[aria-pressed="true"] { background: linear-gradient(90deg, #ff6a1a, var(--ag) 55%, var(--ag2)); color: #1c0f00; box-shadow: 0 0 14px color-mix(in srgb, var(--ag) 45%, transparent); }
 .comps { max-width: 100%; overflow-x: auto; scrollbar-width: none; } .comps::-webkit-scrollbar { display: none; }
 .comps button { white-space: nowrap; flex: none; }
-#sez-angoli { display: grid; gap: 18px; }
+#sez-angoli { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; }
 :root[data-comp="angoli"] footer .how { display: none; }
 .ang-teams .chip { box-shadow: 0 0 0 1px rgba(255,255,255,.4); }
 #sez-angoli h2 { font: 800 24px/1 var(--display); text-transform: uppercase; letter-spacing: .5px; margin: 6px 0 0; }
 .ang-lead { margin: 0; max-width: 68ch; color: var(--muted); }
 .ang-lead b { color: var(--ink); }
 .ang-bar { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; }
+.ang-bar > * { min-width: 0; }
 .ang-seg { display: inline-flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); max-width: 100%; overflow-x: auto; scrollbar-width: none; }
 .ang-seg button { font: 700 13px var(--body); border: 0; background: transparent; color: var(--muted); padding: 6px 12px; border-radius: 999px; cursor: pointer; white-space: nowrap; }
 .ang-seg button[aria-pressed="true"] { background: var(--ag); color: #1c0f00; }
@@ -1327,7 +1328,7 @@ function extraHist(r) {
 const ANG = ALL.angoli && ((ALL.angoli.matches || []).length || (ALL.angoli.storico || []).length) ? ALL.angoli : null;
 const astate = { f: 'all', sort: 'p', all: false };
 const itn = (v, d = 1) => Number(v).toFixed(d).replace('.', ',');
-const ANG_COMP = { sa: 'Serie A', ucl: 'Champions', extra: 'EXTRA' };
+const ANG_COMP = { sa: 'Serie A', ucl: 'Champions', naz: 'Nazionali', extra: 'EXTRA' };
 const angCols = c => c || ['#5d6c7b', '#ffffff'];
 function angCard(m, rank, top) {
   const S = ANG.soglia || 14, now = Date.now() / 1000, w = v => Math.max(2, Math.min(100, v / .3 * 100)).toFixed(1), tot = m.mu[0] + m.mu[1];
@@ -1350,7 +1351,7 @@ function angCard(m, rank, top) {
 }
 function renderAngoli() {
   const el = document.getElementById("sez-angoli"), S = ANG.soglia || 14, now = Date.now() / 1000;
-  const comps = ['sa', 'ucl', 'extra'].filter(c => ANG.matches.some(m => m.c === c));
+  const comps = ['sa', 'ucl', 'naz', 'extra'].filter(c => ANG.matches.some(m => m.c === c));
   if (astate.f !== 'all' && !comps.includes(astate.f)) astate.f = 'all';
   const list = ANG.matches.filter(m => astate.f === 'all' || m.c === astate.f);
   const order = [...list].sort((a, b) => astate.sort === 'p' ? b.p - a.p || a.ko - b.ko : a.ko - b.ko || b.p - a.p);
@@ -1381,6 +1382,7 @@ function renderAngoli() {
       <p>La stima parte dalle ultime 20 gare di ciascuna squadra: angoli battuti e concessi, tiri, tocchi in area avversaria, xG e possesso, insieme alla media della competizione. Non servono le formazioni, quindi la probabilità è disponibile già giorni prima e si ferma al calcio d'inizio.</p>
       <p>«Quota equa» è la quota a cui la giocata sarebbe in pari secondo il modello (1 diviso la probabilità): una quota del bookmaker più alta è a favore, una più bassa no. «Sulla media» dice di quanti punti percentuali la partita supera la frequenza abituale della competizione.</p>
       <p>Nelle prove sul passato (13.291 partite dal 2023/24, ogni stagione stimata solo con i dati precedenti) il 10% di partite con la probabilità più alta è finito con ${S}+ angoli il 23,6% delle volte, contro il 14,3% di tutte le partite. Il vantaggio c'è ma è piccolo, e sulle singole giornate conta molto il caso.</p>
+      <p>Per le nazionali lo storico è più corto (Nations League, Europei, Mondiali e qualificazioni dal 2021) e i ${S}+ sono più rari: circa una partita su dieci. Nelle 613 partite di prova il modello ha fatto comunque meglio della media.</p>
       ${ANG.updated ? `<p>Ultimo aggiornamento: ${fmtDay(ANG.updated).toLowerCase()} alle ${fmtTime(ANG.updated)}.</p>` : ''}
     </details>`;
   for (const b of el.querySelectorAll('[data-f]')) b.addEventListener('click', () => { astate.f = b.dataset.f; renderAngoli(); });
@@ -1485,7 +1487,7 @@ function setComp(c, keepId) {
     try { localStorage.setItem('ammoniti_comp', c); } catch (e) {}
     for (const q of ['.layout', '#area', '#storico', '#xintro']) document.querySelector(q).hidden = true;
     document.getElementById('hdr-round').textContent = `· ${ANG.soglia || 14} o più`;
-    document.getElementById('meta').innerHTML = '<span>Serie A, Champions e big match EXTRA</span>';
+    document.getElementById('meta').innerHTML = '<span>Serie A, Champions, Nazionali e big match EXTRA</span>';
     history.replaceState(null, '', '#angoli'); renderAngoli(); compInView(c); return;
   }
   if (c !== 'sa' && !cupOf(c)) c = 'sa';

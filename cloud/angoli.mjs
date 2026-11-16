@@ -8,7 +8,7 @@ import fs from 'node:fs';
 import './lib_node.mjs';
 import { loadExtra, walk, train, SOGLIA } from './angoli_modello.mjs';
 
-const XDIR = process.argv[2] || 'dati/extra', DATA = 'bot/webapp/data.json';
+const XDIR = process.argv[2] || 'dati/extra', NDIR = process.argv[3] || 'dati/extra_naz', DATA = 'bot/webapp/data.json', ESITI = 'bot/webapp/vercel/risultati.json';
 const hour = 3600, day = 86400, AHEAD = 10 * day, OPTS = { variante: 2, n: 20 };
 const now = (process.env.CARTELLINO_ORA ? Date.parse(process.env.CARTELLINO_ORA) : Date.now()) / 1000;
 const FORCE = process.env.ANGOLI_FORZA === '1';
@@ -21,11 +21,12 @@ const data = JSON.parse(fs.readFileSync(DATA, 'utf8'));
 const ang = data.angoli ||= { updated: 0, soglia: SOGLIA, matches: [], storico: [], col: {} };
 ang.matches ||= []; ang.storico ||= []; ang.col ||= {}; ang.soglia = SOGLIA;
 const xm = (data.extra?.matches || []).filter(m => m.ko > now);
+const nm = (data.cups?.naz?.matches || []).filter(m => m.ko > now);   // Nazionali (16/11): le partite della sezione Nazionali
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const get = async u => { for (let k = 0; k < 3; k++) { try { const r = await fetch(u, { signal: AbortSignal.timeout(20000) }); if (r.status === 200) return await r.json(); if (r.status === 429) await sleep(4000); } catch {} await sleep(800); } return null; };
 
 // --- quando ricalcolare: ogni 6 ore, se c'è un esito da archiviare o se in EXTRA è entrata una partita nuova
-const due = ang.matches.some(m => now > m.ko + 2.5 * hour) || xm.some(m => !ang.matches.some(x => x.id === m.id));
+const due = ang.matches.some(m => now > m.ko + 2.5 * hour) || [...xm, ...nm].some(m => !ang.matches.some(x => x.id === m.id));
 if (!FORCE && now - (ang.updated || 0) < 6 * hour && !due) { console.log('ANGOLI: niente da fare'); process.exit(0); }
 
 const r2 = v => +v.toFixed(2), r3 = v => +v.toFixed(3);
@@ -47,7 +48,8 @@ for (const m of [...ang.matches]) {
 }
 
 // --- 2. modello sull'archivio
-const ms = loadExtra(XDIR);
+// club + nazionali in un unico allenamento; le nazionali sono un'unica competizione «naz» (prova: ricerca/angoli/angoli14_naz.mjs)
+const ms = [...loadExtra(XDIR), ...loadExtra(NDIR, null, 'naz')].sort((a, b) => a.ts - b.ts);
 if (ms.length < 3000) { console.log('ANGOLI: archivio extra assente o troppo piccolo (' + ms.length + ' partite)'); if (changed) fs.writeFileSync(DATA, JSON.stringify(data)); process.exit(0); }
 const W = walk(ms, OPTS), M = train(W.rows);
 // ultime 20 gare di ogni squadra: quante con almeno 14 angoli
@@ -57,7 +59,7 @@ const idByName = {}; for (const m of ms) { idByName[m.hn] = m.h; idByName[m.an] 
 
 // nomi italiani (classifiche) e colori già usati in pagina
 const itName = {}; for (const g of [...(data.classifiche?.sa || []), ...(data.classifiche?.ucl || [])]) for (const r of g.rows || []) if (r[10]) itName[r[10]] = r[1];
-const colByName = {}; for (const m of [...(data.matches || []), ...(data.cups?.ucl?.matches || []), ...(data.extra?.matches || [])]) { if (m.hc) colByName[m.h] = m.hc; if (m.ac) colByName[m.a] = m.ac; }
+const colByName = {}; for (const m of [...(data.matches || []), ...(data.cups?.ucl?.matches || []), ...(data.cups?.naz?.matches || []), ...(data.extra?.matches || [])]) { if (m.hc) colByName[m.h] = m.hc; if (m.ac) colByName[m.a] = m.ac; }
 const cols = (id, name) => ang.col[id] || colByName[name] || null;
 
 function stima(base, lg, riserva, hid, aid) {
@@ -89,6 +91,13 @@ for (const m of xm) {
   const e = stima({ id: m.id, c: 'extra', lega: m.comp, ko: m.ko, h: m.h, a: m.a, hc: m.hc || null, ac: m.ac || null, hid, aid }, lg, riserva, hid, aid);
   if (e) { out.push(e); kept.add(e.id); }
 }
+for (const m of nm) {
+  if (kept.has(m.id)) continue;
+  const hid = idByName[m.en?.[0]], aid = idByName[m.en?.[1]];
+  if (!hid || !aid) { console.log('ANGOLI: nazionale non trovata in archivio per', m.h, '-', m.a); continue; }
+  const e = stima({ id: m.id, c: 'naz', lega: 'Nations League', ko: m.ko, h: m.h, a: m.a, hc: m.hc || null, ac: m.ac || null, hid, aid }, 'naz', null, hid, aid);
+  if (e) { out.push(e); kept.add(e.id); } else console.log('ANGOLI: storico insufficiente per', m.h, '-', m.a);
+}
 // colori mancanti (squadre mai viste in pagina): da FotMob, una volta sola
 for (const m of out.filter(m => !m.hc || !m.ac).slice(0, 12)) {
   const tc = (await get('/api/data/matchDetails?matchId=' + m.id))?.general?.teamColors?.lightMode; if (!tc) continue;
@@ -111,6 +120,21 @@ if (!ang.storico.length && !ang.seme) {
   ang.storico.sort((a, b) => b.ko - a.ko); ang.seme = 1;
   console.log('ANGOLI: storico iniziale con', ang.storico.length, 'partite ricalcolate');
 }
+// --- 5. Nazionali già giocate (ultimi 30 giorni, quelle passate dalla sezione Nazionali) e non ancora nello storico degli angoli:
+// si aggiungono ricalcolate (retro: 1) appena entrano in archivio, con un modello allenato solo sulle gare precedenti alla più vecchia.
+try {
+  const fatte = new Set(ang.storico.map(r => r.id)), inCorso = new Set(ang.matches.map(m => m.id));
+  const esiti = JSON.parse(fs.readFileSync(ESITI, 'utf8')).filter(r => r.comp === 'naz' && r.ko > now - 30 * day && !fatte.has(r.matchId) && !inCorso.has(r.matchId));
+  const righe = new Map(W.rows.filter(r => r.m.lg === 'naz').map(r => [r.m.id, r])), nuove = esiti.filter(r => righe.has(r.matchId));
+  if (nuove.length) {
+    const t0 = Math.min(...nuove.map(r => righe.get(r.matchId).m.ts)), prima = train(W.rows.filter(r => r.m.ts < t0));
+    const seen = [], base = {}; for (const m of ms) if (m.lg === 'naz') { const X = seen.slice(-380); base[m.id] = (X.filter(t => t >= SOGLIA).length + 2) / (X.length + 16); seen.push(m.t.angoli[0] + m.t.angoli[1]); }
+    for (const e of nuove) { const r = righe.get(e.matchId), p = prima.pred(r.f), [h, a] = e.partita.split(' - ');
+      ang.storico.push({ id: e.matchId, c: 'naz', lega: 'Nations League', ko: e.ko, h, a, hc: colByName[h] || null, ac: colByName[a] || null, p: r3(p.p), mu: [r2(p.mh), r2(p.ma)], base: r3(base[e.matchId]), finale: e.finale, ang: r.m.t.angoli, retro: 1 }); }
+    ang.storico.sort((a, b) => b.ko - a.ko);
+    console.log('ANGOLI: nazionali ricalcolate nello storico:', nuove.length);
+  }
+} catch (e) { console.log('ANGOLI: nazionali nello storico non aggiunte:', e.message); }
 ang.storico = ang.storico.slice(0, 400);
 ang.n = M.n; ang.updated = calOk ? Math.round(now) : 0;   // calendario mancante: si riprova al giro dopo
 fs.writeFileSync(DATA, JSON.stringify(data));

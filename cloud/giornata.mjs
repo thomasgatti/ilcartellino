@@ -416,7 +416,7 @@ function updateReferee(round, m, j) {
 
 async function inspect(round) {
   const window = round.matches.filter(m => now < m.ko + 7 * 24 * hour && (
-    (!m.uff && now >= m.ko - 60 * hour) || (now >= m.ko + 75 * 60 && (!seen.has(m.id) || now < m.ko + 48 * hour))));
+    (now >= m.ko - 60 * hour && (!m.uff || now < m.ko + 45 * 60)) || (now >= m.ko + 75 * 60 && (!seen.has(m.id) || now < m.ko + 48 * hour))));
   round.pending = [];
   round.finished = [];
   for (const m of window) {
@@ -430,8 +430,19 @@ async function inspect(round) {
       if (status.finished && !seen.has(m.id)) round.finished.push({m,j});
       // nelle 48 ore dopo la fine FotMob a volte corregge i cartellini (9/11: giallo di Musah passato a Diawara): riarchivia
       else if (status.finished && cardsChanged(m,j)) round.finished.push({m,j});
-      if (m.uff) continue;
       const lineup = j.content?.lineup;
+      if (m.uff) {
+        // Le ufficiali si ricontrollano a ogni giro fino a 45 minuti dopo il via (16/11): in Olanda-Grecia del 13/11 FotMob le aveva
+        // pubblicate con Kourbelis titolare, poi al suo posto è partito Triantis; il bot non le rileggeva più e il tris è rimasto
+        // con un giocatore mai sceso in campo. Se gli undici cambiano: prima del via si rifanno stime e tris, dopo il via scatta la revisione.
+        if (status.finished || !validLineup(lineup,'standard')) continue;
+        const item = await prepareLineup(m.id,j,m.forfait);
+        if (item.line !== field.get(m.id)) {
+          console.warn(`Partita ${m.id}: formazione ufficiale cambiata (${m.h}-${m.a}), ricalcolo`);
+          round.pending.push({...item, beforeKickoff: !status.started && now < m.ko, changed: true});
+        }
+        continue;
+      }
       const beforeKickoff = !status.started && !status.finished && now < m.ko;
       if (!validLineup(lineup,'standard') && !(beforeKickoff && (
         validLineup(lineup,'predicted') || (m.src === 'provv' && validLineup(lineup,'lastStarting11'))))) {
@@ -661,7 +672,7 @@ try {
         if (item.beforeKickoff || round.advance) trisIds.push(item.id);
         else {
           const m = round.section.matches.find(x => x.id === item.id);
-          if (m?.uff && !m.uff_late) { m.uff_late = 1; console.warn(`Partita ${m.id}: formazioni ufficiali arrivate dopo il calcio d'inizio (${m.h}-${m.a})`); }
+          if (m?.uff && !m.uff_late && !item.changed) { m.uff_late = 1; console.warn(`Partita ${m.id}: formazioni ufficiali arrivate dopo il calcio d'inizio (${m.h}-${m.a})`); }
         }
       }
     }

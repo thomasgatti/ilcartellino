@@ -10,14 +10,15 @@ import fs from 'node:fs'; import path from 'node:path'; import zlib from 'node:z
 export const K = ['angoli', 'tiri', 'tocchi_area', 'xg', 'possesso'];
 export const SOGLIA = 14;
 
-export function loadExtra(dir, only = null) {
+// lgAs: tutte le partite della cartella sotto un'unica competizione (le nazionali: troppe poche gare per competizione)
+export function loadExtra(dir, only = null, lgAs = null) {
   const out = [];
   if (!fs.existsSync(dir)) return out;
   for (const f of fs.readdirSync(dir).filter(f => f.endsWith('.json.gz'))) {
     const [lg, season] = f.replace('.json.gz', '').split('_');
     if (only && !only.includes(lg)) continue;
     for (const [id, m] of Object.entries(JSON.parse(zlib.gunzipSync(fs.readFileSync(path.join(dir, f))))))
-      if (m.ts && K.every(k => Array.isArray(m.t?.[k]) && m.t[k].every(Number.isFinite))) out.push({ id: +id, lg, season: +season.slice(0, 4), ts: m.ts, h: m.h[0], a: m.a[0], hn: m.h[1], an: m.a[1], t: m.t });
+      if (m.ts && K.every(k => Array.isArray(m.t?.[k]) && m.t[k].every(Number.isFinite))) out.push({ id: +id, lg: lgAs || lg, season: +season.slice(0, 4), ts: m.ts, h: m.h[0], a: m.a[0], hn: m.h[1], an: m.a[1], t: m.t });
   }
   return out.sort((a, b) => a.ts - b.ts);
 }

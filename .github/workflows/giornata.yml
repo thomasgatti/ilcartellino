@@ -10,6 +10,7 @@ on:
       - '.github/workflows/giornata.yml'
       - 'cloud/giornata.mjs'
       - 'cloud/angoli.mjs'
+      - 'cloud/attesa.mjs'
   workflow_run:
     workflows: ['Aggiorna dati FotMob']
     branches: [main]
@@ -35,7 +36,7 @@ jobs:
       (github.event_name == 'workflow_dispatch' || vars.CARTELLINO_AUTO == 'true') &&
       (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success')
     runs-on: ubuntu-24.04
-    timeout-minutes: 12
+    timeout-minutes: 35
     permissions:
       contents: write
     steps:
@@ -50,6 +51,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Attesa delle formazioni ufficiali (solo nell'ora prima del via)
+        run: node cloud/attesa.mjs
+        continue-on-error: true
+        timeout-minutes: 20
+        env:
+          ATTESA_NO: ${{ github.event_name == 'workflow_dispatch' && inputs.prova && '1' || '' }}
       - name: Controlla formazioni ed esiti
         id: partite
         run: node cloud/giornata.mjs

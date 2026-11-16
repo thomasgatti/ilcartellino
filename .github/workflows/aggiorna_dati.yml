@@ -31,6 +31,9 @@ jobs:
       - name: Dati EXTRA delle partite nuove
         run: node cloud/scrape_extra.mjs dati/fotmob dati/extra 20
         continue-on-error: true
+      - name: Dati EXTRA delle nazionali (angoli, tiri…) per la sezione Angoli
+        run: node cloud/scrape_extra.mjs dati/nazionali dati/extra_naz 10
+        continue-on-error: true
       - name: Quote della stagione in corso (football-data.co.uk, per il contesto del modello)
         run: |
           mkdir -p dati/quote && cd dati/quote
