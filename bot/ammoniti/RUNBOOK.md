@@ -733,3 +733,12 @@ Notti del 12 e del 13/11 rifatte come in produzione (archivio troncato, rose dal
 2. Variabile `NBA_MODELLO` = `v2`: dal giro successivo la pagina usa v2. In `oggi.json`: `modello.versione`.
 3. Per tornare indietro: togliere la variabile (o metterla a `v1`).
 4. Fra 3-4 settimane: `python3 bot/nba/rapporto.py dati/nba` e rifare `assenze_robuste`, `p_gioca` e il confronto col mercato sui dati del registro.
+
+### Seguito (17/11/2026, mattina)
+- **Controlli su GitHub**: `nba_test.yml` gira sulla richiesta di modifica n. 21 e passa (7/7) su un runner vero.
+- **Registro**: il passo dei workflow provato contro un ramo `dati` finto (due giri di fila: due fotografie, nessuna riscritta). Se manca l'ingresso del modello ora lo dice con un avviso invece di «nessuna partita».
+- **Prima notte pubblicata misurabile** (15/11, pagina v1, 3 partite, 42 giocatori): doppie doppie previste 5,7, reali 4; 3 giocatori in pagina non sono entrati, di cui 2 quotati; dei 2 «in dubbio» uno non ha giocato. Troppo poco per giudicare: serve il registro.
+- **16/11, pagina v1**: la «quota alta» proponeva Zach Edey e Amen Thompson, entrambi «in dubbio» (10 in dubbio in pagina). Con v2 sarebbero rimasti fuori da giocate e combinazioni.
+- **Pagina `/nba/`**: live collegato per id ESPN (il nome resta come riserva: «Sarr, Alexandre» e simili non perdono più l'esito); a partita finita, se il tabellino non è stato scaricato l'esito resta in sospeso invece di «non ha giocato»; con v2 l'etichetta «rischio riposo» diventa «gioca NN%» (titolo: probabilità che giochi, escluso da giocate e combinazioni); se le quote sono di un giro precedente l'intestazione dice «previsioni delle X, quote delle Y». Controllo con Playwright a 1300 e 390 px, prima e dopo le partite, con un live finto in cui i nomi del tabellino sono volutamente diversi (si collegano per id) e una partita col tabellino che non si scarica; nessun errore in console, nessuno scorrimento orizzontale.
+- **`livello`** (ritaratura sulle stagioni di prova precedenti, spostamento e pendenza del logit; confronto sulle stagioni 2024/25-2026/27): doppia doppia +0,00008 [+0,00000; +0,00015] e +0,00011: **scartata**. Tripla doppia: −0,00002 [−0,00008; +0,00004], previsto/reale 0,92 → 1,01: **neutra, non adottata** (il livello torna giusto ma la log loss no; 313 eventi).
+- **`miscela`** (peso fra alberi e logistica, oggi 50/50): scelto sulle stagioni precedenti doppia doppia +0,00020 [+0,00008; +0,00032], tripla +0,00007; alberi soli +0,00040, logistica sola +0,00072. **Il 50/50 resta**: conferma della scelta del 13/11.

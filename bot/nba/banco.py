@@ -204,7 +204,46 @@ def e_v2(B):
         v = pd.concat(P['td']).loc[B.T.index].values > pd.concat(P['dd']).loc[B.T.index].values; print(f'     righe con P(TD) > P(DD): {int(v.sum())}')
     return R
 
-ESPERIMENTI = {'v2': e_v2, 'lega_giorno': e_lega_giorno, 'minuti_fini': e_minuti_fini, 'minuti_uno': e_minuti_uno, 'td_da_dd': e_td_da_dd, 'assenze_robuste': e_assenze_robuste, 'p_gioca': e_p_gioca}
+def e_livello(B):
+    """Ritaratura sulle stagioni di prova precedenti: per la stagione s si stimano spostamento (e pendenza) del logit sulle previsioni
+    fuori campione delle stagioni di prova prima di s. La prima stagione di prova resta senza correzione per entrambi: si confrontano le altre."""
+    from sklearn.linear_model import LogisticRegression
+    R = []; T = B.T[B.T.st.isin(B.prove[1:])]
+    for y in ('dd', 'td'):
+        p = B.campione(y); out = {'spostamento': [], 'spostamento e pendenza': []}
+        for st in B.prove[1:]:
+            tr = B.T[B.T.st < st]; te = T[T.st == st]; x_tr = LG(p.loc[tr.index].values); x_te = LG(p.loc[te.index].values)
+            # solo spostamento: si cerca b che minimizza la log loss di sig(x + b) (logistica con x come «offset», per bisezione sulla derivata)
+            yy = tr[y].values.astype(float); lo, hi = -2.0, 2.0
+            for _ in range(60):
+                b = (lo + hi) / 2; g = np.sum(sig(x_tr + b) - yy)
+                lo, hi = (lo, b) if g > 0 else (b, hi)
+            out['spostamento'].append(pd.Series(sig(x_te + b), index=te.index))
+            m = LogisticRegression(C=1e6, max_iter=1000).fit(x_tr.reshape(-1, 1), yy); out['spostamento e pendenza'].append(pd.Series(m.predict_proba(x_te.reshape(-1, 1))[:, 1], index=te.index))
+            print(f'     {y} {st}: spostamento del logit {b:+.3f} · pendenza {m.coef_[0][0]:.3f}')
+        for k, v in out.items(): R.append(confronta(T, y, p.loc[T.index].values, pd.concat(v).loc[T.index].values, f'ritaratura ({k}), stagioni di prova 2-4'))
+    return R
+
+def e_miscela(B):
+    """Peso fra alberi e regressione logistica (oggi 50/50 sul logit). Per la stagione s il peso si sceglie sulle stagioni di prova prima di s;
+    la prima stagione di prova resta 50/50 per tutti. Confronto anche con alberi soli e logistica sola."""
+    R = []; c = cols(LIV['prima']); T = B.T[B.T.st.isin(B.prove[1:])]
+    for y in ('dd', 'td'):
+        A, L = [], []
+        for st in B.prove:
+            tr, te = B.D[B.D.st < st], B.D[B.D.st == st]
+            A.append(pd.Series(gbm(y == 'td').fit(tr[c], tr[y].values).predict_proba(te[c])[:, 1], index=te.index)); L.append(pd.Series(logit_().fit(tr[c], tr[y].values).predict_proba(te[c])[:, 1], index=te.index))
+        a, l = LG(pd.concat(A).loc[B.T.index].values), LG(pd.concat(L).loc[B.T.index].values); yy = B.T[y].values.astype(float)
+        p0 = sig((a + l) / 2); pesi = np.linspace(0, 1, 21); scelto = np.full(len(yy), 0.5)
+        for st in B.prove[1:]:
+            m = (B.T.st < st).values; w = pesi[np.argmin([perdita(yy[m], sig(w * a[m] + (1 - w) * l[m])).mean() for w in pesi])]
+            scelto[(B.T.st == st).values] = w; print(f'     {y} {st}: peso degli alberi scelto sulle stagioni prima {w:.2f}')
+        k = B.T.st.isin(B.prove[1:]).values
+        R.append(confronta(T, y, p0[k], sig(scelto * a + (1 - scelto) * l)[k], 'peso scelto sulle stagioni precedenti'))
+        R.append(confronta(T, y, p0[k], sig(a)[k], 'alberi soli', regola=False)); R.append(confronta(T, y, p0[k], sig(l)[k], 'logistica sola', regola=False))
+    return R
+
+ESPERIMENTI = {'miscela': e_miscela, 'livello': e_livello, 'v2': e_v2, 'lega_giorno': e_lega_giorno, 'minuti_fini': e_minuti_fini, 'minuti_uno': e_minuti_uno, 'td_da_dd': e_td_da_dd, 'assenze_robuste': e_assenze_robuste, 'p_gioca': e_p_gioca}
 
 if __name__ == '__main__':
     if '--elenco' in sys.argv:
