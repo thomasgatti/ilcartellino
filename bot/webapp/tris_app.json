@@ -1226,22 +1226,22 @@
   "id": 5181810,
   "ko": 1794944700,
   "partita": "Ungheria - Irlanda del Nord",
-  "uff": false,
-  "p3": 0.013987567323459158,
+  "uff": true,
+  "p3": 0.01652927660540436,
   "trio": [
    {
-    "n": "T. Hume",
-    "p": 0.2357,
-    "team": "Irlanda del Nord"
-   },
-   {
     "n": "T. Atcheson",
-    "p": 0.2302,
+    "p": 0.256,
     "team": "Irlanda del Nord"
    },
    {
-    "n": "M. Csinger",
-    "p": 0.2222,
+    "n": "T. Hume",
+    "p": 0.2514,
+    "team": "Irlanda del Nord"
+   },
+   {
+    "n": "Á. Markgráf",
+    "p": 0.2214,
     "team": "Ungheria"
    }
   ]
@@ -1251,8 +1251,8 @@
   "id": 5181823,
   "ko": 1794944700,
   "partita": "Irlanda - Kosovo",
-  "uff": false,
-  "p3": 0.018340306117234605,
+  "uff": true,
+  "p3": 0.019089683452152093,
   "trio": [
    {
     "n": "K. Hajrizi",
@@ -1261,12 +1261,12 @@
    },
    {
     "n": "L. Emërllahu",
-    "p": 0.2533,
+    "p": 0.2478,
     "team": "Kosovo"
    },
    {
     "n": "L. Scales",
-    "p": 0.186,
+    "p": 0.198,
     "team": "Irlanda"
    }
   ]
@@ -1327,7 +1327,7 @@
   "ko": 1794944700,
   "partita": "Galles - Portogallo",
   "uff": true,
-  "p3": 0.012986208336871086,
+  "p3": 0.013053307341036935,
   "trio": [
    {
     "n": "B. Davies",
@@ -1341,7 +1341,7 @@
    },
    {
     "n": "J. Cancelo",
-    "p": 0.1884,
+    "p": 0.1893,
     "team": "Portogallo"
    }
   ]
