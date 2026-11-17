@@ -86,7 +86,7 @@ jobs:
       - name: Probabilità DD/TD e combinazioni
         if: steps.giorno.outputs.genera == 'si'
         env:
-          NBA_MODELLO: ${{ vars.NBA_MODELLO }}   # vuota o v1 = modello di sempre; v2 = bot/nba/modello2.py (si torna indietro togliendo la variabile)
+          NBA_MODELLO: ${{ vars.NBA_MODELLO }}   # vuota = v2 (predefinito dal 17/11), v1 = modello di prima: per tornare indietro creare la variabile NBA_MODELLO=v1 (si torna indietro togliendo la variabile)
         run: |
           # la pagina della notte prima resta visibile come «Notte scorsa» (nba/ieri.json)
           python3 - "${{ steps.giorno.outputs.giorno }}" <<'PY'

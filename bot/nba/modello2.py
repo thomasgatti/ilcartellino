@@ -6,7 +6,7 @@ Rispetto al modello attuale (v1, immutato in prova.py / oggi.py):
      come se le conoscesse tutte).
   2. TRIPLA DOPPIA: media geometrica fra il modello diretto e P(DD) × P(TD | DD), mai sopra P(DD).
   3. P(GIOCA): probabilità che un giocatore di rotazione, in campo nella partita precedente, giochi stanotte.
-Si attiva con la variabile NBA_MODELLO=v2 (predefinito v1): tornare indietro = togliere la variabile.
+Predefinito dal 17/11/2026 pomeriggio; la variabile del repository NBA_MODELLO=v1 torna al modello di prima.
 """
 import numpy as np, pandas as pd
 from prova import colonne, gbm, logit_, LG, GRUPPI

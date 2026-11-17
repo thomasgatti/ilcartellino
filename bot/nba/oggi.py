@@ -4,7 +4,8 @@ Uso: python3 bot/nba/oggi.py <cartella nba del ramo dati> <oggi_input.json di cl
 Modello: quello «con il referto infortuni» del RUNBOOK (logistica + alberi, media sul logit), allenato su tutto l'archivio.
 Chi è «out» per ESPN non gioca e conta come assenza per i compagni; i «dubbi» sono trattati come presenti e segnati.
 
-Variabile NBA_MODELLO (predefinito v1 = tutto come prima). Con NBA_MODELLO=v2 (bot/nba/modello2.py, numeri nel RUNBOOK):
+Variabile NBA_MODELLO: dal 17/11/2026 pomeriggio il predefinito è v2 (bot/nba/modello2.py, numeri nel RUNBOOK); NBA_MODELLO=v1 = tutto come prima.
+Con v2:
   doppia doppia allenata con assenze note a metà, tripla doppia mai sopra la doppia, P(gioca) al posto della regola «rischio riposo»
   (chiave nuova p_gioca; sotto 0,80 il giocatore è segnato «riposo» e resta fuori da giocate e combinazioni), i giocatori «in dubbio»
   fuori da giocate e combinazioni, «quota alta» = i più probabili a quota 3 o più (non più il «valore» p × quota più alto).
@@ -17,7 +18,8 @@ from dataset import carica, costruisci
 from prova import prepara, colonne, gbm, logit_, LG, GRUPPI
 from mercato import norm, abbina
 
-V2 = os.environ.get('NBA_MODELLO', 'v1').strip().lower() == 'v2'
+# dal 17/11/2026 pomeriggio v2 è il predefinito (variabile vuota o assente = v2); NBA_MODELLO=v1 torna al modello di prima
+V2 = (os.environ.get('NBA_MODELLO') or 'v2').strip().lower() != 'v1'
 
 
 # Combinazioni: per ogni fascia di quota, la combinazione PIÙ PROBABILE che paga almeno quella quota.
