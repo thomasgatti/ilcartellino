@@ -28,8 +28,11 @@ outer: for (const [lg, seasons] of Object.entries(process.env.SCRAPE_SET === 'na
       // 17/11: nelle 48 ore dopo la partita si salva solo un tabellino completo (punteggi, cronaca, minuti dei titolari), altrimenti
       // si riprova al prossimo giro, perché una partita salvata non viene più riscaricata. Dopo si salva com'è: per alcuni campionati
       // (id 441 e 122) FotMob non pubblica mai i minuti (853 partite su 21.765 in archivio al 17/11).
-      const completo = Number.isFinite(m.hs) && Number.isFinite(m.as) && Array.isArray(j.content?.matchFacts?.events?.events) && m.pl.some(r => r[4] === 1 && r[5] > 0);
-      if (m.pl.length > 20 && (completo || Date.now() / 1000 - m.ts > 2 * 86400)) { have[id] = m; n++; } else incompleti++; } catch (e) { parseKo++; } await sleep(80); } }));
+      // L'eccezione dopo 48 ore vale solo per i minuti: punteggi e cronaca sono sempre obbligatori (anche nei campionati senza minuti
+      // FotMob li dà; in archivio 0 partite senza punteggio). Una partita senza esito valido si riprova e non viene mai salvata a metà.
+      const esitoOk = Number.isFinite(m.hs) && Number.isFinite(m.as) && Array.isArray(j.content?.matchFacts?.events?.events);
+      const minuti = m.pl.some(r => r[4] === 1 && r[5] > 0);
+      if (m.pl.length > 20 && esitoOk && (minuti || Date.now() / 1000 - m.ts > 2 * 86400)) { have[id] = m; n++; } else incompleti++; } catch (e) { parseKo++; } await sleep(80); } }));
   if (n) save(f, have); tot += n; console.log(lg, s, 'nuove', n, 'totale', Object.keys(have).length);
   if ((Date.now() - T0) / 60000 > MAXMIN) { console.log('tempo massimo raggiunto: riprende al prossimo giro'); break outer; }
 }

@@ -511,8 +511,10 @@ function applyForecast(round, exportRows) {
     // pagina (m.qg: Sisal, bet365.it, Eurobet), una sola quota per giocatore = 1 / media delle probabilità implicite dei bookmaker.
     // Prova del 13/11 (ricerca/tris/mercato.mjs): in Champions il mercato prevede meglio del modello, la miscela 0,5–0,7 è la migliore.
     const lines = exportRows.flatMap(e => {
-      const qg = round.matches.find(m => m.id === e.id)?.qg?.q; if (!qg || !Object.keys(qg).length || !e.teams) return [];
-      const bets = Object.entries(qg).map(([n, b]) => { const v = Object.values(b).filter(x => x > 1); return v.length ? `${n}:${(v.length / v.reduce((a, x) => a + 1 / x, 0)).toFixed(3)}` : null; }).filter(Boolean);
+      const mq = round.matches.find(m => m.id === e.id), qg = mq?.qg?.q; if (!qg || !Object.keys(qg).length || !e.teams) return [];
+      // 17/11: sulle ufficiali contano solo le quote dei titolari attuali (una cache di un altro XI non deve superare la soglia)
+      const xi = mq.uff ? new Set(mq.pl.filter(r => (r[6] ?? 100) === 100).map(r => r[0])) : null;
+      const bets = Object.entries(qg).filter(([n]) => !xi || xi.has(n)).map(([n, b]) => { const v = Object.values(b).filter(x => x > 1); return v.length ? `${n}:${(v.length / v.reduce((a, x) => a + 1 / x, 0)).toFixed(3)}` : null; }).filter(Boolean);
       return bets.length >= 10 ? [`${e.teams.map(t => t[1]).join(' ').toLowerCase().replace(/[^a-z0-9à-ÿ]+/g, '-')}|${bets.join(';')}`] : [];
     });
     if (lines.length) { const f = path.join(temp, 'oc_ucl_oddspapi.txt'); fs.writeFileSync(f, lines.join('\n') + '\n'); args.push(f); console.log(`Champions: quote OddsPapi per ${lines.length} partite nella miscela col mercato`); }
@@ -656,8 +658,9 @@ try {
     }
   }
   const all = rounds.flatMap(r => r.pending);
+  let moduli = { sa: 'completo', coppe: 'completo' };
   if (all.length) {
-    const moduli = moduliStato(await startModel(Math.min(now,...all.map(({j}) => Date.parse(j.general.matchTimeUTCDate) / 1000))));
+    moduli = moduliStato(await startModel(Math.min(now,...all.map(({j}) => Date.parse(j.general.matchTimeUTCDate) / 1000))));
     globalThis.saPatchVs();
     const predict = globalThis.fmPredict3;
     globalThis.fmPredict3 = (id,model,extra = []) => predict(id,model,extra.filter(p => !prepared.get(id).excluded.has(+p.id)));
@@ -715,6 +718,19 @@ try {
     }
   }
   if (await updateQuoteLive(rounds, now)) touched = true;
+  // 17/11 (revisione ChatGPT): se in questo giro sono arrivate le prime quote sulle ufficiali di una partita di Champions già stimata
+  // qui (modello avviato), la stima si rifà subito, senza aspettare un giro che potrebbe cadere dopo il via.
+  if (all.length) for (const round of rounds.filter(r => r.comp === 'ucl')) {
+    const ids = round.section.matches.filter(m => m.qg_ricalcola && now < m.ko && prepared.has(m.id)).map(m => m.id); if (!ids.length) continue;
+    try {
+      round.matches = round.section.matches;   // applyForecast legge le quote da qui
+      const exported = await globalThis.cupExport3(ids);
+      if (exported.length !== ids.length || exported.some(m => !m.pl?.length)) throw new Error('stime incomplete');
+      changedIds.push(...applyForecast(round, exported));
+      for (const id of ids) { if (!trisIds.includes(id)) trisIds.push(id); const m = round.section.matches.find(x => x.id === id); if (m) { delete m.qg_ricalcola; m.moduli ??= moduli.coppe; } }
+      console.log('Champions: stima rifatta con le quote sulle ufficiali per', ids.join(','));
+    } catch (e) { console.warn('Champions, seconda stima con le quote:', e.message, '(si riprova al prossimo giro)'); }
+  }
   try { if (await updateTables(finished > 0)) touched = true; } catch (e) { console.warn('Classifiche:', e.message); }
   if (finished || changedIds.length || touched) {
     write(files.data,data);

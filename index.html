@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta name="build" content="2026-11-17T19:02:37Z">
+<meta name="build" content="2026-11-17T19:38:21Z">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -936,7 +936,9 @@ const myTris = {}, pickNow = {}, results = Object.fromEntries((window.cartellino
 for (const r of (ALL.extra && ALL.extra.storico) || []) results[r.id] ??= { matchId: r.id, comp: 'extra', partita: `${r.h} - ${r.a}`, ko: r.ko, finale: r.finale,
   // 17/11: un giallo conta per il giocatore del tris solo se è della sua squadra (omonimi in squadre diverse, es. Isaac e Iván Romero)
   ammoniti: (r.ammoniti || []).filter(c => !c[3] || !(r.tris || []).some(t => t.n === c[1] && t.s && t.s !== c[3]) || (r.tris || []).some(t => t.n === c[1] && t.s === c[3])).map(c => c[1]),
-  sostituzioni: r.sostituzioni || {}, falli: {}, tris_app: (r.tris || []).map(t => ({ n: t.n, p: t.p })) };
+  sostituzioni: r.sostituzioni || {}, falli: {}, tris_app: (r.tris || []).map(t => ({ n: t.n, p: t.p, s: t.s })),
+  // 17/11: per «La mia area» i cartellini e i cambi per squadra, e i lati dei nomi della distinta (per i tris salvati senza squadra)
+  ammoniti_lato: (r.ammoniti || []).filter(c => c[3]).map(c => [c[1], c[3]]), sost_lato: r.sost_lato || null, lati: r.lati || null };
 const savedAppTris = new Map((window.cartellinoTris || []).map(t => [t.id, t]));
 const esc = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const withTimeout = (pr, ms = 10000) => Promise.race([pr, new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), ms))]);
@@ -1280,7 +1282,7 @@ function wireBuilder(m) {
   if (sv) sv.addEventListener('click', async () => {
     const ps = players(m, true), mine = current(m), app = pick(m, state.mode, 0, true);
     const doc = { matchId: m.id, comp: state.comp, partita: `${m.h} - ${m.a}`, ko: m.ko, giornata: DATA.round, savedAt: new Date().toISOString(), modalita: state.mode, regolaSostituto: state.subRule,
-      mio: mine.map(n => ({ n, p: +(((ps.find(x => x.n === n) || {}).p) || 0).toFixed(3) })), app: app.trio.map(t => ({ n: t.n, p: +t.p.toFixed(3) })) };
+      mio: mine.map(n => { const x = ps.find(x => x.n === n) || {}; return { n, p: +((x.p) || 0).toFixed(3), ...(x.side ? { s: x.side } : {}) }; }), app: app.trio.map(t => ({ n: t.n, p: +t.p.toFixed(3), ...(t.side ? { s: t.side } : {}) })) };
     sv.disabled = true; sv.textContent = 'Salvataggio…';
     try { await DB.collection('data/users/' + UID).doc('t' + m.id).set(doc); myTris[m.id] = doc; delete pickNow[m.id]; renderList(); select(m.id); }
     catch (e) { sv.disabled = false; sv.textContent = 'Riprova'; const msg = document.getElementById('savedmsg'); if (msg) msg.textContent = 'Salvataggio non riuscito: riprova tra poco.'; }
@@ -1288,8 +1290,12 @@ function wireBuilder(m) {
 }
 function score(trio, res, subRule = true) {
   const am = new Set(res.ammoniti || []), fl = res.falli || {}, sb = res.sostituzioni || {};
-  const rows = trio.map(t => { const r = subRule ? sb[t.n] : null; const viaSub = !!(r && am.has(r) && !am.has(t.n));
-    const f = fl[t.n] == null && (!r || fl[r] == null) ? null : (fl[t.n] || 0) + (r ? (fl[r] || 0) : 0); return { n: t.n, hit: am.has(t.n) || viaSub, viaSub, sub: r, f, np: f == null && Object.keys(fl).length > 0 }; });
+  // 17/11: se l'esito sa la squadra di ogni giallo (EXTRA), un giallo conta solo per un giocatore della stessa squadra
+  // (omonimi come Isaac e Iván Romero). La squadra del giocatore è quella salvata col tris o, per i tris vecchi, quella univoca nella distinta.
+  const lato = t => t.s || t.side || (res.lati?.[t.n]?.length === 1 ? res.lati[t.n][0] : null);
+  const giallo = (n, s) => res.ammoniti_lato && s ? res.ammoniti_lato.some(c => c[0] === n && c[1] === s) : am.has(n);
+  const rows = trio.map(t => { const s = lato(t), r = subRule ? (s && res.sost_lato?.[s] ? res.sost_lato[s][t.n] : sb[t.n]) : null; const dir = giallo(t.n, s), viaSub = !!(r && giallo(r, s) && !dir);
+    const f = fl[t.n] == null && (!r || fl[r] == null) ? null : (fl[t.n] || 0) + (r ? (fl[r] || 0) : 0); return { n: t.n, hit: dir || viaSub, viaSub, sub: r, f, np: f == null && Object.keys(fl).length > 0 }; });
   const hits = rows.filter(r => r.hit).length, falli = rows.reduce((a, r) => a + (r.f || 0), 0);
   return { rows, hits, falli, punti: hits * 3 + falli * 0.5 };
 }
