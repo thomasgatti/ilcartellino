@@ -916,7 +916,9 @@ const state = { comp: 'sa', id: null, mode: '21', revealed: {}, idx: {}, boost: 
 let DB = null, USER = null, UID = null, MYNAME = '', loaded = false;
 const myTris = {}, pickNow = {}, results = Object.fromEntries((window.cartellinoRisultati || []).map(r => [r.matchId, r]));
 for (const r of (ALL.extra && ALL.extra.storico) || []) results[r.id] ??= { matchId: r.id, comp: 'extra', partita: `${r.h} - ${r.a}`, ko: r.ko, finale: r.finale,
-  ammoniti: (r.ammoniti || []).map(c => c[1]), sostituzioni: r.sostituzioni || {}, falli: {}, tris_app: (r.tris || []).map(t => ({ n: t.n, p: t.p })) };
+  // 17/11: un giallo conta per il giocatore del tris solo se è della sua squadra (omonimi in squadre diverse, es. Isaac e Iván Romero)
+  ammoniti: (r.ammoniti || []).filter(c => !c[3] || !(r.tris || []).some(t => t.n === c[1] && t.s && t.s !== c[3]) || (r.tris || []).some(t => t.n === c[1] && t.s === c[3])).map(c => c[1]),
+  sostituzioni: r.sostituzioni || {}, falli: {}, tris_app: (r.tris || []).map(t => ({ n: t.n, p: t.p })) };
 const savedAppTris = new Map((window.cartellinoTris || []).map(t => [t.id, t]));
 const esc = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const withTimeout = (pr, ms = 10000) => Promise.race([pr, new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), ms))]);
@@ -1319,8 +1321,9 @@ const LGSKIN = { 'Premier League': 'pl', 'FA Cup': 'fa', 'EFL Cup': 'efl', 'LaLi
 const xcols = (m, s) => (s === 'h' ? m.hc : m.ac) || ['#13202d', '#ffffff'];
 // scheda dello storico per un big match EXTRA (cartellini: gialli e rossi, regola del sostituto)
 function extraHist(r) {
-  const sb = r.sostituzioni || {}, b = new Set((r.ammoniti || []).map(c => c[1]));
-  const rows = (r.tris || []).map(t => { const via = !b.has(t.n) && b.has(sb[t.n]); return { ...t, hit: b.has(t.n) || via, via, sub: sb[t.n] }; }), hits = rows.filter(x => x.hit).length;
+  // 17/11: gialli e cambi per lato quando lo storico lo sa (c[3], sost_lato), altrimenti solo per nome come prima
+  const card = (n, s) => (r.ammoniti || []).some(c => c[1] === n && (!c[3] || !s || c[3] === s)), sb = (n, s) => (s && r.sost_lato?.[s] ? r.sost_lato[s][n] : (r.sostituzioni || {})[n]);
+  const rows = (r.tris || []).map(t => { const sub = sb(t.n, t.s), dir = card(t.n, t.s), via = !dir && !!sub && card(sub, t.s); return { ...t, hit: dir || via, via, sub }; }), hits = rows.filter(x => x.hit).length;
   const li = x => `<li class="${x.hit ? 'ok' : ''}"><span class="nm" title="${esc(x.n)}">${esc(x.n)}${x.sub && x.via ? `<small class="note">→ entrato ${esc(x.sub)}</small>` : ''}</span><span class="lead"></span><span class="val">${x.hit ? `<span class="hit">${x.via ? '✓ sostituto' : '✓ giallo'}</span> · ` : ''}${Math.round(x.p * 100)}%</span></li>`;
   return { hits, n: rows.length ? 1 : 0, card: `<article class="hist-card cmp-extra"><div class="hh"><h3>${esc(r.h)} – ${esc(r.a)} · ${r.finale}</h3>${rows.length ? `<span class="hits-badge ${hits === 3 ? 'h3' : hits === 2 ? 'h2' : ''}">${hits}/3</span>` : ''}</div>
       <span class="note"><span class="ctag">EXTRA</span>${esc(r.comp)} · ${fmtTime(r.ko)}</span>

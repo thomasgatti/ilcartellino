@@ -450,8 +450,9 @@ async function inspect(round) {
         // con un giocatore mai sceso in campo. Se gli undici cambiano: prima del via si rifanno stime e tris, dopo il via scatta la revisione.
         if (status.finished || !validLineup(lineup,'standard')) continue;
         const item = await prepareLineup(m.id,j,m.forfait);
-        if (item.line !== field.get(m.id)) {
-          console.warn(`Partita ${m.id}: formazione ufficiale cambiata (${m.h}-${m.a}), ricalcolo`);
+        const quoteNuove = m.qg_ricalcola && !status.started && now < m.ko; if (m.qg_ricalcola && !quoteNuove) { delete m.qg_ricalcola; round.touched = true; }
+        if (item.line !== field.get(m.id) || quoteNuove) {
+          console.warn(`Partita ${m.id}: ${quoteNuove ? 'quote sulle ufficiali arrivate dopo la stima' : 'formazione ufficiale cambiata'} (${m.h}-${m.a}), ricalcolo`);
           round.pending.push({...item, beforeKickoff: !status.started && now < m.ko, changed: true});
         }
         continue;

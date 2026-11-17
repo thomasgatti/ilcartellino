@@ -45,22 +45,54 @@ const loadGz = f => JSON.parse(zlib.gunzipSync(fs.readFileSync(f)));
 const archive = (dir, lg) => fs.existsSync(dir) ? fs.readdirSync(dir).filter(f => f.startsWith(lg + '_') && f.endsWith('.json.gz')).flatMap(f => Object.values(loadGz(path.join(dir, f)))) : [];
 
 // --- 1. esiti delle partite finite
+// 17/11 (revisione ChatGPT): ogni partita in un try a sé (una scheda difettosa non ferma le altre); si archivia solo un tabellino
+// completo (due squadre, due punteggi, cronaca degli eventi, statistiche giocatori), altrimenti si riprova al giro dopo;
+// i cartellini si attribuiscono per ID FotMob (nome preso da playerStats, lato dall'evento), i cambi anche per lato;
+// un rinvio non cancella la partita: se FotMob dà una nuova data la si aggiorna, senza risposta si aspetta;
+// nelle 48 ore dopo la fine si rilegge il tabellino e si aggiorna l'esito se FotMob ha corretto i cartellini.
+function esito(m, j) {
+  const st = j?.header?.status, H = j?.header?.teams, ev = j?.content?.matchFacts?.events?.events, ps = Object.values(j?.content?.playerStats || {});
+  if (!st?.finished || H?.length !== 2 || !H.every(t => Number.isFinite(t.score)) || !Array.isArray(ev) || ps.length < 22) return null;
+  const names = {}; for (const p of ps) if (p?.id) names[p.id] = short(p.name);
+  const cards = ev.filter(e => e.type === 'Card' && ['Yellow', 'YellowRed', 'Red'].includes(e.card) && names[e.player?.id])
+    .map(e => [e.time, names[e.player.id], e.card === 'Red' ? 'R' : e.card === 'YellowRed' ? 'GR' : 'G', e.isHome ? 'h' : 'a', e.player.id]);
+  const subs = {}, subsLato = { h: {}, a: {} };
+  for (const e of ev.filter(e => e.type === 'Substitution' && e.swap?.length === 2)) {
+    const out = names[e.swap[1].id] || short(e.swap[1].name), inn = names[e.swap[0].id] || short(e.swap[0].name);
+    subs[out] = inn; subsLato[e.isHome ? 'h' : 'a'][out] = inn;
+  }
+  const corners = (j.content?.stats?.Periods?.All?.stats || []).flatMap(g => g.stats || []).find(s => s.key === 'corners')?.stats;
+  return { id: m.id, comp: m.comp, h: m.h, a: m.a, hc: m.hc, ac: m.ac, ko: m.ko, finale: `${H[0].score}-${H[1].score}`, tris: m.tris,
+    angoli_prev: m.corners ? [m.corners.h.mu, m.corners.a.mu] : m.angoli_prev ?? null,
+    ammoniti: cards, sostituzioni: subs, sost_lato: subsLato, angoli: Array.isArray(corners) && corners.every(Number.isFinite) ? corners : null };
+}
 for (const m of [...ex.matches]) {
   if (now < m.ko + 2.5 * hour) continue;
-  const j = await get('/api/data/matchDetails?matchId=' + m.id);
-  const st = j?.header?.status;
-  if (st?.cancelled || st?.awarded || (now > m.ko + 2 * day && !st?.finished)) { ex.matches = ex.matches.filter(x => x.id !== m.id); continue; }
-  if (!st?.finished) continue;
-  const ev = j.content?.matchFacts?.events?.events || [], H = j.header.teams;
-  const names = {}; for (const p of Object.values(j.content?.playerStats || {})) names[p.id] = short(p.name);
-  const cards = ev.filter(e => e.type === 'Card' && e.player?.name && ['Yellow', 'YellowRed', 'Red'].includes(e.card))
-    .map(e => [e.time, short(e.player.name), e.card === 'Red' ? 'R' : e.card === 'YellowRed' ? 'GR' : 'G', e.isHome ? 'h' : 'a']).filter(c => Object.values(names).includes(c[1]));
-  const subs = {}; for (const e of ev.filter(e => e.type === 'Substitution' && e.swap?.length === 2)) subs[short(e.swap[1].name)] = short(e.swap[0].name);
-  const corners = (j.content?.stats?.Periods?.All?.stats || []).flatMap(g => g.stats || []).find(s => s.key === 'corners')?.stats;
-  ex.storico.unshift({ id: m.id, comp: m.comp, h: m.h, a: m.a, hc: m.hc, ac: m.ac, ko: m.ko, finale: `${H[0].score}-${H[1].score}`, tris: m.tris, angoli_prev: m.corners ? [m.corners.h.mu, m.corners.a.mu] : null,
-    ammoniti: cards, sostituzioni: subs, angoli: Array.isArray(corners) && corners.every(Number.isFinite) ? corners : null });
-  ex.matches = ex.matches.filter(x => x.id !== m.id);
-  console.log('EXTRA archiviata', m.h, m.a);
+  try {
+    const j = await get('/api/data/matchDetails?matchId=' + m.id), st = j?.header?.status;
+    if (!j) { console.log('EXTRA: nessuna risposta per', m.h, m.a, '(riprovo)'); continue; }
+    if (st?.cancelled || st?.awarded) { ex.matches = ex.matches.filter(x => x.id !== m.id); console.log('EXTRA tolta (annullata o a tavolino)', m.h, m.a); continue; }
+    if (!st?.finished) {
+      const nuovo = Date.parse(j.general?.matchTimeUTCDate) / 1000;
+      if (Number.isFinite(nuovo) && nuovo > m.ko + hour && !st?.started) { console.log('EXTRA rinviata', m.h, m.a, '→', new Date(nuovo * 1000).toISOString()); m.ko = nuovo; continue; }
+      if (now > m.ko + 7 * day) { ex.matches = ex.matches.filter(x => x.id !== m.id); console.log('::warning title=EXTRA tolta senza esito::' + `${m.h}-${m.a}: dopo 7 giorni nessun risultato`); }
+      continue;
+    }
+    const r = esito(m, j);
+    if (!r) { console.log('EXTRA: tabellino incompleto per', m.h, m.a, '(riprovo)'); if (now > m.ko + 7 * day) { ex.matches = ex.matches.filter(x => x.id !== m.id); console.log('::warning title=EXTRA tolta senza esito::' + `${m.h}-${m.a}: tabellino incompleto per 7 giorni`); } continue; }
+    ex.storico = [r, ...ex.storico.filter(x => x.id !== m.id)];
+    ex.matches = ex.matches.filter(x => x.id !== m.id);
+    console.log('EXTRA archiviata', m.h, m.a, r.finale, 'cartellini', r.ammoniti.length);
+  } catch (e) { console.log('::warning title=EXTRA esito::' + `${m.h}-${m.a}: ${String(e.message || e).slice(0, 150)}`); }
+}
+for (const r of ex.storico.filter(r => now < r.ko + 2 * day)) {   // correzioni di FotMob nelle 48 ore
+  try {
+    const j = await get('/api/data/matchDetails?matchId=' + r.id), n = j && esito(r, j);
+    if (n && (JSON.stringify(n.ammoniti) !== JSON.stringify(r.ammoniti) || n.finale !== r.finale)) {
+      Object.assign(r, { finale: n.finale, ammoniti: n.ammoniti, sostituzioni: n.sostituzioni, sost_lato: n.sost_lato, angoli: n.angoli ?? r.angoli, corretto: Math.round(now) });
+      console.log('EXTRA esito corretto da FotMob', r.h, r.a);
+    }
+  } catch (e) { console.log('::warning title=EXTRA rilettura::' + `${r.h}-${r.a}: ${String(e.message || e).slice(0, 150)}`); }
 }
 ex.storico = ex.storico.slice(0, 150);
 
