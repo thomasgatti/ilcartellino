@@ -21,7 +21,7 @@ function registra(out, rosa, lateIds) {
   for (const t of out) {
     const r = {v:1,id:t.id,comp:t.comp,partita:t.partita,ko:t.ko,creato,prima_del_via:adesso < t.ko,
       commit:process.env.GITHUB_SHA || null,giro:process.env.GITHUB_RUN_ID || null,
-      tipo:lateIds.has(t.id) ? 'revisione' : 'previsione',uff:t.uff,src:rosa[t.id]?.src ?? null,modello:rosa[t.id]?.modello ?? null,
+      tipo:lateIds.has(t.id) ? 'revisione' : 'previsione',uff:t.uff,src:rosa[t.id]?.src ?? null,modello:rosa[t.id]?.modello ?? null,moduli:rosa[t.id]?.moduli ?? null,
       p3:t.p3,trio:t.trio,rosa:rosa[t.id]?.rosa || [],distinta:campo.get(t.id) || null,varianti:{}};
     if (ultima.get(t.id) !== firma(r)) righe.push(JSON.stringify(r));
   }
@@ -50,7 +50,7 @@ async function main() {
           result.push({comp,id:m.id,ko:m.ko,partita:m.h+' - '+m.a,uff:!!m.uff,p3:t.p3,
             trio:t.trio.map(x=>({n:x.n,p:+x.p.toFixed(4),team:x.team}))});
           // per il registro delle previsioni: la rosa che il selettore ha davvero visto (stesso filtro di combos)
-          rosa[m.id] = {src:m.src || null, modello:DATA.model || ALL.model || null,
+          rosa[m.id] = {src:m.src || null, modello:DATA.model || ALL.model || null, moduli:m.moduli || null,
             rosa:players(m,true,true).filter(p => !m.uff || p.st === 100).map(p => [p.n,p.side,p.pos,p.p0,p.q,p.st,+p.p.toFixed(4)])};
         }
       }

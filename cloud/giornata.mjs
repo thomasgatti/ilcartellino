@@ -145,6 +145,15 @@ function startModel(cutoff) {
   return globalThis.ammBuild();
 }
 
+// 17/11: stato dei moduli del modello. Se «testa calda» o contesto (possesso atteso, quote 1X2) mancano o vanno in errore,
+// il bot pubblica lo stesso ma con un modello ridotto: lo dice nel log di Actions (avviso giallo) e lo scrive sulla partita (m.moduli).
+function moduliStato(st) {
+  const sx = (nome, x) => !x ? `${nome} assente` : x.errore ? `${nome} in errore: ${String(x.errore).slice(0,120)}` : x.saltato ? `${nome} saltato: ${x.saltato}` : null;
+  const problemi = [sx('testa calda', st?.hot), sx('contesto', st?.ctx)].filter(Boolean);
+  if (problemi.length) console.log(`::warning title=Modello ridotto::${problemi.join(' · ')}`);
+  return problemi.length ? 'ridotto: ' + problemi.join(' · ') : 'completo';
+}
+
 // Calendario della giornata (Serie A: FotMob 55, 10 partite; Champions fase campionato: FotMob 42, 18 partite).
 // Passa alla giornata successiva quando quella in corso è tutta archiviata e la prossima inizia entro 72 ore e almeno metà
 // delle partite ha una formazione (ultima, probabile o ufficiale). Le partite rimaste fuori entrano ai giri successivi.
@@ -533,7 +542,7 @@ function applyForecast(round, exportRows) {
     }
     if (!old) continue;
     if (!m.uff && old.forfait?.length) m.forfait = old.forfait;
-    for (const key of ['derby','hc','ac','uff_late','qg','line_src','line_q']) if (old[key] != null) m[key] = old[key];
+    for (const key of ['derby','hc','ac','uff_late','qg','line_src','line_q','moduli']) if (old[key] != null) m[key] = old[key];
     if (m.line == null && old.line != null) { m.line = old.line; if (old.line_est) m.line_est = 1; }
     if (!m.odds) m.odds = old.odds;
     if (m.ref === '–') m.ref = old.ref;
@@ -610,7 +619,7 @@ function archiveResult(round, m, j) {
   }
   const previous = results.findIndex(r => r.matchId === m.id);
   const kept = previous >= 0 ? results[previous] : null;
-  const prior = savedTris.get(m.id) || (kept && {trio:kept.tris_app,p3:kept.p3_app,revised:kept.tris_app_revisione});
+  const prior = savedTris.get(m.id) || (kept && {trio:kept.tris_app,p3:kept.p3_app,uff:kept.tris_app_uff,revised:kept.tris_app_revisione});
   if (!prior?.trio?.length) throw new Error('Tris prepartita assente');
   if (previous >= 0) { results.splice(previous,1); console.log('Cartellini corretti da FotMob:',m.h,m.a); }
   m.live = {t:'FT',sc:rawScore,fin:true,cards,fl,p:{},out:Object.keys(sub),sub,src:'fotmob'};
@@ -643,7 +652,7 @@ try {
   }
   const all = rounds.flatMap(r => r.pending);
   if (all.length) {
-    await startModel(Math.min(now,...all.map(({j}) => Date.parse(j.general.matchTimeUTCDate) / 1000)));
+    const moduli = moduliStato(await startModel(Math.min(now,...all.map(({j}) => Date.parse(j.general.matchTimeUTCDate) / 1000))));
     globalThis.saPatchVs();
     const predict = globalThis.fmPredict3;
     globalThis.fmPredict3 = (id,model,extra = []) => predict(id,model,extra.filter(p => !prepared.get(id).excluded.has(+p.id)));
@@ -669,6 +678,7 @@ try {
       changedIds.push(...applyForecast(round,exported));
       for (const item of round.pending) {
         field.set(item.id,item.line);
+        const mm = round.section.matches.find(x => x.id === item.id); if (mm) mm.moduli = moduli;
         if (item.beforeKickoff || round.advance) trisIds.push(item.id);
         else {
           const m = round.section.matches.find(x => x.id === item.id);

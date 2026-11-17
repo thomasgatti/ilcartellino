@@ -32,7 +32,7 @@ for (const [nome, P] of Object.entries(SETS)) {
     for (const k in acc) acc[k].push(t[k]);
   }
   const ratio = v => v.reduce((a, x) => a + x[0], 0) / v.reduce((a, x) => a + x[1], 0);
-  let seed = 3; const rnd = () => (seed = (seed * 1103515245 + 12345) % 2147483648) / 2147483648;
+  let seed = 3; const rnd = () => (seed = (Math.imul(seed, 1103515245) + 12345) & 0x7fffffff) / 2147483648 /* 17/11: prodotto intero esatto (prima perdeva precisione oltre 2^53) */;
   const ci = (v, f = ratio) => { const b = []; for (let k = 0; k < 2000; k++) { const s = []; for (let i = 0; i < v.length; i++) s.push(v[Math.floor(rnd() * v.length)]); b.push(f(s)); } b.sort((x, y) => x - y); return [b[50], b[1950]]; };
   console.log(`\n== ${nome}: ${acc.fronte.length} partite ==`);
   for (const k of ['fronte', 'altri', 'compagni']) { const v = acc[k], c = ci(v); console.log(`${k.padEnd(9)} coppie entrambe ammonite ${v.reduce((a, x) => a + x[0], 0)} · attese ${v.reduce((a, x) => a + x[1], 0).toFixed(1)} · rapporto ${ratio(v).toFixed(3)} [${c[0].toFixed(3)}; ${c[1].toFixed(3)}]`); }

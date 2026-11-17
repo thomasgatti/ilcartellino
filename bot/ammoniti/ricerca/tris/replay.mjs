@@ -151,7 +151,7 @@ function summ(r) {
 }
 function boot2(a, b, f, B = 4000) { // differenza appaiata b − a, ricampionando le partite
   const n = a.length, d = a.map((x, i) => f(b[i]) - f(x)), mu = d.reduce((s, x) => s + x, 0) / n; const bs = [];
-  let seed = 7; const rnd = () => (seed = (seed * 1103515245 + 12345) % 2147483648) / 2147483648;
+  let seed = 7; const rnd = () => (seed = (Math.imul(seed, 1103515245) + 12345) & 0x7fffffff) / 2147483648 /* 17/11: prodotto intero esatto (prima perdeva precisione oltre 2^53) */;
   for (let k = 0; k < B; k++) { let s = 0; for (let i = 0; i < n; i++) s += d[Math.floor(rnd() * n)]; bs.push(s / n); }
   bs.sort((x, y) => x - y); return [mu, bs[Math.floor(B * .025)], bs[Math.floor(B * .975)]];
 }

@@ -36,4 +36,12 @@ jobs:
         if: always()
         run: |
           cd dati && git config user.name "bot ammoniti" && git config user.email "bot@users.noreply.github.com"
-          mkdir -p extra_naz && git add -A extra extra_naz && (git commit -qm "extra $(date -u +%F)" && git push -q origin HEAD:dati) || echo "niente di nuovo"
+          # 17/11: un errore di commit o push fa fallire il passo (prima finiva in "niente di nuovo" e il giro risultava riuscito)
+          mkdir -p extra_naz
+          git add -A extra extra_naz
+          if git diff --cached --quiet; then
+            echo "niente di nuovo"
+          else
+            git commit -qm "extra $(date -u +%F)"
+            git push -q origin HEAD:dati
+          fi
