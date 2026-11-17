@@ -12,7 +12,7 @@ const { chromium } = require('playwright');
 const registro = path.join(__dirname, 'registro_previsioni.jsonl');
 function registra(out, rosa, lateIds) {
   const prima = fs.existsSync(registro) ? fs.readFileSync(registro,'utf8').split('\n').filter(Boolean).map(l => JSON.parse(l)) : [];
-  const firma = r => JSON.stringify([r.uff,r.tipo,r.p3,r.trio,r.rosa,r.distinta ?? null,r.varianti ?? {}]);
+  const firma = r => JSON.stringify([r.uff,r.tipo,r.p3,r.trio,r.rosa,r.distinta ?? null,r.varianti ?? {},r.moduli ?? null]);
   // distinta: la riga di lineups.txt del giro (nomi, maglia, posizione x/y in campo), copiata così com'è
   const campo = new Map(fs.readFileSync(path.join(__dirname,'lineups.txt'),'utf8').split(/\r?\n/).filter(Boolean).map(l => [+l.split('|')[0],l]));
   const ultima = new Map(prima.map(r => [r.id,firma(r)]));

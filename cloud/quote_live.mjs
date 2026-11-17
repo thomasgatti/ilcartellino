@@ -54,6 +54,7 @@ export async function updateQuoteLive(rounds, now) {
           for (const x of Object.values(P)) {
             if (!x?.active || !x.playerName || !(x.price > 1)) continue;
             const row = m.pl.find(r => sameName(r[0], x.playerName)) || fuzzyRow(m.pl, x.playerName); if (!row) continue;
+            if (m.pl.filter(r => r[0] === row[0]).length > 1) continue;   // 17/11: nome abbreviato condiviso (es. due «S. Camara»): meglio nessuna quota che quella dell'altro
             (q[row[0]] ||= {})[LABEL[b] || b] = x.price;
           }
         }

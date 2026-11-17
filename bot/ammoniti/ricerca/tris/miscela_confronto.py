@@ -6,7 +6,7 @@ arrotondata a 3 decimali, partita usata solo con almeno 10 giocatori quotati. Pr
 Uso: python3 miscela_confronto.py righe.json quote_ucl.json"""
 import json, sys, os, math, random, collections
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
-from market_blend import blend_match, lg, ex
+from market_blend import blend_match, match_names, lg, ex
 
 R = json.load(open(sys.argv[1]))['righe']; Q = json.load(open(sys.argv[2]))
 BOOKS = ['sisal.it', 'bet365.it', 'eurobet.it']
@@ -19,12 +19,14 @@ for mid, rows in by.items():
         for n, v in ((rec or {}).get('q', {}).get(b) or {}).items():
             if v and v[0] and v[0] > 1: bets.setdefault(n, []).append(v[0])
     bets = [(n, round(len(v) / sum(1 / x for x in v), 3)) for n, v in bets.items()]
+    # 17/11: come in produzione, la soglia dei 10 si applica alle quote dei giocatori della distinta (qui: dei titolari abbinati)
+    if len(bets) >= 10 and len(match_names([r['n'] for r in rows], bets)) < 10: info['meno di 10 titolari quotati'] += 1; bets = []
     if len(bets) < 10:
         info['senza quote'] += 1; G.append({'id': mid, 'ts': rows[0]['ts'], 'R': [dict(r, b={w: r['p'] for w in (.3, .5, .7)}) for r in rows], 'cop': 0}); continue
     pl = [[r['n'], 0, 0, r['p']] for r in rows]; out = {}
     for w in (.3, .5, .7):
         bl, k = blend_match(pl, bets, w=w); out[w] = [x[0] for x in bl]
-        if w == .5: matched = sum(1 for x in bl if x[1]); info['k al bordo 1'] += k < 1.0001; info['partite con quote'] += 1
+        if w == .5: matched = sum(1 for x in bl if x[1]); info['k al bordo 1'] += k < 1.0001; info['k al bordo 6'] += k > 5.9999; info['partite con quote'] += 1
     G.append({'id': mid, 'ts': rows[0]['ts'], 'cop': matched / len(rows), 'R': [dict(r, b={w: out[w][i] for w in out}) for i, r in enumerate(rows)]})
 # controllo omonimi: due titolari con stesse iniziale e cognome
 dup = sum(1 for g in G for k, c in collections.Counter((r['n'].split()[0][0] + ' ' + r['n'].split()[-1]).lower() for r in g['R']).items() if c > 1)
