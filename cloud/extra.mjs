@@ -64,8 +64,10 @@ function esito(m, j) {
   const corners = (j.content?.stats?.Periods?.All?.stats || []).flatMap(g => g.stats || []).find(s => s.key === 'corners')?.stats;
   return { id: m.id, comp: m.comp, h: m.h, a: m.a, hc: m.hc, ac: m.ac, ko: m.ko, finale: `${H[0].score}-${H[1].score}`, tris: m.tris,
     angoli_prev: m.corners ? [m.corners.h.mu, m.corners.a.mu] : m.angoli_prev ?? null,
+    lati: m.pl ? Object.fromEntries(Object.entries(m.pl.reduce((o, r) => ((o[r[0]] ||= new Set()).add(r[1]), o), {})).map(([n, v]) => [n, [...v]])) : m.lati,
     ammoniti: cards, sostituzioni: subs, sost_lato: subsLato, angoli: Array.isArray(corners) && corners.every(Number.isFinite) ? corners : null };
 }
+const appena = new Set();   // archiviate in questo giro: la rilettura parte dal giro dopo
 for (const m of [...ex.matches]) {
   if (now < m.ko + 2.5 * hour) continue;
   try {
@@ -74,24 +76,31 @@ for (const m of [...ex.matches]) {
     if (st?.cancelled || st?.awarded) { ex.matches = ex.matches.filter(x => x.id !== m.id); console.log('EXTRA tolta (annullata o a tavolino)', m.h, m.a); continue; }
     if (!st?.finished) {
       const nuovo = Date.parse(j.general?.matchTimeUTCDate) / 1000;
-      if (Number.isFinite(nuovo) && nuovo > m.ko + hour && !st?.started) { console.log('EXTRA rinviata', m.h, m.a, '→', new Date(nuovo * 1000).toISOString()); m.ko = nuovo; continue; }
+      if (Number.isFinite(nuovo) && nuovo > m.ko + hour && !st?.started) { console.log('EXTRA rinviata', m.h, m.a, '→', new Date(nuovo * 1000).toISOString()); m.ko = nuovo; m.rinviata = 1; continue; }   // rinviata: tenuta anche se il calendario non la riporta ancora
       if (now > m.ko + 7 * day) { ex.matches = ex.matches.filter(x => x.id !== m.id); console.log('::warning title=EXTRA tolta senza esito::' + `${m.h}-${m.a}: dopo 7 giorni nessun risultato`); }
       continue;
     }
     const r = esito(m, j);
     if (!r) { console.log('EXTRA: tabellino incompleto per', m.h, m.a, '(riprovo)'); if (now > m.ko + 7 * day) { ex.matches = ex.matches.filter(x => x.id !== m.id); console.log('::warning title=EXTRA tolta senza esito::' + `${m.h}-${m.a}: tabellino incompleto per 7 giorni`); } continue; }
+    r.archiviato = Math.round(now); appena.add(m.id);
     ex.storico = [r, ...ex.storico.filter(x => x.id !== m.id)];
     ex.matches = ex.matches.filter(x => x.id !== m.id);
     console.log('EXTRA archiviata', m.h, m.a, r.finale, 'cartellini', r.ammoniti.length);
   } catch (e) { console.log('::warning title=EXTRA esito::' + `${m.h}-${m.a}: ${String(e.message || e).slice(0, 150)}`); }
 }
-for (const r of ex.storico.filter(r => now < r.ko + 2 * day)) {   // correzioni di FotMob nelle 48 ore
+// Correzioni di FotMob nelle 48 ore dopo l'archiviazione (o dopo il via per gli esiti senza `archiviato`), dal giro successivo.
+// Si confrontano punteggio, cartellini, cambi e angoli. Se la nuova risposta ha la cronaca vuota mentre l'esito ne aveva una,
+// la si applica solo se si ripete uguale al giro dopo (una risposta vuota passeggera non azzera un esito valido).
+for (const r of ex.storico.filter(r => !appena.has(r.id) && now < (r.archiviato || r.ko) + 2 * day)) {
   try {
-    const j = await get('/api/data/matchDetails?matchId=' + r.id), n = j && esito(r, j);
-    if (n && (JSON.stringify(n.ammoniti) !== JSON.stringify(r.ammoniti) || n.finale !== r.finale)) {
-      Object.assign(r, { finale: n.finale, ammoniti: n.ammoniti, sostituzioni: n.sostituzioni, sost_lato: n.sost_lato, angoli: n.angoli ?? r.angoli, corretto: Math.round(now) });
-      console.log('EXTRA esito corretto da FotMob', r.h, r.a);
-    }
+    const j = await get('/api/data/matchDetails?matchId=' + r.id), n = j && esito(r, j); if (!n) continue;
+    const firma = x => JSON.stringify([x.finale, x.ammoniti, x.sost_lato || x.sostituzioni, x.angoli]);
+    if (firma(n) === firma(r)) { delete r.in_attesa; continue; }
+    const svuota = !n.ammoniti.length && !Object.keys(n.sostituzioni).length && (r.ammoniti.length || Object.keys(r.sostituzioni || {}).length);
+    if (svuota && r.in_attesa !== firma(n)) { r.in_attesa = firma(n); console.log('EXTRA: cronaca vuota per', r.h, r.a, '(aspetto conferma al giro dopo)'); continue; }
+    delete r.in_attesa;
+    Object.assign(r, { finale: n.finale, ammoniti: n.ammoniti, sostituzioni: n.sostituzioni, sost_lato: n.sost_lato, angoli: n.angoli ?? r.angoli, corretto: Math.round(now) });
+    console.log('EXTRA esito corretto da FotMob', r.h, r.a);
   } catch (e) { console.log('::warning title=EXTRA rilettura::' + `${r.h}-${r.a}: ${String(e.message || e).slice(0, 150)}`); }
 }
 ex.storico = ex.storico.slice(0, 150);
@@ -236,7 +245,8 @@ if (out.some(m => m.ref)) {
 // se il calendario della sua competizione non è arrivato, resta anche quella futura, con la stima di prima.
 const feedOk = new Set(Object.entries(COMPS).filter(([cid]) => Array.isArray(comps[cid]?.fixtures?.allMatches)).map(([, [cname]]) => cname));
 const outIds = new Set(out.map(m => m.id)), tenute = [];
-for (const m of ex.matches) if (!outIds.has(m.id) && (m.ko <= now || (!feedOk.has(m.comp) && m.ko <= now + AHEAD))) { out.push(m); tenute.push(`${m.h}-${m.a}`); }
+for (const m of ex.matches) if (!outIds.has(m.id) && (m.ko <= now || m.rinviata || (!feedOk.has(m.comp) && m.ko <= now + AHEAD))) { out.push(m); tenute.push(`${m.h}-${m.a}`); }
+// una rinviata che il calendario riporta di nuovo torna una partita normale (la sua scheda nuova sostituisce quella vecchia)
 if (tenute.length) console.log('EXTRA tenute dal giro precedente:', tenute.join(', '));
 const nessunCalendario = feedOk.size === 0;
 if (nessunCalendario) console.log('::warning title=EXTRA senza calendari::nessun calendario FotMob arrivato; partite tenute dal giro precedente');

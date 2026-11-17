@@ -30,6 +30,7 @@ export function fuzzyRow(pl, theirs) {
     .filter(x => x && x.s >= .6).sort((a, b) => b.s - a.s);
   return c.length && (c.length === 1 || c[0].s - c[1].s > .15) ? c[0].r : null;
 }
+const xiDi = m => m.pl.filter(r => (r[6] ?? 100) === 100).map(r => r[0]).sort().join('|');   // titolari della scheda: lega la cache delle quote alla formazione
 export async function updateQuoteLive(rounds, now) {
   const key = process.env.ODDSPAPI_KEY; if (!key) return false;
   let touched = false, budget = 4;
@@ -37,7 +38,7 @@ export async function updateQuoteLive(rounds, now) {
     for (const round of rounds) {
       const t = TOUR[round.comp]; if (!t) continue;
       const due = round.section.matches.filter(m => m.ko > now && m.ko - now < 36 * 3600 && m.pl?.length &&
-        (!m.qg || now - m.qg.agg > 90 * 60 || (m.uff && !m.qg.uff))).sort((a, b) => a.ko - b.ko);
+        (!m.qg || now - m.qg.agg > 90 * 60 || (m.uff && !m.qg.uff) || (m.uff && m.qg.xi && m.qg.xi !== xiDi(m)))).sort((a, b) => a.ko - b.ko);   // 17/11: XI cambiato → quote da rileggere
       if (!due.length || budget <= 0) continue;
       const d0 = new Date((now - 86400) * 1000).toISOString().slice(0, 10), d1 = new Date((now + 3 * 86400) * 1000).toISOString().slice(0, 10);
       const fx = await get(key, '/fixtures', { tournamentId: t, from: d0, to: d1 }); const F = Array.isArray(fx) ? fx : fx?.data || [];
@@ -60,9 +61,9 @@ export async function updateQuoteLive(rounds, now) {
         }
         // 17/11: la stima della Champions legge m.qg prima di questo passo. Se qui arrivano per la prima volta almeno 10 quote sulle
         // ufficiali, la partita va ricalcolata al giro dopo (prima del via) perché tris e percentuali usino queste quote.
-        const utili = x => Object.values(x?.q || {}).filter(b => Object.values(b).some(v => v > 1)).length;
-        if (round.comp === 'ucl' && m.uff && utili({ q }) >= 10 && !(m.qg?.uff && utili(m.qg) >= 10)) m.qg_ricalcola = 1;
-        m.qg = { agg: now, uff: m.uff ? 1 : 0, q }; touched = true;
+        const xi = m.uff ? xiDi(m) : null, utili = (x, sig) => Object.entries(x?.q || {}).filter(([n, b]) => (!sig || sig.split('|').includes(n)) && Object.values(b).some(v => v > 1)).length;
+        if (round.comp === 'ucl' && m.uff && utili({ q }, xi) >= 10 && !(m.qg?.uff && m.qg.xi === xi && utili(m.qg, xi) >= 10)) m.qg_ricalcola = 1;
+        m.qg = { agg: now, uff: m.uff ? 1 : 0, ...(xi ? { xi } : {}), q }; touched = true;
         // linea cartellini della partita: la più equilibrata fra Over/Under (mercati 10914 + 4·(linea − 0,5); Over = id, Under = id + 1)
         for (const b of ['sisal.it', 'bet365.it', 'eurobet.it']) {
           const mk = o.bookmakerOdds?.[b]?.markets; if (!mk) continue; let best = null;
