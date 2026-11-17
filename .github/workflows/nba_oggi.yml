@@ -31,7 +31,11 @@ jobs:
         env:
           ODDSPAPI_KEY: ${{ secrets.ODDSPAPI_KEY_NBA }}
           NBA_SENZA_QUOTE: ${{ inputs.quote == 'no' && '1' || '' }}
+      - name: Controlli del modello
+        run: python3 bot/nba/test_nba.py
       - name: Modello
+        env:
+          NBA_MODELLO: ${{ vars.NBA_MODELLO }}   # vuota o v1 = modello di sempre; v2 = bot/nba/modello2.py
         run: |
           python3 -c "import json,shutil;v=json.load(open('nba/oggi.json'));n=json.load(open('/tmp/oggi_input.json'));v.get('giorno')!=n['giorno'] and v.get('partite') and shutil.copy('nba/oggi.json','nba/ieri.json')" || true
           python3 bot/nba/oggi.py dati/nba /tmp/oggi_input.json nba/oggi.json
@@ -47,3 +51,22 @@ jobs:
             git pull -q --rebase origin main
             git push -q origin HEAD:main
           fi
+      # Fotografia di ciò che il modello sapeva e ha detto, nel ramo dati (nba/registro/): serve alla prova «in avanti» (bot/nba/rapporto.py).
+      # Non blocca la pubblicazione: se non riesce resta un avviso nel riepilogo del giro.
+      - name: Registro delle previsioni (ramo dati)
+        continue-on-error: true
+        run: |
+          if [ ! -s /tmp/oggi_input.json ]; then echo '::warning::Ingresso del modello mancante: niente registro'; exit 1; fi
+          if ! node -e "process.exit(require('/tmp/oggi_input.json').partite.length ? 0 : 1)"; then echo 'Nessuna partita: niente registro'; exit 0; fi
+          cd dati
+          for i in 1 2 3; do
+            git fetch -q origin dati
+            rm -rf /tmp/reg && git worktree prune && git worktree add -q --detach /tmp/reg FETCH_HEAD
+            python3 ../bot/nba/registro.py /tmp/oggi_input.json ../nba/oggi.json /tmp/reg/nba
+            git -C /tmp/reg add nba/registro
+            git -C /tmp/reg -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -qm "registro nba $(date -u +%FT%H:%MZ)"
+            if git -C /tmp/reg push -q origin HEAD:dati; then echo 'Registro salvato'; exit 0; fi
+            sleep 5
+          done
+          echo '::warning::Registro NBA non salvato nel ramo dati'
+          exit 1

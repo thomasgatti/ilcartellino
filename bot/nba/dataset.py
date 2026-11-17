@@ -7,6 +7,15 @@ segnate, quelle che presuppongono un'informazione disponibile poco prima della p
   tit        = è nel quintetto (i quintetti escono ~30 minuti prima)
   ass_*      = compagni della rotazione che non giocano questa partita (referto infortuni)
   linea_*    = handicap e totale punti prepartita (ESPN «pickcenter»)
+
+Versione 2 (17/11/2026, vedi RUNBOOK «NBA: banco di prova e modello v2»). Senza opzioni la tabella è IDENTICA a quella di prima
+(il modello attuale resta il riferimento); le opzioni aggiungono soltanto:
+  universo=True         anche le righe dei giocatori di rotazione che NON sono entrati (gioca=0): servono a P(gioca) e alla prova
+                        sull'universo vero di prima della partita. Chi usa il modello attuale deve filtrare gioca == 1.
+  lega_per_giorno=True  le medie di lega si aggiornano a fine giornata, non dopo ogni partita: le partite della stessa sera
+                        (il 58% ha lo stesso orario di un'altra) non si vedono più fra loro.
+Colonne nuove sempre presenti (nessun modello attuale le usa): gioca, ieri, min_ult, min_sd, rientro, pf36, disp, gare7, n_sq_st,
+emin_red_gia, emin_red_ass.
 """
 import gzip, json, math, os, sys
 from collections import defaultdict, deque
@@ -55,14 +64,17 @@ def strutturale(ps):
         d[0] *= (1 - p)
     return 1 - d[0] - d[1], 1 - d[0] - d[1] - d[2]
 
-def costruisci(partite, gioc):
+def costruisci(partite, gioc, universo=False, lega_per_giorno=False):
     G = {}                                            # stato del giocatore
     T = defaultdict(lambda: dict(n=0, ult=None, poss=Mobile(), conc={k: Mobile() for k in ('pts', 'reb', 'ast')}, fatti={k: Mobile() for k in ('pts', 'reb', 'ast')},
-                                 rot={}, conc_r={r: {k: Mobile() for k in ('pts', 'reb', 'ast')} for r in 'GFC'}))
+                                 rot={}, conc_r={r: {k: Mobile() for k in ('pts', 'reb', 'ast')} for r in 'GFC'}, tss=deque(maxlen=6), nst={}))
     lega = {k: Mobile() for k in ('poss', 'pts', 'reb', 'ast')}
-    righe = []
+    righe = []; coda_lega = []; giorno_lega = None
     for m in partite:
         st, ts = m['st'], m['ts']; lati = {1: m['h'], 0: m['a']}
+        if lega_per_giorno and m.get('g') != giorno_lega:          # giornata nuova: entrano nelle medie di lega le partite del giorno prima
+            for k, v in coda_lega: lega[k].agg(v, 0.01)
+            coda_lega = []; giorno_lega = m.get('g')
         per_lato = {1: [], 0: []}
         for r in m['p']: per_lato[r[1]].append(r)
         tot = {}
@@ -90,16 +102,24 @@ def costruisci(partite, gioc):
                           ritmo=a['poss'].m, ritmo_avv=b['poss'].m, ritmo_lega=lega['poss'].m,
                           conc={k: (b['conc'][k].m, lega[k].m) for k in ('pts', 'reb', 'ast')}, conc_r=b['conc_r'],
                           sq={k: a['fatti'][k].m for k in ('pts', 'reb', 'ast')},
-                          hc=None if hc is None else (hc if L else -hc), totp=totp)
+                          hc=None if hc is None else (hc if L else -hc), totp=totp,
+                          rotd={pid: ieri for pid, mm, ieri in rot}, s_rot=sum(mm['min'].m for _, mm, _ in rot),
+                          s_ass=sum(mm['min'].m for _, mm, _ in ass), s_gia=sum(mm['min'].m for _, mm in gia),
+                          gare7=sum(1 for t_ in a['tss'] if ts - t_ < 7 * 86400), n_sq_st=a['nst'].get(st, 0))
         for L in (0, 1):
             c = ctx[L]; tid, oid = lati[L][0], lati[1 - L][0]
-            for r in per_lato[L]:
+            elenco = [(r, 1) for r in per_lato[L]]
+            if universo and not m.get('futura'):     # di rotazione, ancora di questa squadra, non entrati: riga con gioca=0
+                dentro = {r[0] for r in per_lato[L]}
+                elenco += [([pid_, L, 0, 0, 0, 0, 0, 0, 0], 0) for pid_ in c['rotd'] if pid_ not in dentro and pid_ in G and G[pid_]['sq'] == tid]
+            for r, gioca in elenco:
                 pid, _, tit, mn, pts, reb, ast, stl, blk = r[:9]
                 val = dict(pts=pts, reb=reb, ast=ast, stl=stl, blk=blk)
                 n10 = sum(1 for k in CAT if val[k] >= 10)
                 g = G.get(pid); rl = ruolo((gioc.get(str(pid)) or ['', ''])[1])
                 riga = dict(id=m['id'], ts=ts, st=st, tipo=m['tipo'], pid=pid, sq=tid, avv=oid, casa=L, ruolo=rl, tit=tit, futura=int(bool(m.get('futura'))),
-                            min=mn, pts=pts, reb=reb, ast=ast, stl=stl, blk=blk, dd=int(n10 >= 2), td=int(n10 >= 3), n_prec=0 if g is None else g['n'])
+                            min=mn, pts=pts, reb=reb, ast=ast, stl=stl, blk=blk, dd=int(n10 >= 2), td=int(n10 >= 3), n_prec=0 if g is None else g['n'],
+                            gioca=gioca, ieri=int(bool(c['rotd'].get(pid))), gare7=c['gare7'], n_sq_st=c['n_sq_st'])
                 if g is not None and g['n'] > 0:
                     ns = g['ns'].get(st, 0); em = g['emin'].m
                     riga.update(n_stag=ns, emin=em, emin_lenta=g['lenta']['min'].m, tit_rec=g['etit'].m, tit_ult=g['tit_ult'],
@@ -122,6 +142,13 @@ def costruisci(partite, gioc):
                     p2, p3 = strutturale(ps); riga['p_dd_strut'] = p2; riga['p_td_strut'] = p3
                     ordn = sorted((riga[k + '_att'] for k in ('pts', 'reb', 'ast')), reverse=True)
                     riga['att_2a'] = ordn[1]; riga['att_3a'] = ordn[2]
+                    # v2: minuti più fini e presenza (nessun modello attuale usa queste colonne)
+                    fermo = (ts - g['ult']) / 86400
+                    riga.update(min_ult=g['min_ult'], min_sd=math.sqrt(max(g['lenta']['min'].v, 0.0)), rientro=0 if fermo > 10 else min(g['rientro'], 10),
+                                pf36=36 * g['pf'].m / max(g['lenta']['min'].m, 4.0) if g['pf'].m is not None else None, disp=g['disp'].m)
+                    for nome_, s_ in (('gia', c['s_gia']), ('ass', c['s_ass'])):      # minuti attesi se i minuti degli assenti si spartiscono fra i presenti
+                        s_ = s_ - (em if (nome_ == 'ass' and not gioca and pid in c['rotd']) else 0)
+                        riga['emin_red_' + nome_] = em * min(c['s_rot'] / max(c['s_rot'] - s_, 100.0), 1.5) if c['s_rot'] > 150 else em
                 # contesto di squadra
                 riga.update(riposo=c['ripo'], riposo_avv=c['ripo_avv'], b2b=None if c['ripo'] is None else int(c['ripo'] < 1.6), b2b_avv=None if c['ripo_avv'] is None else int(c['ripo_avv'] < 1.6),
                             ritmo=c['ritmo'], ritmo_avv=c['ritmo_avv'], ritmo_lega=c['ritmo_lega'], linea_hc=c['hc'], linea_tot=c['totp'], playoff=int(m['tipo'] != 2))
@@ -150,7 +177,9 @@ def costruisci(partite, gioc):
                 oggi_ = {r[0] for r in per_lato[L]}
                 for pid_, (ult_, _) in a['rot'].items():
                     if ult_ and ult_[-1] == a['n'] and pid_ in G: G[pid_]['b2b'][0] += 1; G[pid_]['b2b'][1] += int(pid_ in oggi_)
-            a['n'] += 1; a['ult'] = ts
+            for pid_ in ctx[L]['rotd']:                                  # presenza: quante partite della squadra gioca chi è di rotazione
+                if pid_ in G and G[pid_]['sq'] == tid: G[pid_]['disp'].agg(int(any(r[0] == pid_ for r in per_lato[L])), 0.1)
+            a['n'] += 1; a['ult'] = ts; a['tss'].append(ts); a['nst'][st] = a['nst'].get(st, 0) + 1
             a['poss'].agg((tot[0]['poss'] + tot[1]['poss']) / 2, 0.08)
             for k in ('pts', 'reb', 'ast'): a['fatti'][k].agg(tot[L][k], 0.08); a['conc'][k].agg(tot[1 - L][k], 0.08)
             # concesso per ruolo: somma dei giocatori avversari di quel ruolo
@@ -163,9 +192,11 @@ def costruisci(partite, gioc):
                 val = dict(min=r[3], pts=r[4], reb=r[5], ast=r[6], stl=r[7], blk=r[8]); n10 = sum(1 for k in CAT if val[k] >= 10)
                 g = G.get(pid)
                 if g is None:
-                    g = G[pid] = dict(n=0, ns={}, ult=ts, sq=tid, sqn={}, exvisti=set(), b2b=[0, 0], emin=Mobile(), etit=Mobile(), tit_ult=0, dd=Mobile(), td=Mobile(), cdd=0, ctd=0, sdd={}, std={}, ssum={},
+                    g = G[pid] = dict(n=0, ns={}, ult=ts, sq=tid, min_ult=0, rientro=0, pf=Mobile(), disp=Mobile(), sqn={}, exvisti=set(), b2b=[0, 0], emin=Mobile(), etit=Mobile(), tit_ult=0, dd=Mobile(), td=Mobile(), cdd=0, ctd=0, sdd={}, std={}, ssum={},
                                       lenta={k: Mobile() for k in CAT + ('min',)}, vel={k: Mobile() for k in CAT}, u10dd=deque(maxlen=10), u10td=deque(maxlen=10), u10min=deque(maxlen=10),
                                       u10={k: deque(maxlen=10) for k in ('pts', 'reb', 'ast')})
+                g['rientro'] = 0 if (ts - g['ult']) / 86400 > 10 else g['rientro'] + 1
+                g['min_ult'] = r[3]; g['pf'].agg(r[18] if len(r) > 18 else 0, A_LENTA)
                 st = m['st']; g['n'] += 1; g['ns'][st] = g['ns'].get(st, 0) + 1; g['ult'] = ts; g['sq'] = tid
                 g['sqn'][tid] = g['sqn'].get(tid, 0) + 1
                 if g['sqn'].get(oid, 0) >= 10: g['exvisti'].add(oid)
@@ -176,13 +207,15 @@ def costruisci(partite, gioc):
                 for k in ('pts', 'reb', 'ast'): g['u10'][k].append(val[k])
                 for k in CAT + ('min',): g['lenta'][k].agg(val[k], A_LENTA)
                 for k in CAT: g['vel'][k].agg(val[k], A_VELOCE); g['ssum'][(st, k)] = g['ssum'].get((st, k), 0.0) + val[k]
-        for k in ('pts', 'reb', 'ast', 'poss'): lega[k].agg((tot[0][k] + tot[1][k]) / 2, 0.01)
+        for k in ('pts', 'reb', 'ast', 'poss'):
+            if lega_per_giorno: coda_lega.append((k, (tot[0][k] + tot[1][k]) / 2))
+            else: lega[k].agg((tot[0][k] + tot[1][k]) / 2, 0.01)
     return pd.DataFrame(righe)
 
 if __name__ == '__main__':
-    src, out = sys.argv[1], sys.argv[2]
+    src, out = sys.argv[1], sys.argv[2]; v2 = '--v2' in sys.argv      # --v2: universo completo e medie di lega per giorno
     partite, gioc = carica(src)
-    D = costruisci(partite, gioc)
+    D = costruisci(partite, gioc, universo=v2, lega_per_giorno=v2)
     D.to_pickle(out)
     print(f'partite {len(partite)} · righe {len(D)} · stagioni:')
     print(D.groupby('st').agg(partite=('id', 'nunique'), righe=('id', 'size'), dd=('dd', 'sum'), td=('td', 'sum'), playoff=('playoff', 'mean')).to_string())
