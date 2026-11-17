@@ -145,13 +145,17 @@ function startModel(cutoff) {
   return globalThis.ammBuild();
 }
 
-// 17/11: stato dei moduli del modello. Se «testa calda» o contesto (possesso atteso, quote 1X2) mancano o vanno in errore,
-// il bot pubblica lo stesso ma con un modello ridotto: lo dice nel log di Actions (avviso giallo) e lo scrive sulla partita (m.moduli).
+// 17/11: stato dei moduli del modello, per competizione. Serie A (fmPredict3) usa «testa calda» e contesto quote 1X2;
+// coppe e nazionali (cupPredict3) usano il contesto possesso atteso. Un modulo è ridotto se manca, va in errore, viene saltato
+// o se non è riuscito l'aggancio al predittore (patch: false: modello allenato con la variabile ma predizioni senza).
+// Il bot pubblica lo stesso: lo dice nel log di Actions (avviso giallo) e lo scrive sulla partita (m.moduli).
 function moduliStato(st) {
-  const sx = (nome, x) => !x ? `${nome} assente` : x.errore ? `${nome} in errore: ${String(x.errore).slice(0,120)}` : x.saltato ? `${nome} saltato: ${x.saltato}` : null;
-  const problemi = [sx('testa calda', st?.hot), sx('contesto', st?.ctx)].filter(Boolean);
-  if (problemi.length) console.log(`::warning title=Modello ridotto::${problemi.join(' · ')}`);
-  return problemi.length ? 'ridotto: ' + problemi.join(' · ') : 'completo';
+  const sx = (nome, x, sub) => { const y = sub && x && !x.errore && !x.saltato ? x[sub] : x;
+    return !y ? `${nome} assente` : x.errore ? `${nome} in errore: ${String(x.errore).slice(0,120)}` : x.saltato ? `${nome} saltato: ${x.saltato}` : y.patch === false ? `${nome} non agganciato al predittore` : null; };
+  const fai = probs => { probs = probs.filter(Boolean); return probs.length ? 'ridotto: ' + probs.join(' · ') : 'completo'; };
+  const out = { sa: fai([sx('testa calda', st?.hot), sx('contesto quote', st?.ctx, 'sa')]), coppe: fai([sx('contesto possesso', st?.ctx, 'ucl')]) };
+  for (const [k, v] of Object.entries(out)) if (v !== 'completo') console.log(`::warning title=Modello ridotto (${k === 'sa' ? 'Serie A' : 'coppe e nazionali'})::${v.slice(9)}`);
+  return out;
 }
 
 // Calendario della giornata (Serie A: FotMob 55, 10 partite; Champions fase campionato: FotMob 42, 18 partite).
@@ -678,7 +682,7 @@ try {
       changedIds.push(...applyForecast(round,exported));
       for (const item of round.pending) {
         field.set(item.id,item.line);
-        const mm = round.section.matches.find(x => x.id === item.id); if (mm) mm.moduli = moduli;
+        const mm = round.section.matches.find(x => x.id === item.id); if (mm) mm.moduli = round.comp === 'sa' ? moduli.sa : moduli.coppe;
         if (item.beforeKickoff || round.advance) trisIds.push(item.id);
         else {
           const m = round.section.matches.find(x => x.id === item.id);

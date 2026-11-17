@@ -200,7 +200,15 @@ if (out.some(m => m.ref)) {
     m.refnote = `${d(c / g.length)} cartellini/gara · ${d(y / g.length)} gialli · ${g.length} gare in archivio`;
   }
 }
+// 17/11: non perdere partite già pubblicate. Una partita iniziata resta finché il passo 1 non la archivia (o la toglie se annullata);
+// se il calendario della sua competizione non è arrivato, resta anche quella futura, con la stima di prima.
+const feedOk = new Set(Object.entries(COMPS).filter(([cid]) => Array.isArray(comps[cid]?.fixtures?.allMatches)).map(([, [cname]]) => cname));
+const outIds = new Set(out.map(m => m.id)), tenute = [];
+for (const m of ex.matches) if (!outIds.has(m.id) && (m.ko <= now || (!feedOk.has(m.comp) && m.ko <= now + AHEAD))) { out.push(m); tenute.push(`${m.h}-${m.a}`); }
+if (tenute.length) console.log('EXTRA tenute dal giro precedente:', tenute.join(', '));
+const nessunCalendario = feedOk.size === 0;
+if (nessunCalendario) console.log('::warning title=EXTRA senza calendari::nessun calendario FotMob arrivato; partite tenute dal giro precedente');
 ex.matches = out.sort((a, b) => a.ko - b.ko);
-ex.updated = Math.round(now);
+if (!nessunCalendario) ex.updated = Math.round(now);   // senza calendari non conta come aggiornamento: il giro dopo riprova
 fs.writeFileSync(DATA, JSON.stringify(data));
 console.log('EXTRA aggiornata:', ex.matches.length, 'partite,', ex.storico.length, 'nello storico');
