@@ -17,17 +17,22 @@ const get = async u => { for (let k = 0; k < 4; k++) { try { const r = await fet
 const file = (lg, s) => path.join(OUT, lg + '_' + s.replace('/', '-') + '.json.gz');
 const load = f => fs.existsSync(f) ? JSON.parse(zlib.gunzipSync(fs.readFileSync(f))) : {};
 const save = (f, o) => fs.writeFileSync(f, zlib.gzipSync(JSON.stringify(o)));
-let tot = 0, calOk = 0, calKo = 0, detKo = 0, parseKo = 0;   // 17/11: conteggi per non far passare un giro vuoto per errore come riuscito
+let tot = 0, calOk = 0, calKo = 0, detKo = 0, parseKo = 0, incompleti = 0;   // 17/11: conteggi per non far passare un giro vuoto per errore come riuscito
 outer: for (const [lg, seasons] of Object.entries(process.env.SCRAPE_SET === 'naz' ? SPEC_NAZ : SPEC)) for (const s of seasons) {
   const f = file(lg, s), have = load(f);
-  const L = await get('/api/data/leagues?id=' + lg + '&season=' + encodeURIComponent(s)); if (!L) { calKo++; console.log('niente calendario', lg, s); continue; } calOk++;
+  const L = await get('/api/data/leagues?id=' + lg + '&season=' + encodeURIComponent(s)); if (!Array.isArray(L?.fixtures?.allMatches)) { calKo++; console.log(L ? 'calendario senza partite (risposta incompleta)' : 'niente calendario', lg, s); continue; } calOk++;   // 17/11: un JSON senza calendario non conta come arrivato
   const todo = (L.fixtures?.allMatches || []).filter(m => m.status?.finished && !m.status?.cancelled && !have[m.id]).map(m => +m.id);
   let i = 0, n = 0;
   await Promise.all([0, 1, 2, 3].map(async () => { while (i < todo.length) { const id = todo[i++]; const j = await get('/api/data/matchDetails?matchId=' + id); if (!j) { detKo++; continue; }
-    try { const m = fmParse(j, s); m.lg = +lg; m.x = deepExtra(j); if (m.pl.length > 20) { have[id] = m; n++; } } catch (e) { parseKo++; } await sleep(80); } }));
+    try { const m = fmParse(j, s); m.lg = +lg; m.x = deepExtra(j);
+      // 17/11: nelle 48 ore dopo la partita si salva solo un tabellino completo (punteggi, cronaca, minuti dei titolari), altrimenti
+      // si riprova al prossimo giro, perché una partita salvata non viene più riscaricata. Dopo si salva com'è: per alcuni campionati
+      // (id 441 e 122) FotMob non pubblica mai i minuti (853 partite su 21.765 in archivio al 17/11).
+      const completo = Number.isFinite(m.hs) && Number.isFinite(m.as) && Array.isArray(j.content?.matchFacts?.events?.events) && m.pl.some(r => r[4] === 1 && r[5] > 0);
+      if (m.pl.length > 20 && (completo || Date.now() / 1000 - m.ts > 2 * 86400)) { have[id] = m; n++; } else incompleti++; } catch (e) { parseKo++; } await sleep(80); } }));
   if (n) save(f, have); tot += n; console.log(lg, s, 'nuove', n, 'totale', Object.keys(have).length);
   if ((Date.now() - T0) / 60000 > MAXMIN) { console.log('tempo massimo raggiunto: riprende al prossimo giro'); break outer; }
 }
-console.log('partite nuove in tutto:', tot, '· calendari arrivati', calOk, 'mancati', calKo, '· tabellini non arrivati', detKo, 'illeggibili', parseKo);
+console.log('partite nuove in tutto:', tot, '· calendari arrivati', calOk, 'mancati', calKo, '· tabellini non arrivati', detKo, 'illeggibili', parseKo, 'incompleti', incompleti);
 if (!calOk) { console.log('::error title=FotMob irraggiungibile::nessun calendario arrivato'); process.exit(1); }
-if (calKo || detKo || parseKo) console.log(`::warning title=FotMob incompleto::calendari mancati ${calKo}, tabellini non arrivati ${detKo}, illeggibili ${parseKo}: riprende al prossimo giro`);
+if (calKo || detKo || parseKo || incompleti) console.log(`::warning title=FotMob incompleto::calendari mancati ${calKo}, tabellini non arrivati ${detKo}, illeggibili ${parseKo}, incompleti ${incompleti}: riprende al prossimo giro`);

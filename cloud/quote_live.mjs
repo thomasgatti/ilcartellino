@@ -58,6 +58,10 @@ export async function updateQuoteLive(rounds, now) {
             (q[row[0]] ||= {})[LABEL[b] || b] = x.price;
           }
         }
+        // 17/11: la stima della Champions legge m.qg prima di questo passo. Se qui arrivano per la prima volta almeno 10 quote sulle
+        // ufficiali, la partita va ricalcolata al giro dopo (prima del via) perché tris e percentuali usino queste quote.
+        const utili = x => Object.values(x?.q || {}).filter(b => Object.values(b).some(v => v > 1)).length;
+        if (round.comp === 'ucl' && m.uff && utili({ q }) >= 10 && !(m.qg?.uff && utili(m.qg) >= 10)) m.qg_ricalcola = 1;
         m.qg = { agg: now, uff: m.uff ? 1 : 0, q }; touched = true;
         // linea cartellini della partita: la più equilibrata fra Over/Under (mercati 10914 + 4·(linea − 0,5); Over = id, Under = id + 1)
         for (const b of ['sisal.it', 'bet365.it', 'eurobet.it']) {
