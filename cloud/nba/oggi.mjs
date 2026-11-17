@@ -10,7 +10,7 @@ const giorno = process.argv[3] || new Intl.DateTimeFormat('en-CA', { timeZone: '
 const sb = await get(E + 'scoreboard?dates=' + giorno + '&limit=100'), partite = [];
 if (!Array.isArray(sb?.events)) throw new Error('Calendario ESPN non disponibile: non pubblicare dati NBA incompleti');
 const stato = s => /out|suspen/i.test(s || '') ? 'out' : /day|doubt|question|probable|game time/i.test(s || '') ? 'dubbio' : '';
-const inf = {}; { const j = await get(E + 'injuries'); for (const T of j?.injuries || []) for (const x of T.injuries || []) { const id = +x.athlete?.id || +(x.athlete?.links?.[0]?.href?.match(/id\/(\d+)/)?.[1] || 0); if (id) inf[id] = [stato(x.status), x.details?.type || x.shortComment?.slice(0, 60) || '']; } }
+const inf = {}; { const j = await get(E + 'injuries'); if (!Array.isArray(j?.injuries)) throw new Error('Lista infortuni ESPN non disponibile: non pubblicare la pagina come se nessuno fosse fuori'); for (const T of j?.injuries || []) for (const x of T.injuries || []) { const id = +x.athlete?.id || +(x.athlete?.links?.[0]?.href?.match(/id\/(\d+)/)?.[1] || 0); if (id) inf[id] = [stato(x.status), x.details?.type || x.shortComment?.slice(0, 60) || '']; } }
 const rose = {};
 const rosa = async id => { if (rose[id]) return rose[id]; const j = await get(E + 'teams/' + id + '/roster'); await sleep(150);
   return rose[id] = (j?.athletes || []).map(a => { const i = inf[+a.id], s = i ? i[0] : stato(a.injuries?.[0]?.status); return [+a.id, a.displayName, a.position?.abbreviation || '', s, i?.[1] || '']; }); };
@@ -27,7 +27,8 @@ const cap = Math.max(0, Math.min(partite.length, Number(process.env.NBA_QUOTE_MA
 const soloItaliani = process.env.NBA_QUOTE_SOLO_ITALIA === '1';
 const daQuotare = cap >= partite.length ? partite : Array.from({ length: cap }, (_, i) => partite[Math.floor((i + 0.5) * partite.length / cap)]);
 console.log(`quote: ${daQuotare.length}/${partite.length} partite${soloItaliani ? ' · solo bookmaker italiani' : ''}`);
-if (K && daQuotare.length && !process.env.NBA_SENZA_QUOTE) { const B = 'https://api.oddspapi.io/v4'; let chiamate = 0;
+let quoteCreato = null;
+if (K && daQuotare.length && !process.env.NBA_SENZA_QUOTE) { const B = 'https://api.oddspapi.io/v4'; let chiamate = 0; quoteCreato = Math.floor(Date.now() / 1000);
   const op = async (p, q) => { for (let k = 0; k < 4; k++) { await sleep(3600); const u = new URL(B + p); for (const [a, v] of Object.entries({ ...q, apiKey: K })) u.searchParams.set(a, v); const r = await fetch(u, { signal: AbortSignal.timeout(60000) }).catch(() => null); if (!r) continue; if (r.status === 429) { const t = await r.text(); if (/REQUEST_LIMIT/.test(t)) { console.log('quota OddsPapi finita'); return null; } await sleep(5000); continue; } chiamate++; if (!r.ok) return null; return r.json(); } return null; };
   const t0 = Math.min(...partite.map(p => p.ts)), d = x => new Date(x * 1000).toISOString().slice(0, 10);
   const fx = await op('/fixtures', { tournamentId: 132, from: d(t0 - 43200), to: d(t0 + 86400) }), F = Array.isArray(fx) ? fx : fx?.data || [];
@@ -39,4 +40,5 @@ if (K && daQuotare.length && !process.env.NBA_SENZA_QUOTE) { const B = 'https://
     console.log(`  ${P.a[1]} @ ${P.h[1]}: quote ${n}${soloItaliani || italiani !== null ? ' · bookmaker italiani ' + ni : ''}`); }
   console.log('richieste OddsPapi usate:', chiamate, '· bookmaker italiani con questi mercati:', italiani);
 }
-fs.writeFileSync(OUT, JSON.stringify({ giorno, creato: Math.floor(Date.now() / 1000), partite }));
+// quote_creato: istante in cui le quote sono state lette (assente se non richieste: nel rifacimento della pagina vale l'ora della prima lettura)
+fs.writeFileSync(OUT, JSON.stringify({ giorno, creato: Math.floor(Date.now() / 1000), ...(quoteCreato && partite.some(p => Object.keys(p.quote.dd).length) ? { quote_creato: quoteCreato } : {}), partite }));

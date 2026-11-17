@@ -1,0 +1,22 @@
+name: NBA - controlli del modello
+# Controlli automatici di bot/nba (fughe di informazione, universo, abbinamento dei nomi, combinazioni, modello v2, registro).
+# Parte a ogni richiesta di modifica che tocca il modello NBA, e a mano. Non pubblica nulla.
+on:
+  pull_request:
+    paths:
+      - 'bot/nba/**'
+      - '.github/workflows/nba_test.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  controlli:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -q pandas scikit-learn
+      - run: python3 bot/nba/test_nba.py

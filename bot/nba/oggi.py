@@ -3,13 +3,21 @@
 Uso: python3 bot/nba/oggi.py <cartella nba del ramo dati> <oggi_input.json di cloud/nba/oggi.mjs> <uscita oggi.json>
 Modello: quello «con il referto infortuni» del RUNBOOK (logistica + alberi, media sul logit), allenato su tutto l'archivio.
 Chi è «out» per ESPN non gioca e conta come assenza per i compagni; i «dubbi» sono trattati come presenti e segnati.
+
+Variabile NBA_MODELLO (predefinito v1 = tutto come prima). Con NBA_MODELLO=v2 (bot/nba/modello2.py, numeri nel RUNBOOK):
+  doppia doppia allenata con assenze note a metà, tripla doppia mai sopra la doppia, P(gioca) al posto della regola «rischio riposo»
+  (chiave nuova p_gioca; sotto 0,80 il giocatore è segnato «riposo» e resta fuori da giocate e combinazioni), i giocatori «in dubbio»
+  fuori da giocate e combinazioni, «quota alta» = i più probabili a quota 3 o più (non più il «valore» p × quota più alto).
+In uscita, sempre: modello {versione, commit}, quote_ora (istante in cui le quote sono state lette).
 """
-import json, sys, itertools
+import json, os, sys, itertools
 import numpy as np, pandas as pd
 sys.path.insert(0, __file__.rsplit('/', 1)[0])
 from dataset import carica, costruisci
 from prova import prepara, colonne, gbm, logit_, LG, GRUPPI
-from mercato import norm
+from mercato import norm, abbina
+
+V2 = os.environ.get('NBA_MODELLO', 'v1').strip().lower() == 'v2'
 
 
 # Combinazioni: per ogni fascia di quota, la combinazione PIÙ PROBABILE che paga almeno quella quota.
@@ -91,9 +99,10 @@ def diario(partite, gioc, D):
     return dict(giorno=giorno, dd=sorted(dd, key=lambda x: x['n']), td=td, spazio=spazio[:8])
 
 def main(cartella, f_in, f_out, f_quote=None):
-    partite, gioc = carica(cartella); I = json.load(open(f_in)); stato = {}; nomi = {}
+    partite, gioc = carica(cartella); I = json.load(open(f_in)); stato = {}; nomi = {}; quote_ora = I.get('quote_creato')
     if f_quote:                                        # rifacimento della stessa notte: le quote si riprendono dalla pagina già pubblicata
         V = json.load(open(f_quote)); vecchie = {str(P['id']): P for P in V.get('partite', [])} if V.get('giorno') == I['giorno'] else {}
+        if vecchie and not quote_ora: quote_ora = V.get('quote_ora') or V.get('creato')          # quote riusate: vale l'ora in cui erano state lette
         for P in I['partite']:
             if P['quote']['dd'] or P['quote']['td'] or str(P['id']) not in vecchie: continue
             for g in vecchie[str(P['id'])]['giocatori']:
@@ -106,19 +115,28 @@ def main(cartella, f_in, f_out, f_quote=None):
                 nomi[pid] = nome; stato[pid] = (st, perche); gioc.setdefault(str(pid), [nome, ruolo_, P[k][0]])
                 if st != 'out': righe.append([pid, L] + [0] * 18)
         partite.append(dict(id=P['id'], st=f"{P['anno'] - 1}-{P['anno']}", ts=P['ts'], tipo=P['tipo'], h=[P['h'][0], P['h'][1], 0], a=[P['a'][0], P['a'][1], 0], linea=None, t={}, p=righe, futura=True))
-    D = prepara(costruisci(partite, gioc)); tr, te = D[D.futura == 0], D[D.futura == 1].copy()
-    c = [x for x in colonne('assenze del giorno') if x not in GRUPPI['linea prepartita']]
-    for y in ('dd', 'td'):
-        a = gbm(y == 'td').fit(tr[c], tr[y].values).predict_proba(te[c])[:, 1]; b = logit_().fit(tr[c], tr[y].values).predict_proba(te[c])[:, 1]
-        te['p_' + y] = 1 / (1 + np.exp(-(LG(a) + LG(b)) / 2))
-    out = dict(giorno=I['giorno'], creato=I['creato'], partite=[]); tutti = []
+    if V2:
+        import modello2 as M2
+        U = M2.prepara2(costruisci(partite, gioc, universo=True, lega_per_giorno=True)); U = U[U.n_prec >= 5].sort_values('ts').reset_index(drop=True)
+        D = U[U.gioca == 1]; tr, te = D[D.futura == 0], D[D.futura == 1].copy()                    # D: chi è entrato in campo + le partite da giocare
+        te['p_dd'], te['p_td'] = M2.prevedi(tr, te)
+        te['p_gioca'] = np.nan; m = (te.ieri == 1) & (te.emin >= 12)                              # P(gioca): solo per chi era in campo nella partita prima
+        if m.any(): te.loc[m, 'p_gioca'] = M2.prevedi_gioca(M2.universo_gioca(U[U.futura == 0]), te[m])
+    else:
+        D = prepara(costruisci(partite, gioc)); tr, te = D[D.futura == 0], D[D.futura == 1].copy()
+        c = [x for x in colonne('assenze del giorno') if x not in GRUPPI['linea prepartita']]
+        for y in ('dd', 'td'):
+            a = gbm(y == 'td').fit(tr[c], tr[y].values).predict_proba(te[c])[:, 1]; b = logit_().fit(tr[c], tr[y].values).predict_proba(te[c])[:, 1]
+            te['p_' + y] = 1 / (1 + np.exp(-(LG(a) + LG(b)) / 2))
+    out = dict(giorno=I['giorno'], creato=I['creato'], modello=dict(versione='v2' if V2 else 'v1', commit=os.environ.get('GITHUB_SHA', '')[:7]), partite=[]); tutti = []
+    if quote_ora: out['quote_ora'] = quote_ora
     for P in I['partite']:
         Z = te[te.id == P['id']]; per_nome = {norm(nomi[p]): p for p in Z.pid}
         q = {'dd': {}, 'td': {}}
         for y in ('dd', 'td'):
             for bk, d in P['quote'][y].items():
                 for nome, prezzo in d.items():
-                    pid = per_nome.get(norm(nome))
+                    pid = per_nome.get(abbina(nome, per_nome) or '')
                     if pid is None: continue
                     # l'utente gioca in Italia: vale la quota migliore fra i bookmaker italiani; quelli americani solo se in Italia non è quotato
                     it = bk.endswith('.it'); vecchia = q[y].get(pid)
@@ -130,7 +148,11 @@ def main(cartella, f_in, f_out, f_quote=None):
                      p_dd=round(float(r.p_dd), 4), p_td=round(float(r.p_td), 4))
             # etichette: ex di turno; seconda serata di back-to-back per uno che di solito la salta; minuti in crescita
             if r.ex: g['ex'] = 1
-            if r.b2b == 1 and r.b2b_occ >= 4 and r.b2b_gio / r.b2b_occ < 0.6: g['riposo'] = 1
+            if V2:
+                if r.p_gioca == r.p_gioca:                     # non NaN
+                    g['p_gioca'] = round(float(r.p_gioca), 3)
+                    if r.p_gioca < M2.SOGLIA_GIOCA: g['riposo'] = 1
+            elif r.b2b == 1 and r.b2b_occ >= 4 and r.b2b_gio / r.b2b_occ < 0.6: g['riposo'] = 1
             if r.emin - r.emin_lenta >= 4: g['su'] = round(float(r.emin - r.emin_lenta), 1)
             for y in ('dd', 'td'):
                 if r.pid in q[y]: g['q_' + y], g['b_' + y] = q[y][r.pid][:2]; g['v_' + y] = round(g['p_' + y] * g['q_' + y], 3)
@@ -144,16 +166,19 @@ def main(cartella, f_in, f_out, f_quote=None):
             fuori[k] = [dict(n=n_, perche=pc, **sostituto(partite, P[k][0], pid, {g_['id'] for g_ in G}, nomi)) for pid, n_, _, st, pc in P['rosa'][k] if st == 'out' and ult.get(pid, 0) >= 15]
         out['partite'].append(dict(id=P['id'], ts=P['ts'], h=dict(sigla=P['h'][1], nome=P['h'][2]), a=dict(sigla=P['a'][1], nome=P['a'][2]), giocatori=G[:14], candidati=cand, fuori=fuori, quote=int(bool(q['dd']))))
     tutti = [g for g in tutti if not g.get('riposo')]          # chi rischia il turno di riposo non entra in giocate e combinazioni
+    if V2: tutti = [g for g in tutti if not g.get('dubbio')]   # v2: nemmeno chi è «in dubbio» (nelle prime notti misurate salta la partita 4 volte su 10)
     con = [g for g in tutti if 'q_dd' in g]
     breve = lambda g: {k: g[k] for k in ('n', 'sq', 'p_dd', 'p_td', 'q_dd', 'b_dd', 'v_dd', 'q_td', 'b_td', 'v_td', 'dubbio', 'ex', 'su') if k in g}
     C = dict(
         bassa=[breve(g) for g in sorted([g for g in con if g['q_dd'] < 2.0], key=lambda g: -g['p_dd'])[:3]],
-        alta=[breve(g) for g in sorted([g for g in con if g['q_dd'] >= 3.0 and g['p_dd'] >= 0.10], key=lambda g: -g['v_dd'])[:3]],
+        # v1: il «valore» p × quota più alto. v2: i più probabili (il valore più alto sceglie i casi in cui il modello contraddice di più il mercato, e lì sbaglia più spesso)
+        alta=[breve(g) for g in sorted([g for g in con if g['q_dd'] >= 3.0 and g['p_dd'] >= 0.10], key=lambda g: -(g['p_dd'] if V2 else g['v_dd']))[:3]],
         td=[breve(g) for g in sorted([g for g in tutti if g['p_td'] >= 0.03], key=lambda g: -g['p_td'])[:4]])
     if not con: C['bassa'] = [breve(g) for g in sorted(tutti, key=lambda g: -g['p_dd'])[:3]]
     C['combinazioni'] = combinazioni(tutti)
     out['consigli'] = C
     out['ieri'] = diario(partite, gioc, D)
+    if V2: assert all(g['p_td'] <= g['p_dd'] for P in out['partite'] for g in P['giocatori']), 'P(TD) > P(DD)'
     json.dump(out, open(f_out, 'w'), ensure_ascii=False)
     for P in out['partite']:
         print(f"\n{P['a']['sigla']} @ {P['h']['sigla']}  ·  fuori: {', '.join(x['n'] for k in 'ha' for x in P['fuori'][k]) or '-'}")

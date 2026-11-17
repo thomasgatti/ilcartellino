@@ -79,8 +79,14 @@ jobs:
           NBA_QUOTE_MAX_PARTITE: '5'
           NBA_SENZA_QUOTE: ${{ steps.giorno.outputs.riusa }}
         run: node cloud/nba/oggi.mjs /tmp/nba_auto_input.json "${{ steps.giorno.outputs.giorno }}"
+      # Controlli automatici del modello (archivio finto, pochi secondi): se falliscono non si pubblica nulla.
+      - name: Controlli del modello
+        if: steps.giorno.outputs.genera == 'si'
+        run: python3 bot/nba/test_nba.py
       - name: Probabilità DD/TD e combinazioni
         if: steps.giorno.outputs.genera == 'si'
+        env:
+          NBA_MODELLO: ${{ vars.NBA_MODELLO }}   # vuota o v1 = modello di sempre; v2 = bot/nba/modello2.py (si torna indietro togliendo la variabile)
         run: |
           # la pagina della notte prima resta visibile come «Notte scorsa» (nba/ieri.json)
           python3 - "${{ steps.giorno.outputs.giorno }}" <<'PY'
@@ -130,4 +136,23 @@ jobs:
             sleep 3
           done
           echo 'Errore nella pubblicazione' >&2
+          exit 1
+      # Fotografia di ciò che il modello sapeva e ha detto, nel ramo dati (nba/registro/): serve alla prova «in avanti» (bot/nba/rapporto.py).
+      # Non blocca la pubblicazione: se non riesce resta un avviso nel riepilogo del giro.
+      - name: Registro delle previsioni (ramo dati)
+        if: steps.giorno.outputs.genera == 'si'
+        continue-on-error: true
+        run: |
+          if ! node -e "process.exit(require('/tmp/nba_auto_input.json').partite.length ? 0 : 1)"; then echo 'Nessuna partita: niente registro'; exit 0; fi
+          cd dati
+          for i in 1 2 3; do
+            git fetch -q origin dati
+            rm -rf /tmp/reg && git worktree prune && git worktree add -q --detach /tmp/reg FETCH_HEAD
+            python3 ../bot/nba/registro.py /tmp/nba_auto_input.json ../nba/oggi.json /tmp/reg/nba
+            git -C /tmp/reg add nba/registro
+            git -C /tmp/reg -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -qm "registro nba $(date -u +%FT%H:%MZ)"
+            if git -C /tmp/reg push -q origin HEAD:dati; then echo 'Registro salvato'; exit 0; fi
+            sleep 5
+          done
+          echo '::warning::Registro NBA non salvato nel ramo dati'
           exit 1
