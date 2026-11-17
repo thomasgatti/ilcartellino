@@ -210,17 +210,18 @@ const cogn = n => { const p = String(n).split(' '); return p.length > 1 ? p.slic
 const fmtG = new Intl.DateTimeFormat('it-IT', { weekday: 'long', day: 'numeric', month: 'long' }), fmtO = new Intl.DateTimeFormat('it-IT', { hour: '2-digit', minute: '2-digit' });
 let D = null;
 // etichette del giocatore: sempre nella riga sotto il nome
-const tags = g => (g.dubbio ? '<span class="tag dub">in dubbio</span>' : '') + (g.riposo ? '<span class="tag rip" title="Seconda partita in due sere: di solito ne salta una">rischio riposo</span>' : '') + (g.ex ? '<span class="tag ex" title="Ha giocato in questa squadra avversaria">ex</span>' : '') + (g.su ? `<span class="tag su" title="Minuti in crescita nelle ultime partite">+${Math.round(g.su)} min</span>` : '');
+const tags = g => (g.dubbio ? '<span class="tag dub">in dubbio</span>' : '') + (g.riposo ? `<span class="tag rip" title="${g.p_gioca != null ? 'Probabilità che giochi stanotte: ' + pc(g.p_gioca) + '. Escluso da giocate e combinazioni' : 'Seconda partita in due sere: di solito ne salta una'}">${g.p_gioca != null ? 'gioca ' + pc(g.p_gioca) : 'rischio riposo'}</span>` : '') + (g.ex ? '<span class="tag ex" title="Ha giocato in questa squadra avversaria">ex</span>' : '') + (g.su ? `<span class="tag su" title="Minuti in crescita nelle ultime partite">+${Math.round(g.su)} min</span>` : '');
 const CHIP = { dd: '<span class="chip dd">doppia doppia</span>', td: '<span class="chip td">tripla doppia</span>' };
 
 // ---- live da ESPN, come per gli ammoniti: tabellone ogni 30 secondi, tabellino delle partite in corso ----
 const ESPN = 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/', LIVE = {}, aperte = new Set(), chiave = n => String(n).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z ]/g, '').replace(/\b(jr|sr|ii|iii|iv)\b/g, '').replace(/\s+/g, ' ').trim();
-const partitaDi = {};
-const statoG = n => { const L = LIVE[partitaDi[n]]; if (!L || L.stato === 'pre') return null; const x = L.pl?.[chiave(n)]; return { L, x, fin: L.stato === 'post' }; };
+const partitaDi = {}, idDi = {};
+// collegamento per id ESPN (oggi.json lo ha dal 13/11); il nome serve solo se l'id manca
+const statoG = n => { const L = LIVE[partitaDi[n]]; if (!L || L.stato === 'pre') return null; const x = (idDi[n] != null ? L.pl?.['#' + idDi[n]] : null) ?? L.pl?.[chiave(n)]; return { L, x, fin: L.stato === 'post' }; };
 const n10 = x => [x.pts, x.reb, x.ast, x.stl, x.blk].filter(v => v >= 10).length;
 // esito: 'si' presa, 'no' non presa (partita finita), 'ng' non ha giocato, 'live' in corso, null non iniziata
 function esito(n, cosa) { const s = statoG(n); if (!s) return null; const serve = cosa === 'td' ? 3 : 2;
-  if (s.x && n10(s.x) >= serve) return 'si'; if (!s.fin) return s.L.pl ? 'live' : null; return s.x ? 'no' : 'ng'; }
+  if (s.x && n10(s.x) >= serve) return 'si'; if (!s.fin) return s.L.pl ? 'live' : null; if (!s.L.pl) return null; return s.x ? 'no' : 'ng'; }
 const SEGNO = { si: '<span class="es si">✓ presa</span>', no: '<span class="es no">✗ non presa</span>', ng: '<span class="es ng">non ha giocato</span>', live: '<span class="es live">in corso</span>' };
 const cifre = x => { const v = (k, u) => `<b class="${x[k] >= 10 ? 'ok' : ''}">${x[k]}</b> ${u}`; return `${v('pts', 'pt')} · ${v('reb', 'rb')} · ${v('ast', 'as')}${x.stl >= 5 ? ` · ${v('stl', 'rec')}` : ''}${x.blk >= 5 ? ` · ${v('blk', 'st')}` : ''}`; };
 const riga = n => { const s = statoG(n); return s?.x ? `<span class="lv">${cifre(s.x)}</span>` : ''; };
@@ -228,7 +229,7 @@ async function espn(path) { const sep = path.includes('?') ? '&' : '?'; const r 
 function tabellino(j) { const pl = {};
   for (const T of j.boxscore?.players || []) { const S = T.statistics?.[0]; if (!S) continue; const nomi = S.names || S.labels || [], ix = k => nomi.indexOf(k);
     for (const a of S.athletes || []) { const st = a.stats || []; if (a.didNotPlay || !st.length) continue; const v = k => parseInt(st[ix(k)], 10) || 0;
-      pl[chiave(a.athlete.displayName)] = { min: v('MIN'), pts: v('PTS'), reb: v('REB'), ast: v('AST'), stl: v('STL'), blk: v('BLK') }; } }
+      const r = { min: v('MIN'), pts: v('PTS'), reb: v('REB'), ast: v('AST'), stl: v('STL'), blk: v('BLK') }; pl[chiave(a.athlete.displayName)] = r; if (a.athlete.id != null) pl['#' + a.athlete.id] = r; } }
   return pl; }
 let inGiro = false;
 async function aggiornaLive() {
@@ -300,16 +301,16 @@ function disegna() {
 }
 // due viste con la stessa impaginazione: «Stanotte» (oggi.json) e «Notte scorsa» (ieri.json, la pagina della notte prima con i risultati finali)
 const DATI = {}; let vista = 'oggi', notaBase = null;
-function mostra(v) { vista = v; D = DATI[v]; for (const k in partitaDi) delete partitaDi[k];
+function mostra(v) { vista = v; D = DATI[v]; for (const k in partitaDi) delete partitaDi[k]; for (const k in idDi) delete idDi[k];
   document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.v === v));
   const agg = new Date(D.creato * 1000), nota = document.getElementById('note'); notaBase ??= nota.innerHTML; nota.innerHTML = notaBase;
   document.getElementById('livemeta').textContent = '';
   if (!D.partite.length) { document.getElementById('meta').innerHTML = `Nessuna partita in programma ${v === 'oggi' ? 'stanotte' : ''} · aggiornato alle ${fmtO.format(agg)}`; document.getElementById('status').hidden = true; disegna(); return; }
-  for (const P of D.partite) for (const g of P.giocatori) partitaDi[g.n] = P.id;
+  for (const P of D.partite) for (const g of P.giocatori) { partitaDi[g.n] = P.id; if (g.id != null) idDi[g.n] = g.id; }
   const primo = new Date(Math.min(...D.partite.map(p => p.ts)) * 1000);
   const ritirate = (D.quote_non_disponibili || []).map(x => esc(x.n + ' ' + (x.cosa || '').toUpperCase())).join(', ');
   const segnalate = (D.quote_segnalate || []).map(x => `${esc(x.n)} ${esc((x.cosa || '').toUpperCase())} quota ${nq(x.q)} (segnalata, non verificata)`).join('; ');
-  document.getElementById('meta').innerHTML = `Notte del <b>${fmtG.format(primo).replace(/^\S+\s/, '')}</b> · ${D.partite.length} partite · ${v === 'oggi' ? 'previsioni e quote delle ' + fmtO.format(agg) : 'le proposte di allora e com\'è andata'}`;
+  document.getElementById('meta').innerHTML = `Notte del <b>${fmtG.format(primo).replace(/^\S+\s/, '')}</b> · ${D.partite.length} partite · ${v === 'oggi' ? (D.quote_ora && Math.abs(D.quote_ora - D.creato) > 600 ? `previsioni delle ${fmtO.format(agg)}, quote delle ${fmtO.format(new Date(D.quote_ora * 1000))}` : 'previsioni e quote delle ' + fmtO.format(agg)) : 'le proposte di allora e com\'è andata'}`;
   if (ritirate || segnalate) nota.insertAdjacentHTML('afterbegin', `${ritirate ? 'Quote segnalate come non disponibili: ' + ritirate + '. ' : ''}${segnalate ? 'Aggiornamento: ' + segnalate + '. ' : ''}`);
   document.getElementById('status').hidden = false; disegna(); aggiornaLive();
 }
