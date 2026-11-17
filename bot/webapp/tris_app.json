@@ -1276,17 +1276,17 @@
   "id": 5181848,
   "ko": 1794944700,
   "partita": "Polonia - Svezia",
-  "uff": false,
-  "p3": 0.018450597942490852,
+  "uff": true,
+  "p3": 0.021877983843108594,
   "trio": [
    {
-    "n": "G. Lagerbielke",
-    "p": 0.2972,
+    "n": "E. Stroud",
+    "p": 0.3008,
     "team": "Svezia"
    },
    {
-    "n": "G. Gudmundsson",
-    "p": 0.2367,
+    "n": "G. Lagerbielke",
+    "p": 0.2773,
     "team": "Svezia"
    },
    {
@@ -1301,23 +1301,23 @@
   "id": 5181871,
   "ko": 1794944700,
   "partita": "Danimarca - Norvegia",
-  "uff": false,
-  "p3": 0.01333453137438548,
+  "uff": true,
+  "p3": 0.014079067182213459,
   "trio": [
    {
-    "n": "K. Ajer",
-    "p": 0.2349,
+    "n": "R. Kristensen",
+    "p": 0.2416,
+    "team": "Danimarca"
+   },
+   {
+    "n": "L. Østigård",
+    "p": 0.226,
     "team": "Norvegia"
    },
    {
-    "n": "R. Kristensen",
-    "p": 0.2328,
-    "team": "Danimarca"
-   },
-   {
-    "n": "V. Nelsson",
-    "p": 0.2102,
-    "team": "Danimarca"
+    "n": "K. Ajer",
+    "p": 0.2223,
+    "team": "Norvegia"
    }
   ]
  },
@@ -1326,22 +1326,22 @@
   "id": 5181872,
   "ko": 1794944700,
   "partita": "Galles - Portogallo",
-  "uff": false,
-  "p3": 0.010690495175916645,
+  "uff": true,
+  "p3": 0.012986208336871086,
   "trio": [
    {
     "n": "B. Davies",
-    "p": 0.2627,
+    "p": 0.2528,
     "team": "Galles"
    },
    {
-    "n": "L. Cullen",
-    "p": 0.2248,
+    "n": "R. Colwill",
+    "p": 0.2351,
     "team": "Galles"
    },
    {
-    "n": "A. Costa",
-    "p": 0.156,
+    "n": "J. Cancelo",
+    "p": 0.1884,
     "team": "Portogallo"
    }
   ]
