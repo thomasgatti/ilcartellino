@@ -4,7 +4,7 @@ Leggi prima `README.md` (struttura, dati, regole del progetto). Storia completa 
 
 ## Regole operative
 1. **Rispondi e scrivi in italiano** (interfaccia, commenti, messaggi di commit).
-2. **Non lavorare su `main`**: ogni push su `main` va subito online su ilcartellino.vercel.app, dove lo usano gli amici del proprietario. Crea un ramo `codex/<cosa>`; il merge lo decide il proprietario dopo aver visto l'anteprima Vercel.
+2. **Non lavorare direttamente su `main`**: ogni push su `main` va subito online su ilcartellino.vercel.app, dove lo usano gli amici del proprietario. Crea un ramo `codex/<cosa>`, fai lì build e controlli, poi **unisci subito a `main`** senza lasciare richieste di unione in attesa (dal 17/11/2026 il proprietario non vuole approvarle a mano). Dopo l'unione controlla che il giro successivo della Giornata automatica finisca bene e di' al proprietario che cosa è cambiato.
 3. **Non modificare `index.html` della radice né `bot/webapp/index.html` a mano**: sono generati. Modifica `bot/webapp/template.html` (o i dati), poi:
    `cd bot/webapp && python3 build.py && python3 build_vercel.py && cp vercel/sito/index.html ../../index.html && rm -rf vercel/sito`
 4. Non toccare il ramo `dati` né i file grandi in `bot/ammoniti/data/` senza un motivo esplicito.

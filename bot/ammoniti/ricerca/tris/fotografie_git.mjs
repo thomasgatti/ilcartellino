@@ -9,7 +9,7 @@ const ris = JSON.parse(fs.readFileSync('bot/webapp/vercel/risultati.json', 'utf8
 
 function pick(m, subq) {
   const SUBQ = subq || { D: .019, M: .042, F: .039 }, jointK = t => (new Set(t.map(x => x.side)).size > 1 ? 1.16 : 1.04);
-  const ps = m.pl.map(([n, side, pos, num, p0, vs, st = 100, q = null]) => ({ n, side, st, p: 1 - (1 - p0) * (1 - (q ?? SUBQ[pos] ?? .03)) }))
+  const ps = m.pl.map(([n, side, pos, num, p0, vs, st = 100, q = null]) => { const qq = q ?? SUBQ[pos] ?? .03; return { n, side, st, p: st >= 100 ? 1 - (1 - p0) * (1 - qq) : p0 + Math.max(0, st / 100 - p0) * qq }; })
     .sort((x, y) => y.p - x.p).filter(p => !m.uff || p.st === 100), out = [];
   for (const two of ['h', 'a']) {
     const A = ps.filter(x => x.side === two).slice(0, 7), B = ps.filter(x => x.side !== two).slice(0, 7);

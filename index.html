@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta name="build" content="2026-11-16T22:21:21Z">
+<meta name="build" content="2026-11-17T01:25:19Z">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -963,9 +963,11 @@ const adj = (p, on) => on ? 1 / (1 + Math.exp(-(Math.log(p / (1 - p)) + BOOST)))
 try { const s = JSON.parse(localStorage.getItem('amm_ui') || '{}'); if (s.mode) state.mode = s.mode; if (s.boost) state.boost = s.boost; if (s.subRule === false) state.subRule = false; } catch (e) {}
 const saveUi = () => { try { localStorage.setItem('amm_ui', JSON.stringify({ mode: state.mode, boost: state.boost, subRule: state.subRule })); } catch (e) {} };
 const SUBQ = DATA.subq || { D: 0.019, M: 0.042, F: 0.039 };
-const slotP = (p, pos, q, subRule = state.subRule) => subRule ? 1 - (1 - p) * (1 - (q ?? SUBQ[pos] ?? 0.03)) : p;   // titolare O chi entra al suo posto
+// titolare O chi entra al suo posto. Sulle probabili p è già P(titolare) × P(giallo se parte): il sostituto conta solo se il giocatore
+// parte davvero, quindi p + (st − p) × q. Con st = 100 (ufficiali) è la formula di sempre, 1 − (1 − p)(1 − q).
+const slotP = (p, pos, q, subRule = state.subRule, st = 100) => { if (!subRule) return p; const qq = q ?? SUBQ[pos] ?? 0.03; return st >= 100 ? 1 - (1 - p) * (1 - qq) : p + Math.max(0, st / 100 - p) * qq; };
 
-function players(m, raw = false, subRule = state.subRule) { return m.pl.map(([n, side, pos, num, p0, vs, st = 100, q = null]) => { const b = !raw && !!state.boost[bkey(m, n)]; return { n, side, pos, num, st, q, p: slotP(adj(p0, b), pos, q, subRule), p0, b, vs, qg: m.qg?.q?.[n] || null, tags: (m.tags && m.tags[n]) || [], team: side === 'h' ? m.h : m.a, cols: side === 'h' ? m.hc : m.ac }; }).sort((x, y) => y.p - x.p); }
+function players(m, raw = false, subRule = state.subRule) { return m.pl.map(([n, side, pos, num, p0, vs, st = 100, q = null]) => { const b = !raw && !!state.boost[bkey(m, n)]; return { n, side, pos, num, st, q, p: slotP(adj(p0, b), pos, q, subRule, st), p0, b, vs, qg: m.qg?.q?.[n] || null, tags: (m.tags && m.tags[n]) || [], team: side === 'h' ? m.h : m.a, cols: side === 'h' ? m.hc : m.ac }; }).sort((x, y) => y.p - x.p); }
 function combos(m, mode, raw = false, subRule = state.subRule) {
   const ps = players(m, raw, subRule).filter(p => !m.uff || p.st === 100), out = [];
   if (mode === 'free') {
