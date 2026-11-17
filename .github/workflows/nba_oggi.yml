@@ -38,4 +38,12 @@ jobs:
       - name: Pubblica
         run: |
           git config user.name "bot ammoniti" && git config user.email "bot@users.noreply.github.com"
-          git add nba/oggi.json nba/ieri.json && (git commit -qm "NBA: partite della notte $(date -u +%F)" && git pull -q --rebase origin main && git push -q origin HEAD:main) || echo "niente di nuovo"
+          # 17/11: un errore di commit o push fa fallire il passo (prima finiva in "niente di nuovo" e il giro risultava riuscito)
+          git add nba/oggi.json nba/ieri.json
+          if git diff --cached --quiet; then
+            echo "niente di nuovo"
+          else
+            git commit -qm "NBA: partite della notte $(date -u +%F)"
+            git pull -q --rebase origin main
+            git push -q origin HEAD:main
+          fi

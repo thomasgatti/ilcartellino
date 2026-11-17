@@ -17,6 +17,6 @@ for (const m of all) {
   acc.push(t);
 }
 const rr = v => (v.reduce((s, x) => s + x[0], 0) / v.reduce((s, x) => s + x[1], 0)) / (v.reduce((s, x) => s + x[2], 0) / v.reduce((s, x) => s + x[3], 0));
-let seed = 5; const rnd = () => (seed = (seed * 1103515245 + 12345) % 2147483648) / 2147483648, B = [];
+let seed = 5; const rnd = () => (seed = (Math.imul(seed, 1103515245) + 12345) & 0x7fffffff) / 2147483648 /* 17/11: prodotto intero esatto (prima perdeva precisione oltre 2^53) */, B = [];
 for (let k = 0; k < 2000; k++) { const s = []; for (let i = 0; i < acc.length; i++) s.push(acc[Math.floor(rnd() * acc.length)]); B.push(rr(s)); } B.sort((a, c) => a - c);
 console.log(`Nazionali: ${acc.length} partite · coppie di fronte entrambe ammonite ${acc.reduce((s, x) => s + x[0], 0)} · di fronte / altri avversari ${rr(acc).toFixed(3)} [${B[50].toFixed(3)}; ${B[1950].toFixed(3)}]`);

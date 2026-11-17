@@ -1371,7 +1371,7 @@ function renderAngoli() {
     <div class="ang-list">${order.map((m, i) => angCard(m, i + 1, best.has(m.id))).join('')}</div>` : `<p class="note">Nessuna partita in programma nei prossimi giorni: le stime tornano con il prossimo turno.</p>`}
     <h2>Verifica</h2>
     ${st.length ? `<div class="ang-tiles">
-      <div class="stat"><span class="k">Partite verificate</span><span class="v">${st.length}</span></div>
+      <div class="stat"><span class="k">Partite verificate</span><span class="v">${st.length}${retro ? ` <small>${st.length - retro} stimate prima del via</small>` : ''}</span></div>
       <div class="stat"><span class="k">Finite con ${S}+ angoli</span><span class="v">${hits} <small>attese ${itn(att)}</small></span></div>
       <div class="stat"><span class="k">Nel terzo più alto</span><span class="v">${alto.filter(hit).length} su ${alto.length} <small>attese ${itn(alto.reduce((s, r) => s + r.p, 0))}</small></span></div>
     </div>
