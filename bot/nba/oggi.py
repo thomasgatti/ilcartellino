@@ -101,8 +101,9 @@ def blocca(V, C, tutti, tutti_tutti, stato_nome):
         if m is None:
             v = dict(v); v['p_' + y] = validi[v['n']]['p_' + y]; v['p_dd'] = validi[v['n']]['p_dd']; v['p_td'] = validi[v['n']]['p_td']
             C[k] = [v] + [g for g in C.get(k, []) if g['n'] != v['n']][:2]
-        elif C.get(k):
-            C[k] = [dict(C[k][0], prima={a: b for a, b in v.items() if a not in ('prima', 'motivo')} if not v.get('prima') else v['prima'], motivo=m)] + C[k][1:]
+        else:
+            pr = v['prima'] if v.get('prima') else {a: b for a, b in v.items() if a not in ('prima', 'motivo')}
+            C[k] = [dict(C[k][0], prima=pr, motivo=m)] + C[k][1:] if C.get(k) else [dict(nessuna=1, prima=pr, motivo=m)]
     return C
 
 def ricombina(f):

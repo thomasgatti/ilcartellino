@@ -278,6 +278,7 @@ function prima(gambe, q, motivo, chiaveAp) {
 }
 function giocata(cls, etichetta, g, y, vuoto) {
   if (!g) return `<div class="card pick ${cls}"><div class="lab">${etichetta}</div><div class="empty">${vuoto}</div></div>`;
+  if (g.nessuna) return `<div class="card pick ${cls}"><div class="lab">${etichetta}</div><div class="empty">Nessuna alternativa senza ${esc(g.motivo || '')}</div>${g.prima ? prima([Object.assign({ cosa: y, p: g.prima['p_' + y], q: g.prima['q_' + y] }, g.prima)], g.prima['q_' + y], g.motivo, etichetta + '·' + g.prima.n) : ''}</div>`;
   const e = esito(g.n, y);
   return `<div class="card pick ${cls} ${e ? 'e-' + e : ''}"><div class="lab"><span>${etichetta}</span>${e ? SEGNO[e] : ''}</div><div class="big">${esc(cogn(g.n))}</div><div class="pc">${pc(g['p_' + y])}</div>${voce(g, y, { chip: false, senzaP: true, book: true, esito: e === 'si' || e === 'no' ? null : e })}${g.prima ? prima([Object.assign({ cosa: y, p: g.prima['p_' + y], q: g.prima['q_' + y] }, g.prima)], g.prima['q_' + y], g.motivo, etichetta + '·' + g.prima.n) : ''}</div>`;
 }
