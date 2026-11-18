@@ -101,7 +101,7 @@ def blocca(V, C, tutti, tutti_tutti, stato_nome):
         q = validi.get(n, {}).get('q_' + y)
         return q if q else vecchia                                  # quota sparita dal bookmaker: resta quella di prima
     def scese(gambe, nuove):
-        return ', '.join(f"{x['n'].split(' ', 1)[-1]} {x['cosa'].upper()} da {fmt_q(x['q'])} a {fmt_q(q)}" for x, q in zip(gambe, nuove) if q < x['q'] * 0.9)
+        return ', '.join(f"{x['n'].split(' ', 1)[-1]} {x['cosa'].upper()} da {fmt_q(x['q'])} a {fmt_q(q)}" for x, q in zip(gambe, nuove) if q < x['q'])
     vecchio = V.get('consigli') or {}; fisse, sostituite = {}, {}
     for c in vecchio.get('combinazioni', []):
         if c['tipo'] not in TIPI: continue
