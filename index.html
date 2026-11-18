@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta name="build" content="2026-11-18T09:34:09Z">
+<meta name="build" content="2026-11-18T09:42:36Z">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -345,7 +345,7 @@ details.how p { margin: 8px 0 0; max-width: none; }
 .tag.hot { background: #d62b36; color: #fff; border-color: #d62b36; }
 .match .tag.hot { display: block; margin-top: 3px; font-size: 9.5px; padding: 1px 5px; text-align: center; }
 /* ---- Storico unico: un colore per competizione ---- */
-.cmp-sa { --cc: #1e6fe0; } .cmp-ucl { --cc: #8b3dff; } .cmp-extra { --cc: #16a34a; } .cmp-naz { --cc: #d62b36; }
+.cmp-sa { --cc: #1e6fe0; } .cmp-ucl { --cc: #8b3dff; } .cmp-uel { --cc: #f07c00; } .cmp-extra { --cc: #16a34a; } .cmp-naz { --cc: #d62b36; }
 #storico .hist-card[class*="cmp-"] { border-color: color-mix(in srgb, var(--cc) 55%, var(--line)) !important; border-top: 6px solid var(--cc) !important;
   box-shadow: inset 0 90px 70px -60px color-mix(in srgb, var(--cc) 45%, transparent), 0 6px 22px -14px var(--cc); }
 #storico .hist-card[class*="cmp-"] .side.app { background: color-mix(in srgb, var(--cc) 9%, transparent); }
@@ -1357,7 +1357,7 @@ function extraHist(r) {
 const ANG = ALL.angoli && ((ALL.angoli.matches || []).length || (ALL.angoli.storico || []).length) ? ALL.angoli : null;
 const astate = { f: 'all', sort: 'p', all: false };
 const itn = (v, d = 1) => Number(v).toFixed(d).replace('.', ',');
-const ANG_COMP = { sa: 'Serie A', ucl: 'Champions', naz: 'Nazionali', extra: 'EXTRA' };
+const ANG_COMP = { sa: 'Serie A', ucl: 'Champions', uel: 'Europa League', naz: 'Nazionali', extra: 'EXTRA' };
 const angCols = c => c || ['#5d6c7b', '#ffffff'];
 function angCard(m, rank, top) {
   const S = ANG.soglia || 14, now = Date.now() / 1000, w = v => Math.max(2, Math.min(100, v / .3 * 100)).toFixed(1), tot = m.mu[0] + m.mu[1];
@@ -1380,7 +1380,7 @@ function angCard(m, rank, top) {
 }
 function renderAngoli() {
   const el = document.getElementById("sez-angoli"), S = ANG.soglia || 14, now = Date.now() / 1000;
-  const comps = ['sa', 'ucl', 'naz', 'extra'].filter(c => ANG.matches.some(m => m.c === c));
+  const comps = ['sa', 'ucl', 'uel', 'naz', 'extra'].filter(c => ANG.matches.some(m => m.c === c));
   if (astate.f !== 'all' && !comps.includes(astate.f)) astate.f = 'all';
   const list = ANG.matches.filter(m => astate.f === 'all' || m.c === astate.f);
   const order = [...list].sort((a, b) => astate.sort === 'p' ? b.p - a.p || a.ko - b.ko : a.ko - b.ko || b.p - a.p);
