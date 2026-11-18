@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta name="build" content="2026-11-17T22:21:04Z">
+<meta name="build" content="2026-11-18T09:24:58Z">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -734,7 +734,7 @@ html { overflow-y: scroll; scrollbar-gutter: stable; }
 :root[data-comp="angoli"] footer .how { display: none; }
 .ang-teams .chip { box-shadow: 0 0 0 1px rgba(255,255,255,.4); }
 #sez-angoli h2 { font: 800 24px/1 var(--display); text-transform: uppercase; letter-spacing: .5px; margin: 6px 0 0; }
-.ang-lead { margin: 0; max-width: 68ch; color: var(--muted); }
+.ang-lead { margin: 0; color: var(--muted); }   /* 18/11: a tutta larghezza come il resto della sezione */
 .ang-lead b { color: var(--ink); }
 .ang-bar { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; }
 .ang-bar > * { min-width: 0; }
@@ -783,7 +783,7 @@ html { overflow-y: scroll; scrollbar-gutter: stable; }
 .ang-more { justify-self: start; font: 700 14px var(--body); border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 8px 14px; border-radius: 999px; cursor: pointer; }
 .ang-how { border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; background: color-mix(in srgb, var(--surface) 94%, transparent); }
 .ang-how summary { cursor: pointer; font-weight: 700; }
-.ang-how p { color: var(--muted); margin: 8px 0 0; max-width: 75ch; }
+.ang-how p { color: var(--muted); margin: 8px 0 0; }   /* 18/11: niente limite di riga, il testo occupa tutto il riquadro */
 @media (max-width: 560px) {
   :root[data-comp="angoli"] body { background-image: repeating-linear-gradient(90deg, rgba(255,255,255,.035) 0 60px, transparent 60px 120px); }
   .ang-card { padding: 12px; } .ang-pct b { font-size: 34px; } .ang-teams { font-size: 15px; }

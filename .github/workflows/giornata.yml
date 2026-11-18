@@ -111,6 +111,7 @@ jobs:
         run: |
           git add -- index.html bot/webapp/index.html bot/webapp/data.json bot/webapp/lineups.txt bot/webapp/tris_app.json bot/webapp/vercel/risultati.json
           if [ -f bot/webapp/registro_previsioni.jsonl ]; then git add -- bot/webapp/registro_previsioni.jsonl; fi
+          git add -A -- bot/webapp/oddspapi_stato.json 2>/dev/null || true   # stato della quota OddsPapi (creato o tolto da quote_live.mjs)
           if ! git diff --cached --quiet; then
             git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Aggiorna formazioni ed esiti'
             git push origin HEAD:main

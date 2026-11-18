@@ -14,7 +14,8 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 async function get(p, q = {}) {
   for (let k = 0; k < 5; k++) {
     await sleep(3500); const u = new URL(B + p); for (const [a, v] of Object.entries({ ...q, apiKey: K })) u.searchParams.set(a, v);
-    const r = await fetch(u); if (r.status === 429) { await sleep(3000); continue; }
+    const r = await fetch(u);
+    if (r.status === 429) { const t = await r.text(); if (/REQUEST_LIMIT/i.test(t)) { console.log('::warning title=OddsPapi::quota mensile finita, niente archivio oggi'); process.exit(0); } await sleep(3000); continue; }   // 18/11: a quota finita una sola chiamata, non cinque
     const t = await r.text(); if (r.status === 404) return null; if (!r.ok) throw new Error(`${r.status} ${p}: ${t.slice(0, 200)}`); return JSON.parse(t);
   }
   throw new Error('troppi 429 su ' + p);
