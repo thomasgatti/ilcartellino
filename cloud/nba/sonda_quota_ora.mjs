@@ -5,8 +5,8 @@ const get = async (p, q = {}) => { await sleep(3600); const u = new URL(B + p); 
 const casa = process.argv[2] || 'Pelicans', filtro = new RegExp(process.argv[3] || 'Thompson|Cunningham', 'i');
 const d = x => x.toISOString().slice(0, 10), oggi = new Date();
 const fx = await get('/fixtures', { tournamentId: 132, from: d(new Date(+oggi - 864e5)), to: d(new Date(+oggi + 864e5)) }); const F = Array.isArray(fx) ? fx : fx?.data || [];
-const f = F.find(x => String(x.participant1Name).includes(casa) && Date.parse(x.startTime) > Date.now() - 3 * 3600e3);
-if (!f) { console.log('partita non trovata'); process.exit(0); }
+const f = F.find(x => (String(x.participant1Name) + ' ' + x.participant2Name).includes(casa) && Date.parse(x.startTime) > Date.now() - 3 * 3600e3);
+if (!f) { console.log('partita non trovata fra:', F.map(x => `${x.participant1Name}-${x.participant2Name} ${x.startTime}`).join(' | ')); process.exit(0); }
 console.log(`${f.participant2Name} @ ${f.participant1Name} · ${f.startTime}`);
 const o = await get('/odds', { fixtureId: f.fixtureId, bookmakers: 'sisal.it,bet365.it,eurobet.it,snai.it' });
 for (const [b, v] of Object.entries(o?.bookmakerOdds || {})) for (const [mid, key] of [['112602', 'DD'], ['112603', 'TD']]) for (const out of Object.values(v.markets?.[mid]?.outcomes || {}))
