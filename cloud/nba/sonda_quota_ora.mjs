@@ -4,7 +4,7 @@ const K = process.env.ODDSPAPI_KEY, B = 'https://api.oddspapi.io/v4', sleep = ms
 const get = async (p, q = {}) => { await sleep(3600); const u = new URL(B + p); for (const [k, v] of Object.entries({ ...q, apiKey: K })) u.searchParams.set(k, v); const r = await fetch(u); const t = await r.text(); console.log(`[${r.status}] ${p}`); try { return JSON.parse(t); } catch { console.log(t.slice(0, 300)); return null; } };
 const casa = process.argv[2] || 'Pelicans', filtro = new RegExp(process.argv[3] || 'Thompson|Cunningham', 'i');
 const d = x => x.toISOString().slice(0, 10), oggi = new Date();
-const fx = await get('/fixtures', { tournamentId: 132, from: d(new Date(+oggi - 864e5)), to: d(new Date(+oggi + 864e5)) }); const F = Array.isArray(fx) ? fx : fx?.data || [];
+const fx = await get('/fixtures', { tournamentId: 132, from: d(new Date(+oggi - 864e5)), to: d(new Date(+oggi + 2 * 864e5)) }); const F = Array.isArray(fx) ? fx : fx?.data || [];
 const f = F.find(x => (String(x.participant1Name) + ' ' + x.participant2Name).includes(casa) && Date.parse(x.startTime) > Date.now() - 3 * 3600e3);
 if (!f) { console.log('partita non trovata fra:', F.map(x => `${x.participant1Name}-${x.participant2Name} ${x.startTime}`).join(' | ')); process.exit(0); }
 console.log(`${f.participant2Name} @ ${f.participant1Name} · ${f.startTime}`);
