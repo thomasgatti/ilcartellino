@@ -1,14 +1,14 @@
 name: NBA - aggiornamento automatico quotidiano
 # Avvio giornaliero nel primo pomeriggio americano, prima delle eventuali partite domenicali.
-# Quote limitate: massimo 1 richiesta fixtures + 5 richieste bookmaker italiani al giorno
-# (~186 richieste in un mese di 31 giorni, rispetto a 250 disponibili).
+# Quote (dal 18/11/2026): /odds-by-tournaments, 1 richiesta per bookmaker (Sisal, bet365) dà tutte le partite della notte.
+# Pomeriggio: 1 fixtures + 2 = 3 richieste; sera (rifai): 2 (gli id delle partite sono nella pagina) → ~5 al giorno, ~155 in 31 giorni su 250.
 on:
   schedule:
     - cron: '30 15 * * *'
   workflow_dispatch:
     inputs:
       rifai:
-        description: Rifare la pagina anche se la notte è già pubblicata, riusando le quote già salvate (non spende richieste OddsPapi) — si/no
+        description: Rifare la pagina anche se la notte è già pubblicata, con quote rilette (2 richieste OddsPapi; se non arrivano valgono quelle salvate) — si/no
         default: 'no'
 
 concurrency:
@@ -53,7 +53,7 @@ jobs:
             # si rifà solo se nessuna partita della notte è già cominciata: il calendario contiene solo quelle da giocare, le altre sparirebbero dalla pagina
             if [ "${{ inputs.rifai }}" = "si" ] && python3 -c "import json,time,sys; sys.exit(0 if min(p['ts'] for p in json.load(open('nba/oggi.json'))['partite']) > time.time() + 600 else 1)"; then
               echo "genera=si" >> "$GITHUB_OUTPUT"; echo "riusa=1" >> "$GITHUB_OUTPUT"; cp nba/oggi.json /tmp/nba_quote_salvate.json
-              echo "Rifaccio la pagina di $GIORNO riusando le quote già salvate"
+              echo "Rifaccio la pagina di $GIORNO rileggendo le quote (se non arrivano valgono quelle salvate)"
             else
               echo "genera=no" >> "$GITHUB_OUTPUT"
               echo "La pagina NBA è già aggiornata per $GIORNO"
@@ -77,7 +77,8 @@ jobs:
           ODDSPAPI_KEY: ${{ secrets.ODDSPAPI_KEY_NBA }}
           NBA_QUOTE_SOLO_ITALIA: '1'
           NBA_QUOTE_MAX_PARTITE: '5'
-          NBA_SENZA_QUOTE: ${{ steps.giorno.outputs.riusa }}
+          NBA_QUOTE_TORNEO: '1'
+          NBA_FX_DA: /tmp/nba_quote_salvate.json
         run: node cloud/nba/oggi.mjs /tmp/nba_auto_input.json "${{ steps.giorno.outputs.giorno }}"
       # Controlli automatici del modello (archivio finto, pochi secondi): se falliscono non si pubblica nulla.
       - name: Controlli del modello

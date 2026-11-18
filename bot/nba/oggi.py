@@ -81,17 +81,27 @@ def alternative(c, tutte_gambe, minimo=None, quante=3):
         g['alt'] = [dict(n=x['n'], id=x.get('id'), sq=x['sq'], partita=x['partita'], p=round(x['p'], 4), q=x['q'],
                          cp=round(c['p'] / g['p'] * x['p'], 4) if g['p'] else None, cq=round(c['q'] / g['q'] * x['q'], 2)) for x in alt]
 
+def fmt_q(q): return f"{q:.2f}".rstrip('0').rstrip('.').replace('.', ',') if q < 10 else f"{q:.0f}" if q == int(q) else f"{q:.2f}".replace('.', ',')
+
 def blocca(V, C, tutti, tutti_tutti, stato_nome):
     """Rifacimento della sera (18/11/2026): le giocate e le combinazioni già pubblicate per questa notte restano quelle.
-    Si sostituisce solo ciò che contiene un giocatore diventato fuori, in dubbio o a rischio riposo; la versione di prima resta
-    in «prima» con il motivo, così chi l'ha già giocata la ritrova. Le probabilità delle proposte tenute si aggiornano, le quote no."""
-    validi = {g['n']: g for g in tutti}; tutti_n = {g['n']: g for g in tutti_tutti}
+    Si sostituisce ciò che contiene un giocatore diventato fuori, in dubbio o a rischio riposo; la versione di prima resta
+    in «prima» con il motivo, così chi l'ha già giocata la ritrova. Le probabilità delle proposte tenute si aggiornano.
+    Dal 18/11/2026 sera anche le quote si rileggono: quelle tenute prendono la quota nuova (la vecchia resta in q_prima se è cambiata
+    di oltre il 10%); una combinazione che scende sotto la sua fascia (Alta 10, Altissima 30, Colpo grosso 100) e la «quota alta»
+    che scende sotto 3 vengono sostituite, con il motivo «quota scesa»."""
+    validi = {g['n']: g for g in tutti}; tutti_n = {g['n']: g for g in tutti_tutti}; minimo = dict(FASCE)
     def perche(n):
         if n in validi: return None
         g = tutti_n.get(n); cogn_ = n.split(' ', 1)[-1]
         if g is None: return f"{cogn_} {'fuori' if stato_nome.get(n) == 'out' else 'non più in elenco'}"
         return f"{cogn_} {'in dubbio' if g.get('dubbio') else 'a rischio riposo' if g.get('riposo') else 'non più in elenco'}"
-    def pulita(c): return {k: v for k, v in c.items() if k not in ('prima', 'motivo')}
+    def pulita(c): return {k: v for k, v in c.items() if k not in ('prima', 'motivo', 'q_prima')}
+    def nuova_q(n, y, vecchia):
+        q = validi.get(n, {}).get('q_' + y)
+        return q if q else vecchia                                  # quota sparita dal bookmaker: resta quella di prima
+    def scese(gambe, nuove):
+        return ', '.join(f"{x['n'].split(' ', 1)[-1]} {x['cosa'].upper()} da {fmt_q(x['q'])} a {fmt_q(q)}" for x, q in zip(gambe, nuove) if q < x['q'] * 0.9)
     vecchio = V.get('consigli') or {}; fisse, sostituite = {}, {}
     for c in vecchio.get('combinazioni', []):
         if c['tipo'] not in TIPI: continue
@@ -99,9 +109,17 @@ def blocca(V, C, tutti, tutti_tutti, stato_nome):
             sostituite[c['tipo']] = (c.get('prima'), c.get('motivo')); continue
         motivi = [m for m in (perche(x['n']) for x in c['gambe']) if m]
         if motivi: sostituite[c['tipo']] = (c.get('prima') or pulita(c), ', '.join(motivi)); continue
-        k = dict(c)
-        for x in k['gambe']: x['p'] = round(float(validi[x['n']]['p_' + x['cosa']]), 4)
-        k['p'] = round(float(np.prod([x['p'] for x in k['gambe']])), 4); fisse[c['tipo']] = k
+        k = dict(c); k['gambe'] = [dict(x) for x in c['gambe']]
+        qn = [nuova_q(x['n'], x['cosa'], x['q']) for x in k['gambe']]
+        q_tot = round(float(np.prod(qn)), 2)
+        if c['tipo'] in minimo and q_tot < minimo[c['tipo']]:
+            sostituite[c['tipo']] = (c.get('prima') or pulita(c), 'quota scesa (' + scese(k['gambe'], qn) + f') a {fmt_q(q_tot)}, sotto {minimo[c["tipo"]]}'); continue
+        for x, q in zip(k['gambe'], qn): x['p'] = round(float(validi[x['n']]['p_' + x['cosa']]), 4); x['q'] = q
+        k['p'] = round(float(np.prod([x['p'] for x in k['gambe']])), 4)
+        qp = c.get('q_prima', c['q'])
+        k['q'] = q_tot; k.pop('q_prima', None)
+        if abs(q_tot - qp) > 0.1 * qp: k['q_prima'] = qp
+        fisse[c['tipo']] = k
     nuove = combinazioni(tutti, fisse)
     tipi = {c['tipo'] for c in nuove}
     for c in nuove:
@@ -115,12 +133,21 @@ def blocca(V, C, tutti, tutti_tutti, stato_nome):
         v = (vecchio.get(k) or [None])[0]
         if not v: continue
         m = perche(v['n'])
+        if m is None and k == 'alta' and v.get('q_dd'):
+            qn = nuova_q(v['n'], 'dd', v['q_dd'])
+            if qn < 3.0: m = f"quota scesa ({v['n'].split(' ', 1)[-1]} da {fmt_q(v.get('q_prima_dd', v['q_dd']))} a {fmt_q(qn)}), sotto 3"
         if m is None:
-            v = dict(v); v['p_' + y] = validi[v['n']]['p_' + y]; v['p_dd'] = validi[v['n']]['p_dd']; v['p_td'] = validi[v['n']]['p_td']
+            v = dict(v); g = validi[v['n']]
+            for a in ('p_dd', 'p_td'): v[a] = g[a]
+            for z in ('dd', 'td'):
+                if g.get('q_' + z) and v.get('q_' + z):
+                    qp = v.get('q_prima_' + z, v['q_' + z]); v['q_' + z], v['b_' + z] = g['q_' + z], g['b_' + z]; v.pop('q_prima_' + z, None)
+                    if abs(v['q_' + z] - qp) > 0.1 * qp: v['q_prima_' + z] = qp
             C[k] = [v] + [g for g in C.get(k, []) if g['n'] != v['n']][:2]
         else:
             pr = v['prima'] if v.get('prima') else {a: b for a, b in v.items() if a not in ('prima', 'motivo')}
-            C[k] = [dict(C[k][0], prima=pr, motivo=m)] + C[k][1:] if C.get(k) else [dict(nessuna=1, prima=pr, motivo=m)]
+            nuovi = [g for g in C.get(k, []) if g['n'] != v['n']]
+            C[k] = [dict(nuovi[0], prima=pr, motivo=m)] + nuovi[1:] if nuovi else [dict(nessuna=1, prima=pr, motivo=m)]
     return C
 
 def ricombina(f):
@@ -239,7 +266,7 @@ def main(cartella, f_in, f_out, f_quote=None):
         ult = D[D.futura == 0].groupby('pid').emin.last()
         for k in ('h', 'a'):
             fuori[k] = [dict(n=n_, perche=pc, **sostituto(partite, P[k][0], pid, {g_['id'] for g_ in G}, nomi)) for pid, n_, _, st, pc in P['rosa'][k] if st == 'out' and ult.get(pid, 0) >= 15]
-        out['partite'].append(dict(id=P['id'], ts=P['ts'], h=dict(sigla=P['h'][1], nome=P['h'][2]), a=dict(sigla=P['a'][1], nome=P['a'][2]), giocatori=G[:14], candidati=cand, fuori=fuori, quote=int(bool(q['dd']))))
+        out['partite'].append(dict(id=P['id'], **({'fx': P['fx']} if P.get('fx') else {}), ts=P['ts'], h=dict(sigla=P['h'][1], nome=P['h'][2]), a=dict(sigla=P['a'][1], nome=P['a'][2]), giocatori=G[:14], candidati=cand, fuori=fuori, quote=int(bool(q['dd']))))
     tutti_tutti = list(tutti)
     tutti = [g for g in tutti if not g.get('riposo')]          # chi rischia il turno di riposo non entra in giocate e combinazioni
     if V2: tutti = [g for g in tutti if not g.get('dubbio')]   # v2: nemmeno chi è «in dubbio» (nelle prime notti misurate salta la partita 4 volte su 10)

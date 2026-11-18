@@ -181,6 +181,8 @@ details.alt[open] > summary .arrow { transform: rotate(90deg); }
 .carta.vuota:hover .piu { background: var(--red); } .carta.vuota:focus-visible { outline: 3px solid #fff; outline-offset: 4px; border-radius: 12px; }
 .carta .ci { position: relative; height: 100%; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 22% 12% 18%; gap: 3px; }
 .carta .x { position: absolute; top: -4px; right: -4px; z-index: 2; box-shadow: 0 2px 6px rgba(0,0,0,.4); width: 24px; height: 24px; border-radius: 50%; border: 0; background: rgba(0,0,0,.35); color: #fff; font-size: 16px; line-height: 1; cursor: pointer; }
+.qv { font-size: 11px; color: var(--muted); }
+.tot .qv { display: block; margin-top: 2px; }
 .carta .ci > * { flex-shrink: 0; }
 .carta .cn { font: 900 22px/1.15 var(--display); text-transform: uppercase; margin-top: 6px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .carta .cs { font-size: 11.5px; color: var(--muted); }
@@ -278,7 +280,7 @@ details.alt[open] > summary .arrow { transform: rotate(90deg); }
     <div class="status" id="status" hidden><span class="livemeta" id="livemeta" role="status" aria-live="polite"></span><button type="button" class="btn" id="aggiorna">Aggiorna live</button></div>
   </header>
   <div id="app"></div>
-  <div class="note" id="note">Percentuali del modello; quote di bet365, Sisal ed Eurobet fotografate all'ora indicata, non in tempo reale: su altri bookmaker (per esempio SNAI) possono essere diverse, verifica sempre prima di giocare. Le proposte del pomeriggio restano fisse: se la sera un giocatore viene dato fuori o in dubbio, al suo posto compare una proposta aggiornata e quella vecchia resta sotto, con il suo esito. Nelle verifiche il mercato è stato più preciso del modello, quindi nessun vantaggio dimostrato. Il gioco è vietato ai minori e può causare dipendenza.</div>
+  <div class="note" id="note">Percentuali del modello; quote di Sisal e bet365 lette nel pomeriggio e riaggiornate la sera (alle 23:05), non in tempo reale: su altri bookmaker (per esempio SNAI) possono essere diverse, verifica sempre prima di giocare. Le proposte del pomeriggio restano fisse: se la sera un giocatore viene dato fuori o in dubbio, o la quota scende sotto la fascia del titolo (Alta 10, Altissima 30, Colpo grosso 100; quota alta 3), al suo posto compare una proposta aggiornata e quella vecchia resta sotto, con il suo esito; se la quota cambia ma resta nella fascia, accanto c'è quella di prima («era …»). Nelle verifiche il mercato è stato più preciso del modello, quindi nessun vantaggio dimostrato. Il gioco è vietato ai minori e può causare dipendenza.</div>
 </div>
 <script>
 (() => { const sp = document.getElementById('splash'); if (!sp || !document.documentElement.classList.contains('splash-on')) return;
@@ -342,7 +344,7 @@ async function aggiornaLive() {
 function voce(g, y, opt = {}) {
   const e = opt.esito === undefined ? esito(g.n, y) : opt.esito, l = riga(g.n), p = g['p_' + y] ?? g.p, q = g['q_' + y] ?? g.q;
   const segno = e === 'si' ? '<span class="tick si">✓</span>' : e === 'no' ? '<span class="tick no">✗</span>' : '';
-  const numeri = e ? (l || (e === 'ng' ? 'non ha giocato · di solito la giocata viene annullata' : '')) : `${opt.senzaP ? '' : p != null ? pc(p) : '–'}${q ? `${opt.senzaP ? '' : ' · '}quota <span class="q">${nq(q)}</span>${opt.book && g['b_' + y] ? ' ' + esc(bk(g['b_' + y])) : ''}` : ''}`;
+  const numeri = e ? (l || (e === 'ng' ? 'non ha giocato · di solito la giocata viene annullata' : '')) : `${opt.senzaP ? '' : p != null ? pc(p) : '–'}${q ? `${opt.senzaP ? '' : ' · '}quota <span class="q">${nq(q)}</span>${opt.book && g['b_' + y] ? ' ' + esc(bk(g['b_' + y])) : ''}${g['q_prima_' + y] ? ` <span class="qv">era ${nq(g['q_prima_' + y])}</span>` : ''}` : ''}`;
   return `<div class="item"><div class="nm">${segno}${esc(g.n)}<span class="tm">${esc(g.sq)}</span></div><div class="sub">${opt.chip === false ? '' : CHIP[y]}<span>${numeri}</span>${tags(g)}</div></div>`;
 }
 function prima(gambe, q, motivo, chiaveAp) {
@@ -368,7 +370,7 @@ function combo(a) {
   const altri = (g, i) => !iniziata && g.alt?.length ? `<details class="alt" data-id="alt·${esc(a.tipo)}·${i}"${aperte.has('alt·' + a.tipo + '·' + i) ? ' open' : ''}><summary>altri al posto di ${esc(cogn(g.n))} <span class="arrow">›</span></summary>`
     + g.alt.map(x => `<div class="altr"><div><b>${esc(x.n)}</b> <small>${esc(x.sq)}</small></div><div class="am">${pc(x.p)} · quota <span class="q">${nq(x.q)}</span><span class="ac"> → combinazione ${x.cp != null ? pc(x.cp) + ' · ' : ''}<b>${nq(x.cq)}</b></span></div></div>`).join('') + '</details>' : '';
   return `<div class="row ${tot ? 'e-' + (tot === 'sv' ? 'si' : tot) : ''}"><div><div class="tier">${esc(a.tipo)}</div><div class="legs">${a.gambe.map((g, i) => `<div>${voce(g, g.cosa, { esito: es[i] })}${altri(g, i)}</div>`).join('')}</div></div>`
-    + `<div class="tot"><div class="pcb">${pc(a.p)}</div><small class="lbl">riuscita</small><div class="big">${nq(a.q)}</div>${tot ? `<div class="esito">${CORTO[tot]}</div>` : a.prima ? '<div class="esito"><span class="cambio">aggiornata</span></div>' : ''}<small>2 € → ${(2 * a.q).toFixed(0)} €</small></div>${sotto}</div>`;
+    + `<div class="tot"><div class="pcb">${pc(a.p)}</div><small class="lbl">riuscita</small><div class="big">${nq(a.q)}</div>${a.q_prima && !tot ? `<small class="qv">era ${nq(a.q_prima)} alle ${D.proposte_ora ? fmtO.format(new Date(D.proposte_ora * 1000)) : 'prima'}</small>` : ''}${tot ? `<div class="esito">${CORTO[tot]}</div>` : a.prima ? '<div class="esito"><span class="cambio">aggiornata</span></div>' : ''}<small>2 € → ${(2 * a.q).toFixed(0)} €</small></div>${sotto}</div>`;
 }
 function disegna() {
   // nel Calcolatore non si ridisegna mentre l'utente sta scrivendo una quota (il live ridisegna ogni 30 secondi)
@@ -475,7 +477,7 @@ function disegnaCalc() {
     const oggi = x.giorno === DATI.oggi?.giorno, es = oggi ? x.legs.map(l => l.libero ? null : esito(l.n, l.cosa)) : x.legs.map(() => null), tot = oggi ? totale(es) : null, { tq, tp } = conto(x.legs);
     return `<div class="row ${tot ? 'e-' + (tot === 'sv' ? 'si' : tot) : ''}"><div><div class="tier">${oggi ? 'Stanotte' : 'Notte scorsa'} · ${fmtO.format(new Date(x.creato))}</div><div class="legs">${x.legs.map((l, k) => voce({ n: l.n, sq: l.sq || '', p: l.p, q: +(l.mia || l.q) || null }, l.cosa, { esito: es[k] })).join('')}</div></div>`
       + `<div class="tot"><div class="pcb">${tp != null ? pc(tp) : '–'}</div><small class="lbl">riuscita</small><div class="big">${tq ? nq(tq) : '–'}</div>${tot ? `<div class="esito">${CORTO[tot]}</div>` : ''}<small>${x.posta} € → ${tq ? (x.posta * tq).toFixed(0) : '–'} €</small><button type="button" class="link" data-act="elimina" data-i="${i}">elimina</button></div></div>`; }).join('') + '</div>';
-  h += '<p class="note">Le percentuali sono del modello; le quote sono quelle in pagina (bet365, Sisal, Eurobet) o quelle che scrivi tu: se giochi su SNAI scrivi la sua. La schedina resta salvata solo in questo browser.</p></section>';
+  h += '<p class="note">Le percentuali sono del modello; le quote sono quelle in pagina (Sisal, bet365) o quelle che scrivi tu: se giochi su SNAI scrivi la sua. La schedina resta salvata solo in questo browser.</p></section>';
   document.getElementById('app').innerHTML = h;
   document.getElementById('note').hidden = true;
 }

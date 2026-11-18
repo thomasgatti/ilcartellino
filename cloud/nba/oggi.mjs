@@ -31,14 +31,28 @@ let quoteCreato = null;
 if (K && daQuotare.length && !process.env.NBA_SENZA_QUOTE) { const B = 'https://api.oddspapi.io/v4'; let chiamate = 0; quoteCreato = Math.floor(Date.now() / 1000);
   const op = async (p, q) => { for (let k = 0; k < 4; k++) { await sleep(3600); const u = new URL(B + p); for (const [a, v] of Object.entries({ ...q, apiKey: K })) u.searchParams.set(a, v); const r = await fetch(u, { signal: AbortSignal.timeout(60000) }).catch(() => null); if (!r) continue; if (r.status === 429) { const t = await r.text(); if (/REQUEST_LIMIT/.test(t)) { console.log('quota OddsPapi finita'); return null; } await sleep(5000); continue; } chiamate++; if (!r.ok) return null; return r.json(); } return null; };
   const t0 = Math.min(...partite.map(p => p.ts)), d = x => new Date(x * 1000).toISOString().slice(0, 10);
-  const fx = await op('/fixtures', { tournamentId: 132, from: d(t0 - 43200), to: d(t0 + 86400) }), F = Array.isArray(fx) ? fx : fx?.data || [];
   const leggi = (o, P) => { let n = 0; for (const [b, v] of Object.entries(o?.bookmakerOdds || {})) for (const [mid, key] of [['112602', 'dd'], ['112603', 'td']]) for (const out of Object.values(v.markets?.[mid]?.outcomes || {})) for (const x of Object.values(out.players || {})) { if (!x?.active || !x.playerName || !(x.price > 1)) continue; (P.quote[key][b] ||= {})[x.playerName] = x.price; n++; } return n; };
+  // id OddsPapi delle partite: dalla pagina già pubblicata della stessa notte (NBA_FX_DA, rifacimento della sera) oppure da /fixtures
+  const fxNoti = {}; if (process.env.NBA_FX_DA) { try { const V = JSON.parse(fs.readFileSync(process.env.NBA_FX_DA, 'utf8')); if (V.giorno === giorno) for (const P of V.partite || []) if (P.fx) fxNoti[P.id] = P.fx; } catch {} }
+  for (const P of partite) if (fxNoti[P.id]) P.fx = fxNoti[P.id];
+  if (partite.some(P => !P.fx)) { const fx = await op('/fixtures', { tournamentId: 132, from: d(t0 - 43200), to: d(t0 + 86400) }), F = Array.isArray(fx) ? fx : fx?.data || [];
+    for (const P of partite) { if (P.fx) continue; const f = F.find(f => Math.abs(Date.parse(f.startTime) / 1000 - P.ts) < 5 * 3600 && String(f.participant1Name).includes(NOMI[P.h[0]]) && String(f.participant2Name).includes(NOMI[P.a[0]])); if (f) P.fx = f.fixtureId; else console.log('  non trovata su OddsPapi:', P.a[1], '@', P.h[1]); } }
+  if (process.env.NBA_QUOTE_TORNEO === '1') {
+    // dal 18/11/2026: una richiesta per bookmaker dà le quote di TUTTE le partite NBA in programma (/odds-by-tournaments, mercati giocatore compresi).
+    // Eurobet non ha mai avuto questi mercati (nessuna quota in pagina dal 13/11), quindi bastano Sisal e bet365: 2 richieste invece di 5.
+    const perFx = Object.fromEntries(partite.filter(P => P.fx).map(P => [P.fx, P]));
+    for (const bk of (process.env.NBA_BOOK_TORNEO || 'sisal.it,bet365.it').split(',')) { const o = await op('/odds-by-tournaments', { bookmaker: bk, tournamentIds: 132 }); const L = Array.isArray(o) ? o : o?.data || [];
+      let n = 0; for (const f of L) if (perFx[f.fixtureId]) n += leggi(f, perFx[f.fixtureId]); console.log(`  ${bk}: ${L.length} partite NBA in elenco, ${n} quote DD/TD per le nostre`); }
+    for (const P of partite) console.log(`  ${P.a[1]} @ ${P.h[1]}: quote ${['dd', 'td'].map(y => Object.values(P.quote[y]).reduce((a, x) => a + Object.keys(x).length, 0)).join(' / ')}`);
+    console.log('richieste OddsPapi usate:', chiamate);
+  } else {
   let italiani = null;
-  for (const P of daQuotare) { const f = F.find(f => Math.abs(Date.parse(f.startTime) / 1000 - P.ts) < 5 * 3600 && String(f.participant1Name).includes(NOMI[P.h[0]]) && String(f.participant2Name).includes(NOMI[P.a[0]])); if (!f) { console.log('  non trovata su OddsPapi:', P.a[1], '@', P.h[1]); continue; }
+  for (const P of daQuotare) { if (!P.fx) continue; const f = { fixtureId: P.fx };
     const n = soloItaliani ? 0 : leggi(await op('/odds', { fixtureId: f.fixtureId, bookmakers: 'fanduel,bet365,draftkings' }), P); let ni = 0;
     if (soloItaliani || italiani !== false) { ni = leggi(await op('/odds', { fixtureId: f.fixtureId, bookmakers: 'sisal.it,bet365.it,eurobet.it' }), P); if (italiani === null) italiani = ni > 0; }
     console.log(`  ${P.a[1]} @ ${P.h[1]}: quote ${n}${soloItaliani || italiani !== null ? ' · bookmaker italiani ' + ni : ''}`); }
   console.log('richieste OddsPapi usate:', chiamate, '· bookmaker italiani con questi mercati:', italiani);
+  }
 }
 // quote_creato: istante in cui le quote sono state lette (assente se non richieste: nel rifacimento della pagina vale l'ora della prima lettura)
 fs.writeFileSync(OUT, JSON.stringify({ giorno, creato: Math.floor(Date.now() / 1000), ...(quoteCreato && partite.some(p => Object.keys(p.quote.dd).length) ? { quote_creato: quoteCreato } : {}), partite }));
