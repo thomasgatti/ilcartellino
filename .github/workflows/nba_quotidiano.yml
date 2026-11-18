@@ -117,10 +117,14 @@ jobs:
           print('NBA:',len(d['partite']),'partite,',
                 len(d['consigli'].get('combinazioni', [])),'combinazioni')
           PY
+      - name: Come stanno andando le proposte (nba/storico.json)
+        if: steps.giorno.outputs.genera == 'si'
+        continue-on-error: true
+        run: python3 bot/nba/storico.py dati/nba nba/storico.json --pagina nba/ieri.json
       - name: Pubblica soltanto i dati NBA
         if: steps.giorno.outputs.genera == 'si'
         run: |
-          git add -- nba/oggi.json nba/ieri.json
+          git add -- nba/oggi.json nba/ieri.json nba/storico.json
           if git diff --cached --quiet; then
             echo 'Nessun cambiamento NBA'
             exit 0

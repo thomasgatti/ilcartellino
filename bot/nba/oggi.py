@@ -24,7 +24,9 @@ V2 = (os.environ.get('NBA_MODELLO') or 'v2').strip().lower() != 'v1'
 
 # Combinazioni: per ogni fascia di quota, la combinazione PIÙ PROBABILE che paga almeno quella quota.
 # Gambe = doppia doppia o tripla doppia di giocatori di partite diverse (indipendenti: vedi RUNBOOK), 2 o 3 gambe; quota = prodotto delle singole.
-FASCE = (('Sicura', 1.5), ('Media', 3), ('Alta', 10), ('Altissima', 30), ('Colpo grosso', 100))
+# dal 18/11/2026 (scelta dell'utente): niente più «Sicura» e «Media»; per le giocate sicure ci sono le tre giocate della notte e il Calcolatore
+FASCE = (('Alta', 10), ('Altissima', 30), ('Colpo grosso', 100))
+TIPI = [n for n, _ in FASCE] + ['Con una tripla doppia', 'Due triple doppie']
 LIMITE = 2          # dal 18/11/2026: lo stesso giocatore al massimo in 2 combinazioni (se salta lui, saltano al massimo due proposte)
 CAMPI_GAMBA = ('n', 'id', 'sq', 'partita', 'cosa', 'p', 'q', 'dubbio', 'ex')
 
@@ -37,7 +39,7 @@ def combinazioni(tutti, fisse=None):
         base = dict(n=g['n'], id=g.get('id'), sq=g['sq'], partita=g['partita'], dubbio=g.get('dubbio', 0), ex=g.get('ex', 0))
         if g.get('q_dd') and g['p_dd'] >= 0.08: gambe.append(dict(base, cosa='dd', p=g['p_dd'], q=g['q_dd']))
         if g.get('q_td') and g['p_td'] >= 0.03: gambe.append(dict(base, cosa='td', p=g['p_td'], q=g['q_td']))
-    gambe = sorted(gambe, key=lambda x: -x['p'])[:40]; cand = []
+    gambe = sorted(gambe, key=lambda x: -x['p']); tutte_gambe = list(gambe); gambe = gambe[:40]; cand = []
     for k in (2, 3):
         for c in itertools.combinations(gambe, k):
             if len({x['partita'] for x in c}) < k: continue
@@ -63,7 +65,21 @@ def combinazioni(tutti, fisse=None):
         if nome in fisse: out.append(fisse[nome]); continue
         r = scegli(nome, sorted([c for c in cand if filtro(c)], key=ordine))
         if r: out.append(r)
+    for c in out: alternative(c, tutte_gambe, dict(FASCE).get(c['tipo']))
     return out
+
+def alternative(c, tutte_gambe, minimo=None, quante=3):
+    """Per ogni gamba, i migliori sostituti dello stesso tipo (DD con DD, TD con TD): giocatori non già nella combinazione, di partite
+    diverse dalle altre gambe, in ordine di probabilità; con la combinazione che ne verrebbe fuori (cp, cq). Solo informazione: il
+    limite per giocatore non vale qui. Prima chi lascia la combinazione nella sua fascia di quota (quota ≥ minimo), poi gli altri."""
+    nomi = {x['n'] for x in c.get('gambe', [])}
+    for i, g in enumerate(c.get('gambe', [])):
+        altre = {x['partita'] for j, x in enumerate(c['gambe']) if j != i}
+        alt = [x for x in tutte_gambe if x['cosa'] == g['cosa'] and x['n'] not in nomi and x['partita'] not in altre]
+        if minimo: alt = sorted(alt, key=lambda x: (c['q'] / g['q'] * x['q'] < minimo, -x['p']))
+        alt = alt[:quante]
+        g['alt'] = [dict(n=x['n'], id=x.get('id'), sq=x['sq'], partita=x['partita'], p=round(x['p'], 4), q=x['q'],
+                         cp=round(c['p'] / g['p'] * x['p'], 4) if g['p'] else None, cq=round(c['q'] / g['q'] * x['q'], 2)) for x in alt]
 
 def blocca(V, C, tutti, tutti_tutti, stato_nome):
     """Rifacimento della sera (18/11/2026): le giocate e le combinazioni già pubblicate per questa notte restano quelle.
@@ -78,6 +94,7 @@ def blocca(V, C, tutti, tutti_tutti, stato_nome):
     def pulita(c): return {k: v for k, v in c.items() if k not in ('prima', 'motivo')}
     vecchio = V.get('consigli') or {}; fisse, sostituite = {}, {}
     for c in vecchio.get('combinazioni', []):
+        if c['tipo'] not in TIPI: continue
         if not c.get('gambe'):                                       # già senza alternativa: resta com'era
             sostituite[c['tipo']] = (c.get('prima'), c.get('motivo')); continue
         motivi = [m for m in (perche(x['n']) for x in c['gambe']) if m]
@@ -91,7 +108,7 @@ def blocca(V, C, tutti, tutti_tutti, stato_nome):
         if c['tipo'] in sostituite and c['tipo'] not in fisse: c['prima'], c['motivo'] = sostituite[c['tipo']]
     for tipo, (prima, motivo) in sostituite.items():
         if tipo not in tipi and prima: nuove.append(dict(tipo=tipo, gambe=[], nessuna=1, prima=prima, motivo=motivo))
-    ordine = [n for n, _ in FASCE] + ['Con una tripla doppia', 'Due triple doppie']
+    ordine = TIPI
     nuove.sort(key=lambda c: ordine.index(c['tipo']) if c['tipo'] in ordine else 99)
     C['combinazioni'] = nuove
     for k, y in (('bassa', 'dd'), ('alta', 'dd'), ('td', 'td')):

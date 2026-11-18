@@ -152,6 +152,71 @@ details.ieri > summary small { display: block; font-weight: 400; color: var(--mu
   .pl, .plh { grid-template-columns: minmax(0, 1fr) 48px 48px; gap: 8px; }
 }
 
+
+/* combinazioni (18/11): riuscita in grande come nei cartellini, «altri» al posto di ciascun giocatore */
+.tot .pcb { font: 900 30px/1 var(--display); font-variant-numeric: tabular-nums; }
+.tot .lbl { margin: 1px 0 6px; font-size: 10.5px; text-transform: uppercase; letter-spacing: .6px; }
+.tot .big { font-size: 24px; }
+details.alt { margin: 4px 0 2px; }
+details.alt > summary { list-style: none; cursor: pointer; display: inline-flex; gap: 6px; align-items: center; font-size: 12px; color: var(--sky); padding: 2px 0; }
+details.alt[open] > summary .arrow { transform: rotate(90deg); }
+.altr { padding: 6px 0 6px 10px; border-left: 2px solid var(--soft); margin-left: 2px; font-size: 13.5px; font-variant-numeric: tabular-nums; }
+.altr + .altr { margin-top: 2px; } .altr .am { font-size: 12.5px; color: var(--muted); margin-top: 1px; }
+.altr small { color: var(--muted); } .altr .ac { display: block; } .altr .ac b { color: var(--gold); }
+/* come stanno andando */
+.storico { padding: 6px var(--pad) 12px; }
+.storico > div { display: grid; grid-template-columns: minmax(0, 1fr) 66px 56px 92px; gap: 8px; padding: 8px 0; border-top: 1px solid var(--soft); font-size: 14px; font-variant-numeric: tabular-nums; }
+.storico > div span + span { text-align: right; }
+.storico .sh { border-top: 0; font: 700 11px var(--body); text-transform: uppercase; letter-spacing: .6px; color: var(--muted); }
+.storico .pos { color: var(--good); } .storico .neg { color: var(--bad); }
+.storico .sn { font-size: 12px; color: var(--muted); margin: 8px 0 0; }
+/* Calcolatore: carte a forma di scudo, come «La mia area» dei cartellini */
+.carte { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 190px)); gap: 14px; margin-bottom: 14px; }
+.carta { position: relative; aspect-ratio: 13 / 18; border: 0; background: none; padding: 0; color: var(--ink); font: inherit; }
+.carta .scudo { position: absolute; inset: 0; width: 100%; height: 100%; filter: drop-shadow(0 8px 18px rgba(0,0,0,.35)); }
+.carta.vuota { cursor: pointer; display: grid; place-items: center; }
+.carta.vuota .scudo path { fill: rgba(255,255,255,.06); stroke: rgba(255,255,255,.35); stroke-dasharray: 5 4; }
+.carta.vuota .piu { position: relative; width: 52px; height: 52px; border-radius: 50%; background: #11182e; display: grid; place-items: center; font: 300 36px/1 var(--body); color: #fff; box-shadow: 0 4px 14px rgba(0,0,0,.4); }
+.carta.vuota .cv { position: absolute; bottom: 22%; left: 0; right: 0; text-align: center; font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .6px; }
+.carta.vuota:hover .piu { background: var(--red); } .carta.vuota:focus-visible { outline: 3px solid #fff; outline-offset: 4px; border-radius: 12px; }
+.carta .ci { position: relative; height: 100%; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 22% 12% 18%; gap: 3px; }
+.carta .x { position: absolute; top: -4px; right: -4px; z-index: 2; box-shadow: 0 2px 6px rgba(0,0,0,.4); width: 24px; height: 24px; border-radius: 50%; border: 0; background: rgba(0,0,0,.35); color: #fff; font-size: 16px; line-height: 1; cursor: pointer; }
+.carta .cn { font: 900 22px/1 var(--display); text-transform: uppercase; margin-top: 6px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.carta .cs { font-size: 11.5px; color: var(--muted); }
+.carta .cp { font: 900 34px/1 var(--display); margin-top: 4px; font-variant-numeric: tabular-nums; }
+.carta .ce, .carta .cl { font-size: 11px; } .carta .cl .lv b { font-weight: 700; }
+.carta .cq { margin-top: auto; font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+.carta .cq input, .posta input { width: 64px; padding: 5px 6px; border-radius: 8px; border: 1px solid var(--line); background: rgba(0,0,0,.25); color: var(--gold); font: 700 15px var(--body); text-align: center; }
+.carta .cb { font-size: 10.5px; color: var(--muted); min-height: 14px; }
+.carta.e-si .scudo path { stroke: var(--good); stroke-width: 3; } .carta.e-no { opacity: .7; }
+.pad { padding: var(--pad); }
+.riep { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.riep .rv { display: flex; flex-direction: column; gap: 2px; } .riep .rv span { font: 700 11px var(--body); text-transform: uppercase; letter-spacing: .6px; color: var(--muted); }
+.riep .rv b { font: 900 28px/1.1 var(--display); font-variant-numeric: tabular-nums; } .riep .rv b.q { color: var(--gold); }
+.posta { display: flex; align-items: center; gap: 6px; font-size: 14px; }
+.avv { margin-top: 10px; font-size: 13px; color: var(--muted); display: grid; gap: 3px; }
+.az { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; } .btn.pieno { background: var(--red); border-color: var(--red); }
+.link { margin-top: 6px; border: 0; background: none; color: var(--muted); font-size: 12px; text-decoration: underline; cursor: pointer; padding: 0; }
+/* scelta del giocatore */
+#scelta { position: fixed; inset: 0; z-index: 9000; display: grid; place-items: center; } #scelta[hidden] { display: none; }
+#scelta .sf { position: absolute; inset: 0; background: rgba(5,10,30,.6); }
+#scelta .sp2 { position: relative; width: min(560px, 94vw); max-height: 82vh; display: flex; flex-direction: column; background: #1a2c66; border: 1px solid var(--line); border-radius: 16px; padding: 14px; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+#scelta .sh2 { display: flex; justify-content: space-between; align-items: center; } #scelta h3 { margin: 0; font: 800 20px var(--display); text-transform: uppercase; }
+#scelta .x { width: 30px; height: 30px; border-radius: 50%; border: 0; background: rgba(0,0,0,.3); color: #fff; font-size: 18px; cursor: pointer; }
+#cerca { margin: 10px 0; padding: 11px 12px; border-radius: 10px; border: 1px solid var(--line); background: rgba(0,0,0,.25); color: #fff; font: 16px var(--body); }
+#lista { overflow-y: auto; }
+#lista .lg { font: 700 11px var(--body); text-transform: uppercase; letter-spacing: .6px; color: var(--muted); padding: 12px 2px 4px; }
+#lista .lr { display: grid; grid-template-columns: minmax(0, 1fr) 76px 76px; gap: 8px; align-items: center; padding: 7px 2px; border-top: 1px solid var(--soft); }
+#lista .lr.gia { opacity: .5; } #lista .ln { min-width: 0; } #lista .ln small { color: var(--muted); }
+.pk { border: 1px solid var(--line); border-radius: 8px; background: rgba(255,255,255,.08); color: #fff; padding: 6px 4px; font: 13px var(--body); cursor: pointer; display: flex; flex-direction: column; align-items: center; line-height: 1.15; }
+.pk b { font-weight: 800; } .pk small { color: var(--gold); } .pk.td b { color: var(--sky); } .pk:hover:not(:disabled) { border-color: #fff; } .pk:disabled { cursor: not-allowed; }
+.fermo body { overflow: hidden; }
+@media (max-width: 720px) {
+  .carte { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .riep { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #scelta { place-items: end center; } #scelta .sp2 { width: 100vw; max-height: 88vh; border-radius: 16px 16px 0 0; }
+  .storico > div { grid-template-columns: minmax(0, 1fr) 58px 48px 76px; font-size: 13px; }
+}
 /* anteprima: il pallone entra nel canestro (una volta per visita, si salta toccando) */
 #splash { display: none; }
 .splash-on #splash { display: grid; position: fixed; inset: 0; z-index: 9999; place-items: center; cursor: pointer; background: linear-gradient(180deg, #2450a8, #14296a); animation: spOut .5s ease 3.5s forwards; }
@@ -207,7 +272,7 @@ details.ieri > summary small { display: block; font-weight: 400; color: var(--mu
   <header>
     <span class="crumb">NBA</span>
     <h1>Il tabellino</h1>
-    <div class="tabs" id="tabs" hidden><button type="button" data-v="oggi" class="on">Stanotte</button><button type="button" data-v="ieri">Notte scorsa</button></div>
+    <div class="tabs" id="tabs" hidden><button type="button" data-v="oggi" class="on">Stanotte</button><button type="button" data-v="ieri" hidden>Notte scorsa</button><button type="button" data-v="calc">Calcolatore</button></div>
     <div class="meta" id="meta">Carico…</div>
     <div class="status" id="status" hidden><span class="livemeta" id="livemeta" role="status" aria-live="polite"></span><button type="button" class="btn" id="aggiorna">Aggiorna live</button></div>
   </header>
@@ -276,7 +341,7 @@ async function aggiornaLive() {
 function voce(g, y, opt = {}) {
   const e = opt.esito === undefined ? esito(g.n, y) : opt.esito, l = riga(g.n), p = g['p_' + y] ?? g.p, q = g['q_' + y] ?? g.q;
   const segno = e === 'si' ? '<span class="tick si">✓</span>' : e === 'no' ? '<span class="tick no">✗</span>' : '';
-  const numeri = e ? (l || (e === 'ng' ? 'non ha giocato · di solito la giocata viene annullata' : '')) : `${opt.senzaP ? '' : pc(p)}${q ? `${opt.senzaP ? '' : ' · '}quota <span class="q">${nq(q)}</span>${opt.book && g['b_' + y] ? ' ' + esc(bk(g['b_' + y])) : ''}` : ''}`;
+  const numeri = e ? (l || (e === 'ng' ? 'non ha giocato · di solito la giocata viene annullata' : '')) : `${opt.senzaP ? '' : p != null ? pc(p) : '–'}${q ? `${opt.senzaP ? '' : ' · '}quota <span class="q">${nq(q)}</span>${opt.book && g['b_' + y] ? ' ' + esc(bk(g['b_' + y])) : ''}` : ''}`;
   return `<div class="item"><div class="nm">${segno}${esc(g.n)}<span class="tm">${esc(g.sq)}</span></div><div class="sub">${opt.chip === false ? '' : CHIP[y]}<span>${numeri}</span>${tags(g)}</div></div>`;
 }
 function prima(gambe, q, motivo, chiaveAp) {
@@ -294,18 +359,27 @@ function giocata(cls, etichetta, g, y, vuoto) {
   const quando = P ? `${esc(P.a.sigla)} @ ${esc(P.h.sigla)} · ${fmtO.format(new Date(P.ts * 1000))}` : '';
   return `<div class="card pick ${cls} ${e ? 'e-' + e : ''}">${testa(e ? SEGNO[e] : quando)}<div class="main"><div class="big">${esc(cogn(g.n))}</div><div class="pc">${pc(g['p_' + y])}</div></div>${voce(g, y, { chip: false, senzaP: true, book: true, esito: e === 'si' || e === 'no' ? null : e })}${pr}</div>`;
 }
+// una combinazione: gambe a sinistra (con gli «altri» al posto di ciascuno), a destra riuscita, quota ed esito
+function combo(a) {
+  const sotto = a.prima ? prima(a.prima.gambe, a.prima.q, a.motivo, a.tipo) : '';
+  if (a.nessuna || !a.gambe.length) return `<div class="row"><div><div class="tier">${esc(a.tipo)}</div><div class="empty">Nessuna alternativa${a.motivo ? ' senza ' + esc(a.motivo) : ''}</div></div><div></div>${sotto}</div>`;
+  const es = a.gambe.map(g => esito(g.n, g.cosa)), tot = totale(es), iniziata = es.some(e => e);
+  const altri = (g, i) => !iniziata && g.alt?.length ? `<details class="alt" data-id="alt·${esc(a.tipo)}·${i}"${aperte.has('alt·' + a.tipo + '·' + i) ? ' open' : ''}><summary>altri al posto di ${esc(cogn(g.n))} <span class="arrow">›</span></summary>`
+    + g.alt.map(x => `<div class="altr"><div><b>${esc(x.n)}</b> <small>${esc(x.sq)}</small></div><div class="am">${pc(x.p)} · quota <span class="q">${nq(x.q)}</span><span class="ac"> → combinazione ${x.cp != null ? pc(x.cp) + ' · ' : ''}<b>${nq(x.cq)}</b></span></div></div>`).join('') + '</details>' : '';
+  return `<div class="row ${tot ? 'e-' + (tot === 'sv' ? 'si' : tot) : ''}"><div><div class="tier">${esc(a.tipo)}</div><div class="legs">${a.gambe.map((g, i) => `<div>${voce(g, g.cosa, { esito: es[i] })}${altri(g, i)}</div>`).join('')}</div></div>`
+    + `<div class="tot"><div class="pcb">${pc(a.p)}</div><small class="lbl">riuscita</small><div class="big">${nq(a.q)}</div>${tot ? `<div class="esito">${CORTO[tot]}</div>` : a.prima ? '<div class="esito"><span class="cambio">aggiornata</span></div>' : ''}<small>2 € → ${(2 * a.q).toFixed(0)} €</small></div>${sotto}</div>`;
+}
 function disegna() {
+  // nel Calcolatore non si ridisegna mentre l'utente sta scrivendo una quota (il live ridisegna ogni 30 secondi)
+  if (vista === 'calc') { if (document.activeElement?.closest?.('#app input')) return; return disegnaCalc(); }
   const C = D.consigli || {}, Ps = [...D.partite].sort((a, b) => a.ts - b.ts); let h = '';
   if (Ps.length) {
     h += '<section><div class="sec"><h2>Le giocate della notte</h2></div><div class="picks">'
       + giocata('', 'Doppia doppia · quota bassa', (C.bassa || [])[0], 'dd', 'Nessuna quota sotto 2,00.')
       + giocata('', 'Doppia doppia · quota alta', (C.alta || [])[0], 'dd', 'Nessuna quota alta adatta.')
       + giocata('td', 'Tripla doppia', (C.td || [])[0], 'td', 'Nessun candidato sopra il 3%.') + '</div></section>';
-    if ((C.combinazioni || []).length) h += '<section><div class="sec"><h2>Combinazioni</h2><span>giocatori di partite diverse · per ogni fascia di quota la più probabile</span></div><div class="card">'
-      + C.combinazioni.map(a => { const sotto = a.prima ? prima(a.prima.gambe, a.prima.q, a.motivo, a.tipo) : '';
-        if (a.nessuna || !a.gambe.length) return `<div class="row"><div><div class="tier">${esc(a.tipo)}</div><div class="empty">Nessuna alternativa senza ${esc(a.motivo || '')}</div></div><div></div>${sotto}</div>`;
-        const es = a.gambe.map(g => esito(g.n, g.cosa)), tot = totale(es);
-        return `<div class="row ${tot ? 'e-' + (tot === 'sv' ? 'si' : tot) : ''}"><div><div class="tier">${esc(a.tipo)}</div><div class="legs">${a.gambe.map((g, i) => voce(g, g.cosa, { esito: es[i] })).join('')}</div></div><div class="tot"><div class="big">${nq(a.q)}</div>${tot ? `<div class="esito">${CORTO[tot]}</div>` : a.prima ? '<div class="esito"><span class="cambio">aggiornata</span></div>' : ''}<small>${tot ? '' : `esce <b>${pc(a.p)}</b><br>`}2 € → ${(2 * a.q).toFixed(0)} €</small></div>${sotto}</div>`; }).join('') + '</div></section>';
+    if ((C.combinazioni || []).length) h += '<section><div class="sec"><h2>Combinazioni</h2><span>giocatori di partite diverse · tocca «altri» sotto un giocatore per vedere chi metterci al suo posto</span></div><div class="card">'
+      + C.combinazioni.map(combo).join('') + '</div></section>';
     h += '<section><div class="sec"><h2>Partite</h2><span>tocca una partita per vedere gli altri giocatori</span></div><div class="card">';
     for (const P of Ps) {
       const c = k => P.giocatori.find(g => g.n === P.candidati[k]), L = LIVE[P.id], viva = L && L.stato !== 'pre';
@@ -329,12 +403,122 @@ function disegna() {
       + (I.dd.length ? `<h3>Doppie doppie</h3><div class="list">${I.dd.map(x => el(x, x.riga)).join('')}</div>` : '')
       + (I.spazio?.length ? `<h3>Più spazio: minuti nelle ultime 3 partite (prima)</h3><div class="list">${I.spazio.map(x => el(x, `${Math.round(x.ora)} (${Math.round(x.prima)})`)).join('')}</div>` : '')
       + '</div></details></div></section>'; }
+  if (vista === 'oggi' && STORICO?.tipi?.length) { const S = STORICO, gg = x => `${+x.slice(6)}/${+x.slice(4, 6)}`;
+    h += `<section><div class="sec"><h2>Come stanno andando</h2><span>le proposte delle notti dal ${gg(S.dal)} al ${gg(S.al)} (${S.notti} notti)</span></div><div class="card"><div class="storico"><div class="sh"><span>Proposta</span><span>Prese</span><span>Attese</span><span>Resa con 1 €</span></div>`
+      + S.tipi.map(t => `<div><span>${esc(t.tipo)}</span><span>${t.prese} su ${t.giocate}</span><span>${String(t.attese).replace('.', ',')}</span><span class="${t.resa >= 0 ? 'pos' : 'neg'}">${t.resa >= 0 ? '+' : '−'}${Math.abs(t.resa).toFixed(2).replace('.', ',')} €</span></div>`).join('')
+      + '<p class="sn">«Attese» = quante ne aspettava il modello. Poche notti contano poco: un solo colpo grosso cambia tutto il conto.</p></div></div></section>'; }
   document.getElementById('app').innerHTML = h;
   document.querySelectorAll('details').forEach(d => d.addEventListener('toggle', () => d.open ? aperte.add(d.dataset.id) : aperte.delete(d.dataset.id)));
 }
+
+// ---- Calcolatore (18/11): la schedina dell'utente, come «La mia area» dei cartellini. Resta salvata in questo browser. ----
+const KCALC = 'nba_calcolatore_v1', KSALV = 'nba_schedine_v1', MAXG = 8;
+let CALC = { giorno: null, legs: [], posta: 2 }, SALVATE = [];
+function caricaCalc() {
+  try { const c = JSON.parse(localStorage.getItem(KCALC) || 'null'); if (c && c.giorno === DATI.oggi?.giorno) CALC = Object.assign({ legs: [], posta: 2 }, c); } catch (e) {}
+  try { SALVATE = JSON.parse(localStorage.getItem(KSALV) || '[]'); } catch (e) { SALVATE = []; }
+  CALC.giorno = DATI.oggi?.giorno || null;
+}
+const salvaCalc = () => { try { localStorage.setItem(KCALC, JSON.stringify(CALC)); } catch (e) {} };
+const salvaSalvate = () => { try { localStorage.setItem(KSALV, JSON.stringify(SALVATE.slice(-60))); } catch (e) {} };
+// tutti i giocatori della notte, per l'elenco della ricerca
+function elenco() { const out = [];
+  for (const P of [...(DATI.oggi?.partite || [])].sort((a, b) => a.ts - b.ts)) for (const g of P.giocatori)
+    out.push({ n: g.n, id: g.id, sq: g.sq, partita: P.id, gara: `${P.a.sigla} @ ${P.h.sigla} · ${fmtO.format(new Date(P.ts * 1000))}`, p_dd: g.p_dd, p_td: g.p_td, q_dd: g.q_dd, q_td: g.q_td, b_dd: g.b_dd, b_td: g.b_td, dubbio: g.dubbio, riposo: g.riposo });
+  return out; }
+const giaDentro = n => CALC.legs.some(l => chiave(l.n) === chiave(n));
+function aggiungi(n, cosa, libero) {
+  if (!n || giaDentro(n) || CALC.legs.length >= MAXG) return;
+  const g = libero ? null : elenco().find(x => x.n === n);
+  CALC.legs.push(g ? { n: g.n, id: g.id, sq: g.sq, partita: g.partita, gara: g.gara, cosa, p: g['p_' + cosa], q: g['q_' + cosa] || null, b: g['b_' + cosa] || null, mia: null }
+                   : { n: n.trim(), cosa, p: null, q: null, mia: null, libero: 1 });
+  if (g) { partitaDi[g.n] = g.partita; if (g.id != null) idDi[g.n] = g.id; }
+  salvaCalc(); chiudiScelta(); disegna();
+}
+function conto(legs) {
+  const q = legs.map(l => +(l.mia || l.q) || 0), p = legs.map(l => l.p);
+  const tq = q.every(x => x > 1) ? q.reduce((a, b) => a * b, 1) : null, tp = p.every(x => x != null) ? p.reduce((a, b) => a * b, 1) : null;
+  const gare = {}; legs.forEach(l => { if (l.partita != null) (gare[l.partita] ||= []).push(cogn(l.n)); });
+  return { tq, tp, stesse: Object.values(gare).filter(x => x.length > 1) };
+}
+const SCUDO = `<svg class="scudo" viewBox="0 0 130 180" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="sg" x1="0" y1="0" x2=".4" y2="1"><stop offset="0" stop-color="#3b5aa8"/><stop offset="1" stop-color="#16285e"/></linearGradient></defs><path d="M8 24 Q20 24 24 13 Q65 -1 106 13 Q110 24 122 24 L122 150 Q122 161 110 162 Q80 165 65 177 Q50 165 20 162 Q8 161 8 150 Z" fill="url(#sg)" stroke="rgba(255,255,255,.45)" stroke-width="2" vector-effect="non-scaling-stroke"/></svg>`;
+function cartaPiena(l, i) {
+  const e = l.libero ? null : esito(l.n, l.cosa), s = l.libero ? null : statoG(l.n);
+  return `<div class="carta piena ${e ? 'e-' + e : ''}">${SCUDO}<div class="ci">
+    <button type="button" class="x" data-act="togli" data-i="${i}" aria-label="Togli ${esc(l.n)}">×</button>
+    <span class="chip ${l.cosa}">${l.cosa === 'td' ? 'tripla doppia' : 'doppia doppia'}</span>
+    <div class="cn">${esc(cogn(l.n))}</div><div class="cs">${esc(l.sq || 'fuori elenco')}${l.gara ? ' · ' + esc(l.gara.split(' · ')[1]) : ''}</div>
+    <div class="cp">${l.p != null ? pc(l.p) : '–'}</div>
+    ${e && e !== 'live' ? `<div class="ce">${SEGNO[e]}</div>` : ''}${s?.x ? `<div class="cl">${cifre(s.x)}</div>` : ''}
+    <label class="cq">quota <input type="text" inputmode="decimal" data-act="quota" data-i="${i}" value="${l.mia || l.q ? nq(l.mia || l.q) : ''}" placeholder="es. 3,00" aria-label="Quota di ${esc(l.n)}"></label>
+    <div class="cb">${l.mia ? 'la tua quota' : l.b ? esc(bk(l.b)) : l.libero ? 'scrivi la quota' : ''}</div></div></div>`;
+}
+const cartaVuota = () => `<button type="button" class="carta vuota" data-act="apri" aria-label="Aggiungi un giocatore">${SCUDO}<span class="piu">+</span><span class="cv">aggiungi</span></button>`;
+function riepilogo(legs, posta) {
+  const { tq, tp, stesse } = conto(legs);
+  if (!legs.length) return '';
+  const val = tq && tp != null ? tp * tq : null;
+  return `<div class="riep"><div class="rv"><span>Quota</span><b class="q">${tq ? nq(tq) : '–'}</b></div><div class="rv"><span>Riuscita</span><b>${tp != null ? pc(tp) : '–'}</b></div>
+    <div class="rv"><span>Posta</span><label class="posta"><input type="text" inputmode="decimal" data-act="posta" value="${String(posta).replace('.', ',')}" aria-label="Posta in euro"> €</label></div><div class="rv"><span>Vincita</span><b>${tq ? (posta * tq).toFixed(2).replace('.', ',') + ' €' : '–'}</b></div></div>
+    <div class="avv">${tq ? '' : '<div>Manca la quota di almeno un giocatore: scrivila nella carta.</div>'}${tp == null ? '<div>Per i giocatori fuori elenco la percentuale non c\'è: la riuscita non si può calcolare.</div>' : ''}
+    ${stesse.map(x => `<div>${x.map(esc).join(' e ')} giocano la stessa partita: la percentuale è indicativa.</div>`).join('')}
+    ${val != null ? `<div>${val >= 1 ? 'Secondo il modello questa quota paga più del rischio.' : 'Secondo il modello questa quota paga meno del rischio: è il margine del bookmaker.'} (valore ${val.toFixed(2).replace('.', ',')})</div>` : ''}</div>`;
+}
+function disegnaCalc() {
+  const legs = CALC.legs; let h = `<section><div class="sec"><h2>Calcolatore</h2><span>tocca + per aggiungere un giocatore: scegli dall'elenco o scrivi tu il nome, poi DD o TD</span></div>`;
+  if (!DATI.oggi?.partite?.length) h += '<div class="card pad"><div class="empty">Stanotte non ci sono partite NBA: il calcolatore si riempie con le partite della notte.</div></div>';
+  h += `<div class="carte">${legs.map(cartaPiena).join('')}${legs.length < MAXG ? cartaVuota() : ''}</div>`;
+  if (legs.length) h += `<div class="card pad">${riepilogo(legs, CALC.posta)}<div class="az"><button type="button" class="btn pieno" data-act="salva">Salva la schedina</button><button type="button" class="btn" data-act="svuota">Svuota</button></div></div>`;
+  const mie = SALVATE.map((x, i) => [x, i]).filter(([x]) => x.giorno === DATI.oggi?.giorno || x.giorno === DATI.ieri?.giorno).reverse();
+  if (mie.length) h += `<div class="sec" style="margin-top:22px"><h2>Le mie schedine</h2><span>salvate in questo browser</span></div><div class="card">` + mie.map(([x, i]) => {
+    const oggi = x.giorno === DATI.oggi?.giorno, es = oggi ? x.legs.map(l => l.libero ? null : esito(l.n, l.cosa)) : x.legs.map(() => null), tot = oggi ? totale(es) : null, { tq, tp } = conto(x.legs);
+    return `<div class="row ${tot ? 'e-' + (tot === 'sv' ? 'si' : tot) : ''}"><div><div class="tier">${oggi ? 'Stanotte' : 'Notte scorsa'} · ${fmtO.format(new Date(x.creato))}</div><div class="legs">${x.legs.map((l, k) => voce({ n: l.n, sq: l.sq || '', p: l.p, q: +(l.mia || l.q) || null }, l.cosa, { esito: es[k] })).join('')}</div></div>`
+      + `<div class="tot"><div class="pcb">${tp != null ? pc(tp) : '–'}</div><small class="lbl">riuscita</small><div class="big">${tq ? nq(tq) : '–'}</div>${tot ? `<div class="esito">${CORTO[tot]}</div>` : ''}<small>${x.posta} € → ${tq ? (x.posta * tq).toFixed(0) : '–'} €</small><button type="button" class="link" data-act="elimina" data-i="${i}">elimina</button></div></div>`; }).join('') + '</div>';
+  h += '<p class="note">Le percentuali sono del modello; le quote sono quelle in pagina (bet365, Sisal, Eurobet) o quelle che scrivi tu: se giochi su SNAI scrivi la sua. La schedina resta salvata solo in questo browser.</p></section>';
+  document.getElementById('app').innerHTML = h;
+  document.getElementById('note').hidden = true;
+}
+// scelta del giocatore: elenco della notte con ricerca, oppure nome scritto a mano
+function apriScelta() {
+  let m = document.getElementById('scelta');
+  if (!m) { m = document.createElement('div'); m.id = 'scelta'; m.innerHTML = `<div class="sf" data-act="chiudi"></div><div class="sp2" role="dialog" aria-modal="true" aria-labelledby="st"><div class="sh2"><h3 id="st">Aggiungi un giocatore</h3><button type="button" class="x" data-act="chiudi" aria-label="Chiudi">×</button></div><input type="search" id="cerca" placeholder="Cerca o scrivi il nome del giocatore" autocomplete="off"><div id="lista"></div></div>`;
+    document.body.appendChild(m); m.addEventListener('click', clic); m.querySelector('#cerca').addEventListener('input', riempiScelta); }
+  m.hidden = false; document.documentElement.classList.add('fermo'); const c = m.querySelector('#cerca'); c.value = ''; riempiScelta(); setTimeout(() => c.focus(), 50);
+}
+function chiudiScelta() { const m = document.getElementById('scelta'); if (m) m.hidden = true; document.documentElement.classList.remove('fermo'); }
+function riempiScelta() {
+  const t = document.getElementById('cerca').value.trim(), k = chiave(t), L = elenco().filter(g => !k || chiave(g.n).includes(k) || chiave(g.sq).includes(k));
+  const bot = (g, cosa) => { const dentro = giaDentro(g.n), p = g['p_' + cosa], q = g['q_' + cosa];
+    return `<button type="button" class="pk ${cosa}" data-act="metti" data-n="${esc(g.n)}" data-c="${cosa}" ${dentro ? 'disabled' : ''}><b>${cosa.toUpperCase()}</b> ${pc(p)}${q ? `<small>${nq(q)}</small>` : ''}</button>`; };
+  let h = '', gara = '';
+  for (const g of L) { if (g.gara !== gara) { gara = g.gara; h += `<div class="lg">${esc(gara)}</div>`; }
+    h += `<div class="lr${giaDentro(g.n) ? ' gia' : ''}"><div class="ln"><b>${esc(g.n)}</b> <small>${esc(g.sq)}${g.dubbio ? ' · in dubbio' : ''}${g.riposo ? ' · rischio riposo' : ''}${giaDentro(g.n) ? ' · già nella schedina' : ''}</small></div>${bot(g, 'dd')}${bot(g, 'td')}</div>`; }
+  if (t && !L.some(g => chiave(g.n) === k)) { const dentro = giaDentro(t);
+    h += `<div class="lg">Non è nell'elenco di stanotte</div><div class="lr${dentro ? ' gia' : ''}"><div class="ln"><b>${esc(t)}</b> <small>${dentro ? 'già nella schedina' : 'senza percentuale: la quota la scrivi tu'}</small></div>`
+      + ['dd', 'td'].map(c => `<button type="button" class="pk ${c}" data-act="libero" data-n="${esc(t)}" data-c="${c}" ${dentro ? 'disabled' : ''}><b>${c.toUpperCase()}</b></button>`).join('') + '</div>'; }
+  if (!h) h = '<div class="lg">Nessun giocatore: scrivi il nome per aggiungerlo a mano.</div>';
+  document.getElementById('lista').innerHTML = h;
+}
+const numero = v => { const x = parseFloat(String(v).replace(',', '.')); return Number.isFinite(x) ? x : null; };
+function clic(e) {
+  const b = e.target.closest('[data-act]'); if (!b) return; const a = b.dataset.act;
+  if (a === 'apri') apriScelta(); else if (a === 'chiudi') chiudiScelta();
+  else if (a === 'metti') aggiungi(b.dataset.n, b.dataset.c, false); else if (a === 'libero') aggiungi(b.dataset.n, b.dataset.c, true);
+  else if (a === 'togli') { CALC.legs.splice(+b.dataset.i, 1); salvaCalc(); disegna(); }
+  else if (a === 'svuota') { CALC.legs = []; salvaCalc(); disegna(); }
+  else if (a === 'salva') { SALVATE.push({ giorno: CALC.giorno, creato: Date.now(), posta: CALC.posta, legs: JSON.parse(JSON.stringify(CALC.legs)) }); salvaSalvate(); b.textContent = 'Salvata ✓'; setTimeout(disegna, 900); }
+  else if (a === 'elimina') { SALVATE.splice(+b.dataset.i, 1); salvaSalvate(); disegna(); }
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') chiudiScelta(); });
+document.getElementById('app').addEventListener('click', clic);
+document.getElementById('app').addEventListener('change', e => {
+  const t = e.target; if (!t.dataset?.act) return;
+  if (t.dataset.act === 'quota') { const v = numero(t.value), l = CALC.legs[+t.dataset.i]; if (l) { l.mia = v && v > 1 && Math.abs(v - (l.q || 0)) > 1e-9 ? v : null; salvaCalc(); disegna(); } }
+  if (t.dataset.act === 'posta') { const v = numero(t.value); CALC.posta = v && v > 0 ? v : 2; salvaCalc(); disegna(); }
+});
 // due viste con la stessa impaginazione: «Stanotte» (oggi.json) e «Notte scorsa» (ieri.json, la pagina della notte prima con i risultati finali)
-const DATI = {}; let vista = 'oggi', notaBase = null;
-function mostra(v) { vista = v; D = DATI[v]; for (const k in partitaDi) delete partitaDi[k]; for (const k in idDi) delete idDi[k];
+const DATI = {}; let vista = 'oggi', notaBase = null, STORICO = null;
+function mostra(v) { vista = v; D = DATI[v === 'calc' ? 'oggi' : v]; document.getElementById('note').hidden = false; for (const k in partitaDi) delete partitaDi[k]; for (const k in idDi) delete idDi[k];
   document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.v === v));
   const agg = new Date(D.creato * 1000), nota = document.getElementById('note'); notaBase ??= nota.innerHTML; nota.innerHTML = notaBase;
   document.getElementById('livemeta').textContent = '';
@@ -342,23 +526,26 @@ function mostra(v) { vista = v; D = DATI[v]; for (const k in partitaDi) delete p
   const segna = g => { if (!g || !g.n) return; if (g.partita != null && partitaDi[g.n] == null) partitaDi[g.n] = g.partita; if (g.id != null && idDi[g.n] == null) idDi[g.n] = g.id; };
   for (const P of D.partite) for (const g of P.giocatori) { partitaDi[g.n] = P.id; if (g.id != null) idDi[g.n] = g.id; }
   const Cn = D.consigli || {}; for (const k of ['bassa', 'alta', 'td']) for (const g of Cn[k] || []) { segna(g); segna(g.prima); }
+  if (v === 'calc') { CALC.legs.forEach(segna); SALVATE.filter(x => x.giorno === D.giorno).forEach(x => x.legs.forEach(segna)); }
   for (const c of Cn.combinazioni || []) { (c.gambe || []).forEach(segna); (c.prima?.gambe || []).forEach(segna); }
   const primo = new Date(Math.min(...D.partite.map(p => p.ts)) * 1000);
   const ritirate = (D.quote_non_disponibili || []).map(x => esc(x.n + ' ' + (x.cosa || '').toUpperCase())).join(', ');
   const segnalate = (D.quote_segnalate || []).map(x => `${esc(x.n)} ${esc((x.cosa || '').toUpperCase())} quota ${nq(x.q)} (segnalata, non verificata)`).join('; ');
-  document.getElementById('meta').innerHTML = `Notte del <b>${fmtG.format(primo).replace(/^\S+\s/, '')}</b> · ${D.partite.length} partite · ${v === 'oggi' ? 'aggiornata alle ' + fmtO.format(agg) : 'le proposte di allora e com\'è andata'}`;
+  document.getElementById('meta').innerHTML = `Notte del <b>${fmtG.format(primo).replace(/^\S+\s/, '')}</b> · ${D.partite.length} partite · ${v !== 'ieri' ? 'aggiornata alle ' + fmtO.format(agg) : 'le proposte di allora e com\'è andata'}`;
   if (ritirate || segnalate) nota.insertAdjacentHTML('afterbegin', `${ritirate ? 'Quote segnalate come non disponibili: ' + ritirate + '. ' : ''}${segnalate ? 'Aggiornamento: ' + segnalate + '. ' : ''}`);
   document.getElementById('status').hidden = false; disegna(); aggiornaLive();
 }
 // l'indirizzo può essere /nba oppure /nba/: senza la barra finale un percorso relativo punterebbe alla radice del sito (16/11: «Dati non ancora disponibili»)
 const BASE = location.pathname.replace(/index\.html$/, '').replace(/\/?$/, '/');
 const leggi = f => fetch(BASE + f + '?' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null);
-Promise.all([leggi('oggi.json'), leggi('ieri.json')]).then(([oggi, ieri]) => {
+Promise.all([leggi('oggi.json'), leggi('ieri.json'), leggi('storico.json')]).then(([oggi, ieri, storico]) => {
   if (!oggi) { document.getElementById('meta').textContent = 'Dati non ancora disponibili.'; return; }
-  DATI.oggi = oggi; if (ieri && ieri.partite?.length && ieri.giorno !== oggi.giorno) { DATI.ieri = ieri; document.getElementById('tabs').hidden = false; }
-  document.querySelectorAll('#tabs button').forEach(b => b.addEventListener('click', () => { if (DATI[b.dataset.v]) mostra(b.dataset.v); }));
+  STORICO = storico; DATI.oggi = oggi; document.getElementById('tabs').hidden = false;
+  if (ieri && ieri.partite?.length && ieri.giorno !== oggi.giorno) { DATI.ieri = ieri; document.querySelector('#tabs [data-v=ieri]').hidden = false; }
+  caricaCalc();
+  document.querySelectorAll('#tabs button').forEach(b => b.addEventListener('click', () => { if (b.dataset.v === 'calc' || DATI[b.dataset.v]) mostra(b.dataset.v); }));
   document.getElementById('aggiorna').addEventListener('click', aggiornaLive);
-  mostra(new URLSearchParams(location.search).get('v') === 'ieri' && DATI.ieri ? 'ieri' : 'oggi');
+  const v0 = new URLSearchParams(location.search).get('v'); mostra(v0 === 'ieri' && DATI.ieri ? 'ieri' : v0 === 'calc' ? 'calc' : 'oggi');
   setInterval(aggiornaLive, 30000); document.addEventListener('visibilitychange', () => { if (!document.hidden) aggiornaLive(); });
 });
 </script>
