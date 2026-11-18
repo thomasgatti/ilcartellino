@@ -25,33 +25,85 @@ V2 = (os.environ.get('NBA_MODELLO') or 'v2').strip().lower() != 'v1'
 # Combinazioni: per ogni fascia di quota, la combinazione PIÙ PROBABILE che paga almeno quella quota.
 # Gambe = doppia doppia o tripla doppia di giocatori di partite diverse (indipendenti: vedi RUNBOOK), 2 o 3 gambe; quota = prodotto delle singole.
 FASCE = (('Sicura', 1.5), ('Media', 3), ('Alta', 10), ('Altissima', 30), ('Colpo grosso', 100))
-def combinazioni(tutti):
-    gambe = []
+LIMITE = 2          # dal 18/11/2026: lo stesso giocatore al massimo in 2 combinazioni (se salta lui, saltano al massimo due proposte)
+CAMPI_GAMBA = ('n', 'id', 'sq', 'partita', 'cosa', 'p', 'q', 'dubbio', 'ex')
+
+def combinazioni(tutti, fisse=None):
+    """fisse: {tipo: combinazione} già decise (proposte del pomeriggio ancora valide); le altre fasce si riempiono intorno a loro,
+    senza ripeterle e rispettando LIMITE anche contando i giocatori delle fisse."""
+    fisse = fisse or {}; gambe = []
     for g in tutti:
         if g.get('riposo'): continue
-        if g.get('q_dd') and g['p_dd'] >= 0.08: gambe.append(dict(n=g['n'], sq=g['sq'], cosa='dd', p=g['p_dd'], q=g['q_dd'], partita=g['partita'], dubbio=g.get('dubbio', 0), ex=g.get('ex', 0)))
-        if g.get('q_td') and g['p_td'] >= 0.03: gambe.append(dict(n=g['n'], sq=g['sq'], cosa='td', p=g['p_td'], q=g['q_td'], partita=g['partita'], dubbio=g.get('dubbio', 0), ex=g.get('ex', 0)))
+        base = dict(n=g['n'], id=g.get('id'), sq=g['sq'], partita=g['partita'], dubbio=g.get('dubbio', 0), ex=g.get('ex', 0))
+        if g.get('q_dd') and g['p_dd'] >= 0.08: gambe.append(dict(base, cosa='dd', p=g['p_dd'], q=g['q_dd']))
+        if g.get('q_td') and g['p_td'] >= 0.03: gambe.append(dict(base, cosa='td', p=g['p_td'], q=g['q_td']))
     gambe = sorted(gambe, key=lambda x: -x['p'])[:40]; cand = []
     for k in (2, 3):
         for c in itertools.combinations(gambe, k):
             if len({x['partita'] for x in c}) < k: continue
             cand.append((float(np.prod([x['p'] for x in c])), float(np.prod([x['q'] for x in c])), c))
-    out, visti = [], set()
+    visti, conta = set(), {}
+    def registra(legs):
+        visti.add(frozenset((x['n'], x['cosa']) for x in legs))
+        for x in legs: conta[x['n']] = conta.get(x['n'], 0) + 1
+    for f in fisse.values(): registra(f['gambe'])
+    def scegli(nome, buone):
+        for p, q, c in buone:
+            if frozenset((x['n'], x['cosa']) for x in c) in visti or any(conta.get(x['n'], 0) >= LIMITE for x in c): continue
+            registra(c); return dict(tipo=nome, p=round(p, 4), q=round(q, 2), gambe=[{a: x[a] for a in CAMPI_GAMBA if a in x} for x in c])
+    fasce = []
     for i, (nome, minimo) in enumerate(FASCE):
         tetto = FASCE[i + 1][1] if i + 1 < len(FASCE) else 1e9
-        buone = sorted([c for c in cand if minimo <= c[1] < tetto], key=lambda c: (-c[0], len(c[2])))
-        for p, q, c in buone:
-            k = frozenset((x['n'], x['cosa']) for x in c)
-            if k in visti: continue
-            visti.add(k); out.append(dict(tipo=nome, p=round(p, 4), q=round(q, 2), gambe=[{a: x[a] for a in ('n', 'sq', 'cosa', 'p', 'q', 'dubbio', 'ex') if a in x} for x in c])); break
+        fasce.append((nome, lambda c, a=minimo, b=tetto: a <= c[1] < b, lambda c: (-c[0], len(c[2]))))
     # con le triple doppie (le più probabili non ne contengono mai: sono le quote col margine più alto): la più probabile con una tripla, e con due
     for nome, quante in (('Con una tripla doppia', 1), ('Due triple doppie', 2)):
-        buone = sorted([c for c in cand if len(c[2]) == 2 and sum(x['cosa'] == 'td' for x in c[2]) == quante], key=lambda c: -c[0])
-        for p, q, c in buone:
-            k = frozenset((x['n'], x['cosa']) for x in c)
-            if k in visti: continue
-            visti.add(k); out.append(dict(tipo=nome, p=round(p, 4), q=round(q, 2), gambe=[{a: x[a] for a in ('n', 'sq', 'cosa', 'p', 'q', 'dubbio')} for x in c])); break
+        fasce.append((nome, lambda c, n=quante: len(c[2]) == 2 and sum(x['cosa'] == 'td' for x in c[2]) == n, lambda c: -c[0]))
+    out = []
+    for nome, filtro, ordine in fasce:
+        if nome in fisse: out.append(fisse[nome]); continue
+        r = scegli(nome, sorted([c for c in cand if filtro(c)], key=ordine))
+        if r: out.append(r)
     return out
+
+def blocca(V, C, tutti, tutti_tutti, stato_nome):
+    """Rifacimento della sera (18/11/2026): le giocate e le combinazioni già pubblicate per questa notte restano quelle.
+    Si sostituisce solo ciò che contiene un giocatore diventato fuori, in dubbio o a rischio riposo; la versione di prima resta
+    in «prima» con il motivo, così chi l'ha già giocata la ritrova. Le probabilità delle proposte tenute si aggiornano, le quote no."""
+    validi = {g['n']: g for g in tutti}; tutti_n = {g['n']: g for g in tutti_tutti}
+    def perche(n):
+        if n in validi: return None
+        g = tutti_n.get(n); cogn_ = n.split(' ', 1)[-1]
+        if g is None: return f"{cogn_} {'fuori' if stato_nome.get(n) == 'out' else 'non più in elenco'}"
+        return f"{cogn_} {'in dubbio' if g.get('dubbio') else 'a rischio riposo' if g.get('riposo') else 'non più in elenco'}"
+    def pulita(c): return {k: v for k, v in c.items() if k not in ('prima', 'motivo')}
+    vecchio = V.get('consigli') or {}; fisse, sostituite = {}, {}
+    for c in vecchio.get('combinazioni', []):
+        if not c.get('gambe'):                                       # già senza alternativa: resta com'era
+            sostituite[c['tipo']] = (c.get('prima'), c.get('motivo')); continue
+        motivi = [m for m in (perche(x['n']) for x in c['gambe']) if m]
+        if motivi: sostituite[c['tipo']] = (c.get('prima') or pulita(c), ', '.join(motivi)); continue
+        k = dict(c)
+        for x in k['gambe']: x['p'] = round(float(validi[x['n']]['p_' + x['cosa']]), 4)
+        k['p'] = round(float(np.prod([x['p'] for x in k['gambe']])), 4); fisse[c['tipo']] = k
+    nuove = combinazioni(tutti, fisse)
+    tipi = {c['tipo'] for c in nuove}
+    for c in nuove:
+        if c['tipo'] in sostituite and c['tipo'] not in fisse: c['prima'], c['motivo'] = sostituite[c['tipo']]
+    for tipo, (prima, motivo) in sostituite.items():
+        if tipo not in tipi and prima: nuove.append(dict(tipo=tipo, gambe=[], nessuna=1, prima=prima, motivo=motivo))
+    ordine = [n for n, _ in FASCE] + ['Con una tripla doppia', 'Due triple doppie']
+    nuove.sort(key=lambda c: ordine.index(c['tipo']) if c['tipo'] in ordine else 99)
+    C['combinazioni'] = nuove
+    for k, y in (('bassa', 'dd'), ('alta', 'dd'), ('td', 'td')):
+        v = (vecchio.get(k) or [None])[0]
+        if not v: continue
+        m = perche(v['n'])
+        if m is None:
+            v = dict(v); v['p_' + y] = validi[v['n']]['p_' + y]; v['p_dd'] = validi[v['n']]['p_dd']; v['p_td'] = validi[v['n']]['p_td']
+            C[k] = [v] + [g for g in C.get(k, []) if g['n'] != v['n']][:2]
+        elif C.get(k):
+            C[k] = [dict(C[k][0], prima={a: b for a, b in v.items() if a not in ('prima', 'motivo')} if not v.get('prima') else v['prima'], motivo=m)] + C[k][1:]
+    return C
 
 def ricombina(f):
     """ricalcola solo le combinazioni da un oggi.json già pubblicato (senza richiedere di nuovo le quote)"""
@@ -102,8 +154,10 @@ def diario(partite, gioc, D):
 
 def main(cartella, f_in, f_out, f_quote=None):
     partite, gioc = carica(cartella); I = json.load(open(f_in)); stato = {}; nomi = {}; quote_ora = I.get('quote_creato')
+    V_stessa = None
     if f_quote:                                        # rifacimento della stessa notte: le quote si riprendono dalla pagina già pubblicata
         V = json.load(open(f_quote)); vecchie = {str(P['id']): P for P in V.get('partite', [])} if V.get('giorno') == I['giorno'] else {}
+        if V.get('giorno') == I['giorno'] and V.get('consigli'): V_stessa = V
         if vecchie and not quote_ora: quote_ora = V.get('quote_ora') or V.get('creato')          # quote riusate: vale l'ora in cui erano state lette
         for P in I['partite']:
             if P['quote']['dd'] or P['quote']['td'] or str(P['id']) not in vecchie: continue
@@ -132,6 +186,7 @@ def main(cartella, f_in, f_out, f_quote=None):
             te['p_' + y] = 1 / (1 + np.exp(-(LG(a) + LG(b)) / 2))
     out = dict(giorno=I['giorno'], creato=I['creato'], modello=dict(versione='v2' if V2 else 'v1', commit=os.environ.get('GITHUB_SHA', '')[:7]), partite=[]); tutti = []
     if quote_ora: out['quote_ora'] = quote_ora
+    out['proposte_ora'] = I['creato']
     for P in I['partite']:
         Z = te[te.id == P['id']]; per_nome = {norm(nomi[p]): p for p in Z.pid}
         q = {'dd': {}, 'td': {}}
@@ -167,10 +222,11 @@ def main(cartella, f_in, f_out, f_quote=None):
         for k in ('h', 'a'):
             fuori[k] = [dict(n=n_, perche=pc, **sostituto(partite, P[k][0], pid, {g_['id'] for g_ in G}, nomi)) for pid, n_, _, st, pc in P['rosa'][k] if st == 'out' and ult.get(pid, 0) >= 15]
         out['partite'].append(dict(id=P['id'], ts=P['ts'], h=dict(sigla=P['h'][1], nome=P['h'][2]), a=dict(sigla=P['a'][1], nome=P['a'][2]), giocatori=G[:14], candidati=cand, fuori=fuori, quote=int(bool(q['dd']))))
+    tutti_tutti = list(tutti)
     tutti = [g for g in tutti if not g.get('riposo')]          # chi rischia il turno di riposo non entra in giocate e combinazioni
     if V2: tutti = [g for g in tutti if not g.get('dubbio')]   # v2: nemmeno chi è «in dubbio» (nelle prime notti misurate salta la partita 4 volte su 10)
     con = [g for g in tutti if 'q_dd' in g]
-    breve = lambda g: {k: g[k] for k in ('n', 'sq', 'p_dd', 'p_td', 'q_dd', 'b_dd', 'v_dd', 'q_td', 'b_td', 'v_td', 'dubbio', 'ex', 'su') if k in g}
+    breve = lambda g: {k: g[k] for k in ('n', 'id', 'partita', 'sq', 'p_dd', 'p_td', 'q_dd', 'b_dd', 'v_dd', 'q_td', 'b_td', 'v_td', 'dubbio', 'ex', 'su') if k in g}
     C = dict(
         bassa=[breve(g) for g in sorted([g for g in con if g['q_dd'] < 2.0], key=lambda g: -g['p_dd'])[:3]],
         # v1: il «valore» p × quota più alto. v2: i più probabili (il valore più alto sceglie i casi in cui il modello contraddice di più il mercato, e lì sbaglia più spesso)
@@ -178,6 +234,9 @@ def main(cartella, f_in, f_out, f_quote=None):
         td=[breve(g) for g in sorted([g for g in tutti if g['p_td'] >= 0.03], key=lambda g: -g['p_td'])[:4]])
     if not con: C['bassa'] = [breve(g) for g in sorted(tutti, key=lambda g: -g['p_dd'])[:3]]
     C['combinazioni'] = combinazioni(tutti)
+    if V_stessa:                                               # rifacimento della stessa notte: le proposte già pubblicate restano (vedi blocca)
+        stato_nome = {nomi[p_]: st for p_, (st, _) in stato.items() if p_ in nomi}
+        C = blocca(V_stessa, C, tutti, tutti_tutti, stato_nome); out['proposte_ora'] = V_stessa.get('proposte_ora') or V_stessa.get('creato')
     out['consigli'] = C
     out['ieri'] = diario(partite, gioc, D)
     if V2: assert all(g['p_td'] <= g['p_dd'] for P in out['partite'] for g in P['giocatori']), 'P(TD) > P(DD)'

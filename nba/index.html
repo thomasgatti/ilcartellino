@@ -93,6 +93,17 @@ section { margin-top: 28px; }
 .tot .big { font: 900 28px/1 var(--display); color: var(--gold); font-variant-numeric: tabular-nums; }
 .tot small { display: block; margin-top: 4px; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
 .tot small b { color: var(--ink); font-weight: 600; }
+/* proposta del pomeriggio sostituita la sera (18/11): resta visibile, piccola, apribile */
+details.prima { grid-column: 1 / -1; margin-top: 2px; border: 1px dashed var(--line); border-radius: 10px; }
+details.prima > summary { list-style: none; cursor: pointer; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; padding: 8px 10px; font-size: 12.5px; color: var(--muted); }
+details.prima > summary b { color: var(--ink); font-weight: 600; }
+details.prima > summary .arrow { margin-left: auto; }
+details.prima[open] > summary .arrow { transform: rotate(90deg); }
+details.prima .in { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px 12px; align-items: center; padding: 2px 10px 10px; }
+details.prima .in .legs { gap: 8px; }
+details.prima .in .qq { font: 800 20px var(--display); color: var(--gold); font-variant-numeric: tabular-nums; text-align: right; }
+.pick details.prima { grid-column: 1 / -1; }
+.cambio { font: 700 10.5px/1 var(--body); text-transform: uppercase; letter-spacing: .5px; padding: 3px 6px; border-radius: 4px; color: var(--gold); border: 1px solid currentColor; white-space: nowrap; }
 
 details.game { border-top: 1px solid var(--line); }
 details.game:first-child { border-top: 0; }
@@ -195,7 +206,7 @@ details.ieri > summary small { display: block; font-weight: 400; color: var(--mu
     <div class="status" id="status" hidden><span class="livemeta" id="livemeta" role="status" aria-live="polite"></span><button type="button" class="btn" id="aggiorna">Aggiorna live</button></div>
   </header>
   <div id="app"></div>
-  <div class="note" id="note">Percentuali del modello; quote dei bookmaker italiani fotografate all'ora indicata, non in tempo reale: verifica dal bookmaker. Nelle verifiche il mercato è stato più preciso del modello, quindi nessun vantaggio dimostrato. Il gioco è vietato ai minori e può causare dipendenza.</div>
+  <div class="note" id="note">Percentuali del modello; quote di bet365, Sisal ed Eurobet fotografate all'ora indicata, non in tempo reale: su altri bookmaker (per esempio SNAI) possono essere diverse, verifica sempre prima di giocare. Le proposte del pomeriggio restano fisse: se la sera un giocatore viene dato fuori o in dubbio, al suo posto compare una proposta aggiornata e quella vecchia resta sotto, con il suo esito. Nelle verifiche il mercato è stato più preciso del modello, quindi nessun vantaggio dimostrato. Il gioco è vietato ai minori e può causare dipendenza.</div>
 </div>
 <script>
 (() => { const sp = document.getElementById('splash'); if (!sp || !document.documentElement.classList.contains('splash-on')) return;
@@ -220,9 +231,11 @@ const partitaDi = {}, idDi = {};
 const statoG = n => { const L = LIVE[partitaDi[n]]; if (!L || L.stato === 'pre') return null; const x = (idDi[n] != null ? L.pl?.['#' + idDi[n]] : null) ?? L.pl?.[chiave(n)]; return { L, x, fin: L.stato === 'post' }; };
 const n10 = x => [x.pts, x.reb, x.ast, x.stl, x.blk].filter(v => v >= 10).length;
 // esito: 'si' presa, 'no' non presa (partita finita), 'ng' non ha giocato, 'live' in corso, null non iniziata
+// una gamba di chi non ha giocato di solito viene annullata: la combinazione vale con le altre (esito 'sv')
+const totale = es => es.some(e => e === 'no') ? 'no' : es.length && es.every(e => e === 'si' || e === 'ng') ? (es.every(e => e === 'si') ? 'si' : es.some(e => e === 'si') ? 'sv' : 'ng') : es.some(e => e) ? 'live' : null;
 function esito(n, cosa) { const s = statoG(n); if (!s) return null; const serve = cosa === 'td' ? 3 : 2;
   if (s.x && n10(s.x) >= serve) return 'si'; if (!s.fin) return s.L.pl ? 'live' : null; if (!s.L.pl) return null; return s.x ? 'no' : 'ng'; }
-const SEGNO = { si: '<span class="es si">✓ presa</span>', no: '<span class="es no">✗ non presa</span>', ng: '<span class="es ng">non ha giocato</span>', live: '<span class="es live">in corso</span>' };
+const SEGNO = { sv: '<span class="es si" title="La gamba di chi non ha giocato di solito viene annullata: vale il resto della giocata, a quota più bassa">✓ presa, una gamba annullata</span>', si: '<span class="es si">✓ presa</span>', no: '<span class="es no">✗ non presa</span>', ng: '<span class="es ng">non ha giocato</span>', live: '<span class="es live">in corso</span>' };
 const cifre = x => { const v = (k, u) => `<b class="${x[k] >= 10 ? 'ok' : ''}">${x[k]}</b> ${u}`; return `${v('pts', 'pt')} · ${v('reb', 'rb')} · ${v('ast', 'as')}${x.stl >= 5 ? ` · ${v('stl', 'rec')}` : ''}${x.blk >= 5 ? ` · ${v('blk', 'st')}` : ''}`; };
 const riga = n => { const s = statoG(n); return s?.x ? `<span class="lv">${cifre(s.x)}</span>` : ''; };
 async function espn(path) { const sep = path.includes('?') ? '&' : '?'; const r = await fetch(ESPN + path + sep + '_=' + Date.now(), { cache: 'no-store', signal: AbortSignal.timeout(9000) }); if (!r.ok) throw new Error('ESPN HTTP ' + r.status); return r.json(); }
@@ -255,13 +268,18 @@ async function aggiornaLive() {
 function voce(g, y, opt = {}) {
   const e = opt.esito === undefined ? esito(g.n, y) : opt.esito, l = riga(g.n), p = g['p_' + y] ?? g.p, q = g['q_' + y] ?? g.q;
   const segno = e === 'si' ? '<span class="tick si">✓</span>' : e === 'no' ? '<span class="tick no">✗</span>' : '';
-  const numeri = e ? (l || (e === 'ng' ? 'non ha giocato' : '')) : `${opt.senzaP ? '' : pc(p)}${q ? `${opt.senzaP ? '' : ' · '}quota <span class="q">${nq(q)}</span>${opt.book && g['b_' + y] ? ' ' + esc(bk(g['b_' + y])) : ''}` : ''}`;
+  const numeri = e ? (l || (e === 'ng' ? 'non ha giocato · di solito la giocata viene annullata' : '')) : `${opt.senzaP ? '' : pc(p)}${q ? `${opt.senzaP ? '' : ' · '}quota <span class="q">${nq(q)}</span>${opt.book && g['b_' + y] ? ' ' + esc(bk(g['b_' + y])) : ''}` : ''}`;
   return `<div class="item"><div class="nm">${segno}${esc(g.n)}<span class="tm">${esc(g.sq)}</span></div><div class="sub">${opt.chip === false ? '' : CHIP[y]}<span>${numeri}</span>${tags(g)}</div></div>`;
+}
+function prima(gambe, q, motivo, chiaveAp) {
+  const es = gambe.map(g => esito(g.n, g.cosa)), tot = totale(es), id = 'prima·' + chiaveAp, ora = D.proposte_ora ? fmtO.format(new Date(D.proposte_ora * 1000)) : 'prima';
+  return `<details class="prima" data-id="${esc(id)}"${aperte.has(id) ? ' open' : ''}><summary><span>Proposta delle ${ora}:</span><b>${gambe.map(g => esc(cogn(g.n)) + (g.cosa === 'td' ? ' TD' : ' DD')).join(' + ')}</b>${q ? `<span>· ${nq(q)}</span>` : ''}<span>· sostituita: ${esc(motivo || '')}</span>${tot ? SEGNO[tot] : ''}<span class="arrow">›</span></summary>`
+    + `<div class="in"><div class="legs">${gambe.map((g, i) => voce(g, g.cosa, { esito: es[i] })).join('')}</div><div class="qq">${q ? nq(q) : ''}</div></div></details>`;
 }
 function giocata(cls, etichetta, g, y, vuoto) {
   if (!g) return `<div class="card pick ${cls}"><div class="lab">${etichetta}</div><div class="empty">${vuoto}</div></div>`;
   const e = esito(g.n, y);
-  return `<div class="card pick ${cls} ${e ? 'e-' + e : ''}"><div class="lab"><span>${etichetta}</span>${e ? SEGNO[e] : ''}</div><div class="big">${esc(cogn(g.n))}</div><div class="pc">${pc(g['p_' + y])}</div>${voce(g, y, { chip: false, senzaP: true, book: true, esito: e === 'si' || e === 'no' ? null : e })}</div>`;
+  return `<div class="card pick ${cls} ${e ? 'e-' + e : ''}"><div class="lab"><span>${etichetta}</span>${e ? SEGNO[e] : ''}</div><div class="big">${esc(cogn(g.n))}</div><div class="pc">${pc(g['p_' + y])}</div>${voce(g, y, { chip: false, senzaP: true, book: true, esito: e === 'si' || e === 'no' ? null : e })}${g.prima ? prima([Object.assign({ cosa: y, p: g.prima['p_' + y], q: g.prima['q_' + y] }, g.prima)], g.prima['q_' + y], g.motivo, etichetta + '·' + g.prima.n) : ''}</div>`;
 }
 function disegna() {
   const C = D.consigli || {}, Ps = [...D.partite].sort((a, b) => a.ts - b.ts); let h = '';
@@ -271,8 +289,10 @@ function disegna() {
       + giocata('', 'Doppia doppia · quota alta', (C.alta || [])[0], 'dd', 'Nessuna quota alta adatta.')
       + giocata('td', 'Tripla doppia', (C.td || [])[0], 'td', 'Nessun candidato sopra il 3%.') + '</div></section>';
     if ((C.combinazioni || []).length) h += '<section><div class="sec"><h2>Combinazioni</h2><span>giocatori di partite diverse · per ogni fascia di quota la più probabile</span></div><div class="card">'
-      + C.combinazioni.map(a => { const es = a.gambe.map(g => esito(g.n, g.cosa)), tot = es.some(e => e === 'no') ? 'no' : es.every(e => e === 'si') ? 'si' : es.some(e => e) ? 'live' : null;
-        return `<div class="row ${tot ? 'e-' + tot : ''}"><div><div class="tier">${esc(a.tipo)}${tot ? SEGNO[tot] : ''}</div><div class="legs">${a.gambe.map((g, i) => voce(g, g.cosa, { esito: es[i] })).join('')}</div></div><div class="tot"><div class="big">${nq(a.q)}</div><small>${tot ? '' : `esce <b>${pc(a.p)}</b><br>`}2 € → ${(2 * a.q).toFixed(0)} €</small></div></div>`; }).join('') + '</div></section>';
+      + C.combinazioni.map(a => { const sotto = a.prima ? prima(a.prima.gambe, a.prima.q, a.motivo, a.tipo) : '';
+        if (a.nessuna || !a.gambe.length) return `<div class="row"><div><div class="tier">${esc(a.tipo)}</div><div class="empty">Nessuna alternativa senza ${esc(a.motivo || '')}</div></div><div></div>${sotto}</div>`;
+        const es = a.gambe.map(g => esito(g.n, g.cosa)), tot = totale(es);
+        return `<div class="row ${tot ? 'e-' + (tot === 'sv' ? 'si' : tot) : ''}"><div><div class="tier">${esc(a.tipo)}${tot ? SEGNO[tot] : a.prima ? '<span class="cambio">aggiornata</span>' : ''}</div><div class="legs">${a.gambe.map((g, i) => voce(g, g.cosa, { esito: es[i] })).join('')}</div></div><div class="tot"><div class="big">${nq(a.q)}</div><small>${tot ? '' : `esce <b>${pc(a.p)}</b><br>`}2 € → ${(2 * a.q).toFixed(0)} €</small></div>${sotto}</div>`; }).join('') + '</div></section>';
     h += '<section><div class="sec"><h2>Partite</h2><span>tocca una partita per vedere gli altri giocatori</span></div><div class="card">';
     for (const P of Ps) {
       const c = k => P.giocatori.find(g => g.n === P.candidati[k]), L = LIVE[P.id], viva = L && L.stato !== 'pre';
@@ -306,11 +326,14 @@ function mostra(v) { vista = v; D = DATI[v]; for (const k in partitaDi) delete p
   const agg = new Date(D.creato * 1000), nota = document.getElementById('note'); notaBase ??= nota.innerHTML; nota.innerHTML = notaBase;
   document.getElementById('livemeta').textContent = '';
   if (!D.partite.length) { document.getElementById('meta').innerHTML = `Nessuna partita in programma ${v === 'oggi' ? 'stanotte' : ''} · aggiornato alle ${fmtO.format(agg)}`; document.getElementById('status').hidden = true; disegna(); return; }
+  const segna = g => { if (!g || !g.n) return; if (g.partita != null && partitaDi[g.n] == null) partitaDi[g.n] = g.partita; if (g.id != null && idDi[g.n] == null) idDi[g.n] = g.id; };
   for (const P of D.partite) for (const g of P.giocatori) { partitaDi[g.n] = P.id; if (g.id != null) idDi[g.n] = g.id; }
+  const Cn = D.consigli || {}; for (const k of ['bassa', 'alta', 'td']) for (const g of Cn[k] || []) { segna(g); segna(g.prima); }
+  for (const c of Cn.combinazioni || []) { (c.gambe || []).forEach(segna); (c.prima?.gambe || []).forEach(segna); }
   const primo = new Date(Math.min(...D.partite.map(p => p.ts)) * 1000);
   const ritirate = (D.quote_non_disponibili || []).map(x => esc(x.n + ' ' + (x.cosa || '').toUpperCase())).join(', ');
   const segnalate = (D.quote_segnalate || []).map(x => `${esc(x.n)} ${esc((x.cosa || '').toUpperCase())} quota ${nq(x.q)} (segnalata, non verificata)`).join('; ');
-  document.getElementById('meta').innerHTML = `Notte del <b>${fmtG.format(primo).replace(/^\S+\s/, '')}</b> · ${D.partite.length} partite · ${v === 'oggi' ? (D.quote_ora && Math.abs(D.quote_ora - D.creato) > 600 ? `previsioni delle ${fmtO.format(agg)}, quote delle ${fmtO.format(new Date(D.quote_ora * 1000))}` : 'previsioni e quote delle ' + fmtO.format(agg)) : 'le proposte di allora e com\'è andata'}`;
+  document.getElementById('meta').innerHTML = `Notte del <b>${fmtG.format(primo).replace(/^\S+\s/, '')}</b> · ${D.partite.length} partite · ${v === 'oggi' ? (D.proposte_ora && D.creato - D.proposte_ora > 600 ? `proposte e quote delle ${fmtO.format(new Date(D.proposte_ora * 1000))}, infortuni e probabilità aggiornati alle ${fmtO.format(agg)}` : D.quote_ora && Math.abs(D.quote_ora - D.creato) > 600 ? `previsioni delle ${fmtO.format(agg)}, quote delle ${fmtO.format(new Date(D.quote_ora * 1000))}` : 'proposte e quote delle ' + fmtO.format(agg)) : 'le proposte di allora e com\'è andata'}`;
   if (ritirate || segnalate) nota.insertAdjacentHTML('afterbegin', `${ritirate ? 'Quote segnalate come non disponibili: ' + ritirate + '. ' : ''}${segnalate ? 'Aggiornamento: ' + segnalate + '. ' : ''}`);
   document.getElementById('status').hidden = false; disegna(); aggiornaLive();
 }
