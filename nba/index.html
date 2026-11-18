@@ -346,7 +346,7 @@ function mostra(v) { vista = v; D = DATI[v]; for (const k in partitaDi) delete p
   const primo = new Date(Math.min(...D.partite.map(p => p.ts)) * 1000);
   const ritirate = (D.quote_non_disponibili || []).map(x => esc(x.n + ' ' + (x.cosa || '').toUpperCase())).join(', ');
   const segnalate = (D.quote_segnalate || []).map(x => `${esc(x.n)} ${esc((x.cosa || '').toUpperCase())} quota ${nq(x.q)} (segnalata, non verificata)`).join('; ');
-  document.getElementById('meta').innerHTML = `Notte del <b>${fmtG.format(primo).replace(/^\S+\s/, '')}</b> · ${D.partite.length} partite · ${v === 'oggi' ? (D.proposte_ora && D.creato - D.proposte_ora > 600 ? `proposte e quote delle ${fmtO.format(new Date(D.proposte_ora * 1000))}, infortuni e probabilità aggiornati alle ${fmtO.format(agg)}` : D.quote_ora && Math.abs(D.quote_ora - D.creato) > 600 ? `previsioni delle ${fmtO.format(agg)}, quote delle ${fmtO.format(new Date(D.quote_ora * 1000))}` : 'proposte e quote delle ' + fmtO.format(agg)) : 'le proposte di allora e com\'è andata'}`;
+  document.getElementById('meta').innerHTML = `Notte del <b>${fmtG.format(primo).replace(/^\S+\s/, '')}</b> · ${D.partite.length} partite · ${v === 'oggi' ? 'aggiornata alle ' + fmtO.format(agg) : 'le proposte di allora e com\'è andata'}`;
   if (ritirate || segnalate) nota.insertAdjacentHTML('afterbegin', `${ritirate ? 'Quote segnalate come non disponibili: ' + ritirate + '. ' : ''}${segnalate ? 'Aggiornamento: ' + segnalate + '. ' : ''}`);
   document.getElementById('status').hidden = false; disegna(); aggiornaLive();
 }
