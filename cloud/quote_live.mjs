@@ -3,15 +3,24 @@
 // Aggiorna ogni partita al massimo ogni 90 minuti, e subito quando arrivano le ufficiali. Al massimo 4 partite per giro (limite del piano).
 // Serve il segreto ODDSPAPI_KEY; senza, non fa nulla. Gli errori non fermano la Giornata.
 const B = 'https://api.oddspapi.io/v4', CARD = '102732', BOOKS = 'sisal.it,bet365.it,eurobet.it';
-const TOUR = { sa: 23, ucl: 7, naz: 23755 }, LABEL = { 'sisal.it': 'sisal', 'bet365.it': 'bet365', 'eurobet.it': 'eurobet' };
+// 18/11: solo Champions (l'unica competizione dove le quote entrano nel modello) e solo sulle ufficiali; QUOTE_LIVE_COMP=sa,ucl,naz per allargare.
+const TUTTI = { sa: 23, ucl: 7, naz: 23755 }, TOUR = Object.fromEntries((process.env.QUOTE_LIVE_COMP || 'ucl').split(',').filter(c => TUTTI[c]).map(c => [c, TUTTI[c]])), LABEL = { 'sisal.it': 'sisal', 'bet365.it': 'bet365', 'eurobet.it': 'eurobet' };
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const norm = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 const tri = s => { const t = new Set(), x = '  ' + norm(s) + ' '; for (let i = 0; i < x.length - 2; i++) t.add(x.slice(i, i + 3)); return t; };
 const sim = (a, b) => { const A = tri(a), C = tri(b); let k = 0; for (const x of A) if (C.has(x)) k++; return k / Math.max(1, Math.min(A.size, C.size)); };
+// 18/11: la chiave gratuita ha 250 richieste al mese e OddsPapi conta anche quelle rifiutate (343/250 al 18/11). Con la quota mensile
+// finita (429 REQUEST_LIMIT_EXCEEDED) non si ritenta: ci si ferma e per 24 ore non si chiama più (stato in oddspapi_stato.json).
+// Un 429 di frequenza (troppe chiamate ravvicinate) si ritenta al massimo una volta.
+import fs from 'node:fs';
+const STATO = new URL('../bot/webapp/oddspapi_stato.json', import.meta.url);
+const leggiStato = () => { try { return JSON.parse(fs.readFileSync(STATO, 'utf8')); } catch { return {}; } };
+class QuotaFinita extends Error {}
 async function get(key, p, q) {
-  for (let k = 0; k < 4; k++) {
+  for (let k = 0; k < 2; k++) {
     await sleep(3500); const u = new URL(B + p); for (const [a, v] of Object.entries({ ...q, apiKey: key })) u.searchParams.set(a, v);
-    const r = await fetch(u, { signal: AbortSignal.timeout(20000) }); if (r.status === 429) { await sleep(2500); continue; }
+    const r = await fetch(u, { signal: AbortSignal.timeout(20000) });
+    if (r.status === 429) { const t = await r.text(); if (/REQUEST_LIMIT/i.test(t)) throw new QuotaFinita(t.slice(0, 120)); await sleep(2500); continue; }
     if (!r.ok) return null; return r.json();
   }
   return null;
@@ -33,15 +42,17 @@ export function fuzzyRow(pl, theirs) {
 const xiDi = m => m.pl.filter(r => (r[6] ?? 100) === 100).map(r => r[0]).sort().join('|');   // titolari della scheda: lega la cache delle quote alla formazione
 export async function updateQuoteLive(rounds, now) {
   const key = process.env.ODDSPAPI_KEY; if (!key) return false;
-  let touched = false, budget = 4;
+  const stato = leggiStato(); if (stato.esaurita && now - stato.esaurita < 24 * 3600) return false;
+  let touched = false, budget = 4, chiamato = false;
   try {
     for (const round of rounds) {
       const t = TOUR[round.comp]; if (!t) continue;
-      const due = round.section.matches.filter(m => m.ko > now && m.ko - now < 36 * 3600 && m.pl?.length &&
-        (!m.qg || now - m.qg.agg > 90 * 60 || (m.uff && !m.qg.uff) || (m.uff && m.qg.xi && m.qg.xi !== xiDi(m)))).sort((a, b) => a.ko - b.ko);   // 17/11: XI cambiato → quote da rileggere
+      // solo sulle ufficiali: una lettura quando escono, un'altra se cambia lo XI (o dopo 90 minuti se la partita non era stata trovata)
+      const due = round.section.matches.filter(m => m.ko > now && m.ko - now < 36 * 3600 && m.pl?.length && m.uff &&
+        (!m.qg || !m.qg.uff || (m.qg.xi && m.qg.xi !== xiDi(m)) || (m.qg.nota && now - m.qg.agg > 90 * 60))).sort((a, b) => a.ko - b.ko);   // 17/11: XI cambiato → quote da rileggere
       if (!due.length || budget <= 0) continue;
       const d0 = new Date((now - 86400) * 1000).toISOString().slice(0, 10), d1 = new Date((now + 3 * 86400) * 1000).toISOString().slice(0, 10);
-      const fx = await get(key, '/fixtures', { tournamentId: t, from: d0, to: d1 }); const F = Array.isArray(fx) ? fx : fx?.data || [];
+      const fx = await get(key, '/fixtures', { tournamentId: t, from: d0, to: d1 }); chiamato = true; const F = Array.isArray(fx) ? fx : fx?.data || [];
       for (const m of due) {
         if (budget-- <= 0) break;
         const en = m.en || [m.h, m.a];
@@ -75,6 +86,10 @@ export async function updateQuoteLive(rounds, now) {
         console.log(`Quote giocatore ${m.h}-${m.a}: ${Object.keys(q).length} giocatori (${[...new Set(Object.values(q).flatMap(Object.keys))].join(', ') || 'nessun bookmaker'})`);
       }
     }
-  } catch (e) { console.warn('Quote giocatore:', e.message); }
+  } catch (e) {
+    if (e instanceof QuotaFinita) { fs.writeFileSync(STATO, JSON.stringify({ esaurita: Math.round(now), risposta: e.message })); console.log('::warning title=OddsPapi::quota mensile finita: niente quote per 24 ore, poi un tentativo'); return true; }
+    console.warn('Quote giocatore:', e.message);
+  }
+  if (chiamato && stato.esaurita) { try { fs.unlinkSync(STATO); } catch {} console.log('OddsPapi di nuovo disponibile'); touched = true; }
   return touched;
 }
