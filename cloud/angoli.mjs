@@ -1,4 +1,4 @@
-// Sezione ANGOLI (13/11/2026): per le partite di Serie A e Champions dei prossimi 10 giorni e per i big match EXTRA,
+// Sezione ANGOLI (13/11/2026): per le partite di Serie A, Champions ed Europa League (dal 18/11) dei prossimi 10 giorni e per i big match EXTRA,
 // probabilità che nella partita si battano almeno 14 angoli in totale, con gli angoli attesi per squadra.
 // Modello in cloud/angoli_modello.mjs (prova sul passato: bot/ammoniti/ricerca/angoli/angoli14.mjs). Non servono le formazioni.
 // Scrive data.json → angoli = { updated, soglia, matches: [...], storico: [...], col: { idSquadra: [sfondo, testo] } }.
@@ -15,7 +15,9 @@ const FORCE = process.env.ANGOLI_FORZA === '1';
 // competizioni EXTRA → [archivio della competizione, campionato del paese (media di riserva per le coppe)]
 const XLG = { 'Premier League': ['47', '47'], 'LaLiga': ['87', '87'], 'Bundesliga': ['54', '54'], 'Ligue 1': ['53', '53'], 'FA Cup': ['132', '47'], 'EFL Cup': ['133', '47'],
   'Copa del Rey': ['138', '87'], 'DFB Pokal': ['209', '54'], 'Coupe de France': ['134', '53'], 'Coppa Italia': ['141', '55'] };
-const FISSE = [['sa', '55', 'Serie A'], ['ucl', '42', 'Champions League']];
+// 18/11: Europa League aggiunta (prova sul passato, 457 gare 2023-27: modello meglio della media della competizione, 10% più alto 23,9% contro 12,0%).
+// Conference (10216) no: il modello non distingue (AUC 0,48), metà delle squadre ha meno di 6 gare note nell'archivio.
+const FISSE = [['sa', '55', 'Serie A'], ['ucl', '42', 'Champions League'], ['uel', '73', 'Europa League']];
 
 const data = JSON.parse(fs.readFileSync(DATA, 'utf8'));
 const ang = data.angoli ||= { updated: 0, soglia: SOGLIA, matches: [], storico: [], col: {} };
@@ -68,7 +70,7 @@ function stima(base, lg, riserva, hid, aid) {
   return { ...base, p: r3(p.p), mu: [r2(p.mh), r2(p.ma)], base: r3(W.freq(lg) ?? W.freq(riserva) ?? 0), sq: { h: [r2(f.med.h[0]), r2(f.med.h[1]), ...nh], a: [r2(f.med.a[0]), r2(f.med.a[1]), ...na] } };
 }
 
-// --- 3. partite: Serie A e Champions dal calendario FotMob, EXTRA dalla sezione EXTRA
+// --- 3. partite: Serie A, Champions ed Europa League dal calendario FotMob, EXTRA dalla sezione EXTRA
 const out = [], kept = new Set(); let calOk = true;
 const keepOld = pred => { for (const m of ang.matches) if (pred(m) && !kept.has(m.id)) { out.push(m); kept.add(m.id); } };
 keepOld(m => m.ko <= now);                                   // già iniziate: la stima resta quella del calcio d'inizio
