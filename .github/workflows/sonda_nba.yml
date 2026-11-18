@@ -22,3 +22,4 @@ jobs:
         env:
           ODDSPAPI_KEY: ${{ secrets.ODDSPAPI_KEY_NBA }}   # chiave separata: la quota mensile dei cartellini resta intatta
           GH_TOKEN: ${{ github.token }}
+          SALTA_ELENCO: '1'
