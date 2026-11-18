@@ -114,7 +114,16 @@ jobs:
           git add -A -- bot/webapp/oddspapi_stato.json 2>/dev/null || true   # stato della quota OddsPapi (creato o tolto da quote_live.mjs)
           if ! git diff --cached --quiet; then
             git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Aggiorna formazioni ed esiti'
-            git push origin HEAD:main
+            # 18/11: se nel frattempo main è cambiato (giro NBA, un'altra chat), si riallinea e si riprova; con un conflitto vero
+            # (es. stessa pagina generata) il passo fallisce in rosso e il giro dopo ricalcola tutto
+            ok=0
+            for i in 1 2 3; do
+              if git push origin HEAD:main; then ok=1; break; fi
+              git fetch -q origin main
+              if ! git rebase -q origin/main; then git rebase --abort; echo "::error title=Pubblicazione::conflitto con main, riprova al prossimo giro"; exit 1; fi
+              sleep 5
+            done
+            [ "$ok" = 1 ] || { echo "::error title=Pubblicazione::push rifiutato tre volte"; exit 1; }
           fi
           if [ -n "$VERCEL_DEPLOY_HOOK" ]; then
             stamp=$(sed -n 's/^<meta name="build" content="\([^"]*\)">$/\1/p' index.html)
