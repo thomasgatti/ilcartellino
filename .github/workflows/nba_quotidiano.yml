@@ -1,7 +1,7 @@
 name: NBA - aggiornamento automatico quotidiano
 # Avvio giornaliero nel primo pomeriggio americano, prima delle eventuali partite domenicali.
 # Quote (dal 18/11/2026): /odds-by-tournaments, 1 richiesta per bookmaker (Sisal, bet365) dà tutte le partite della notte.
-# Pomeriggio: 1 fixtures + 2 = 3 richieste; sera (rifai): 2 (gli id delle partite sono nella pagina) → ~5 al giorno, ~155 in 31 giorni su 250.
+# Pomeriggio: 1 fixtures + 2 = 3 richieste; controllo delle 23:30 (rifai, cron-job.org «NBA sera»): 2 (gli id delle partite sono nella pagina) → ~5 al giorno, ~155 in 31 giorni su 250.
 on:
   schedule:
     - cron: '30 15 * * *'
@@ -88,6 +88,7 @@ jobs:
         if: steps.giorno.outputs.genera == 'si'
         env:
           NBA_MODELLO: ${{ vars.NBA_MODELLO }}   # vuota = v2 (predefinito dal 17/11), v1 = modello di prima: per tornare indietro creare la variabile NBA_MODELLO=v1 (si torna indietro togliendo la variabile)
+          NBA_UFFICIALE: ${{ steps.giorno.outputs.riusa == '1' && '1' || '' }}   # controllo delle 23:30: le proposte diventano ufficiali
         run: |
           # la pagina della notte prima resta visibile come «Notte scorsa» (nba/ieri.json)
           python3 - "${{ steps.giorno.outputs.giorno }}" <<'PY'

@@ -109,6 +109,10 @@ details.prima[open] > summary .arrow { transform: rotate(90deg); }
 details.prima .in { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px 12px; align-items: center; padding: 2px 10px 10px; }
 details.prima .in .legs { gap: 8px; }
 details.prima .in .qq { font: 800 20px var(--display); color: var(--gold); font-variant-numeric: tabular-nums; text-align: right; }
+.banner { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 12px 16px; border-radius: 14px; margin: 0 0 18px; font: 500 15px/1.35 var(--body); border: 1px solid; }
+.banner b { font: 900 15px/1 var(--display); text-transform: uppercase; letter-spacing: .6px; padding: 5px 9px; border-radius: 6px; }
+.banner.prob { background: rgba(255,216,102,.10); border-color: rgba(255,216,102,.55); color: #fff; } .banner.prob b { background: var(--gold); color: #1a2350; }
+.banner.uff { background: rgba(95,224,160,.08); border-color: rgba(95,224,160,.45); color: var(--muted); } .banner.uff b { background: var(--good); color: #10301f; }
 .cambio { font: 700 10.5px/1 var(--body); text-transform: uppercase; letter-spacing: .5px; padding: 3px 6px; border-radius: 4px; color: var(--gold); border: 1px solid currentColor; white-space: nowrap; }
 
 details.game { border-top: 1px solid var(--line); }
@@ -280,7 +284,7 @@ details.alt[open] > summary .arrow { transform: rotate(90deg); }
     <div class="status" id="status" hidden><span class="livemeta" id="livemeta" role="status" aria-live="polite"></span><button type="button" class="btn" id="aggiorna">Aggiorna live</button></div>
   </header>
   <div id="app"></div>
-  <div class="note" id="note">Percentuali del modello; quote di Sisal e bet365 lette nel pomeriggio e riaggiornate la sera (alle 23:05), non in tempo reale: su altri bookmaker (per esempio SNAI) possono essere diverse, verifica sempre prima di giocare. Le proposte del pomeriggio restano fisse: se la sera un giocatore viene dato fuori o in dubbio, o la quota scende sotto la fascia del titolo (Alta 10, Altissima 30, Colpo grosso 100; quota alta 3), al suo posto compare una proposta aggiornata e quella vecchia resta sotto, con il suo esito; se la quota cambia ma resta nella fascia, accanto c'è quella di prima («era …»). Nelle verifiche il mercato è stato più preciso del modello, quindi nessun vantaggio dimostrato. Il gioco è vietato ai minori e può causare dipendenza.</div>
+  <div class="note" id="note">Percentuali del modello; quote di Sisal e bet365 lette nel pomeriggio e alle 23:30, non in tempo reale: su altri bookmaker (per esempio SNAI) possono essere diverse, verifica sempre prima di giocare. Le proposte del pomeriggio sono probabili; alle 23:30 un controllo rilegge infortuni e quote: chi non gioca viene sostituito, e una combinazione la cui quota esce dalla fascia del suo titolo (Alta 10-30, Altissima 30-100, Colpo grosso da 100) passa al titolo giusto, se è almeno probabile quanto la nuova, oppure lascia il posto a una nuova. Nelle verifiche il mercato è stato più preciso del modello, quindi nessun vantaggio dimostrato. Il gioco è vietato ai minori e può causare dipendenza.</div>
 </div>
 <script>
 (() => { const sp = document.getElementById('splash'); if (!sp || !document.documentElement.classList.contains('splash-on')) return;
@@ -348,6 +352,7 @@ function voce(g, y, opt = {}) {
   return `<div class="item"><div class="nm">${segno}${esc(g.n)}<span class="tm">${esc(g.sq)}</span></div><div class="sub">${opt.chip === false ? '' : CHIP[y]}<span>${numeri}</span>${tags(g)}</div></div>`;
 }
 function prima(gambe, q, motivo, chiaveAp) {
+  return '';   // 19/11/2026: le proposte sostituite non si mostrano più (fino alle 23:30 la pagina dice che sono probabili)
   const es = gambe.map(g => esito(g.n, g.cosa)), tot = totale(es), id = 'prima·' + chiaveAp, ora = D.proposte_ora ? fmtO.format(new Date(D.proposte_ora * 1000)) : 'prima';
   return `<details class="prima" data-id="${esc(id)}"${aperte.has(id) ? ' open' : ''}><summary><span class="pt">Proposta delle ${ora}: <b>${gambe.map(g => esc(cogn(g.n)) + (g.cosa === 'td' ? ' TD' : ' DD')).join(' + ')}</b></span><span>${q ? `quota ${nq(q)} · ` : ''}sostituita${motivo ? ': ' + esc(motivo) : ''}</span>${tot ? SEGNO[tot] : ''}<span class="arrow">›</span></summary>`
     + `<div class="in"><div class="legs">${gambe.map((g, i) => voce(g, g.cosa, { esito: es[i] })).join('')}</div><div class="qq">${q ? nq(q) : ''}</div></div></details>`;
@@ -376,6 +381,13 @@ function disegna() {
   // nel Calcolatore non si ridisegna mentre l'utente sta scrivendo una quota (il live ridisegna ogni 30 secondi)
   if (vista === 'calc') { if (document.activeElement?.closest?.('#app input')) return; return disegnaCalc(); }
   const C = D.consigli || {}, Ps = [...D.partite].sort((a, b) => a.ts - b.ts); let h = '';
+  if (vista === 'oggi' && Ps.length) {
+    // 19/11/2026: fino al controllo delle 23:30 (infortuni e quote riletti) le proposte sono probabili
+    const iniziata = Ps[0].ts * 1000 <= Date.now();
+    if (D.ufficiale) h += `<div class="banner uff"><b>Ufficiali</b><span>proposte controllate alle ${fmtO.format(new Date(D.creato * 1000))} con infortuni e quote aggiornati</span></div>`;
+    else if (!iniziata) h += `<div class="banner prob"><b>Probabile</b><span>per le giocate ufficiali aspettare le 23:30</span></div>`;
+    else h += `<div class="banner prob"><b>Probabile</b><span>il controllo delle 23:30 non c'è stato: la prima partita è iniziata prima</span></div>`;
+  }
   if (Ps.length) {
     h += '<section><div class="sec"><h2>Le giocate della notte</h2></div><div class="picks">'
       + giocata('', 'Doppia doppia · quota bassa', (C.bassa || [])[0], 'dd', 'Nessuna quota sotto 2,00.')
