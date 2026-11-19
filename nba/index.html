@@ -221,23 +221,22 @@ details.alt[open] > summary .arrow { transform: rotate(90deg); }
 .az { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; } .btn.pieno { background: var(--red); border-color: var(--red); }
 .link { margin-top: 6px; border: 0; background: none; color: var(--muted); font-size: 12px; text-decoration: underline; cursor: pointer; padding: 0; }
 /* scelta del giocatore */
-#scelta { position: fixed; inset: 0; z-index: 9000; display: grid; place-items: center; } #scelta[hidden] { display: none; }
+#scelta { position: fixed; left: 0; right: 0; top: 0; height: 100dvh; z-index: 9000; display: flex; justify-content: center; align-items: flex-start; padding: max(10px, env(safe-area-inset-top)) 8px 10px; } #scelta[hidden] { display: none; }
 #scelta .sf { position: absolute; inset: 0; background: rgba(5,10,30,.6); }
-#scelta .sp2 { position: relative; width: min(560px, 94vw); max-height: 82vh; display: flex; flex-direction: column; background: #1a2c66; border: 1px solid var(--line); border-radius: 16px; padding: 14px; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+#scelta .sp2 { position: relative; width: min(560px, 100%); height: min(640px, 100%); display: flex; flex-direction: column; background: #1a2c66; border: 1px solid var(--line); border-radius: 16px; padding: 14px; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
 #scelta .sh2 { display: flex; justify-content: space-between; align-items: center; } #scelta h3 { margin: 0; font: 800 20px var(--display); text-transform: uppercase; }
 #scelta .x { width: 30px; height: 30px; border-radius: 50%; border: 0; background: rgba(0,0,0,.3); color: #fff; font-size: 18px; cursor: pointer; }
 #cerca { margin: 10px 0; padding: 11px 12px; border-radius: 10px; border: 1px solid var(--line); background: rgba(0,0,0,.25); color: #fff; font: 16px var(--body); }
-#lista { overflow-y: auto; }
+#lista { overflow-y: auto; flex: 1; min-height: 0; overscroll-behavior: contain; }
 #lista .lg { font: 700 11px var(--body); text-transform: uppercase; letter-spacing: .6px; color: var(--muted); padding: 12px 2px 4px; }
 #lista .lr { display: grid; grid-template-columns: minmax(0, 1fr) 76px 76px; gap: 8px; align-items: center; padding: 7px 2px; border-top: 1px solid var(--soft); }
-#lista .lr.gia { opacity: .5; } #lista .ln { min-width: 0; } #lista .ln small { color: var(--muted); }
+#lista .lr.uno { grid-template-columns: minmax(0, 1fr) 84px; } #lista .lr.gia { opacity: .5; } #lista .ln { min-width: 0; } #lista .ln small { color: var(--muted); }
 .pk { border: 1px solid var(--line); border-radius: 8px; background: rgba(255,255,255,.08); color: #fff; padding: 6px 4px; font: 13px var(--body); cursor: pointer; display: flex; flex-direction: column; align-items: center; line-height: 1.15; }
 .pk b { font-weight: 800; } .pk small { color: var(--gold); } .pk.td b { color: var(--sky); } .pk:hover:not(:disabled) { border-color: #fff; } .pk:disabled { cursor: not-allowed; }
 .fermo body { overflow: hidden; }
 @media (max-width: 720px) {
   .carte { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .riep { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  #scelta { place-items: end center; } #scelta .sp2 { width: 100vw; max-height: 88vh; border-radius: 16px 16px 0 0; }
   .storico > div { grid-template-columns: minmax(0, 1fr) 58px 48px 76px; font-size: 13px; }
 }
 /* anteprima: il pallone entra nel canestro (una volta per visita, si salta toccando) */
@@ -553,11 +552,14 @@ function disegnaCalc() {
 // scelta del giocatore: elenco della notte con ricerca, oppure nome scritto a mano
 function apriScelta() {
   let m = document.getElementById('scelta');
-  if (!m) { m = document.createElement('div'); m.id = 'scelta'; m.innerHTML = `<div class="sf" data-act="chiudi"></div><div class="sp2" role="dialog" aria-modal="true" aria-labelledby="st"><div class="sh2"><h3 id="st">Aggiungi un giocatore</h3><button type="button" class="x" data-act="chiudi" aria-label="Chiudi">×</button></div><input type="search" id="cerca" placeholder="Cerca o scrivi il nome del giocatore" autocomplete="off"><div id="lista"></div></div>`;
+  if (!m) { m = document.createElement('div'); m.id = 'scelta'; m.innerHTML = `<div class="sf" data-act="chiudi"></div><div class="sp2" role="dialog" aria-modal="true" aria-labelledby="st"><div class="sh2"><h3 id="st">Aggiungi un giocatore</h3><button type="button" class="x" data-act="chiudi" aria-label="Chiudi">×</button></div><input type="search" id="cerca" placeholder="Cerca o scrivi il nome del giocatore" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="search"><div id="lista"></div></div>`;
     document.body.appendChild(m); m.addEventListener('click', clic); m.querySelector('#cerca').addEventListener('input', riempiScelta); }
   m.querySelector('#st').textContent = SCELTA === 'miei' ? 'Scegli chi seguire' : 'Aggiungi un giocatore';
-  m.hidden = false; document.documentElement.classList.add('fermo'); const c = m.querySelector('#cerca'); c.value = ''; riempiScelta(); setTimeout(() => c.focus(), 50);
+  m.hidden = false; document.documentElement.classList.add('fermo'); adatta(); const c = m.querySelector('#cerca'); c.value = ''; riempiScelta(); setTimeout(() => c.focus(), 50);
 }
+// la finestra resta in alto e occupa solo la parte di schermo visibile: con la tastiera del telefono aperta non scende e non finisce sotto la tastiera
+function adatta() { const m = document.getElementById('scelta'), v = window.visualViewport; if (!m || m.hidden || !v) return; m.style.top = v.offsetTop + 'px'; m.style.height = v.height + 'px'; }
+window.visualViewport?.addEventListener('resize', adatta); window.visualViewport?.addEventListener('scroll', adatta);
 function chiudiScelta() { const m = document.getElementById('scelta'); if (m) m.hidden = true; document.documentElement.classList.remove('fermo'); }
 function riempiScelta() {
   const t = document.getElementById('cerca').value.trim(), k = chiave(t), L = elenco().filter(g => !k || chiave(g.n).includes(k) || chiave(g.sq).includes(k));
@@ -566,13 +568,13 @@ function riempiScelta() {
   let h = '', gara = '';
   if (SCELTA === 'miei') {
     for (const g of L) { if (g.gara !== gara) { gara = g.gara; h += `<div class="lg">${esc(gara)}</div>`; } const s_ = seguo(g.n);
-      h += `<div class="lr${s_ ? ' gia' : ''}"><div class="ln"><b>${esc(g.n)}</b> <small>${esc(g.sq)}${g.dubbio ? ' · in dubbio' : ''}${s_ ? ' · lo segui già' : ''}</small></div><button type="button" class="pk segui" data-act="segui" data-n="${esc(g.n)}" ${s_ ? 'disabled' : ''}><b>Segui</b></button></div>`; }
-    if (t && !L.some(g => chiave(g.n) === k)) h += `<div class="lg">Non è nell'elenco di stanotte</div><div class="lr"><div class="ln"><b>${esc(t)}</b> <small>lo cerco nei tabellini di tutte le partite</small></div><button type="button" class="pk segui" data-act="seguilibero" data-n="${esc(t)}" ${seguo(t) ? 'disabled' : ''}><b>Segui</b></button></div>`;
+      h += `<div class="lr uno${s_ ? ' gia' : ''}"><div class="ln"><b>${esc(g.n)}</b> <small>${esc(g.sq)}${g.dubbio ? ' · in dubbio' : ''}${s_ ? ' · lo segui già' : ''}</small></div><button type="button" class="pk segui" data-act="segui" data-n="${esc(g.n)}" ${s_ ? 'disabled' : ''}><b>Segui</b></button></div>`; }
+    if (t && !L.length) h += `<div class="lg">Non è nell'elenco di stanotte</div><div class="lr uno"><div class="ln"><b>${esc(t)}</b> <small>lo cerco nei tabellini di tutte le partite</small></div><button type="button" class="pk segui" data-act="seguilibero" data-n="${esc(t)}" ${seguo(t) ? 'disabled' : ''}><b>Segui</b></button></div>`;
     document.getElementById('lista').innerHTML = h || '<div class="lg">Nessun giocatore: scrivi il nome per seguirlo.</div>'; return;
   }
   for (const g of L) { if (g.gara !== gara) { gara = g.gara; h += `<div class="lg">${esc(gara)}</div>`; }
     h += `<div class="lr${giaDentro(g.n) ? ' gia' : ''}"><div class="ln"><b>${esc(g.n)}</b> <small>${esc(g.sq)}${g.dubbio ? ' · in dubbio' : ''}${g.riposo ? ' · rischio riposo' : ''}${giaDentro(g.n) ? ' · già nella schedina' : ''}</small></div>${bot(g, 'dd')}${bot(g, 'td')}</div>`; }
-  if (t && !L.some(g => chiave(g.n) === k)) { const dentro = giaDentro(t);
+  if (t && !L.length) { const dentro = giaDentro(t);
     h += `<div class="lg">Non è nell'elenco di stanotte</div><div class="lr${dentro ? ' gia' : ''}"><div class="ln"><b>${esc(t)}</b> <small>${dentro ? 'già nella schedina' : 'senza percentuale: la quota la scrivi tu'}</small></div>`
       + ['dd', 'td'].map(c => `<button type="button" class="pk ${c}" data-act="libero" data-n="${esc(t)}" data-c="${c}" ${dentro ? 'disabled' : ''}><b>${c.toUpperCase()}</b></button>`).join('') + '</div>'; }
   if (!h) h = '<div class="lg">Nessun giocatore: scrivi il nome per aggiungerlo a mano.</div>';
