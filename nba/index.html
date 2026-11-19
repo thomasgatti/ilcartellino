@@ -147,6 +147,8 @@ details[open] > summary .arrow { transform: rotate(90deg); }
 .more { padding: 2px var(--pad) 12px; }
 .more .out { font-size: 13px; color: var(--muted); margin: 8px 0 4px; }
 .more .out b { color: var(--ink); font-weight: 600; }
+.sqc { display: inline-block; background: var(--c1); color: var(--c2); padding: 2px 7px; border-radius: 5px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.18); line-height: 1.3; max-width: 100%; overflow: hidden; text-overflow: ellipsis; vertical-align: middle; }
+.duo .dh .sqc { padding: 3px 9px; }
 .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
 .duo .dc { min-width: 0; background: rgba(0,0,0,.16); border-radius: 12px; padding: 4px 10px 8px; }
 .duo .dh { display: flex; justify-content: space-between; align-items: baseline; padding: 6px 0 6px; border-bottom: 1px solid var(--line); font: 800 15px var(--display); letter-spacing: .5px; }
@@ -321,6 +323,13 @@ const pc = p => (p * 100).toFixed(p < 0.0995 ? 1 : 0).replace('.', ',') + '%';
 const nq = q => Number(q).toFixed(2).replace('.', ',');
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const BOOK = { sisal: 'Sisal', bet365: 'bet365', eurobet: 'Eurobet', fanduel: 'FanDuel', draftkings: 'DraftKings' }, bk = b => BOOK[b] || b;
+// colori delle squadre (solo colori, niente loghi né marchi): sfondo e scritta
+const COLORI = { ATL: ['#E03A3E', '#fff'], BKN: ['#000', '#fff'], BOS: ['#007A33', '#fff'], CHA: ['#00788C', '#fff'], CHI: ['#CE1141', '#fff'], CLE: ['#860038', '#FDBB30'],
+  DAL: ['#00538C', '#fff'], DEN: ['#0E2240', '#FEC524'], DET: ['#C8102E', '#fff'], GS: ['#1D428A', '#FFC72C'], HOU: ['#CE1141', '#fff'], IND: ['#002D62', '#FDBB30'],
+  LAC: ['#C8102E', '#fff'], LAL: ['#552583', '#FDB927'], MEM: ['#5D76A9', '#fff'], MIA: ['#98002E', '#F9A01B'], MIL: ['#00471B', '#EEE1C6'], MIN: ['#0C2340', '#78BE20'],
+  NO: ['#0C2340', '#C8A770'], NY: ['#006BB6', '#F58426'], OKC: ['#007AC1', '#fff'], ORL: ['#0077C0', '#fff'], PHI: ['#006BB6', '#fff'], PHX: ['#1D1160', '#E56020'],
+  POR: ['#E03A3E', '#fff'], SA: ['#000', '#C4CED4'], SAC: ['#5A2D81', '#fff'], TOR: ['#CE1141', '#fff'], UTAH: ['#3E2680', '#fff'], WSH: ['#002B5C', '#fff'] };
+const sqc = (sigla, testo) => { const c = COLORI[sigla]; return c ? `<span class="sqc" style="--c1:${c[0]};--c2:${c[1]}">${esc(testo)}</span>` : esc(testo); };
 const cogn = n => { const p = String(n).split(' '); return p.length > 1 ? p.slice(1).join(' ') : n; };
 const fmtG = new Intl.DateTimeFormat('it-IT', { weekday: 'long', day: 'numeric', month: 'long' }), fmtO = new Intl.DateTimeFormat('it-IT', { hour: '2-digit', minute: '2-digit' });
 let D = null;
@@ -431,7 +440,7 @@ function disegna() {
     h += '<section><div class="sec"><h2>Partite</h2><span>tocca una partita per vedere le due squadre giocatore per giocatore, con il punteggio in diretta</span></div><div class="card">';
     for (const P of Ps) {
       const c = k => P.giocatori.find(g => g.n === P.candidati[k]), L = LIVE[P.id], viva = L && L.stato !== 'pre';
-      const lato = (k, i) => { const g = c(k); return `<div class="side"><div class="t">${esc(P[k].nome)}${viva ? `<b class="sc">${esc(L.sc[i])}</b>` : ''}</div>${g ? voce(g, 'dd', { chip: false }) : '<div class="item"><div class="nm">–</div></div>'}</div>`; };
+      const lato = (k, i) => { const g = c(k); return `<div class="side"><div class="t">${sqc(P[k].sigla, P[k].nome)}${viva ? `<b class="sc">${esc(L.sc[i])}</b>` : ''}</div>${g ? voce(g, 'dd', { chip: false }) : '<div class="item"><div class="nm">–</div></div>'}</div>`; };
       const quando = !viva ? `<span class="time">${fmtO.format(new Date(P.ts * 1000))}</span>` : `<span class="time st ${L.stato}">${L.stato === 'in' ? '<span class="dot"></span>' : ''}${esc(L.det)}</span>`;
       const fuori = ['a', 'h'].flatMap(k => (P.fuori[k] || []).map(x => `<b>${esc(x.n)}</b> (${esc(P[k].sigla)})${x.posto ? ` → più spazio a ${esc(x.posto)}` : ''}`));
       h += `<details class="game" data-id="${P.id}"${aperte.has(String(P.id)) ? ' open' : ''}><summary>${quando}${lato('a', 0)}${lato('h', 1)}<span class="arrow">›</span></summary><div class="more">`
@@ -504,7 +513,7 @@ function duo(P, L, viva) {
         + `<div class="ds">DD <b>${pc(g.p_dd)}</b>${g.q_dd ? ' · ' + nq(g.q_dd) : ''}${g.p_td >= 0.03 ? ` · TD ${pc(g.p_td)}` : ''}<small>${g.pts.toFixed(0)}-${g.reb.toFixed(0)}-${g.ast.toFixed(0)} di media</small></div></div>`).join('');
       if (viva) righe = (L.pl ? '' : '<div class="dv">tabellino in arrivo…</div>') + righe;
     }
-    return `<div class="dc"><div class="dh"><span>${esc(P[k].sigla)}</span>${viva ? `<b>${esc(L.sc[i])}</b>` : ''}</div>${righe || '<div class="dv">nessun giocatore</div>'}</div>`;
+    return `<div class="dc"><div class="dh">${sqc(P[k].sigla, P[k].sigla)}${viva ? `<b>${esc(L.sc[i])}</b>` : ''}</div>${righe || '<div class="dv">nessun giocatore</div>'}</div>`;
   };
   return `<div class="duo">${col('a', 0)}${col('h', 1)}</div>`;
 }
