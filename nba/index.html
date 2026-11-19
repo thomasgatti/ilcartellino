@@ -613,11 +613,13 @@ function cartaPiena(l, i) {
     <div class="cb">${l.mia ? 'la tua quota' : l.b ? esc(bk(l.b)) : l.libero ? 'scrivi la quota' : ''}</div></div></div>`;
 }
 const cartaVuota = () => `<button type="button" class="carta vuota" data-act="apri" aria-label="Aggiungi un giocatore">${SCUDO}<span class="piu">+</span><span class="cv">aggiungi</span></button>`;
+// sotto lo 0,1% la percentuale diventerebbe «0,0%»: meglio «1 su N»
+const riusc = p => p >= 0.001 ? pc(p) : p > 0 ? `1 su ${Math.round(1 / p).toLocaleString('it-IT')}` : '0%';
 function riepilogo(legs, posta) {
   const { tq, tp, stesse } = conto(legs);
   if (!legs.length) return '';
   const val = tq && tp != null ? tp * tq : null;
-  return `<div class="riep"><div class="rv"><span>Quota</span><b class="q">${tq ? nq(tq) : '–'}</b></div><div class="rv"><span>Riuscita</span><b>${tp != null ? pc(tp) : '–'}</b></div>
+  return `<div class="riep"><div class="rv"><span>Quota</span><b class="q">${tq ? nq(tq) : '–'}</b></div><div class="rv"><span>Riuscita</span><b>${tp != null ? riusc(tp) : '–'}</b></div>
     <div class="rv"><span>Posta</span><label class="posta"><input type="text" inputmode="decimal" data-act="posta" value="${String(posta).replace('.', ',')}" aria-label="Posta in euro"> €</label></div><div class="rv"><span>Vincita</span><b>${tq ? (posta * tq).toFixed(2).replace('.', ',') + ' €' : '–'}</b></div></div>
     <div class="avv">${tq ? '' : '<div>Manca la quota di almeno un giocatore: scrivila nella carta.</div>'}${tp == null ? '<div>Per i giocatori fuori elenco la percentuale non c\'è: la riuscita non si può calcolare.</div>' : ''}
     ${stesse.map(x => `<div>${x.map(esc).join(' e ')} giocano la stessa partita: la percentuale è indicativa.</div>`).join('')}
@@ -632,7 +634,7 @@ function disegnaCalc() {
   if (mie.length) h += `<div class="sec" style="margin-top:22px"><h2>Le mie schedine</h2><span>salvate in questo browser</span></div><div class="card">` + mie.map(([x, i]) => {
     const oggi = x.giorno === DATI.oggi?.giorno, es = oggi ? x.legs.map(l => l.libero ? null : esito(l.n, l.cosa)) : x.legs.map(() => null), tot = oggi ? totale(es) : null, { tq, tp } = conto(x.legs);
     return `<div class="row ${tot ? 'e-' + (tot === 'sv' ? 'si' : tot) : ''}"><div><div class="tier">${oggi ? 'Stanotte' : 'Notte scorsa'} · ${fmtO.format(new Date(x.creato))}</div><div class="legs">${x.legs.map((l, k) => voce({ n: l.n, sq: l.sq || '', p: l.p, q: +(l.mia || l.q) || null }, l.cosa, { esito: es[k] })).join('')}</div></div>`
-      + `<div class="tot"><div class="pcb">${tp != null ? pc(tp) : '–'}</div><small class="lbl">riuscita</small><div class="big">${tq ? nq(tq) : '–'}</div>${tot ? `<div class="esito">${CORTO[tot]}</div>` : ''}<small>${x.posta} € → ${tq ? (x.posta * tq).toFixed(0) : '–'} €</small><button type="button" class="link" data-act="elimina" data-i="${i}">elimina</button></div></div>`; }).join('') + '</div>';
+      + `<div class="tot"><div class="pcb">${tp != null ? riusc(tp) : '–'}</div><small class="lbl">riuscita</small><div class="big">${tq ? nq(tq) : '–'}</div>${tot ? `<div class="esito">${CORTO[tot]}</div>` : ''}<small>${x.posta} € → ${tq ? (x.posta * tq).toFixed(0) : '–'} €</small><button type="button" class="link" data-act="elimina" data-i="${i}">elimina</button></div></div>`; }).join('') + '</div>';
   h += '<p class="note">Le percentuali sono del modello; le quote sono quelle in pagina (Sisal, bet365) o quelle che scrivi tu: se giochi su SNAI scrivi la sua. La schedina resta salvata solo in questo browser.</p></section>';
   document.getElementById('app').innerHTML = h;
   document.getElementById('note').hidden = true;
