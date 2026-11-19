@@ -457,10 +457,10 @@ function disegna() {
     h += '</div></section>';
   }
   const I = D.ieri;
-  if (vista === 'ieri') { const fatte = [];
+  if (vista === 'ieri' || vista === 'oggi') { const fatte = [];   // stesso riquadro nelle due schede: stanotte in diretta, la notte scorsa dai tabellini finali
     for (const P of Ps) { const L = LIVE[P.id]; for (const k of ['a', 'h']) for (const x of L?.sq?.[P[k].sigla] || []) { const n = n10(x); if (n >= 2) fatte.push({ ...x, sq: P[k].sigla, n10: n }); } }
     if (fatte.length) { const el = x => `<div><span>${esc(x.n)} <small>${esc(x.sq)}</small></span><small>${x.pts}-${x.reb}-${x.ast}${x.stl >= 10 ? '-' + x.stl + ' rec' : ''}${x.blk >= 10 ? '-' + x.blk + ' st' : ''}</small></div>`, td = fatte.filter(x => x.n10 >= 3), dd = fatte.filter(x => x.n10 === 2);
-      h += `<section><div class="sec"><h2>Doppie e triple doppie</h2><span>tutte quelle della notte, dai tabellini finali</span></div><div class="card"><details class="ieri"${aperte.has('fatte') ? ' open' : ''} data-id="fatte"><summary><span>${fatte.length} ${fatte.length === 1 ? 'doppia doppia' : 'doppie doppie'}, ${td.length ? `di cui ${td.length} ${td.length === 1 ? 'tripla' : 'triple'}` : 'nessuna tripla'}<small>tocca per vedere chi</small></span><span class="arrow">›</span></summary><div class="more">`
+      h += `<section><div class="sec"><h2>Doppie e triple doppie</h2><span>${vista === 'oggi' ? 'tutte quelle di stanotte, in diretta' : 'tutte quelle della notte, dai tabellini finali'}</span></div><div class="card"><details class="ieri"${aperte.has('fatte·' + vista) ? ' open' : ''} data-id="fatte·${vista}"><summary><span>${fatte.length} ${fatte.length === 1 ? 'doppia doppia' : 'doppie doppie'}, ${td.length ? `di cui ${td.length} ${td.length === 1 ? 'tripla' : 'triple'}` : 'nessuna tripla'}<small>tocca per vedere chi</small></span><span class="arrow">›</span></summary><div class="more">`
         + (td.length ? `<h3>Triple doppie</h3><div class="list">${td.map(el).join('')}</div>` : '') + (dd.length ? `<h3>Doppie doppie</h3><div class="list">${dd.map(el).join('')}</div>` : '') + '</div></details></div></section>'; } }
   // 19/11/2026: chi ha fatto doppia doppia sta solo nella «Notte scorsa» (una notte, un posto); in «Stanotte» resta chi sta trovando più spazio
   if (vista === 'oggi' && I?.spazio?.length) { const el = (x, s_) => `<div><span>${esc(x.n)}${x.sq ? ` <small>${esc(x.sq)}</small>` : ''}</span><small>${s_}</small></div>`;
