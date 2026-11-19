@@ -16,7 +16,7 @@ GIOCATE = (('bassa', 'dd', 'Doppia doppia · quota bassa'), ('alta', 'dd', 'Dopp
 COMBO = ('Alta', 'Altissima', 'Colpo grosso', 'Con una tripla doppia', 'Due triple doppie')
 
 def valuta(O, E, gioc):
-    """notte → elenco di (tipo, p, q, esito) con esito 'si' / 'no' / 'rimborso' e quota pagata"""
+    """notte → elenco di (tipo, p, q, esito, quota pagata, gambe) con esito 'si' / 'no' / 'rimborso'; gambe = [[nome, dd|td, si|no|ng]] (dal 19/11/2026)"""
     part = {}
     for P in O['partite']:
         for g in P['giocatori']: part.setdefault(g['n'], (str(P['id']), g.get('id')))
@@ -34,16 +34,17 @@ def valuta(O, E, gioc):
         if not g or not g.get('n') or not g.get('q_' + y): continue
         e = gamba(g['n'], y, g.get('partita'), g.get('id'))
         if e is None: continue
-        out.append((nome, g['p_' + y], g['q_' + y], 'rimborso' if e == 'ng' else e, g['q_' + y] if e == 'si' else 1 if e == 'ng' else 0))
+        out.append((nome, g['p_' + y], g['q_' + y], 'rimborso' if e == 'ng' else e, g['q_' + y] if e == 'si' else 1 if e == 'ng' else 0, [[g['n'], y, e]]))
     for c in C.get('combinazioni') or []:
         if c.get('tipo') not in COMBO or not c.get('gambe'): continue
         es = [gamba(x['n'], x['cosa'], x.get('partita'), x.get('id')) for x in c['gambe']]
         if any(e is None for e in es): continue
-        if 'no' in es: out.append((c['tipo'], c['p'], c['q'], 'no', 0)); continue
-        if all(e == 'ng' for e in es): out.append((c['tipo'], c['p'], c['q'], 'rimborso', 1)); continue
+        gm = [[x['n'], x['cosa'], e] for x, e in zip(c['gambe'], es)]
+        if 'no' in es: out.append((c['tipo'], c['p'], c['q'], 'no', 0, gm)); continue
+        if all(e == 'ng' for e in es): out.append((c['tipo'], c['p'], c['q'], 'rimborso', 1, gm)); continue
         pag = 1.0
         for x, e in zip(c['gambe'], es): pag *= x['q'] if e == 'si' else 1
-        out.append((c['tipo'], c['p'], c['q'], 'si', round(pag, 2)))
+        out.append((c['tipo'], c['p'], c['q'], 'si', round(pag, 2), gm))
     return out
 
 def main(cartella, f_out, pagine=()):
@@ -62,7 +63,7 @@ def main(cartella, f_out, pagine=()):
     tipi = OrderedDict((n, dict(tipo=n, giocate=0, prese=0, rimborsi=0, p=0.0, incassato=0.0)) for _, _, n in GIOCATE)
     for n in COMBO: tipi[n] = dict(tipo=n, giocate=0, prese=0, rimborsi=0, p=0.0, incassato=0.0)
     for g in sorted(voci):
-        for tipo, p, q, e, pag in voci[g]:
+        for tipo, p, q, e, pag, *_ in voci[g]:
             if tipo not in tipi: continue
             t = tipi[tipo]; t['giocate'] += 1; t['p'] += p; t['incassato'] += pag; t['prese'] += e == 'si'; t['rimborsi'] += e == 'rimborso'
     righe = [dict(tipo=t['tipo'], giocate=t['giocate'], prese=t['prese'], rimborsi=t['rimborsi'], attese=round(t['p'], 2), resa=round(t['incassato'] - t['giocate'], 2))

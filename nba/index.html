@@ -200,9 +200,14 @@ details.alt[open] > summary .arrow { transform: rotate(90deg); }
 .storico { padding: 6px var(--pad) 12px; }
 .storico > div { display: grid; grid-template-columns: minmax(0, 1fr) 66px 56px 92px; gap: 8px; padding: 8px 0; border-top: 1px solid var(--soft); font-size: 14px; font-variant-numeric: tabular-nums; }
 .storico > div span + span { text-align: right; }
-.storico .sh { border-top: 0; font: 700 11px var(--body); text-transform: uppercase; letter-spacing: .6px; color: var(--muted); }
+.storico .sh { border-top: 0; white-space: nowrap; font: 700 11px var(--body); text-transform: uppercase; letter-spacing: .6px; color: var(--muted); }
 .storico .pos { color: var(--good); } .storico .neg { color: var(--bad); }
 .storico .sn { font-size: 12px; color: var(--muted); margin: 8px 0 0; }
+.vn { border-top: 1px solid var(--line); } .vn summary { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 10px; align-items: center; padding: 12px var(--pad); cursor: pointer; list-style: none; }
+.vn summary::-webkit-details-marker { display: none; } .vn summary small { display: block; color: var(--muted); font-size: 12.5px; } .vn .pos { color: var(--good); font-weight: 700; } .vn .neg { color: var(--bad); font-weight: 700; }
+.vn .vl { padding: 0 var(--pad) 10px; } .vn .vr { display: grid; grid-template-columns: minmax(0, 1fr) 62px 92px; gap: 8px; align-items: center; padding: 8px 0; border-top: 1px solid var(--soft); font-size: 14px; }
+.vn .vt { font: 700 11px var(--body); text-transform: uppercase; letter-spacing: .5px; color: var(--muted); } .vn .vg { margin-top: 2px; } .vn .vq { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; } .vn .vq small { display: block; font-weight: 500; color: var(--muted); font-size: 11.5px; } .vn .ve { text-align: right; }
+.vn[open] .arrow { transform: rotate(90deg); }
 /* Calcolatore: carte a forma di scudo, come «La mia area» dei cartellini */
 .carte { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 190px)); gap: 14px; margin-bottom: 14px; }
 .carta { position: relative; aspect-ratio: 13 / 18; border: 0; background: none; padding: 0; color: var(--ink); font: inherit; }
@@ -330,6 +335,8 @@ const COLORI = { ATL: ['#E03A3E', '#fff'], BKN: ['#000', '#fff'], BOS: ['#007A33
   NO: ['#0C2340', '#C8A770'], NY: ['#006BB6', '#F58426'], OKC: ['#007AC1', '#fff'], ORL: ['#0077C0', '#fff'], PHI: ['#006BB6', '#fff'], PHX: ['#1D1160', '#E56020'],
   POR: ['#E03A3E', '#fff'], SA: ['#000', '#C4CED4'], SAC: ['#5A2D81', '#fff'], TOR: ['#CE1141', '#fff'], UTAH: ['#3E2680', '#fff'], WSH: ['#002B5C', '#fff'] };
 const sqc = (sigla, testo) => { const c = COLORI[sigla]; return c ? `<span class="sqc" style="--c1:${c[0]};--c2:${c[1]}">${esc(testo)}</span>` : esc(testo); };
+// giorno americano AAAAMMGG → data italiana della notte (le partite cominciano dopo mezzanotte da noi), come nell'intestazione
+const ggIt = x => { const d = new Date(Date.UTC(+x.slice(0, 4), +x.slice(4, 6) - 1, +x.slice(6) + 1)); return `${d.getUTCDate()}/${d.getUTCMonth() + 1}`; };
 const cogn = n => { const p = String(n).split(' '); return p.length > 1 ? p.slice(1).join(' ') : n; };
 const fmtG = new Intl.DateTimeFormat('it-IT', { weekday: 'long', day: 'numeric', month: 'long' }), fmtO = new Intl.DateTimeFormat('it-IT', { hour: '2-digit', minute: '2-digit' });
 let D = null;
@@ -450,16 +457,27 @@ function disegna() {
     h += '</div></section>';
   }
   const I = D.ieri;
-  if (I && (I.dd?.length || I.td?.length)) { const gg = `${+I.giorno.slice(6)}/${+I.giorno.slice(4, 6)}`, el = (x, s) => `<div><span>${esc(x.n)}${x.sq ? ` <small>${esc(x.sq)}</small>` : ''}</span><small>${s}</small></div>`;
-    h += `<section><div class="sec"><h2>Ultima notte in archivio</h2><span>${gg}</span></div><div class="card"><details class="ieri"${aperte.has('ieri') ? ' open' : ''} data-id="ieri"><summary><span>${I.dd.length + I.td.length} doppie doppie, di cui ${I.td.length} triple<small>${I.spazio?.length ? I.spazio.length + ' giocatori stanno trovando più spazio' : 'chi le ha fatte'}</small></span><span class="arrow">›</span></summary><div class="more">`
+  if (vista === 'ieri') { const fatte = [];
+    for (const P of Ps) { const L = LIVE[P.id]; for (const k of ['a', 'h']) for (const x of L?.sq?.[P[k].sigla] || []) { const n = n10(x); if (n >= 2) fatte.push({ ...x, sq: P[k].sigla, n10: n }); } }
+    if (fatte.length) { const el = x => `<div><span>${esc(x.n)} <small>${esc(x.sq)}</small></span><small>${x.pts}-${x.reb}-${x.ast}${x.stl >= 10 ? '-' + x.stl + ' rec' : ''}${x.blk >= 10 ? '-' + x.blk + ' st' : ''}</small></div>`, td = fatte.filter(x => x.n10 >= 3), dd = fatte.filter(x => x.n10 === 2);
+      h += `<section><div class="sec"><h2>Chi l'ha fatta quella notte</h2><span>dai tabellini finali</span></div><div class="card"><details class="ieri"${aperte.has('fatte') ? ' open' : ''} data-id="fatte"><summary><span>${fatte.length} doppie doppie, di cui ${td.length} ${td.length === 1 ? 'tripla' : 'triple'}<small>tocca per vedere chi</small></span><span class="arrow">›</span></summary><div class="more">`
+        + (td.length ? `<h3>Triple doppie</h3><div class="list">${td.map(el).join('')}</div>` : '') + (dd.length ? `<h3>Doppie doppie</h3><div class="list">${dd.map(el).join('')}</div>` : '') + '</div></details></div></section>'; } }
+  if (vista === 'oggi' && I && (I.dd?.length || I.td?.length)) { const gg = ggIt(I.giorno), el = (x, s) => `<div><span>${esc(x.n)}${x.sq ? ` <small>${esc(x.sq)}</small>` : ''}</span><small>${s}</small></div>`;
+    h += `<section><div class="sec"><h2>Chi l'ha fatta la notte scorsa</h2><span>notte del ${gg}</span></div><div class="card"><details class="ieri"${aperte.has('ieri') ? ' open' : ''} data-id="ieri"><summary><span>${I.dd.length + I.td.length} doppie doppie, di cui ${I.td.length} triple<small>${I.spazio?.length ? I.spazio.length + ' giocatori stanno trovando più spazio' : 'chi le ha fatte'}</small></span><span class="arrow">›</span></summary><div class="more">`
       + (I.td.length ? `<h3>Triple doppie</h3><div class="list">${I.td.map(x => el(x, x.riga)).join('')}</div>` : '')
       + (I.dd.length ? `<h3>Doppie doppie</h3><div class="list">${I.dd.map(x => el(x, x.riga)).join('')}</div>` : '')
       + (I.spazio?.length ? `<h3>Più spazio: minuti nelle ultime 3 partite (prima)</h3><div class="list">${I.spazio.map(x => el(x, `${Math.round(x.ora)} (${Math.round(x.prima)})`)).join('')}</div>` : '')
       + '</div></details></div></section>'; }
-  if (vista === 'oggi' && STORICO?.tipi?.length) { const S = STORICO, gg = x => `${+x.slice(6)}/${+x.slice(4, 6)}`;
+  if (vista === 'oggi' && STORICO?.tipi?.length) { const S = STORICO, gg = ggIt;
     h += `<section><div class="sec"><h2>Come stanno andando</h2><span>le proposte delle notti dal ${gg(S.dal)} al ${gg(S.al)} (${S.notti} notti)</span></div><div class="card"><div class="storico"><div class="sh"><span>Proposta</span><span>Prese</span><span>Attese</span><span>Resa con 1 €</span></div>`
       + S.tipi.map(t => `<div><span>${esc(t.tipo)}</span><span>${t.prese} su ${t.giocate}</span><span>${String(t.attese).replace('.', ',')}</span><span class="${t.resa >= 0 ? 'pos' : 'neg'}">${t.resa >= 0 ? '+' : '−'}${Math.abs(t.resa).toFixed(2).replace('.', ',')} €</span></div>`).join('')
-      + '<p class="sn">«Attese» = quante ne aspettava il modello. Poche notti contano poco: un solo colpo grosso cambia tutto il conto.</p></div></div></section>'; }
+      + '<p class="sn">«Attese» = quante ne aspettava il modello. Poche notti contano poco: un solo colpo grosso cambia tutto il conto.</p></div>'
+      + Object.keys(S.voci || {}).sort().reverse().map(g => { const V = S.voci[g], prese = V.filter(v => v[3] === 'si').length, resa = V.reduce((a, v) => a + v[4] - 1, 0);
+        const ic = e => e === 'si' ? '<span class="tick si">✓</span>' : e === 'ng' ? '<span class="tick">–</span>' : '<span class="tick no">✗</span>';
+        return `<details class="vn" data-id="vn·${g}"${aperte.has('vn·' + g) ? ' open' : ''}><summary><span><b>Notte del ${gg(g)}</b><small>${prese} ${prese === 1 ? 'presa' : 'prese'} su ${V.length}</small></span><span class="${resa >= 0 ? 'pos' : 'neg'}">${resa >= 0 ? '+' : '−'}${Math.abs(resa).toFixed(2).replace('.', ',')} €</span><span class="arrow">›</span></summary><div class="vl">`
+          + V.map(([tipo, p, q, e, pag, gm]) => `<div class="vr"><div><div class="vt">${esc(tipo)}</div><div class="vg">${(gm || []).map(([n, c, x]) => `${ic(x)}${esc(cogn(n))} ${c.toUpperCase()}`).join(' + ') || '–'}</div></div><div class="vq">${nq(q)}<small>${pc(p)}</small></div><div class="ve">${e === 'si' ? '<span class="es si">✓ presa</span>' : e === 'rimborso' ? '<span class="es ng">rimborsata</span>' : '<span class="es no">✗ persa</span>'}</div></div>`).join('')
+          + '</div></details>'; }).join('')
+      + '</div></section>'; }
   document.getElementById('app').innerHTML = h;
   document.querySelectorAll('details').forEach(d => d.addEventListener('toggle', () => d.open ? aperte.add(d.dataset.id) : aperte.delete(d.dataset.id)));
 }
@@ -657,7 +675,7 @@ function mostra(v) { vista = v; D = DATI[v === 'calc' || v === 'miei' ? 'oggi' :
   const primo = new Date(Math.min(...D.partite.map(p => p.ts)) * 1000);
   const ritirate = (D.quote_non_disponibili || []).map(x => esc(x.n + ' ' + (x.cosa || '').toUpperCase())).join(', ');
   const segnalate = (D.quote_segnalate || []).map(x => `${esc(x.n)} ${esc((x.cosa || '').toUpperCase())} quota ${nq(x.q)} (segnalata, non verificata)`).join('; ');
-  document.getElementById('meta').innerHTML = `Notte del <b>${fmtG.format(primo).replace(/^\S+\s/, '')}</b> · ${D.partite.length} partite · ${v !== 'ieri' ? 'aggiornata alle ' + fmtO.format(agg) : 'le proposte di allora e com\'è andata'}`;
+  document.getElementById('meta').innerHTML = `Notte del <b>${fmtG.format(primo).replace(/^\S+\s/, '')}</b> · ${D.partite.length} partite${v !== 'ieri' ? '' : ' · le proposte di allora e com\'è andata'}`;
   if (ritirate || segnalate) nota.insertAdjacentHTML('afterbegin', `${ritirate ? 'Quote segnalate come non disponibili: ' + ritirate + '. ' : ''}${segnalate ? 'Aggiornamento: ' + segnalate + '. ' : ''}`);
   document.getElementById('status').hidden = false; disegna(); aggiornaLive();
 }
