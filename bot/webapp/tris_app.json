@@ -1520,5 +1520,30 @@
     "team": "Bologna"
    }
   ]
+ },
+ {
+  "comp": "sa",
+  "id": 5749750,
+  "ko": 1795366800,
+  "partita": "Milan - Frosinone",
+  "uff": false,
+  "p3": 0.006553994866605937,
+  "trio": [
+   {
+    "n": "P. Masini",
+    "p": 0.2089,
+    "team": "Frosinone"
+   },
+   {
+    "n": "A. Oyono",
+    "p": 0.1931,
+    "team": "Frosinone"
+   },
+   {
+    "n": "K. De Winter",
+    "p": 0.1401,
+    "team": "Milan"
+   }
+  ]
  }
 ]
