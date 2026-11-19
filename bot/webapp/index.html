@@ -451,7 +451,7 @@ td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
 .picked td:first-child::before { content: ""; display: inline-block; width: 8px; height: 11px; background: var(--card); border-radius: 1px; margin-right: 6px; vertical-align: -1px; }
 footer { font-size: 13px; color: var(--muted); display: grid; gap: 6px; }
 .comps { display: inline-flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); justify-self: start; }
-.comps button { font: 700 14px var(--body); border: 0; background: transparent; color: var(--muted); padding: 7px 14px; border-radius: 999px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.comps button, .comps a.nba { font: 700 14px var(--body); text-decoration: none; border: 0; background: transparent; color: var(--muted); padding: 7px 14px; border-radius: 999px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
 .comps button[aria-pressed="true"] { background: var(--ink); color: var(--surface); }
 .comps .star { font-size: 12px; }
 /* Tema coppe europee: notte blu, luci iridescenti; il giallo resta solo per il cartellino */
@@ -727,7 +727,10 @@ html { overflow-y: scroll; scrollbar-gutter: stable; }
 :root[data-comp="angoli"] h1 span { color: var(--muted); -webkit-text-fill-color: var(--muted); }
 :root[data-comp="angoli"] .comps button[aria-pressed="true"] { background: linear-gradient(90deg, #ff6a1a, var(--ag) 55%, var(--ag2)); color: #1c0f00; box-shadow: 0 0 14px color-mix(in srgb, var(--ag) 45%, transparent); }
 .comps { max-width: 100%; overflow-x: auto; scrollbar-width: none; } .comps::-webkit-scrollbar { display: none; }
-.comps button { white-space: nowrap; flex: none; }
+.comps button, .comps a.nba { white-space: nowrap; flex: none; }
+/* 19/11/2026: pulsante NBA (porta a /nba) e scritta di EXTRA sopra l'arco giallo dello sfondo: fondo scuro dietro, l'arco resta */
+.comps a.nba:hover, .comps a.nba:focus-visible { color: var(--ink); }
+:root[data-comp="extra"] #meta span { background: rgba(10, 8, 48, .78); color: #eef0ff; padding: 3px 10px; border-radius: 999px; box-shadow: 0 0 0 1px rgba(255,255,255,.08); backdrop-filter: blur(3px); }
 #sez-angoli { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; }
 :root[data-comp="angoli"] footer .how { display: none; }
 .ang-teams .chip { box-shadow: 0 0 0 1px rgba(255,255,255,.4); }
@@ -809,6 +812,7 @@ html { overflow-y: scroll; scrollbar-gutter: stable; }
     <button type="button" id="comp-naz" aria-pressed="false" hidden><span class="star" aria-hidden="true">★</span> Nazionali</button>
     <button type="button" id="comp-extra" aria-pressed="false" hidden>EXTRA</button>
     <button type="button" id="comp-angoli" aria-pressed="false" hidden><span class="star" aria-hidden="true">⚑</span> Angoli</button>
+    <a class="nba" id="comp-nba" href="/nba"><span class="star" aria-hidden="true">●</span> NBA</a>
   </div>
   <header>
     <h1>I miei ammoniti <span id="hdr-round"></span></h1>
@@ -995,7 +999,7 @@ function appTrisAtKickoff(m) {
   }
   return recorded;
 }
-const trioPct = p => Number.isFinite(p) ? (p * 100).toFixed(1) + '%' : '–';
+const trioPct = p => Number.isFinite(p) ? (p * 100).toFixed(1).replace('.', ',') + '%' : '–';
 function probNote(m) {
   const tipo = m.src === 'provv' ? 'PROVVISORIE' : 'PROBABILI';
   const fonte = m.src === 'provv' ? 'ultima formazione e presenze da titolare nelle ultime giornate' : m.src === 'fotmob' ? 'FotMob' : 'consenso di 4 giornali';
@@ -1154,7 +1158,7 @@ function select(id) {
       <span class="rank">Trio ${best.rank} di ${best.n}<small>${best.rank === 1 ? 'il più probabile' : 'alternativa'}</small></span>` : ''}
     </div>
     <div class="stickers">${best.trio.map(x => sticker(x, !shown)).join('')}</div>
-    <div class="summary"><span>Tutti e tre ammoniti</span><span class="big">${shown ? (best.p3 * 100).toFixed(1) + '%' : '?'}</span>
+    <div class="summary"><span>Tutti e tre ammoniti</span><span class="big">${shown ? (best.p3 * 100).toFixed(1).replace('.', ',') + '%' : '?'}</span>
       <div class="seg" role="group" aria-label="Composizione del trio">
         <button type="button" id="mode21" aria-pressed="${state.mode === '21'}">2 + 1 tra le squadre</button>
         <button type="button" id="modefree" aria-pressed="${state.mode === 'free'}">Liberi</button>
@@ -1693,7 +1697,6 @@ function start() {
   // nel menu solo le competizioni con partite vicine (più quella aperta da un link)
   for (const c of ['ucl', 'naz', 'extra']) document.getElementById('comp-' + c).hidden = !(compVisible(c) || (c === c0 && cupOf(c)));
   document.getElementById('comp-angoli').hidden = !ANG;
-  document.querySelector('.comps').hidden = ['ucl', 'naz', 'extra', 'angoli'].every(c => document.getElementById('comp-' + c).hidden);
   setComp(c0, fromHash);
   setTimeout(liveLoop, 1000);
   const chip = document.getElementById('b' + state.id), strip = document.getElementById('list');
