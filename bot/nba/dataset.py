@@ -139,6 +139,15 @@ def costruisci(partite, gioc, universo=False, lega_per_giorno=False):
                         ps.append(p_almeno10(att, lenta.v * scala))
                     riga['u10_min'] = float(np.mean(g['u10min']))
                     for k in ('pts', 'reb', 'ast'): riga[k + '_10'] = float(np.mean(g['u10'][k]))
+                    # forma (19/11/2026, esperimento «forma» del banco; nessun modello in produzione le usa):
+                    # ultime 5 partite, seconda e terza voce davvero fatte (non attese), quante volte è andato vicino a doppia e tripla
+                    u5 = lambda d_: float(np.mean(list(d_)[-5:]))
+                    for k in ('pts', 'reb', 'ast'): riga[k + '_5'] = u5(g['u10'][k])
+                    riga.update(min_5=u5(g['u10min']), dd_5=u5(g['u10dd']), td_5=u5(g['u10td']),
+                                sec_10=float(np.mean(g['u10sec'])), ter_10=float(np.mean(g['u10ter'])), sec_5=u5(g['u10sec']), ter_5=u5(g['u10ter']),
+                                q2_10=float(np.mean([x >= 8 for x in g['u10sec']])), q3_10=float(np.mean([x >= 7 for x in g['u10ter']])),
+                                ter_stag=(g['ssum'].get((st, 'ter'), 0.0) + K_STAG * float(np.mean(g['u10ter']))) / (ns + K_STAG),
+                                sec_stag=(g['ssum'].get((st, 'sec'), 0.0) + K_STAG * float(np.mean(g['u10sec']))) / (ns + K_STAG))
                     p2, p3 = strutturale(ps); riga['p_dd_strut'] = p2; riga['p_td_strut'] = p3
                     ordn = sorted((riga[k + '_att'] for k in ('pts', 'reb', 'ast')), reverse=True)
                     riga['att_2a'] = ordn[1]; riga['att_3a'] = ordn[2]
@@ -194,7 +203,7 @@ def costruisci(partite, gioc, universo=False, lega_per_giorno=False):
                 if g is None:
                     g = G[pid] = dict(n=0, ns={}, ult=ts, sq=tid, min_ult=0, rientro=0, pf=Mobile(), disp=Mobile(), sqn={}, exvisti=set(), b2b=[0, 0], emin=Mobile(), etit=Mobile(), tit_ult=0, dd=Mobile(), td=Mobile(), cdd=0, ctd=0, sdd={}, std={}, ssum={},
                                       lenta={k: Mobile() for k in CAT + ('min',)}, vel={k: Mobile() for k in CAT}, u10dd=deque(maxlen=10), u10td=deque(maxlen=10), u10min=deque(maxlen=10),
-                                      u10={k: deque(maxlen=10) for k in ('pts', 'reb', 'ast')})
+                                      u10={k: deque(maxlen=10) for k in ('pts', 'reb', 'ast')}, u10sec=deque(maxlen=10), u10ter=deque(maxlen=10))
                 g['rientro'] = 0 if (ts - g['ult']) / 86400 > 10 else g['rientro'] + 1
                 g['min_ult'] = r[3]; g['pf'].agg(r[18] if len(r) > 18 else 0, A_LENTA)
                 st = m['st']; g['n'] += 1; g['ns'][st] = g['ns'].get(st, 0) + 1; g['ult'] = ts; g['sq'] = tid
@@ -205,6 +214,8 @@ def costruisci(partite, gioc, universo=False, lega_per_giorno=False):
                 g['sdd'][st] = g['sdd'].get(st, 0) + int(n10 >= 2); g['std'][st] = g['std'].get(st, 0) + int(n10 >= 3)
                 g['u10dd'].append(int(n10 >= 2)); g['u10td'].append(int(n10 >= 3)); g['u10min'].append(val['min'])
                 for k in ('pts', 'reb', 'ast'): g['u10'][k].append(val[k])
+                o3 = sorted((val['pts'], val['reb'], val['ast']), reverse=True); g['u10sec'].append(o3[1]); g['u10ter'].append(o3[2])
+                g['ssum'][(st, 'sec')] = g['ssum'].get((st, 'sec'), 0.0) + o3[1]; g['ssum'][(st, 'ter')] = g['ssum'].get((st, 'ter'), 0.0) + o3[2]
                 for k in CAT + ('min',): g['lenta'][k].agg(val[k], A_LENTA)
                 for k in CAT: g['vel'][k].agg(val[k], A_VELOCE); g['ssum'][(st, k)] = g['ssum'].get((st, k), 0.0) + val[k]
         for k in ('pts', 'reb', 'ast', 'poss'):

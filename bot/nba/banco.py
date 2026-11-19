@@ -243,7 +243,18 @@ def e_miscela(B):
         R.append(confronta(T, y, p0[k], sig(a)[k], 'alberi soli', regola=False)); R.append(confronta(T, y, p0[k], sig(l)[k], 'logistica sola', regola=False))
     return R
 
-ESPERIMENTI = {'miscela': e_miscela, 'livello': e_livello, 'v2': e_v2, 'lega_giorno': e_lega_giorno, 'minuti_fini': e_minuti_fini, 'minuti_uno': e_minuti_uno, 'td_da_dd': e_td_da_dd, 'assenze_robuste': e_assenze_robuste, 'p_gioca': e_p_gioca}
+FORMA = ['pts_5', 'reb_5', 'ast_5', 'min_5', 'dd_5', 'td_5', 'sec_10', 'ter_10', 'sec_5', 'ter_5', 'q2_10', 'q3_10', 'sec_stag', 'ter_stag']
+def e_forma(B):
+    """Forma recente (19/11/2026): ultime 5 partite, seconda e terza voce davvero fatte, quante volte vicino a doppia (2ª voce ≥ 8) e tripla (3ª ≥ 7)."""
+    R = []
+    for y in ('dd', 'td'):
+        p1 = B.previsioni(B.D, y, cols(LIV['prima']) + FORMA); R.append(confronta(B.T, y, B.campione(y).loc[B.T.index].values, p1.loc[B.T.index].values, 'forma recente (tutte)'))
+    for nome, ext in (('ultime 5', ['pts_5', 'reb_5', 'ast_5', 'min_5', 'dd_5', 'td_5']), ('vicino a doppia/tripla', ['sec_10', 'ter_10', 'sec_5', 'ter_5', 'q2_10', 'q3_10', 'sec_stag', 'ter_stag'])):
+        for y in ('dd', 'td'):
+            p1 = B.previsioni(B.D, y, cols(LIV['prima']) + ext); R.append(confronta(B.T, y, B.campione(y).loc[B.T.index].values, p1.loc[B.T.index].values, nome))
+    return R
+
+ESPERIMENTI = {'forma': e_forma, 'miscela': e_miscela, 'livello': e_livello, 'v2': e_v2, 'lega_giorno': e_lega_giorno, 'minuti_fini': e_minuti_fini, 'minuti_uno': e_minuti_uno, 'td_da_dd': e_td_da_dd, 'assenze_robuste': e_assenze_robuste, 'p_gioca': e_p_gioca}
 
 if __name__ == '__main__':
     if '--elenco' in sys.argv:
