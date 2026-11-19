@@ -475,10 +475,11 @@ function cartaMia(m, i) {
   return `<div class="mio"><div><div class="mt"><b>${esc(m.n)}</b> <small>${esc(m.sq || '')}</small></div><div class="mg">${gara}</div></div><button type="button" class="x" data-act="nonseguo" data-i="${i}" aria-label="Smetti di seguire ${esc(m.n)}">×</button>
     <div class="mn">${box('pts', 'punti')}${box('reb', 'rimb.')}${box('ast', 'assist')}${x && (x.stl || x.blk) ? box('stl', 'recup.') + box('blk', 'stopp.') : ''}</div>${fondo ? `<div class="mf">${fondo}</div>` : ''}</div>`;
 }
+// in ordine di orario della partita (a parità, nell'ordine in cui sono stati aggiunti); chi è scritto a mano va al suo posto quando lo trovo nei tabellini, prima in fondo
 function disegnaMiei() {
   let h = `<section><div class="sec"><h2>I miei giocatori</h2><span>scegli chi seguire stanotte: punti, rimbalzi e assist in diretta, ogni 30 secondi</span></div>`;
   if (!DATI.oggi?.partite?.length) h += '<div class="card pad"><div class="empty">Stanotte non ci sono partite NBA.</div></div>';
-  else h += `<div class="card miei">${MIEI.n.map(cartaMia).join('')}${MIEI.n.length < MAXM ? `<button type="button" class="ag" data-act="apri" data-m="miei"><span class="piu">+</span> Aggiungi un giocatore da seguire</button>` : ''}</div>`;
+  else h += `<div class="card miei">${MIEI.n.map((m, i) => [m, i, statoMio(m).P?.ts ?? Infinity]).sort((a, b) => a[2] - b[2] || a[1] - b[1]).map(([m, i]) => cartaMia(m, i)).join('')}${MIEI.n.length < MAXM ? `<button type="button" class="ag" data-act="apri" data-m="miei"><span class="piu">+</span> Aggiungi un giocatore da seguire</button>` : ''}</div>`;
   h += '<p class="note">I giocatori restano salvati in questo browser fino alla notte dopo. Dati live da ESPN.</p></section>';
   document.getElementById('app').innerHTML = h; document.getElementById('note').hidden = true;
 }
