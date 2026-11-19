@@ -1445,5 +1445,30 @@
     "team": "Napoli"
    }
   ]
+ },
+ {
+  "comp": "sa",
+  "id": 5749754,
+  "ko": 1795347000,
+  "partita": "Juventus - Venezia",
+  "uff": false,
+  "p3": 0.005852491025689818,
+  "trio": [
+   {
+    "n": "M. Moreno",
+    "p": 0.2431,
+    "team": "Venezia"
+   },
+   {
+    "n": "R. Halhal",
+    "p": 0.1862,
+    "team": "Venezia"
+   },
+   {
+    "n": "D. Luiz",
+    "p": 0.1114,
+    "team": "Juventus"
+   }
+  ]
  }
 ]
