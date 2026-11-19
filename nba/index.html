@@ -147,6 +147,17 @@ details[open] > summary .arrow { transform: rotate(90deg); }
 .more { padding: 2px var(--pad) 12px; }
 .more .out { font-size: 13px; color: var(--muted); margin: 8px 0 4px; }
 .more .out b { color: var(--ink); font-weight: 600; }
+.duo { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+.duo .dc { min-width: 0; background: rgba(0,0,0,.16); border-radius: 12px; padding: 4px 10px 8px; }
+.duo .dh { display: flex; justify-content: space-between; align-items: baseline; padding: 6px 0 6px; border-bottom: 1px solid var(--line); font: 800 15px var(--display); letter-spacing: .5px; }
+.duo .dh b { font: 900 22px var(--display); }
+.duo .dr { padding: 7px 0; border-top: 1px solid var(--soft); } .duo .dr:first-of-type { border-top: 0; }
+.duo .dn { font-weight: 700; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .duo .dn small { color: var(--muted); font-weight: 500; font-size: 11px; margin-left: 5px; }
+.duo .dn .chip { font-size: 10px; padding: 1px 5px; margin-right: 5px; vertical-align: 1px; } .duo .dn .tag { font-size: 10px; margin-left: 5px; }
+.duo .ds { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; } .duo .ds b { color: var(--ink); margin-right: 1px; } .duo .ds b.ok { color: var(--good); }
+.duo .ds small { display: block; font-size: 11px; }
+.duo .dr.si .dn { color: var(--good); } .duo .dv { font-size: 13px; color: var(--muted); padding: 8px 0; }
+@media (max-width: 520px) { .duo { gap: 6px; } .duo .dc { padding: 4px 7px 8px; } .duo .dn { font-size: 13px; } .duo .ds { font-size: 12px; } }
 .pl { display: grid; grid-template-columns: minmax(0, 1fr) 56px 56px; gap: 10px; align-items: center; padding: 9px 0; border-top: 1px solid var(--line); }
 .pl .v { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
 .pl .qq { text-align: right; font-weight: 700; color: var(--gold); font-variant-numeric: tabular-nums; }
@@ -339,6 +350,12 @@ function tabellino(j) { const pl = {};
     for (const a of S.athletes || []) { const st = a.stats || []; if (a.didNotPlay || !st.length) continue; const v = k => parseInt(st[ix(k)], 10) || 0;
       const r = { min: v('MIN'), pts: v('PTS'), reb: v('REB'), ast: v('AST'), stl: v('STL'), blk: v('BLK') }; pl[chiave(a.athlete.displayName)] = r; if (a.athlete.id != null) pl['#' + a.athlete.id] = r; } }
   return pl; }
+function squadre(j) { const sq = {};
+  for (const T of j.boxscore?.players || []) { const S = T.statistics?.[0], ab = T.team?.abbreviation; if (!S || !ab) continue; const nomi = S.names || S.labels || [], ix = k => nomi.indexOf(k);
+    sq[ab] = (S.athletes || []).filter(a => !a.didNotPlay && (a.stats || []).length).map(a => { const v = k => parseInt(a.stats[ix(k)], 10) || 0;
+      return { n: a.athlete.displayName, id: a.athlete.id, tit: !!a.starter, min: v('MIN'), pts: v('PTS'), reb: v('REB'), ast: v('AST'), stl: v('STL'), blk: v('BLK') }; })
+      .sort((x, y) => (y.tit - x.tit) || (y.min - x.min)); }
+  return sq; }
 let inGiro = false;
 async function aggiornaLive() {
   if (!D || !D.partite.length || inGiro || document.hidden) return; inGiro = true; const meta = document.getElementById('livemeta');
@@ -347,7 +364,7 @@ async function aggiornaLive() {
     for (const e of sb.events || []) { if (!miei.has(String(e.id))) continue; trovate++; const t = e.status?.type || {}, c = e.competitions?.[0], L = LIVE[e.id] ||= {};
       const sc = k => c?.competitors?.find(x => x.homeAway === k)?.score ?? '';
       L.stato = t.state || 'pre'; L.det = t.state === 'post' ? 'Finale' : (t.shortDetail || '').replace(/ - /, ' · ').replace(/(\d)(st|nd|rd|th)( Quarter)?/, 'Q$1').replace('Halftime', 'Intervallo').replace('End of', 'Fine'); L.sc = [sc('away'), sc('home')];
-      if (L.stato === 'in' || (L.stato === 'post' && !L.chiusa)) giri.push(espn('summary?event=' + e.id).then(j => { L.pl = tabellino(j); if (L.stato === 'post') L.chiusa = true; }).catch(() => {})); }
+      if (L.stato === 'in' || (L.stato === 'post' && !L.chiusa)) giri.push(espn('summary?event=' + e.id).then(j => { L.pl = tabellino(j); L.sq = squadre(j); if (L.stato === 'post') L.chiusa = true; }).catch(() => {})); }
     await Promise.all(giri);
     if (Dg !== D) { inGiro = false; return aggiornaLive(); }
     if (!trovate) throw new Error('partite non trovate nel tabellone');
@@ -411,18 +428,14 @@ function disegna() {
       + giocata('td', 'Tripla doppia', (C.td || [])[0], 'td', 'Nessun candidato sopra il 3%.') + '</div></section>';
     if ((C.combinazioni || []).length) h += '<section><div class="sec"><h2>Combinazioni</h2><span>giocatori di partite diverse · tocca «altri» sotto un giocatore per vedere chi metterci al suo posto</span></div><div class="card">'
       + C.combinazioni.map(combo).join('') + '</div></section>';
-    h += '<section><div class="sec"><h2>Partite</h2><span>tocca una partita per vedere gli altri giocatori</span></div><div class="card">';
+    h += '<section><div class="sec"><h2>Partite</h2><span>tocca una partita per vedere le due squadre giocatore per giocatore, con il punteggio in diretta</span></div><div class="card">';
     for (const P of Ps) {
       const c = k => P.giocatori.find(g => g.n === P.candidati[k]), L = LIVE[P.id], viva = L && L.stato !== 'pre';
       const lato = (k, i) => { const g = c(k); return `<div class="side"><div class="t">${esc(P[k].nome)}${viva ? `<b class="sc">${esc(L.sc[i])}</b>` : ''}</div>${g ? voce(g, 'dd', { chip: false }) : '<div class="item"><div class="nm">–</div></div>'}</div>`; };
       const quando = !viva ? `<span class="time">${fmtO.format(new Date(P.ts * 1000))}</span>` : `<span class="time st ${L.stato}">${L.stato === 'in' ? '<span class="dot"></span>' : ''}${esc(L.det)}</span>`;
       const fuori = ['a', 'h'].flatMap(k => (P.fuori[k] || []).map(x => `<b>${esc(x.n)}</b> (${esc(P[k].sigla)})${x.posto ? ` → più spazio a ${esc(x.posto)}` : ''}`));
       h += `<details class="game" data-id="${P.id}"${aperte.has(String(P.id)) ? ' open' : ''}><summary>${quando}${lato('a', 0)}${lato('h', 1)}<span class="arrow">›</span></summary><div class="more">`
-        + `<div class="out">${fuori.length ? 'Assenti: ' + fuori.join(' · ') : 'Nessun assente di peso'}</div><div class="plh"><span>Giocatore</span><span>Doppia</span><span>Quota</span></div>`
-        + P.giocatori.filter(g => g.p_dd >= 0.04).slice(0, 8).map(g => { const et = esito(g.n, 'td');
-          const tripla = et === 'si' ? '<span class="chip td">tripla doppia ✓</span>' : !viva && g.p_td >= 0.03 ? `<span class="chip td">tripla ${pc(g.p_td)}${g.q_td ? ' · ' + nq(g.q_td) : ''}</span>` : '';
-          const s = statoG(g.n), sotto = viva ? (s?.x ? `<span class="lv">${cifre(s.x)}</span>` : L.pl ? '<span>non entrato</span>' : '') : `<span>${g.pts.toFixed(1).replace('.', ',')} pt · ${g.reb.toFixed(1).replace('.', ',')} rb · ${g.ast.toFixed(1).replace('.', ',')} as di media</span>`;
-          return `<div class="pl"><div class="item"><div class="nm">${esito(g.n, 'dd') === 'si' ? '<span class="tick si">✓</span>' : ''}${esc(g.n)}<span class="tm">${esc(g.sq)}</span></div><div class="sub">${sotto}${tripla}${tags(g)}</div></div><div class="v">${pc(g.p_dd)}</div><div class="qq">${g.q_dd ? nq(g.q_dd) : '–'}</div></div>`; }).join('')
+        + `<div class="out">${fuori.length ? 'Assenti: ' + fuori.join(' · ') : 'Nessun assente di peso'}</div>${duo(P, L, viva)}`
         + '</div></details>';
     }
     h += '</div></section>';
@@ -476,6 +489,25 @@ function cartaMia(m, i) {
     <div class="mn">${box('pts', 'punti')}${box('reb', 'rimb.')}${box('ast', 'assist')}${x && (x.stl || x.blk) ? box('stl', 'recup.') + box('blk', 'stopp.') : ''}</div>${fondo ? `<div class="mf">${fondo}</div>` : ''}</div>`;
 }
 // in ordine di orario della partita (a parità, nell'ordine in cui sono stati aggiunti); chi è scritto a mano va al suo posto quando lo trovo nei tabellini, prima in fondo
+// 19/11/2026: dentro ogni partita due colonne, ospiti a sinistra e casa a destra. Prima della palla a due i giocatori della pagina
+// (probabilità e quota di doppia doppia); da quando comincia tutti quelli entrati in campo, titolari prima, con punti, rimbalzi e assist dal vivo
+function duo(P, L, viva) {
+  const col = (k, i) => {
+    let righe = '';
+    if (viva && L.sq?.[P[k].sigla]) {
+      righe = L.sq[P[k].sigla].map(x => { const n = n10(x), g = P.giocatori.find(g => String(g.id) === String(x.id)) || P.giocatori.find(g => chiave(g.n) === chiave(x.n));
+        const b = (v, u) => `<b class="${v >= 10 ? 'ok' : ''}">${v}</b>${u}`;
+        return `<div class="dr${n >= 2 ? ' si' : ''}"><div class="dn">${n >= 3 ? '<span class="chip td">TD</span>' : n === 2 ? '<span class="chip dd">DD</span>' : ''}${esc(cogn(x.n))}${x.tit ? '<small>titolare</small>' : ''}</div>`
+          + `<div class="ds">${b(x.pts, 'pt')} ${b(x.reb, 'rb')} ${b(x.ast, 'as')}${x.stl >= 5 ? ' ' + b(x.stl, 'rec') : ''}${x.blk >= 5 ? ' ' + b(x.blk, 'st') : ''}<small>${x.min}'${g && L.stato !== 'post' ? ' · DD ' + pc(g.p_dd) : ''}</small></div></div>`; }).join('');
+    } else {
+      righe = P.giocatori.filter(g => g.sq === P[k].sigla).sort((x, y) => y.p_dd - x.p_dd).map(g => `<div class="dr"><div class="dn">${esc(cogn(g.n))}${tags(g)}</div>`
+        + `<div class="ds">DD <b>${pc(g.p_dd)}</b>${g.q_dd ? ' · ' + nq(g.q_dd) : ''}${g.p_td >= 0.03 ? ` · TD ${pc(g.p_td)}` : ''}<small>${g.pts.toFixed(0)}-${g.reb.toFixed(0)}-${g.ast.toFixed(0)} di media</small></div></div>`).join('');
+      if (viva) righe = (L.pl ? '' : '<div class="dv">tabellino in arrivo…</div>') + righe;
+    }
+    return `<div class="dc"><div class="dh"><span>${esc(P[k].sigla)}</span>${viva ? `<b>${esc(L.sc[i])}</b>` : ''}</div>${righe || '<div class="dv">nessun giocatore</div>'}</div>`;
+  };
+  return `<div class="duo">${col('a', 0)}${col('h', 1)}</div>`;
+}
 function disegnaMiei() {
   let h = `<section><div class="sec"><h2>I miei giocatori</h2><span>scegli chi seguire stanotte: punti, rimbalzi e assist in diretta, ogni 30 secondi</span></div>`;
   if (!DATI.oggi?.partite?.length) h += '<div class="card pad"><div class="empty">Stanotte non ci sono partite NBA.</div></div>';
