@@ -35,6 +35,9 @@ body::after { content: ""; position: fixed; inset: 0 0 auto 0; height: 5px; z-in
 .wrap { position: relative; z-index: 1; max-width: 920px; margin: 0 auto; padding: 22px 16px 56px; }
 
 /* testata */
+/* 19/11/2026: collegamento alla home del cartellino, sopra l'etichetta NBA */
+.casa { display: block; width: max-content; margin: 0 0 10px; font: 700 14px var(--body); color: var(--muted); text-decoration: none; }
+.casa:hover, .casa:focus-visible { color: #fff; text-decoration: underline; }
 .crumb { display: inline-block; font: 700 13px var(--body); padding: 5px 12px; border-radius: 999px; background: var(--red); color: #fff; letter-spacing: .4px; }
 h1 { font: 900 clamp(38px, 9vw, 60px)/.9 var(--display); margin: 12px 0 8px; letter-spacing: .5px; text-transform: uppercase; color: #fff; text-shadow: 3px 3px 0 var(--red); }
 .meta { color: var(--muted); font-size: 14px; }
@@ -50,7 +53,8 @@ h1 { font: 900 clamp(38px, 9vw, 60px)/.9 var(--display); margin: 12px 0 8px; let
 .tabs button { border: 0; background: transparent; color: var(--muted); font: 700 14px var(--body); padding: 7px 16px; border-radius: 999px; cursor: pointer; }
 .tabs button.on { background: var(--red); color: #fff; }
 .tabs { max-width: 100%; overflow-x: auto; scrollbar-width: none; } .tabs::-webkit-scrollbar { display: none; } .tabs button { white-space: nowrap; flex: none; }
-@media (max-width: 520px) { .tabs button { padding: 7px 11px; font-size: 13.5px; } .tabs .lungo { display: none; } }
+/* 19/11/2026: su smartphone le schede si leggono intere («I miei giocatori»): barra larga quanto la pagina, scritte lunghe su due righe */
+@media (max-width: 520px) { .tabs { display: flex; width: 100%; border-radius: 18px; } .tabs button { flex: 1 1 auto; padding: 6px 6px; font-size: 13.5px; line-height: 1.15; white-space: normal; border-radius: 14px; } }
 /* I miei giocatori (19/11/2026) */
 .miei .mio { display: grid; grid-template-columns: 1fr auto; gap: 8px 12px; padding: 14px var(--pad); border-top: 1px solid var(--line); align-items: center; }
 .miei .mio:first-child { border-top: 0; }
@@ -81,6 +85,9 @@ section { margin-top: 28px; }
 .chip { font: 700 10.5px/1 var(--body); text-transform: uppercase; letter-spacing: .5px; padding: 4px 6px; border-radius: 4px; white-space: nowrap; background: rgba(255,255,255,.14); color: #fff; }
 .chip.td { background: rgba(168,212,255,.22); color: var(--sky); }
 .tag { font: 700 10.5px/1 var(--body); text-transform: uppercase; letter-spacing: .5px; padding: 3px 6px; border-radius: 4px; white-space: nowrap; border: 1px solid currentColor; }
+/* 19/11/2026: numeri ed etichette in un solo blocco, così «EX» non va a capo da sola sotto la quota */
+.item .sub .nt { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; min-width: 0; }
+@media (max-width: 520px) { .item .sub, .item .sub .nt { column-gap: 6px; } .item .sub .chip, .item .sub .tag { letter-spacing: .3px; padding-left: 5px; padding-right: 5px; } }
 .tag.ex { color: #ffb0ba; } .tag.dub, .tag.rip { color: var(--gold); } .tag.su { color: var(--good); }
 .q { color: var(--gold); font-weight: 700; }
 .lv b { font-weight: 700; color: var(--ink); } .lv b.ok { color: var(--good); }
@@ -178,6 +185,10 @@ details.ieri > summary small { display: block; font-weight: 400; color: var(--mu
 @media (max-width: 720px) {
   .picks { grid-template-columns: 1fr; }
   .row { grid-template-columns: minmax(0, 1fr) 84px; }
+}
+/* 19/11/2026: su smartphone la colonna di riuscita e quota cede qualche pixel (il contenuto più largo è ~62 px) alle gambe della combinazione */
+@media (max-width: 520px) {
+  .row { grid-template-columns: minmax(0, 1fr) 78px; }
   details.game > summary { grid-template-columns: 56px minmax(0, 1fr) 14px; gap: 8px 10px; }
   details.game > summary .time { grid-row: 1 / span 2; }
   details.game > summary .side + .side { grid-column: 2; }
@@ -326,6 +337,7 @@ html { scrollbar-gutter: stable; }
 </div>
 <div class="wrap">
   <header>
+    <a class="casa" href="/">← Il cartellino</a>
     <span class="crumb">NBA</span>
     <h1>Il tabellino</h1>
     <div class="tabs" id="tabs" hidden><button type="button" data-v="oggi" class="on">Stanotte</button><button type="button" data-v="ieri" hidden>Notte scorsa</button><button type="button" data-v="calc">Calcolatore</button><button type="button" data-v="miei">I miei<span class="lungo"> giocatori</span></button></div>
@@ -427,7 +439,7 @@ function voce(g, y, opt = {}) {
   const e = opt.esito === undefined ? esito(g.n, y) : opt.esito, l = riga(g.n), p = g['p_' + y] ?? g.p, q = g['q_' + y] ?? g.q;
   const segno = e === 'si' ? '<span class="tick si">✓</span>' : e === 'no' ? '<span class="tick no">✗</span>' : '';
   const numeri = e ? (l || (e === 'ng' ? 'non ha giocato' : '')) : `${opt.senzaP ? '' : p != null ? pc(p) : '–'}${q ? `${opt.senzaP ? '' : ' · '}quota <span class="q">${nq(q)}</span>${opt.book && g['b_' + y] ? ' ' + esc(bk(g['b_' + y])) : ''}${g['q_prima_' + y] ? ` <span class="qv">era ${nq(g['q_prima_' + y])}</span>` : ''}` : ''}`;
-  return `<div class="item"><div class="nm">${segno}${esc(g.n)}<span class="tm">${esc(g.sq)}</span></div><div class="sub">${opt.chip === false ? '' : CHIP[y]}<span>${numeri}</span>${tags(g)}</div></div>`;
+  return `<div class="item"><div class="nm">${segno}${esc(g.n)}<span class="tm">${esc(g.sq)}</span></div><div class="sub">${opt.chip === false ? '' : CHIP[y]}<span class="nt"><span>${numeri}</span>${tags(g)}</span></div></div>`;
 }
 function prima(gambe, q, motivo, chiaveAp) {
   return '';   // 19/11/2026: le proposte sostituite non si mostrano più (fino alle 23:30 la pagina dice che sono probabili)
