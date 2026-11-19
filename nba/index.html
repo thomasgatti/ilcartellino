@@ -36,8 +36,10 @@ body::after { content: ""; position: fixed; inset: 0 0 auto 0; height: 5px; z-in
 
 /* testata */
 /* 19/11/2026: collegamento alla home del cartellino, sopra l'etichetta NBA */
-.casa { display: block; width: max-content; margin: 0 0 10px; font: 700 14px var(--body); color: var(--muted); text-decoration: none; }
-.casa:hover, .casa:focus-visible { color: #fff; text-decoration: underline; }
+/* 19/11/2026 (2): il ritorno al cartellino è un pulsante a sé, tutto a destra sulla riga dell'etichetta NBA */
+.testa { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.casa { flex: none; display: inline-flex; align-items: center; gap: 6px; font: 700 14px var(--body); white-space: nowrap; text-decoration: none; color: #1a1600; padding: 7px 14px; border-radius: 999px; background: linear-gradient(90deg, #ffd400, #ffb000); box-shadow: 0 0 12px rgba(255,212,0,.3); }
+.casa:hover, .casa:focus-visible { filter: brightness(1.08); }
 .crumb { display: inline-block; font: 700 13px var(--body); padding: 5px 12px; border-radius: 999px; background: var(--red); color: #fff; letter-spacing: .4px; }
 h1 { font: 900 clamp(38px, 9vw, 60px)/.9 var(--display); margin: 12px 0 8px; letter-spacing: .5px; text-transform: uppercase; color: #fff; text-shadow: 3px 3px 0 var(--red); }
 .meta { color: var(--muted); font-size: 14px; }
@@ -337,8 +339,7 @@ html { scrollbar-gutter: stable; }
 </div>
 <div class="wrap">
   <header>
-    <a class="casa" href="/">← Il cartellino</a>
-    <span class="crumb">NBA</span>
+    <div class="testa"><span class="crumb">NBA</span><a class="casa" href="/"><span aria-hidden="true">←</span> Il cartellino</a></div>
     <h1>Il tabellino</h1>
     <div class="tabs" id="tabs" hidden><button type="button" data-v="oggi" class="on">Stanotte</button><button type="button" data-v="ieri" hidden>Notte scorsa</button><button type="button" data-v="calc">Calcolatore</button><button type="button" data-v="miei">I miei<span class="lungo"> giocatori</span></button></div>
     <div class="meta" id="meta">Carico…</div>
