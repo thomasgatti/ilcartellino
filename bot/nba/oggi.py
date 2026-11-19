@@ -27,7 +27,9 @@ V2 = (os.environ.get('NBA_MODELLO') or 'v2').strip().lower() != 'v1'
 # dal 18/11/2026 (scelta dell'utente): niente più «Sicura» e «Media»; per le giocate sicure ci sono le tre giocate della notte e il Calcolatore
 FASCE = (('Alta', 10), ('Altissima', 30), ('Colpo grosso', 100))
 TIPI = [n for n, _ in FASCE] + ['Con una tripla doppia', 'Due triple doppie']
-LIMITE = 2          # dal 18/11/2026: lo stesso giocatore al massimo in 2 combinazioni (se salta lui, saltano al massimo due proposte)
+LIMITE = 2
+# «quota bassa» dal 19/11/2026: fra 1,70 e 2,50 (prima sotto 2,00). Richiesta del proprietario: a 1,08-1,30 il guadagno è quasi nullo.
+BASSA = (1.70, 2.50)          # dal 18/11/2026: lo stesso giocatore al massimo in 2 combinazioni (se salta lui, saltano al massimo due proposte)
 CAMPI_GAMBA = ('n', 'id', 'sq', 'partita', 'cosa', 'p', 'q', 'dubbio', 'ex')
 
 def combinazioni(tutti, fisse=None):
@@ -90,7 +92,7 @@ def controllo(V, C, tutti, tutti_tutti, stato_nome):
       e se non è meno probabile della nuova che il modello proporrebbe lì (es. Colpo grosso sceso a 32 → Altissima);
       i titoli rimasti vuoti si riempiono con combinazioni nuove;
     - Con una / Due triple doppie restano se tutti giocano;
-    - le giocate singole restano se il giocatore gioca e la quota sta nella sua fascia (bassa sotto 2, alta da 3), altrimenti si prende la prima nuova.
+    - le giocate singole restano se il giocatore gioca e la quota sta nella sua fascia (bassa da 1,70 a 2,50, alta da 3), altrimenti si prende la prima nuova.
     Le proposte vecchie non si mostrano più (niente «sostituita»): fino alle 23:30 la pagina dice che sono probabili.
     Se il controllo si rifà sulla pagina già ufficiale, la regola è la stessa: ciò che è ancora valido resta."""
     validi = {g['n']: g for g in tutti}; minimo = dict(FASCE)
@@ -125,7 +127,7 @@ def controllo(V, C, tutti, tutti_tutti, stato_nome):
         nuove = combinazioni(tutti, fisse)
     nuove.sort(key=lambda c: TIPI.index(c['tipo']) if c['tipo'] in TIPI else 99)
     C['combinazioni'] = nuove
-    for k, y, ok in (('bassa', 'dd', lambda q: q < 2.0), ('alta', 'dd', lambda q: q >= 3.0), ('td', 'td', lambda q: True)):
+    for k, y, ok in (('bassa', 'dd', lambda q: BASSA[0] <= q < BASSA[1]), ('alta', 'dd', lambda q: q >= 3.0), ('td', 'td', lambda q: True)):
         v = (vecchio.get(k) or [None])[0]
         if not v or v.get('nessuna') or v.get('n') not in validi: continue
         g = validi[v['n']]; q = g.get('q_' + y) or v.get('q_' + y)
@@ -260,7 +262,7 @@ def main(cartella, f_in, f_out, f_quote=None):
     con = [g for g in tutti if 'q_dd' in g]
     breve = lambda g: {k: g[k] for k in ('n', 'id', 'partita', 'sq', 'p_dd', 'p_td', 'q_dd', 'b_dd', 'v_dd', 'q_td', 'b_td', 'v_td', 'dubbio', 'ex', 'su') if k in g}
     C = dict(
-        bassa=[breve(g) for g in sorted([g for g in con if g['q_dd'] < 2.0], key=lambda g: -g['p_dd'])[:3]],
+        bassa=[breve(g) for g in sorted([g for g in con if BASSA[0] <= g['q_dd'] < BASSA[1]], key=lambda g: -g['p_dd'])[:3]],
         # v1: il «valore» p × quota più alto. v2: i più probabili (il valore più alto sceglie i casi in cui il modello contraddice di più il mercato, e lì sbaglia più spesso)
         alta=[breve(g) for g in sorted([g for g in con if g['q_dd'] >= 3.0 and g['p_dd'] >= 0.10], key=lambda g: -(g['p_dd'] if V2 else g['v_dd']))[:3]],
         td=[breve(g) for g in sorted([g for g in tutti if g['p_td'] >= 0.03], key=lambda g: -g['p_td'])[:4]])
