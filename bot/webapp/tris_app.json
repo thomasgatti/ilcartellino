@@ -1345,5 +1345,105 @@
     "team": "Portogallo"
    }
   ]
+ },
+ {
+  "comp": "sa",
+  "id": 5749753,
+  "ko": 1795269600,
+  "partita": "Como - Cagliari",
+  "uff": false,
+  "p3": 0.006904513631809887,
+  "trio": [
+   {
+    "n": "Z. Pedro",
+    "p": 0.195,
+    "team": "Cagliari"
+   },
+   {
+    "n": "A. Deiola",
+    "p": 0.1823,
+    "team": "Cagliari"
+   },
+   {
+    "n": "Y. Couto",
+    "p": 0.1674,
+    "team": "Como"
+   }
+  ]
+ },
+ {
+  "comp": "sa",
+  "id": 5749755,
+  "ko": 1795269600,
+  "partita": "Lazio - Lecce",
+  "uff": false,
+  "p3": 0.007687013007088171,
+  "trio": [
+   {
+    "n": "Y. Maleh",
+    "p": 0.2063,
+    "team": "Lecce"
+   },
+   {
+    "n": "D. Veiga",
+    "p": 0.1921,
+    "team": "Lecce"
+   },
+   {
+    "n": "L. Pellegrini",
+    "p": 0.1672,
+    "team": "Lazio"
+   }
+  ]
+ },
+ {
+  "comp": "sa",
+  "id": 5749758,
+  "ko": 1795280400,
+  "partita": "Parma - Roma",
+  "uff": false,
+  "p3": 0.006471867305930934,
+  "trio": [
+   {
+    "n": "M. Troilo",
+    "p": 0.1823,
+    "team": "Parma"
+   },
+   {
+    "n": "V. Sierro",
+    "p": 0.1795,
+    "team": "Parma"
+   },
+   {
+    "n": "B. Cristante",
+    "p": 0.1705,
+    "team": "Roma"
+   }
+  ]
+ },
+ {
+  "comp": "sa",
+  "id": 5749757,
+  "ko": 1795290300,
+  "partita": "Napoli - Torino",
+  "uff": false,
+  "p3": 0.005049845965666168,
+  "trio": [
+   {
+    "n": "S. Coco",
+    "p": 0.1833,
+    "team": "Torino"
+   },
+   {
+    "n": "R. Belghali",
+    "p": 0.1661,
+    "team": "Torino"
+   },
+   {
+    "n": "R. Marín",
+    "p": 0.143,
+    "team": "Napoli"
+   }
+  ]
  }
 ]
