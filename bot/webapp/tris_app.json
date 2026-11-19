@@ -1495,5 +1495,30 @@
     "team": "Genoa"
    }
   ]
+ },
+ {
+  "comp": "sa",
+  "id": 5749752,
+  "ko": 1795356000,
+  "partita": "Bologna - Udinese",
+  "uff": false,
+  "p3": 0.005935705979379512,
+  "trio": [
+   {
+    "n": "M. Palma",
+    "p": 0.1871,
+    "team": "Udinese"
+   },
+   {
+    "n": "J. Abankwah",
+    "p": 0.1676,
+    "team": "Udinese"
+   },
+   {
+    "n": "T. Pobega",
+    "p": 0.1632,
+    "team": "Bologna"
+   }
+  ]
  }
 ]
