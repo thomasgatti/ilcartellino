@@ -1470,5 +1470,30 @@
     "team": "Juventus"
    }
   ]
+ },
+ {
+  "comp": "sa",
+  "id": 5749759,
+  "ko": 1795356000,
+  "partita": "Sassuolo - Genoa",
+  "uff": false,
+  "p3": 0.008993976919138124,
+  "trio": [
+   {
+    "n": "S. Wiafe",
+    "p": 0.2008,
+    "team": "Genoa"
+   },
+   {
+    "n": "D. Ćaleta-Car",
+    "p": 0.197,
+    "team": "Sassuolo"
+   },
+   {
+    "n": "L. Østigård",
+    "p": 0.196,
+    "team": "Genoa"
+   }
+  ]
  }
 ]
