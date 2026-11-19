@@ -252,6 +252,10 @@ details.alt[open] > summary .arrow { transform: rotate(90deg); }
 .pk { border: 1px solid var(--line); border-radius: 8px; background: rgba(255,255,255,.08); color: #fff; padding: 6px 4px; font: 13px var(--body); cursor: pointer; display: flex; flex-direction: column; align-items: center; line-height: 1.15; }
 .pk b { font-weight: 800; } .pk small { color: var(--gold); } .pk.td b { color: var(--sky); } .pk:hover:not(:disabled) { border-color: #fff; } .pk:disabled { cursor: not-allowed; }
 .fermo body { overflow: hidden; }
+/* 19/11/2026: spazio della barra di scorrimento sempre riservato. Calcolatore e «I miei giocatori» sono corti e la barra spariva:
+   su computer tutta la pagina (menu compreso) si spostava di qualche pixel a destra cambiando scheda */
+html { scrollbar-gutter: stable; }
+@supports not (scrollbar-gutter: stable) { html { overflow-y: scroll; } }
 @media (max-width: 720px) {
   .carte { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .riep { grid-template-columns: repeat(2, minmax(0, 1fr)); }
