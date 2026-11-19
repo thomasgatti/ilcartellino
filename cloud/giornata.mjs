@@ -178,9 +178,13 @@ async function syncRound(round, archived) {
   const fixtures = list.filter(m => Number(m.round) === day && !m.status?.cancelled);
   const todo = fixtures.filter(m => !known.has(+m.id) && Date.parse(m.status.utcTime) / 1000 > now);
   if (!todo.length) return;
+  let need = Math.ceil(size / 2);
   if (finishedAll) {
     const first = Math.min(...fixtures.map(m => Date.parse(m.status.utcTime) / 1000));
     if (fixtures.length !== size || first <= now || first > now + Number(process.env.CARTELLINO_ANTICIPO_ORE || 72) * hour) return;
+    // 19/11: a meno di 60 ore dalla prima partita basta una formazione pronta; le altre si aggiungono ai giri dopo (round.append).
+    // Prima servivano metà delle partite: la 12ª di Serie A restava fuori a due giorni dal via con 4 formazioni su 10.
+    if (first - now < 60 * hour) need = 1;
   }
   const loaded = await Promise.allSettled(todo.map(m => matchDetails(+m.id)));
   const ready = loaded.flatMap((r, i) => {
@@ -189,7 +193,7 @@ async function syncRound(round, archived) {
     return ['lastStarting11','predicted','standard'].some(t => validLineup(lu,t)) ? [{id:+todo[i].id, j}] : [];
   });
   console.log(`Giornata ${round.comp} ${day}: formazioni pronte ${ready.length}/${todo.length}`);
-  if (!ready.length || (finishedAll && ready.length < Math.ceil(size / 2))) return;
+  if (!ready.length || (finishedAll && ready.length < need)) return;
   round.pending = await Promise.all(ready.map(({id,j}) => prepareLineup(id,j)));
   for (const item of round.pending) item.beforeKickoff = true;
   if (finishedAll) round.advance = day; else round.append = true;
