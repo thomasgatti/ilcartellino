@@ -1545,5 +1545,30 @@
     "team": "Milan"
    }
   ]
+ },
+ {
+  "comp": "sa",
+  "id": 5749751,
+  "ko": 1795376700,
+  "partita": "Atalanta - Inter",
+  "uff": false,
+  "p3": 0.004331481041922462,
+  "trio": [
+   {
+    "n": "Éderson",
+    "p": 0.1728,
+    "team": "Atalanta"
+   },
+   {
+    "n": "A. Bastoni",
+    "p": 0.1578,
+    "team": "Inter"
+   },
+   {
+    "n": "D. Zappacosta",
+    "p": 0.137,
+    "team": "Atalanta"
+   }
+  ]
  }
 ]
