@@ -49,6 +49,22 @@ h1 { font: 900 clamp(38px, 9vw, 60px)/.9 var(--display); margin: 12px 0 8px; let
 .tabs { display: inline-flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--card); border: 1px solid var(--line); margin: 2px 0 12px; }
 .tabs button { border: 0; background: transparent; color: var(--muted); font: 700 14px var(--body); padding: 7px 16px; border-radius: 999px; cursor: pointer; }
 .tabs button.on { background: var(--red); color: #fff; }
+.tabs { max-width: 100%; overflow-x: auto; scrollbar-width: none; } .tabs::-webkit-scrollbar { display: none; } .tabs button { white-space: nowrap; flex: none; }
+@media (max-width: 520px) { .tabs button { padding: 7px 11px; font-size: 13.5px; } .tabs .lungo { display: none; } }
+/* I miei giocatori (19/11/2026) */
+.miei .mio { display: grid; grid-template-columns: 1fr auto; gap: 8px 12px; padding: 14px var(--pad); border-top: 1px solid var(--line); align-items: center; }
+.miei .mio:first-child { border-top: 0; }
+.mio .mt b { font: 800 17px var(--body); } .mio .mt small { color: var(--muted); font-size: 13px; }
+.mio .mg { color: var(--muted); font-size: 13px; margin-top: 2px; } .mio .mg .dot { margin-right: 4px; }
+.mio .mn { grid-column: 1 / -1; display: flex; gap: 6px; flex-wrap: wrap; }
+.mio .st { min-width: 50px; padding: 6px 8px; border-radius: 10px; background: rgba(0,0,0,.22); text-align: center; }
+.mio .st b { display: block; font: 900 24px/1 var(--display); font-variant-numeric: tabular-nums; } .mio .st span { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; }
+.mio .st.ok { background: rgba(95,224,160,.16); } .mio .st.ok b { color: var(--good); }
+.mio .mf { grid-column: 1 / -1; font-size: 13.5px; color: var(--muted); } .mio .mf .es { margin-right: 6px; }
+.mio .x { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--line); background: transparent; color: var(--muted); font-size: 18px; cursor: pointer; }
+.miei .ag { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 16px; border: 0; border-top: 1px dashed var(--line); background: transparent; color: #fff; font: 700 15px var(--body); cursor: pointer; }
+.miei .ag:first-child { border-top: 0; } .miei .ag .piu { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: var(--red); font-size: 22px; line-height: 1; }
+.pk.segui { min-width: 74px; }
 .tabs button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 /* sezioni: tutte uguali */
 section { margin-top: 28px; }
@@ -279,7 +295,7 @@ details.alt[open] > summary .arrow { transform: rotate(90deg); }
   <header>
     <span class="crumb">NBA</span>
     <h1>Il tabellino</h1>
-    <div class="tabs" id="tabs" hidden><button type="button" data-v="oggi" class="on">Stanotte</button><button type="button" data-v="ieri" hidden>Notte scorsa</button><button type="button" data-v="calc">Calcolatore</button></div>
+    <div class="tabs" id="tabs" hidden><button type="button" data-v="oggi" class="on">Stanotte</button><button type="button" data-v="ieri" hidden>Notte scorsa</button><button type="button" data-v="calc">Calcolatore</button><button type="button" data-v="miei">I miei<span class="lungo"> giocatori</span></button></div>
     <div class="meta" id="meta">Carico…</div>
     <div class="status" id="status" hidden><span class="livemeta" id="livemeta" role="status" aria-live="polite"></span><button type="button" class="btn" id="aggiorna">Aggiorna live</button></div>
   </header>
@@ -380,6 +396,7 @@ function combo(a) {
 function disegna() {
   // nel Calcolatore non si ridisegna mentre l'utente sta scrivendo una quota (il live ridisegna ogni 30 secondi)
   if (vista === 'calc') { if (document.activeElement?.closest?.('#app input')) return; return disegnaCalc(); }
+  if (vista === 'miei') return disegnaMiei();
   const C = D.consigli || {}, Ps = [...D.partite].sort((a, b) => a.ts - b.ts); let h = '';
   if (vista === 'oggi' && Ps.length) {
     // 19/11/2026: fino al controllo delle 23:30 (infortuni e quote riletti) le proposte sono probabili
@@ -427,12 +444,52 @@ function disegna() {
 }
 
 // ---- Calcolatore (18/11): la schedina dell'utente, come «La mia area» dei cartellini. Resta salvata in questo browser. ----
-const KCALC = 'nba_calcolatore_v1', KSALV = 'nba_schedine_v1', MAXG = 8;
+const KCALC = 'nba_calcolatore_v1', KSALV = 'nba_schedine_v1', MAXG = 8, KMIEI = 'nba_miei_v1', MAXM = 15;
+// I miei giocatori: chi l'utente vuole seguire stanotte (anche fuori dalle proposte), salvati in questo browser per la notte
+let MIEI = { giorno: null, n: [] }, SCELTA = 'calc';
+const salvaMiei = () => { try { localStorage.setItem(KMIEI, JSON.stringify(MIEI)); } catch (e) {} };
+const seguo = n => MIEI.n.some(m => chiave(m.n) === chiave(n));
+function segui(n, libero) {
+  if (!n || seguo(n) || MIEI.n.length >= MAXM) return;
+  const g = libero ? null : elenco().find(x => x.n === n);
+  MIEI.n.push(g ? { n: g.n, id: g.id, sq: g.sq, partita: g.partita } : { n: n.trim(), libero: 1 });
+  if (g) { partitaDi[g.n] = g.partita; if (g.id != null) idDi[g.n] = g.id; }
+  salvaMiei(); chiudiScelta(); disegna();
+}
+// chi non è nell'elenco della pagina si cerca per nome nei tabellini di tutte le partite della notte
+function statoMio(m) {
+  if (!m.libero) { const s = statoG(m.n); return { s, L: LIVE[partitaDi[m.n]], P: D.partite.find(P => String(P.id) === String(partitaDi[m.n])) }; }
+  for (const P of D.partite) { const L = LIVE[P.id], x = L?.pl?.[chiave(m.n)]; if (x) return { s: { L, x, fin: L.stato === 'post' }, L, P }; }
+  return { s: null, L: null, P: null };
+}
+function cartaMia(m, i) {
+  const { s, L, P } = statoMio(m), x = s?.x, ora = P ? fmtO.format(new Date(P.ts * 1000)) : '';
+  const gara = P ? `${esc(P.a.sigla)} ${L && L.stato !== 'pre' ? `<b>${esc(L.sc[0])} - ${esc(L.sc[1])}</b>` : '@'} ${esc(P.h.sigla)} · ${L?.stato === 'in' ? '<span class="dot"></span>' + esc(L.det) : L?.stato === 'post' ? 'Finale' : ora}` : m.libero ? 'lo cerco nei tabellini quando la sua partita comincia' : '';
+  const box = (k, u) => `<div class="st ${x && x[k] >= 10 ? 'ok' : ''}"><b>${x ? x[k] : '–'}</b><span>${u}</span></div>`;
+  let fondo = '';
+  if (x) { const n = n10(x), cat = [['pts', 'pt'], ['reb', 'rb'], ['ast', 'as'], ['stl', 'rec'], ['blk', 'st']].map(([k, u]) => [Math.max(0, 10 - x[k]), u]).sort((a, b) => a[0] - b[0]);
+    const manca = q => cat.slice(0, q).filter(c => c[0] > 0).map(c => `${c[0]} ${c[1]}`).join(' + ');
+    fondo = n >= 3 ? '<span class="es si">✓ tripla doppia</span>' : n === 2 ? `<span class="es si">✓ doppia doppia</span>${s.fin ? '' : 'per la tripla: ' + manca(3)}` : s.fin ? '<span class="es no">niente doppia doppia</span>' : 'per la doppia doppia: ' + manca(2);
+    fondo += ` · ${x.min}'`; }
+  else if (s?.fin || (L && L.stato === 'post' && L.pl)) fondo = '<span class="es ng">non ha giocato</span>';
+  else if (L && L.stato === 'in' && L.pl) fondo = m.libero ? 'non trovato nei tabellini: controlla come è scritto il nome' : 'ancora in panchina';
+  return `<div class="mio"><div><div class="mt"><b>${esc(m.n)}</b> <small>${esc(m.sq || '')}</small></div><div class="mg">${gara}</div></div><button type="button" class="x" data-act="nonseguo" data-i="${i}" aria-label="Smetti di seguire ${esc(m.n)}">×</button>
+    <div class="mn">${box('pts', 'punti')}${box('reb', 'rimb.')}${box('ast', 'assist')}${x && (x.stl || x.blk) ? box('stl', 'recup.') + box('blk', 'stopp.') : ''}</div>${fondo ? `<div class="mf">${fondo}</div>` : ''}</div>`;
+}
+function disegnaMiei() {
+  let h = `<section><div class="sec"><h2>I miei giocatori</h2><span>scegli chi seguire stanotte: punti, rimbalzi e assist in diretta, ogni 30 secondi</span></div>`;
+  if (!DATI.oggi?.partite?.length) h += '<div class="card pad"><div class="empty">Stanotte non ci sono partite NBA.</div></div>';
+  else h += `<div class="card miei">${MIEI.n.map(cartaMia).join('')}${MIEI.n.length < MAXM ? `<button type="button" class="ag" data-act="apri" data-m="miei"><span class="piu">+</span> Aggiungi un giocatore da seguire</button>` : ''}</div>`;
+  h += '<p class="note">I giocatori restano salvati in questo browser fino alla notte dopo. Dati live da ESPN.</p></section>';
+  document.getElementById('app').innerHTML = h; document.getElementById('note').hidden = true;
+}
 let CALC = { giorno: null, legs: [], posta: 2 }, SALVATE = [];
 function caricaCalc() {
   try { const c = JSON.parse(localStorage.getItem(KCALC) || 'null'); if (c && c.giorno === DATI.oggi?.giorno) CALC = Object.assign({ legs: [], posta: 2 }, c); } catch (e) {}
   try { SALVATE = JSON.parse(localStorage.getItem(KSALV) || '[]'); } catch (e) { SALVATE = []; }
   CALC.giorno = DATI.oggi?.giorno || null;
+  try { const m = JSON.parse(localStorage.getItem(KMIEI) || 'null'); if (m && m.giorno === DATI.oggi?.giorno && Array.isArray(m.n)) MIEI = m; } catch (e) {}
+  MIEI.giorno = DATI.oggi?.giorno || null;
 }
 const salvaCalc = () => { try { localStorage.setItem(KCALC, JSON.stringify(CALC)); } catch (e) {} };
 const salvaSalvate = () => { try { localStorage.setItem(KSALV, JSON.stringify(SALVATE.slice(-60))); } catch (e) {} };
@@ -498,6 +555,7 @@ function apriScelta() {
   let m = document.getElementById('scelta');
   if (!m) { m = document.createElement('div'); m.id = 'scelta'; m.innerHTML = `<div class="sf" data-act="chiudi"></div><div class="sp2" role="dialog" aria-modal="true" aria-labelledby="st"><div class="sh2"><h3 id="st">Aggiungi un giocatore</h3><button type="button" class="x" data-act="chiudi" aria-label="Chiudi">×</button></div><input type="search" id="cerca" placeholder="Cerca o scrivi il nome del giocatore" autocomplete="off"><div id="lista"></div></div>`;
     document.body.appendChild(m); m.addEventListener('click', clic); m.querySelector('#cerca').addEventListener('input', riempiScelta); }
+  m.querySelector('#st').textContent = SCELTA === 'miei' ? 'Scegli chi seguire' : 'Aggiungi un giocatore';
   m.hidden = false; document.documentElement.classList.add('fermo'); const c = m.querySelector('#cerca'); c.value = ''; riempiScelta(); setTimeout(() => c.focus(), 50);
 }
 function chiudiScelta() { const m = document.getElementById('scelta'); if (m) m.hidden = true; document.documentElement.classList.remove('fermo'); }
@@ -506,6 +564,12 @@ function riempiScelta() {
   const bot = (g, cosa) => { const dentro = giaDentro(g.n), p = g['p_' + cosa], q = g['q_' + cosa];
     return `<button type="button" class="pk ${cosa}" data-act="metti" data-n="${esc(g.n)}" data-c="${cosa}" ${dentro ? 'disabled' : ''}><b>${cosa.toUpperCase()}</b> ${pc(p)}${q ? `<small>${nq(q)}</small>` : ''}</button>`; };
   let h = '', gara = '';
+  if (SCELTA === 'miei') {
+    for (const g of L) { if (g.gara !== gara) { gara = g.gara; h += `<div class="lg">${esc(gara)}</div>`; } const s_ = seguo(g.n);
+      h += `<div class="lr${s_ ? ' gia' : ''}"><div class="ln"><b>${esc(g.n)}</b> <small>${esc(g.sq)}${g.dubbio ? ' · in dubbio' : ''}${s_ ? ' · lo segui già' : ''}</small></div><button type="button" class="pk segui" data-act="segui" data-n="${esc(g.n)}" ${s_ ? 'disabled' : ''}><b>Segui</b></button></div>`; }
+    if (t && !L.some(g => chiave(g.n) === k)) h += `<div class="lg">Non è nell'elenco di stanotte</div><div class="lr"><div class="ln"><b>${esc(t)}</b> <small>lo cerco nei tabellini di tutte le partite</small></div><button type="button" class="pk segui" data-act="seguilibero" data-n="${esc(t)}" ${seguo(t) ? 'disabled' : ''}><b>Segui</b></button></div>`;
+    document.getElementById('lista').innerHTML = h || '<div class="lg">Nessun giocatore: scrivi il nome per seguirlo.</div>'; return;
+  }
   for (const g of L) { if (g.gara !== gara) { gara = g.gara; h += `<div class="lg">${esc(gara)}</div>`; }
     h += `<div class="lr${giaDentro(g.n) ? ' gia' : ''}"><div class="ln"><b>${esc(g.n)}</b> <small>${esc(g.sq)}${g.dubbio ? ' · in dubbio' : ''}${g.riposo ? ' · rischio riposo' : ''}${giaDentro(g.n) ? ' · già nella schedina' : ''}</small></div>${bot(g, 'dd')}${bot(g, 'td')}</div>`; }
   if (t && !L.some(g => chiave(g.n) === k)) { const dentro = giaDentro(t);
@@ -517,7 +581,9 @@ function riempiScelta() {
 const numero = v => { const x = parseFloat(String(v).replace(',', '.')); return Number.isFinite(x) ? x : null; };
 function clic(e) {
   const b = e.target.closest('[data-act]'); if (!b) return; const a = b.dataset.act;
-  if (a === 'apri') apriScelta(); else if (a === 'chiudi') chiudiScelta();
+  if (a === 'apri') { SCELTA = b.dataset.m === 'miei' ? 'miei' : 'calc'; apriScelta(); } else if (a === 'chiudi') chiudiScelta();
+  else if (a === 'segui') segui(b.dataset.n, false); else if (a === 'seguilibero') segui(b.dataset.n, true);
+  else if (a === 'nonseguo') { MIEI.n.splice(+b.dataset.i, 1); salvaMiei(); disegna(); }
   else if (a === 'metti') aggiungi(b.dataset.n, b.dataset.c, false); else if (a === 'libero') aggiungi(b.dataset.n, b.dataset.c, true);
   else if (a === 'togli') { CALC.legs.splice(+b.dataset.i, 1); salvaCalc(); disegna(); }
   else if (a === 'svuota') { CALC.legs = []; salvaCalc(); disegna(); }
@@ -533,7 +599,7 @@ document.getElementById('app').addEventListener('change', e => {
 });
 // due viste con la stessa impaginazione: «Stanotte» (oggi.json) e «Notte scorsa» (ieri.json, la pagina della notte prima con i risultati finali)
 const DATI = {}; let vista = 'oggi', notaBase = null, STORICO = null;
-function mostra(v) { vista = v; D = DATI[v === 'calc' ? 'oggi' : v]; document.getElementById('note').hidden = false; for (const k in partitaDi) delete partitaDi[k]; for (const k in idDi) delete idDi[k];
+function mostra(v) { vista = v; D = DATI[v === 'calc' || v === 'miei' ? 'oggi' : v]; document.getElementById('note').hidden = false; for (const k in partitaDi) delete partitaDi[k]; for (const k in idDi) delete idDi[k];
   document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.v === v));
   const agg = new Date(D.creato * 1000), nota = document.getElementById('note'); notaBase ??= nota.innerHTML; nota.innerHTML = notaBase;
   document.getElementById('livemeta').textContent = '';
@@ -541,6 +607,7 @@ function mostra(v) { vista = v; D = DATI[v === 'calc' ? 'oggi' : v]; document.ge
   const segna = g => { if (!g || !g.n) return; if (g.partita != null && partitaDi[g.n] == null) partitaDi[g.n] = g.partita; if (g.id != null && idDi[g.n] == null) idDi[g.n] = g.id; };
   for (const P of D.partite) for (const g of P.giocatori) { partitaDi[g.n] = P.id; if (g.id != null) idDi[g.n] = g.id; }
   const Cn = D.consigli || {}; for (const k of ['bassa', 'alta', 'td']) for (const g of Cn[k] || []) { segna(g); segna(g.prima); }
+  if (v === 'miei') MIEI.n.forEach(segna);
   if (v === 'calc') { CALC.legs.forEach(segna); SALVATE.filter(x => x.giorno === D.giorno).forEach(x => x.legs.forEach(segna)); }
   for (const c of Cn.combinazioni || []) { (c.gambe || []).forEach(segna); (c.prima?.gambe || []).forEach(segna); }
   const primo = new Date(Math.min(...D.partite.map(p => p.ts)) * 1000);
@@ -558,9 +625,9 @@ Promise.all([leggi('oggi.json'), leggi('ieri.json'), leggi('storico.json')]).the
   STORICO = storico; DATI.oggi = oggi; document.getElementById('tabs').hidden = false;
   if (ieri && ieri.partite?.length && ieri.giorno !== oggi.giorno) { DATI.ieri = ieri; document.querySelector('#tabs [data-v=ieri]').hidden = false; }
   caricaCalc();
-  document.querySelectorAll('#tabs button').forEach(b => b.addEventListener('click', () => { if (b.dataset.v === 'calc' || DATI[b.dataset.v]) mostra(b.dataset.v); }));
+  document.querySelectorAll('#tabs button').forEach(b => b.addEventListener('click', () => { if (b.dataset.v === 'calc' || b.dataset.v === 'miei' || DATI[b.dataset.v]) mostra(b.dataset.v); }));
   document.getElementById('aggiorna').addEventListener('click', aggiornaLive);
-  const v0 = new URLSearchParams(location.search).get('v'); mostra(v0 === 'ieri' && DATI.ieri ? 'ieri' : v0 === 'calc' ? 'calc' : 'oggi');
+  const v0 = new URLSearchParams(location.search).get('v'); mostra(v0 === 'ieri' && DATI.ieri ? 'ieri' : v0 === 'calc' || v0 === 'miei' ? v0 : 'oggi');
   setInterval(aggiornaLive, 30000); document.addEventListener('visibilitychange', () => { if (!document.hidden) aggiornaLive(); });
 });
 </script>
