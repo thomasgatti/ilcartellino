@@ -350,7 +350,7 @@ function esito(n, cosa) { const s = statoG(n); if (!s) return null; const serve 
   if (s.x && n10(s.x) >= serve) return 'si'; if (!s.fin) return s.L.pl ? 'live' : null; if (!s.L.pl) return null; return s.x ? 'no' : 'ng'; }
 // versione corta per la colonna della quota delle combinazioni (stretta sul telefono)
 const CORTO = { si: '<span class="es si">✓ presa</span>', sv: '<span class="es si" title="Una gamba annullata perché il giocatore non ha giocato">✓ presa*</span>', no: '<span class="es no">✗ persa</span>', ng: '<span class="es ng">annullata</span>', live: '<span class="es live">in corso</span>' };
-const SEGNO = { sv: '<span class="es si" title="La gamba di chi non ha giocato di solito viene annullata: vale il resto della giocata, a quota più bassa">✓ presa, una gamba annullata</span>', si: '<span class="es si">✓ presa</span>', no: '<span class="es no">✗ non presa</span>', ng: '<span class="es ng">non ha giocato</span>', live: '<span class="es live">in corso</span>' };
+const SEGNO = { sv: '<span class="es si" title="Chi non ha giocato viene annullato: vale il resto della giocata">✓ presa, una gamba annullata</span>', si: '<span class="es si">✓ presa</span>', no: '<span class="es no">✗ non presa</span>', ng: '<span class="es ng">non ha giocato</span>', live: '<span class="es live">in corso</span>' };
 const cifre = x => { const v = (k, u) => `<b class="${x[k] >= 10 ? 'ok' : ''}">${x[k]}</b> ${u}`; return `${v('pts', 'pt')} · ${v('reb', 'rb')} · ${v('ast', 'as')}${x.stl >= 5 ? ` · ${v('stl', 'rec')}` : ''}${x.blk >= 5 ? ` · ${v('blk', 'st')}` : ''}`; };
 const riga = n => { const s = statoG(n); return s?.x ? `<span class="lv">${cifre(s.x)}</span>` : ''; };
 async function espn(path) { const sep = path.includes('?') ? '&' : '?'; const r = await fetch(ESPN + path + sep + '_=' + Date.now(), { cache: 'no-store', signal: AbortSignal.timeout(9000) }); if (!r.ok) throw new Error('ESPN HTTP ' + r.status); return r.json(); }
@@ -389,7 +389,7 @@ async function aggiornaLive() {
 function voce(g, y, opt = {}) {
   const e = opt.esito === undefined ? esito(g.n, y) : opt.esito, l = riga(g.n), p = g['p_' + y] ?? g.p, q = g['q_' + y] ?? g.q;
   const segno = e === 'si' ? '<span class="tick si">✓</span>' : e === 'no' ? '<span class="tick no">✗</span>' : '';
-  const numeri = e ? (l || (e === 'ng' ? 'non ha giocato · di solito la giocata viene annullata' : '')) : `${opt.senzaP ? '' : p != null ? pc(p) : '–'}${q ? `${opt.senzaP ? '' : ' · '}quota <span class="q">${nq(q)}</span>${opt.book && g['b_' + y] ? ' ' + esc(bk(g['b_' + y])) : ''}${g['q_prima_' + y] ? ` <span class="qv">era ${nq(g['q_prima_' + y])}</span>` : ''}` : ''}`;
+  const numeri = e ? (l || (e === 'ng' ? 'non ha giocato' : '')) : `${opt.senzaP ? '' : p != null ? pc(p) : '–'}${q ? `${opt.senzaP ? '' : ' · '}quota <span class="q">${nq(q)}</span>${opt.book && g['b_' + y] ? ' ' + esc(bk(g['b_' + y])) : ''}${g['q_prima_' + y] ? ` <span class="qv">era ${nq(g['q_prima_' + y])}</span>` : ''}` : ''}`;
   return `<div class="item"><div class="nm">${segno}${esc(g.n)}<span class="tm">${esc(g.sq)}</span></div><div class="sub">${opt.chip === false ? '' : CHIP[y]}<span>${numeri}</span>${tags(g)}</div></div>`;
 }
 function prima(gambe, q, motivo, chiaveAp) {
