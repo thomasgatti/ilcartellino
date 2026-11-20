@@ -258,7 +258,9 @@ def main(cartella, f_in, f_out, f_quote=None):
                     pid = per_nome.get(abbina(nome, per_nome) or '')
                     if pid is None: continue
                     v_ = q3.setdefault(lin, {}).get(pid)
-                    if v_ is None or prezzo > v_[0]: q3[lin][pid] = (prezzo, bk.replace('.it', ''))
+                    sis = prezzo if bk == 'sisal.it' else (v_[2] if v_ else None)
+                    if v_ is None or prezzo > v_[0]: q3[lin][pid] = (prezzo, bk.replace('.it', ''), sis)
+                    else: q3[lin][pid] = (v_[0], v_[1], sis)     # terzo campo: quota Sisal (il sistema integrale si gioca tutto sullo stesso bookmaker)
         G = []
         for r in Z.itertuples():
             if r.emin < 12 or r.gg_fermo > 30: continue

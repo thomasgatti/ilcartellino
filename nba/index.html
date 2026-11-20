@@ -598,18 +598,19 @@ const nLin = lin => String(lin).replace('.', ',');
 function treLive(P, g) { const L = LIVE[P.id]; if (!L?.sq) return null; for (const k of ['a', 'h']) { const x = (L.sq[P[k].sigla] || []).find(x => String(x.id) === String(g.id)); if (x) return { x, fin: L.stato === 'post' }; }
   return L.stato === 'post' ? { x: null, fin: true } : null; }
 function sistemaTriple(Ps) {
-  // per ogni giocatore con quote: le linee con almeno il 5%; valore = media di probabilità × quota sulle sue linee (1 = pari col bookmaker)
-  const cand = [];
+  // il sistema si gioca tutto su un bookmaker: quote Sisal (terzo campo di q3; SNAI ha gli stessi prezzi). Per ogni giocatore le linee dalla 1,5
+  // con almeno il 5%, al massimo 4; valore = media di probabilità × quota sulle sue linee (1 = pari col bookmaker); il migliore per partita, 4 partite
+  const qs = (g, l) => g.q3[l]?.[2], cand = [];
   for (const P of Ps) for (const g of P.tre || []) { if (!g.q3 || !g.t3 || g.dubbio || g.riposo) continue;
-    const lin = Object.keys(g.q3).map(Number).sort((a, b) => a - b).filter(l => pLin(g.t3, l) >= 0.05 && l >= 1.5).slice(0, 5);
-    if (!lin.length) continue; const v = lin.reduce((a, l) => a + pLin(g.t3, l) * g.q3[l][0], 0) / lin.length;
-    cand.push({ g, P, lin, v }); }
+    const lin = Object.keys(g.q3).map(Number).sort((a, b) => a - b).filter(l => qs(g, l) && l >= 1.5 && pLin(g.t3, l) >= 0.05).slice(0, 4);
+    if (!lin.length) continue; const v = lin.reduce((a, l) => a + pLin(g.t3, l) * qs(g, l), 0) / lin.length;
+    cand.push({ g, P, lin, v, q: l => qs(g, l) }); }
   const perPartita = {}; for (const c of cand) if (!perPartita[c.P.id] || c.v > perPartita[c.P.id].v) perPartita[c.P.id] = c;
   const scelti = Object.values(perPartita).sort((a, b) => b.v - a.v).slice(0, 4);
   if (scelti.length < 2) return null;
   const comb = scelti.reduce((a, c) => a * c.lin.length, 1), unit = 0.05;
   return { scelti, comb, costo: comb * unit, pq: scelti.reduce((a, c) => a * pLin(c.g.t3, c.lin[0]), 1), resa: scelti.reduce((a, c) => a * c.v, 1),
-    min: unit * scelti.reduce((a, c) => a * c.g.q3[c.lin[0]][0], 1), max: unit * scelti.reduce((a, c) => a * c.lin.reduce((s_, l) => s_ + c.g.q3[l][0], 0), 1) };
+    min: unit * scelti.reduce((a, c) => a * c.q(c.lin[0]), 1), max: unit * scelti.reduce((a, c) => a * c.lin.reduce((s_, l) => s_ + c.q(l), 0), 1) };
 }
 function sezioneTriple() {
   const Ps = [...D.partite].sort((a, b) => a.ts - b.ts); if (!Ps.some(P => (P.tre || []).length)) return '';
@@ -618,11 +619,11 @@ function sezioneTriple() {
   const S = sistemaTriple(Ps);
   if (S) { let vinto = 1, finiti = 0, perso = false;
     const righe = S.scelti.map(c => { const lv = treLive(c.P, c.g), fatte = lv?.x ? lv.x.tpm : null; let somma = 0, chiuso = false;
-      if (lv?.fin) { finiti++; if (lv.x == null) somma = c.lin.length; else somma = c.lin.reduce((s_, l) => s_ + (fatte > l ? c.g.q3[l][0] : 0), 0); vinto *= somma; if (!somma) perso = true; chiuso = true; }
+      if (lv?.fin) { finiti++; if (lv.x == null) somma = c.lin.length; else somma = c.lin.reduce((s_, l) => s_ + (fatte > l ? c.q(l) : 0), 0); vinto *= somma; if (!somma) perso = true; chiuso = true; }
       return `<div class="tr3"><div class="tn"><b>${esc(c.g.n)}</b> <small>${esc(c.g.sq)} · ${esc(c.P.a.sigla)} @ ${esc(c.P.h.sigla)} · ${fmtO.format(new Date(c.P.ts * 1000))}</small>${fatte != null ? `<span class="t3n">${fatte} ${fatte === 1 ? 'tripla' : 'triple'}${chiuso ? '' : ' ora'}</span>` : lv?.fin ? '<span class="t3n">non ha giocato: linee a 1</span>' : ''}</div>`
-        + `<div class="tl">${c.lin.map(l => `<span class="tc${fatte != null && fatte > l ? ' si' : chiuso ? ' no' : ''}">over ${nLin(l)}<b>${nq(c.g.q3[l][0])}</b><small>${pc(pLin(c.g.t3, l))}</small></span>`).join('')}</div></div>`; }).join('');
+        + `<div class="tl">${c.lin.map(l => `<span class="tc${fatte != null && fatte > l ? ' si' : chiuso ? ' no' : ''}">over ${nLin(l)}<b>${nq(c.q(l))}</b><small>${pc(pLin(c.g.t3, l))}</small></span>`).join('')}</div></div>`; }).join('');
     const esito = finiti === S.scelti.length ? (perso ? '<span class="es no">✗ persa</span>' : `<span class="es si">✓ vinti ${eur(0.05 * vinto)}</span>`) : perso ? '<span class="es no">✗ persa</span>' : '';
-    h += `<div class="card pad tre3"><div class="th"><div><div class="lab">Sistema integrale della notte</div><div class="sub">${S.scelti.length} giocatori di partite diverse, tutte le linee di ognuno · ${S.comb} combinazioni da 0,05 €</div></div>${esito}</div>${righe}`
+    h += `<div class="card pad tre3"><div class="th"><div><div class="lab">Sistema integrale della notte</div><div class="sub">${S.scelti.length} giocatori di partite diverse, tutte le linee di ognuno · ${S.comb} combinazioni da 0,05 € · quote Sisal (SNAI ha le stesse)</div></div>${esito}</div>${righe}`
       + `<div class="tsum"><div><span>Costo</span><b>${eur(S.costo)}</b></div><div><span>Vincita min / max</span><b>${eur(S.min)} / ${eur(S.max)}</b></div><div><span>Prende qualcosa</span><b>${pc(S.pq)}</b></div><div><span>Ritorno atteso</span><b class="${S.resa >= 1 ? 'ok' : ''}">${Math.round(S.resa * 100)}%</b></div></div>`
       + `<p class="sn">Vincita = 0,05 € × (somma delle quote prese di ognuno, moltiplicate fra loro). «Ritorno atteso» = quanto torna in media per ogni euro secondo il modello: sotto il 100% il margine del bookmaker supera quello che il modello vede. Scelti i giocatori con il rapporto migliore fra probabilità e quota, uno per partita.</p></div>`; }
   h += '<div class="card">' + Ps.filter(P => (P.tre || []).length).map(P => `<details class="vn t3g" data-id="t3·${P.id}"${aperte.has('t3·' + P.id) ? ' open' : ''}><summary><span>${sqc(P.a.sigla, P.a.sigla)} @ ${sqc(P.h.sigla, P.h.sigla)}<small>${fmtO.format(new Date(P.ts * 1000))} · ${(P.tre || []).filter(g => g.q3).length} giocatori quotati</small></span><span></span><span class="arrow">›</span></summary><div class="vl">`
