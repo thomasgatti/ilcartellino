@@ -1352,21 +1352,21 @@
   "ko": 1795269600,
   "partita": "Como - Cagliari",
   "uff": false,
-  "p3": 0.006904513631809887,
+  "p3": 0.007766270992938393,
   "trio": [
    {
     "n": "Z. Pedro",
-    "p": 0.195,
+    "p": 0.2029,
     "team": "Cagliari"
    },
    {
     "n": "A. Deiola",
-    "p": 0.1823,
+    "p": 0.1938,
     "team": "Cagliari"
    },
    {
     "n": "Y. Couto",
-    "p": 0.1674,
+    "p": 0.1702,
     "team": "Como"
    }
   ]
@@ -1377,21 +1377,21 @@
   "ko": 1795269600,
   "partita": "Lazio - Lecce",
   "uff": false,
-  "p3": 0.007687013007088171,
+  "p3": 0.007471673753532239,
   "trio": [
    {
     "n": "Y. Maleh",
-    "p": 0.2063,
+    "p": 0.2092,
     "team": "Lecce"
    },
    {
     "n": "D. Veiga",
-    "p": 0.1921,
+    "p": 0.1882,
     "team": "Lecce"
    },
    {
-    "n": "L. Pellegrini",
-    "p": 0.1672,
+    "n": "A. Pedraza",
+    "p": 0.1636,
     "team": "Lazio"
    }
   ]
