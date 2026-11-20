@@ -602,7 +602,8 @@ function sistemaTriple(Ps) {
   const qs = (g, l) => g.q3[l]?.[2], cand = [];
   for (const P of Ps) for (const g of P.tre || []) { if (!g.q3 || !g.t3 || g.dubbio || g.riposo) continue;
     // come nei sistemi del proprietario: tutte le linee Sisal dalla 1,5 in su (al massimo 4), e la più bassa deve essere probabile (almeno 45%)
-    const lin = Object.keys(g.q3).map(Number).sort((a, b) => a - b).filter(l => qs(g, l) && l >= 1.5).slice(0, 4);
+    // linee consecutive: ci si ferma alla prima che Sisal non quota (niente over 4,5 senza l'over 3,5)
+    const lin = []; for (const l of Object.keys(g.q3).map(Number).filter(l => l >= 1.5).sort((a, b) => a - b)) { if (!qs(g, l) || lin.length >= 4) break; lin.push(l); }
     if (!lin.length || pLin(g.t3, lin[0]) < 0.45) continue; const v = lin.reduce((a, l) => a + pLin(g.t3, l) * qs(g, l), 0) / lin.length;
     cand.push({ g, P, lin, v, q: l => qs(g, l) }); }
   const perPartita = {}; for (const c of cand) if (!perPartita[c.P.id] || c.v > perPartita[c.P.id].v) perPartita[c.P.id] = c;
