@@ -826,3 +826,8 @@ Cinque segnalazioni confermate nel codice, 0 casi reali (storico EXTRA ancora vu
 
 ## Nuova giornata a meno di 60 ore dal via (19/11/2026)
 - La 12ª di Serie A (prima partita sabato 21/11 alle 15:00) restava fuori: `syncRound` passava alla giornata nuova solo con almeno metà delle formazioni pronte su FotMob (4 su 10 il 18-19/11). Ora, se la prima partita è a meno di 60 ore, basta una formazione pronta; le altre partite si aggiungono ai giri successivi con il meccanismo già esistente (`round.append`). Oltre le 60 ore resta la metà. Prova sul ramo: 4 partite caricate (Como-Cagliari, Lazio-Lecce, Parma-Roma, Napoli-Torino), modello con tutti i moduli (`moduli: completo`); in produzione dal giro delle 10:39 del 19/11.
+
+## NBA, 20/11/2026 — storico del giocatore in pagina
+
+- `bot/nba/oggi.py` aggiunge a ogni giocatore `sto` = [partite, DD, TD] di questa stagione + le stesse tre della precedente, e `u5` = ultime 5 partite di questa stagione [pt, rb, as, min] (dall'archivio, solo partite con minuti > 0).
+- In pagina (`storia()` in `nba/index.html`): nell'elenco del Calcolatore e di «I miei giocatori» «DD 2 su 16 quest'anno · 22 su 92 (TD 5) l'anno scorso · minuti in crescita» e le ultime 5 righe (in verde quelle con doppia doppia); nelle colonne delle partite, prima della palla a due, la sola riga DD. Richiesta del proprietario dopo Castle (21-6-12) e Bassey (16-13-1) del 19/11, nomi che gioca da solo.

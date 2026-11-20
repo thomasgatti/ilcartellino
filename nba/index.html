@@ -167,6 +167,8 @@ details[open] > summary .arrow { transform: rotate(90deg); }
 .duo .dn .chip { font-size: 10px; padding: 1px 5px; margin-right: 5px; vertical-align: 1px; } .duo .dn .tag { font-size: 10px; margin-left: 5px; }
 .duo .ds { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; } .duo .ds b { color: var(--ink); margin-right: 1px; } .duo .ds b.ok { color: var(--good); }
 .duo .ds small { display: block; font-size: 11px; }
+.sto { font-size: 11.5px; color: var(--muted); line-height: 1.45; margin-top: 2px; font-weight: 400; } .sto b { color: var(--ink); font-weight: 700; } .sto .su { color: var(--good); } .sto .u-si { color: var(--good); font-weight: 600; }
+.duo .sto { font-size: 11px; }
 .duo .dr.si .dn { color: var(--good); } .duo .dv { font-size: 13px; color: var(--muted); padding: 8px 0; }
 @media (max-width: 520px) { .duo { gap: 6px; } .duo .dc { padding: 4px 7px 8px; } .duo .dn { font-size: 13px; } .duo .ds { font-size: 12px; } }
 .pl { display: grid; grid-template-columns: minmax(0, 1fr) 56px 56px; gap: 10px; align-items: center; padding: 9px 0; border-top: 1px solid var(--line); }
@@ -569,7 +571,7 @@ function duo(P, L, viva) {
           + `<div class="ds">${b(x.pts, 'pt')} ${b(x.reb, 'rb')} ${b(x.ast, 'as')}${x.stl >= 5 ? ' ' + b(x.stl, 'rec') : ''}${x.blk >= 5 ? ' ' + b(x.blk, 'st') : ''}<small>${x.min}'${g && L.stato !== 'post' ? ' · DD ' + pc(g.p_dd) : ''}</small></div></div>`; }).join('');
     } else {
       righe = P.giocatori.filter(g => g.sq === P[k].sigla).sort((x, y) => y.p_dd - x.p_dd).map(g => `<div class="dr"><div class="dn">${esc(cogn(g.n))}${tags(g)}</div>`
-        + `<div class="ds">DD <b>${pc(g.p_dd)}</b>${g.q_dd ? ' · ' + nq(g.q_dd) : ''}${g.p_td >= 0.03 ? ` · TD ${pc(g.p_td)}` : ''}<small>${g.pts.toFixed(0)}-${g.reb.toFixed(0)}-${g.ast.toFixed(0)} di media</small></div></div>`).join('');
+        + `<div class="ds">DD <b>${pc(g.p_dd)}</b>${g.q_dd ? ' · ' + nq(g.q_dd) : ''}${g.p_td >= 0.03 ? ` · TD ${pc(g.p_td)}` : ''}<small>${g.pts.toFixed(0)}-${g.reb.toFixed(0)}-${g.ast.toFixed(0)} di media</small></div>${storia(g, false)}</div>`).join('');
       if (viva) righe = (L.pl ? '' : '<div class="dv">tabellino in arrivo…</div>') + righe;
     }
     return `<div class="dc"><div class="dh">${sqc(P[k].sigla, P[k].sigla)}${viva ? `<b>${esc(L.sc[i])}</b>` : ''}</div>${righe || '<div class="dv">nessun giocatore</div>'}</div>`;
@@ -594,9 +596,17 @@ function caricaCalc() {
 const salvaCalc = () => { try { localStorage.setItem(KCALC, JSON.stringify(CALC)); } catch (e) {} };
 const salvaSalvate = () => { try { localStorage.setItem(KSALV, JSON.stringify(SALVATE.slice(-60))); } catch (e) {} };
 // tutti i giocatori della notte, per l'elenco della ricerca
+// storico del giocatore (20/11/2026): doppie (e triple) doppie su partite giocate, quest'anno e l'anno scorso; ultime 5 partite; minuti in crescita
+function storia(g, ultime = true) {
+  if (!g?.sto) return ''; const [n, d, t, n2, d2, t2] = g.sto, f = (d_, t_, n_) => `<b>${d_}</b> su ${n_}${t_ ? ` (TD ${t_})` : ''}`;
+  let s_ = `DD ${f(d, t, n)} quest'anno${n2 ? ` · ${f(d2, t2, n2)} l'anno scorso` : ''}`;
+  if (g.su) s_ += ` · <span class="su">minuti in crescita (+${Math.round(g.su)})</span>`;
+  if (ultime && g.u5?.length) s_ += `<br>ultime: ${g.u5.slice().reverse().map(([p_, r_, a_]) => { const c = [p_, r_, a_].filter(x => x >= 10).length; return `<span class="${c >= 2 ? 'u-si' : ''}">${p_}-${r_}-${a_}</span>`; }).join(' · ')}`;
+  return `<div class="sto">${s_}</div>`;
+}
 function elenco() { const out = [];
   for (const P of [...(DATI.oggi?.partite || [])].sort((a, b) => a.ts - b.ts)) for (const g of P.giocatori)
-    out.push({ n: g.n, id: g.id, sq: g.sq, partita: P.id, gara: `${P.a.sigla} @ ${P.h.sigla} · ${fmtO.format(new Date(P.ts * 1000))}`, p_dd: g.p_dd, p_td: g.p_td, q_dd: g.q_dd, q_td: g.q_td, b_dd: g.b_dd, b_td: g.b_td, dubbio: g.dubbio, riposo: g.riposo });
+    out.push({ n: g.n, id: g.id, sq: g.sq, partita: P.id, gara: `${P.a.sigla} @ ${P.h.sigla} · ${fmtO.format(new Date(P.ts * 1000))}`, p_dd: g.p_dd, p_td: g.p_td, q_dd: g.q_dd, q_td: g.q_td, b_dd: g.b_dd, b_td: g.b_td, dubbio: g.dubbio, riposo: g.riposo, sto: g.sto, u5: g.u5, su: g.su });
   return out; }
 const giaDentro = n => CALC.legs.some(l => chiave(l.n) === chiave(n));
 function aggiungi(n, cosa, libero) {
@@ -671,12 +681,12 @@ function riempiScelta() {
   let h = '', gara = '';
   if (SCELTA === 'miei') {
     for (const g of L) { if (g.gara !== gara) { gara = g.gara; h += `<div class="lg">${esc(gara)}</div>`; } const s_ = seguo(g.n);
-      h += `<div class="lr uno${s_ ? ' gia' : ''}"><div class="ln"><b>${esc(g.n)}</b> <small>${esc(g.sq)}${g.dubbio ? ' · in dubbio' : ''}${s_ ? ' · lo segui già' : ''}</small></div><button type="button" class="pk segui" data-act="segui" data-n="${esc(g.n)}" ${s_ ? 'disabled' : ''}><b>Segui</b></button></div>`; }
+      h += `<div class="lr uno${s_ ? ' gia' : ''}"><div class="ln"><b>${esc(g.n)}</b> <small>${esc(g.sq)}${g.dubbio ? ' · in dubbio' : ''}${s_ ? ' · lo segui già' : ''}</small>${storia(g)}</div><button type="button" class="pk segui" data-act="segui" data-n="${esc(g.n)}" ${s_ ? 'disabled' : ''}><b>Segui</b></button></div>`; }
     if (t && !L.length) h += `<div class="lg">Non è nell'elenco di stanotte</div><div class="lr uno"><div class="ln"><b>${esc(t)}</b> <small>lo cerco nei tabellini di tutte le partite</small></div><button type="button" class="pk segui" data-act="seguilibero" data-n="${esc(t)}" ${seguo(t) ? 'disabled' : ''}><b>Segui</b></button></div>`;
     document.getElementById('lista').innerHTML = h || '<div class="lg">Nessun giocatore: scrivi il nome per seguirlo.</div>'; return;
   }
   for (const g of L) { if (g.gara !== gara) { gara = g.gara; h += `<div class="lg">${esc(gara)}</div>`; }
-    h += `<div class="lr${giaDentro(g.n) ? ' gia' : ''}"><div class="ln"><b>${esc(g.n)}</b> <small>${esc(g.sq)}${g.dubbio ? ' · in dubbio' : ''}${g.riposo ? ' · rischio riposo' : ''}${giaDentro(g.n) ? ' · già nella schedina' : ''}</small></div>${bot(g, 'dd')}${bot(g, 'td')}</div>`; }
+    h += `<div class="lr${giaDentro(g.n) ? ' gia' : ''}"><div class="ln"><b>${esc(g.n)}</b> <small>${esc(g.sq)}${g.dubbio ? ' · in dubbio' : ''}${g.riposo ? ' · rischio riposo' : ''}${giaDentro(g.n) ? ' · già nella schedina' : ''}</small>${storia(g)}</div>${bot(g, 'dd')}${bot(g, 'td')}</div>`; }
   if (t && !L.length) { const dentro = giaDentro(t);
     h += `<div class="lg">Non è nell'elenco di stanotte</div><div class="lr${dentro ? ' gia' : ''}"><div class="ln"><b>${esc(t)}</b> <small>${dentro ? 'già nella schedina' : 'senza percentuale: la quota la scrivi tu'}</small></div>`
       + ['dd', 'td'].map(c => `<button type="button" class="pk ${c}" data-act="libero" data-n="${esc(t)}" data-c="${c}" ${dentro ? 'disabled' : ''}><b>${c.toUpperCase()}</b></button>`).join('') + '</div>'; }

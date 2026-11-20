@@ -188,6 +188,17 @@ def diario(partite, gioc, D):
 
 def main(cartella, f_in, f_out, f_quote=None):
     partite, gioc = carica(cartella); I = json.load(open(f_in)); stato = {}; nomi = {}; quote_ora = I.get('quote_creato')
+    # storico per la pagina (20/11/2026): partite, doppie e triple doppie di questa stagione e della precedente, ultime 5 righe punti-rimbalzi-assist
+    st_ora = f"{I['partite'][0]['anno'] - 1}-{I['partite'][0]['anno']}" if I['partite'] else None
+    st_prima = f"{int(st_ora[:4]) - 1}-{st_ora[:4]}" if st_ora else None
+    sto, ult5 = {}, {}
+    for Pg in sorted(partite, key=lambda x: x['ts']):
+        if Pg['st'] not in (st_ora, st_prima): continue
+        for r in Pg['p']:
+            if r[3] <= 0: continue
+            c10 = sum(1 for x in r[4:9] if x >= 10); a = sto.setdefault(r[0], {}).setdefault(Pg['st'], [0, 0, 0])
+            a[0] += 1; a[1] += c10 >= 2; a[2] += c10 >= 3
+            if Pg['st'] == st_ora: ult5.setdefault(r[0], []).append([r[4], r[5], r[6], r[3]]); ult5[r[0]] = ult5[r[0]][-5:]
     V_stessa = None
     if f_quote:                                        # rifacimento della stessa notte: le quote si riprendono dalla pagina già pubblicata
         V = json.load(open(f_quote)); vecchie = {str(P['id']): P for P in V.get('partite', [])} if V.get('giorno') == I['giorno'] else {}
@@ -245,6 +256,8 @@ def main(cartella, f_in, f_out, f_quote=None):
                     if r.p_gioca < M2.SOGLIA_GIOCA: g['riposo'] = 1
             elif r.b2b == 1 and r.b2b_occ >= 4 and r.b2b_gio / r.b2b_occ < 0.6: g['riposo'] = 1
             if r.emin - r.emin_lenta >= 4: g['su'] = round(float(r.emin - r.emin_lenta), 1)
+            s_ = sto.get(r.pid, {}); g['sto'] = s_.get(st_ora, [0, 0, 0]) + s_.get(st_prima, [0, 0, 0])    # [partite, DD, TD] quest'anno + anno scorso
+            if r.pid in ult5: g['u5'] = ult5[r.pid]                                                       # ultime 5: [pt, rb, as, min]
             for y in ('dd', 'td'):
                 if r.pid in q[y]: g['q_' + y], g['b_' + y] = q[y][r.pid][:2]; g['v_' + y] = round(g['p_' + y] * g['q_' + y], 3)
             G.append(g); tutti.append(dict(g, partita=P['id']))
