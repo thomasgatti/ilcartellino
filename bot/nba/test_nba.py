@@ -14,7 +14,7 @@ import numpy as np, pandas as pd
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from dataset import costruisci
 from mercato import abbina, norm
-ESITO = {'min', 'pts', 'reb', 'ast', 'stl', 'blk', 'dd', 'td'}
+ESITO = {'tpm', 'tpa', 'min', 'pts', 'reb', 'ast', 'stl', 'blk', 'dd', 'td'}
 
 def archivio_finto(n_giorni=70, seme=0):
     """8 squadre, 9 giocatori l'una, 4 partite per sera alla stessa ora; ogni tanto qualcuno salta la partita"""
@@ -62,7 +62,7 @@ def test_fuga_dal_tabellino():
     # e la differenza che la correzione toglie: senza lega_per_giorno la prima partita della sera entra nelle variabili delle altre
     A = costruisci(copy.deepcopy(P), G); B = costruisci(altera({ultime[0]}), G); col = [c for c in A.columns if c not in ESITO]
     d = uguali(A[A.id.isin(ultime[1:])].reset_index(drop=True), B[B.id.isin(ultime[1:])].reset_index(drop=True), col)
-    assert set(d) <= {'ritmo_lega', 'conc_pts', 'conc_reb', 'conc_ast'}, f'fuga inattesa fra partite della stessa sera: {d}'
+    assert set(d) <= {'ritmo_lega', 'conc_pts', 'conc_reb', 'conc_ast', 'conc_tpm'}, f'fuga inattesa fra partite della stessa sera: {d}'
 
 def test_universo():
     P, G = archivio_finto(); A = costruisci(copy.deepcopy(P), G); U = costruisci(copy.deepcopy(P), G, universo=True)
