@@ -598,12 +598,12 @@ const nLin = lin => String(lin).replace('.', ',');
 function treLive(P, g) { const L = LIVE[P.id]; if (!L?.sq) return null; for (const k of ['a', 'h']) { const x = (L.sq[P[k].sigla] || []).find(x => String(x.id) === String(g.id)); if (x) return { x, fin: L.stato === 'post' }; }
   return L.stato === 'post' ? { x: null, fin: true } : null; }
 function sistemaTriple(Ps) {
-  // il sistema si gioca tutto su un bookmaker: quote Sisal (terzo campo di q3; SNAI ha gli stessi prezzi). Per ogni giocatore le linee dalla 1,5
-  // con almeno il 5%, al massimo 4; valore = media di probabilità × quota sulle sue linee (1 = pari col bookmaker); il migliore per partita, 4 partite
+  // il sistema si gioca tutto su un bookmaker: quote Sisal (terzo campo di q3; SNAI ha gli stessi prezzi). valore = media di probabilità × quota sulle sue linee (1 = pari col bookmaker); il migliore per partita, 4 partite
   const qs = (g, l) => g.q3[l]?.[2], cand = [];
   for (const P of Ps) for (const g of P.tre || []) { if (!g.q3 || !g.t3 || g.dubbio || g.riposo) continue;
-    const lin = Object.keys(g.q3).map(Number).sort((a, b) => a - b).filter(l => qs(g, l) && l >= 1.5 && pLin(g.t3, l) >= 0.05).slice(0, 4);
-    if (!lin.length) continue; const v = lin.reduce((a, l) => a + pLin(g.t3, l) * qs(g, l), 0) / lin.length;
+    // come nei sistemi del proprietario: tutte le linee Sisal dalla 1,5 in su (al massimo 4), e la più bassa deve essere probabile (almeno 45%)
+    const lin = Object.keys(g.q3).map(Number).sort((a, b) => a - b).filter(l => qs(g, l) && l >= 1.5).slice(0, 4);
+    if (!lin.length || pLin(g.t3, lin[0]) < 0.45) continue; const v = lin.reduce((a, l) => a + pLin(g.t3, l) * qs(g, l), 0) / lin.length;
     cand.push({ g, P, lin, v, q: l => qs(g, l) }); }
   const perPartita = {}; for (const c of cand) if (!perPartita[c.P.id] || c.v > perPartita[c.P.id].v) perPartita[c.P.id] = c;
   const scelti = Object.values(perPartita).sort((a, b) => b.v - a.v).slice(0, 4);
@@ -625,7 +625,7 @@ function sezioneTriple() {
     const esito = finiti === S.scelti.length ? (perso ? '<span class="es no">✗ persa</span>' : `<span class="es si">✓ vinti ${eur(0.05 * vinto)}</span>`) : perso ? '<span class="es no">✗ persa</span>' : '';
     h += `<div class="card pad tre3"><div class="th"><div><div class="lab">Sistema integrale della notte</div><div class="sub">${S.scelti.length} giocatori di partite diverse, tutte le linee di ognuno · ${S.comb} combinazioni da 0,05 € · quote Sisal (SNAI ha le stesse)</div></div>${esito}</div>${righe}`
       + `<div class="tsum"><div><span>Costo</span><b>${eur(S.costo)}</b></div><div><span>Vincita min / max</span><b>${eur(S.min)} / ${eur(S.max)}</b></div><div><span>Prende qualcosa</span><b>${pc(S.pq)}</b></div><div><span>Ritorno atteso</span><b class="${S.resa >= 1 ? 'ok' : ''}">${Math.round(S.resa * 100)}%</b></div></div>`
-      + `<p class="sn">Vincita = 0,05 € × (somma delle quote prese di ognuno, moltiplicate fra loro). «Ritorno atteso» = quanto torna in media per ogni euro secondo il modello: sotto il 100% il margine del bookmaker supera quello che il modello vede. Scelti i giocatori con il rapporto migliore fra probabilità e quota, uno per partita.</p></div>`; }
+      + `<p class="sn">Vincita = 0,05 € × (somma delle quote prese di ognuno, moltiplicate fra loro). «Ritorno atteso» = quanto torna in media per ogni euro secondo il modello: sotto il 100% il margine del bookmaker supera quello che il modello vede. Per ogni partita il giocatore con il rapporto migliore fra probabilità e quota, fra quelli che superano la linea più bassa almeno 45 volte su 100.</p></div>`; }
   h += '<div class="card">' + Ps.filter(P => (P.tre || []).length).map(P => `<details class="vn t3g" data-id="t3·${P.id}"${aperte.has('t3·' + P.id) ? ' open' : ''}><summary><span>${sqc(P.a.sigla, P.a.sigla)} @ ${sqc(P.h.sigla, P.h.sigla)}<small>${fmtO.format(new Date(P.ts * 1000))} · ${(P.tre || []).filter(g => g.q3).length} giocatori quotati</small></span><span></span><span class="arrow">›</span></summary><div class="vl">`
     + P.tre.map(g => { const lv = treLive(P, g), f = lv?.x ? lv.x.tpm : null, lin = Object.keys(g.q3 || {}).map(Number).sort((a, b) => a - b);
       const mostra = lin.length ? lin : [1.5, 2.5, 3.5];
