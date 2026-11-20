@@ -67,8 +67,8 @@ def strutturale(ps):
 def costruisci(partite, gioc, universo=False, lega_per_giorno=False):
     G = {}                                            # stato del giocatore
     T = defaultdict(lambda: dict(n=0, ult=None, poss=Mobile(), conc={k: Mobile() for k in ('pts', 'reb', 'ast')}, fatti={k: Mobile() for k in ('pts', 'reb', 'ast')},
-                                 rot={}, conc_r={r: {k: Mobile() for k in ('pts', 'reb', 'ast')} for r in 'GFC'}, tss=deque(maxlen=6), nst={}))
-    lega = {k: Mobile() for k in ('poss', 'pts', 'reb', 'ast')}
+                                 rot={}, conc_r={r: {k: Mobile() for k in ('pts', 'reb', 'ast')} for r in 'GFC'}, tss=deque(maxlen=6), nst={}, c3=Mobile()))
+    lega = {k: Mobile() for k in ('poss', 'pts', 'reb', 'ast', 'tpm')}
     righe = []; coda_lega = []; giorno_lega = None
     for m in partite:
         st, ts = m['st'], m['ts']; lati = {1: m['h'], 0: m['a']}
@@ -82,7 +82,7 @@ def costruisci(partite, gioc, universo=False, lega_per_giorno=False):
             t = m.get('t', {}).get('h' if L else 'a') or {}
             s = lambda i: sum(r[i] for r in per_lato[L])
             fga = t.get('fga') or s(11); fta = t.get('fta') or s(15); oreb = t.get('oreb') or s(16); to = t.get('to') or s(9)
-            tot[L] = dict(poss=fga + 0.44 * fta - oreb + to, pts=lati[L][2], reb=t.get('reb') or s(5), ast=t.get('ast') or s(6))
+            tot[L] = dict(poss=fga + 0.44 * fta - oreb + to, pts=lati[L][2], reb=t.get('reb') or s(5), ast=t.get('ast') or s(6), tpm=sum(r[12] for r in per_lato[L] if len(r) > 13))
         ctx = {}
         for L in (0, 1):
             tid, oid = lati[L][0], lati[1 - L][0]; a, b = T[tid], T[oid]
@@ -105,7 +105,7 @@ def costruisci(partite, gioc, universo=False, lega_per_giorno=False):
                           hc=None if hc is None else (hc if L else -hc), totp=totp,
                           rotd={pid: ieri for pid, mm, ieri in rot}, s_rot=sum(mm['min'].m for _, mm, _ in rot),
                           s_ass=sum(mm['min'].m for _, mm, _ in ass), s_gia=sum(mm['min'].m for _, mm in gia),
-                          gare7=sum(1 for t_ in a['tss'] if ts - t_ < 7 * 86400), n_sq_st=a['nst'].get(st, 0))
+                          gare7=sum(1 for t_ in a['tss'] if ts - t_ < 7 * 86400), n_sq_st=a['nst'].get(st, 0), c3=(b['c3'].m, lega['tpm'].m))
         for L in (0, 1):
             c = ctx[L]; tid, oid = lati[L][0], lati[1 - L][0]
             elenco = [(r, 1) for r in per_lato[L]]
@@ -118,6 +118,7 @@ def costruisci(partite, gioc, universo=False, lega_per_giorno=False):
                 n10 = sum(1 for k in CAT if val[k] >= 10)
                 g = G.get(pid); rl = ruolo((gioc.get(str(pid)) or ['', ''])[1])
                 riga = dict(id=m['id'], ts=ts, st=st, tipo=m['tipo'], pid=pid, sq=tid, avv=oid, casa=L, ruolo=rl, tit=tit, futura=int(bool(m.get('futura'))),
+                            tpm=r[12] if len(r) > 13 else 0, tpa=r[13] if len(r) > 13 else 0,
                             min=mn, pts=pts, reb=reb, ast=ast, stl=stl, blk=blk, dd=int(n10 >= 2), td=int(n10 >= 3), n_prec=0 if g is None else g['n'],
                             gioca=gioca, ieri=int(bool(c['rotd'].get(pid))), gare7=c['gare7'], n_sq_st=c['n_sq_st'])
                 if g is not None and g['n'] > 0:
@@ -148,6 +149,12 @@ def costruisci(partite, gioc, universo=False, lega_per_giorno=False):
                                 q2_10=float(np.mean([x >= 8 for x in g['u10sec']])), q3_10=float(np.mean([x >= 7 for x in g['u10ter']])),
                                 ter_stag=(g['ssum'].get((st, 'ter'), 0.0) + K_STAG * float(np.mean(g['u10ter']))) / (ns + K_STAG),
                                 sec_stag=(g['ssum'].get((st, 'sec'), 0.0) + K_STAG * float(np.mean(g['u10sec']))) / (ns + K_STAG))
+                    # triple segnate (20/11/2026, modello «triple» in triple.py; il modello delle doppie non le usa)
+                    t3 = g['t3']; mn_l = max(g['lenta']['min'].m, 4.0); pct = (g['c3m'] + 0.35 * 60) / (g['c3a'] + 60)
+                    riga.update(tpa_lenta=t3['al'].m, tpm_lenta=t3['ml'].m, tpa_vel=t3['av'].m, tpm_vel=t3['mv'].m,
+                                tpa_stag=(g['ssum'].get((st, 'tpa'), 0.0) + K_STAG * t3['al'].m) / (ns + K_STAG), tpm_stag=(g['ssum'].get((st, 'tpm'), 0.0) + K_STAG * t3['ml'].m) / (ns + K_STAG),
+                                tp_car=pct, tpa_car=g['c3a'] / g['n'], tpa_pm=t3['al'].m / mn_l, tpm_att=t3['al'].m / mn_l * em * pct,
+                                tpm_10=float(np.mean(g['u10tpm'])), tpa_10=float(np.mean(g['u10tpa'])))
                     p2, p3 = strutturale(ps); riga['p_dd_strut'] = p2; riga['p_td_strut'] = p3
                     ordn = sorted((riga[k + '_att'] for k in ('pts', 'reb', 'ast')), reverse=True)
                     riga['att_2a'] = ordn[1]; riga['att_3a'] = ordn[2]
@@ -161,6 +168,7 @@ def costruisci(partite, gioc, universo=False, lega_per_giorno=False):
                 # contesto di squadra
                 riga.update(riposo=c['ripo'], riposo_avv=c['ripo_avv'], b2b=None if c['ripo'] is None else int(c['ripo'] < 1.6), b2b_avv=None if c['ripo_avv'] is None else int(c['ripo_avv'] < 1.6),
                             ritmo=c['ritmo'], ritmo_avv=c['ritmo_avv'], ritmo_lega=c['ritmo_lega'], linea_hc=c['hc'], linea_tot=c['totp'], playoff=int(m['tipo'] != 2))
+                a_, l_ = c['c3']; riga['conc_tpm'] = None if a_ is None or l_ is None else a_ - l_
                 for k in ('pts', 'reb', 'ast'):
                     a_, l_ = c['conc'][k]; riga['conc_' + k] = None if a_ is None or l_ is None else a_ - l_
                     cr = c['conc_r'][rl][k].m; riga['concr_' + k] = cr
@@ -191,6 +199,7 @@ def costruisci(partite, gioc, universo=False, lega_per_giorno=False):
             a['n'] += 1; a['ult'] = ts; a['tss'].append(ts); a['nst'][st] = a['nst'].get(st, 0) + 1
             a['poss'].agg((tot[0]['poss'] + tot[1]['poss']) / 2, 0.08)
             for k in ('pts', 'reb', 'ast'): a['fatti'][k].agg(tot[L][k], 0.08); a['conc'][k].agg(tot[1 - L][k], 0.08)
+            a['c3'].agg(tot[1 - L]['tpm'], 0.08)
             # concesso per ruolo: somma dei giocatori avversari di quel ruolo
             for rl in 'GFC':
                 avv = [r for r in per_lato[1 - L] if ruolo((gioc.get(str(r[0])) or ['', ''])[1]) == rl]
@@ -203,7 +212,8 @@ def costruisci(partite, gioc, universo=False, lega_per_giorno=False):
                 if g is None:
                     g = G[pid] = dict(n=0, ns={}, ult=ts, sq=tid, min_ult=0, rientro=0, pf=Mobile(), disp=Mobile(), sqn={}, exvisti=set(), b2b=[0, 0], emin=Mobile(), etit=Mobile(), tit_ult=0, dd=Mobile(), td=Mobile(), cdd=0, ctd=0, sdd={}, std={}, ssum={},
                                       lenta={k: Mobile() for k in CAT + ('min',)}, vel={k: Mobile() for k in CAT}, u10dd=deque(maxlen=10), u10td=deque(maxlen=10), u10min=deque(maxlen=10),
-                                      u10={k: deque(maxlen=10) for k in ('pts', 'reb', 'ast')}, u10sec=deque(maxlen=10), u10ter=deque(maxlen=10))
+                                      u10={k: deque(maxlen=10) for k in ('pts', 'reb', 'ast')}, u10sec=deque(maxlen=10), u10ter=deque(maxlen=10),
+                                      t3={k: Mobile() for k in ('ml', 'al', 'mv', 'av')}, c3m=0, c3a=0, u10tpm=deque(maxlen=10), u10tpa=deque(maxlen=10))
                 g['rientro'] = 0 if (ts - g['ult']) / 86400 > 10 else g['rientro'] + 1
                 g['min_ult'] = r[3]; g['pf'].agg(r[18] if len(r) > 18 else 0, A_LENTA)
                 st = m['st']; g['n'] += 1; g['ns'][st] = g['ns'].get(st, 0) + 1; g['ult'] = ts; g['sq'] = tid
@@ -218,7 +228,11 @@ def costruisci(partite, gioc, universo=False, lega_per_giorno=False):
                 g['ssum'][(st, 'sec')] = g['ssum'].get((st, 'sec'), 0.0) + o3[1]; g['ssum'][(st, 'ter')] = g['ssum'].get((st, 'ter'), 0.0) + o3[2]
                 for k in CAT + ('min',): g['lenta'][k].agg(val[k], A_LENTA)
                 for k in CAT: g['vel'][k].agg(val[k], A_VELOCE); g['ssum'][(st, k)] = g['ssum'].get((st, k), 0.0) + val[k]
-        for k in ('pts', 'reb', 'ast', 'poss'):
+                tm, ta = (r[12], r[13]) if len(r) > 13 else (0, 0); t3 = g['t3']
+                t3['ml'].agg(tm, A_LENTA); t3['al'].agg(ta, A_LENTA); t3['mv'].agg(tm, A_VELOCE); t3['av'].agg(ta, A_VELOCE)
+                g['c3m'] += tm; g['c3a'] += ta; g['u10tpm'].append(tm); g['u10tpa'].append(ta)
+                g['ssum'][(st, 'tpm')] = g['ssum'].get((st, 'tpm'), 0.0) + tm; g['ssum'][(st, 'tpa')] = g['ssum'].get((st, 'tpa'), 0.0) + ta
+        for k in ('pts', 'reb', 'ast', 'poss', 'tpm'):
             if lega_per_giorno: coda_lega.append((k, (tot[0][k] + tot[1][k]) / 2))
             else: lega[k].agg((tot[0][k] + tot[1][k]) / 2, 0.01)
     return pd.DataFrame(righe)

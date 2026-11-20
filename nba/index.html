@@ -158,6 +158,17 @@ details[open] > summary .arrow { transform: rotate(90deg); }
 .more .out b { color: var(--ink); font-weight: 600; }
 .sqc { display: inline-block; background: var(--c1); color: var(--c2); padding: 2px 7px; border-radius: 5px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.18); line-height: 1.3; max-width: 100%; overflow: hidden; text-overflow: ellipsis; vertical-align: middle; }
 .duo .dh .sqc { padding: 3px 9px; }
+.tre3 .th { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 6px; } .tre3 .lab { font: 800 13px var(--body); text-transform: uppercase; letter-spacing: .5px; } .tre3 .sub { color: var(--muted); font-size: 13px; }
+.tr3 { padding: 10px 0; border-top: 1px solid var(--soft); } .t3g .tr3:first-child { border-top: 0; }
+.tr3 .tn b { font-size: 15px; } .tr3 .tn small { color: var(--muted); font-size: 12.5px; } .tr3 .t3n { margin-left: 8px; font-weight: 800; color: var(--gold); font-size: 13px; }
+.tr3 .tl { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.tr3 .tc { display: inline-grid; grid-template-columns: auto auto; gap: 0 8px; align-items: baseline; padding: 5px 9px; border-radius: 9px; background: rgba(0,0,0,.22); border: 1px solid transparent; font-size: 12px; color: var(--muted); }
+.tr3 .tc b { color: var(--gold); font-size: 14px; } .tr3 .tc small { grid-column: 1 / -1; font-size: 11px; }
+.tr3 .tc.val { border-color: rgba(95,224,160,.45); } .tr3 .tc.si { background: rgba(95,224,160,.18); color: var(--good); } .tr3 .tc.no { opacity: .45; }
+.tre3 .tsum { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); }
+.tre3 .tsum span { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .4px; color: var(--muted); } .tre3 .tsum b { font: 800 17px var(--body); } .tre3 .tsum b.ok { color: var(--good); }
+@media (max-width: 520px) { .tre3 .tsum { grid-template-columns: 1fr 1fr; } }
+.tre3 + .card { margin-top: 12px; }
 .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
 .duo .dc { min-width: 0; background: rgba(0,0,0,.16); border-radius: 12px; padding: 4px 10px 8px; }
 .duo .dh { display: flex; justify-content: space-between; align-items: baseline; padding: 6px 0 6px; border-bottom: 1px solid var(--line); font: 800 15px var(--display); letter-spacing: .5px; }
@@ -414,7 +425,7 @@ function tabellino(j) { const pl = {};
 function squadre(j) { const sq = {};
   for (const T of j.boxscore?.players || []) { const S = T.statistics?.[0], ab = T.team?.abbreviation; if (!S || !ab) continue; const nomi = S.names || S.labels || [], ix = k => nomi.indexOf(k);
     sq[ab] = (S.athletes || []).filter(a => !a.didNotPlay && (a.stats || []).length).map(a => { const v = k => parseInt(a.stats[ix(k)], 10) || 0;
-      return { n: a.athlete.displayName, id: a.athlete.id, tit: !!a.starter, min: v('MIN'), pts: v('PTS'), reb: v('REB'), ast: v('AST'), stl: v('STL'), blk: v('BLK') }; })
+      return { n: a.athlete.displayName, id: a.athlete.id, tit: !!a.starter, min: v('MIN'), pts: v('PTS'), reb: v('REB'), ast: v('AST'), stl: v('STL'), blk: v('BLK'), tpm: v('3PT') }; })
       .sort((x, y) => (y.tit - x.tit) || (y.min - x.min)); }
   return sq; }
 let inGiro = false;
@@ -489,6 +500,7 @@ function disegna() {
       + giocata('td', 'Tripla doppia', (C.td || [])[0], 'td', 'Nessun candidato sopra il 3%.') + '</div></section>';
     if ((C.combinazioni || []).length) h += '<section><div class="sec"><h2>Combinazioni</h2><span>giocatori di partite diverse · tocca «altri» sotto un giocatore per vedere chi metterci al suo posto</span></div><div class="card">'
       + C.combinazioni.map(combo).join('') + '</div></section>';
+    h += sezioneTriple();
     h += '<section><div class="sec"><h2>Partite</h2><span>tocca una partita per vedere le due squadre giocatore per giocatore, con il punteggio in diretta</span></div><div class="card">';
     for (const P of Ps) {
       const c = k => P.giocatori.find(g => g.n === P.candidati[k]), L = LIVE[P.id], viva = L && L.stato !== 'pre';
@@ -577,6 +589,48 @@ function duo(P, L, viva) {
     return `<div class="dc"><div class="dh">${sqc(P[k].sigla, P[k].sigla)}${viva ? `<b>${esc(L.sc[i])}</b>` : ''}</div>${righe || '<div class="dv">nessun giocatore</div>'}</div>`;
   };
   return `<div class="duo">${col('a', 0)}${col('h', 1)}</div>`;
+}
+// ===== Triple segnate (20/11/2026, prova): linee «over» dei canestri da 3 e un sistema integrale come quelli che gioca il proprietario =====
+// p[k-1] = P(almeno k triple); la linea «2.5» si prende con almeno 3
+const pLin = (t3, lin) => t3.p[Math.round(+lin + 0.5) - 1] ?? 0;
+const nLin = lin => String(lin).replace('.', ',');
+function treLive(P, g) { const L = LIVE[P.id]; if (!L?.sq) return null; for (const k of ['a', 'h']) { const x = (L.sq[P[k].sigla] || []).find(x => String(x.id) === String(g.id)); if (x) return { x, fin: L.stato === 'post' }; }
+  return L.stato === 'post' ? { x: null, fin: true } : null; }
+function sistemaTriple(Ps) {
+  // per ogni giocatore con quote: le linee con almeno il 5%; valore = media di probabilità × quota sulle sue linee (1 = pari col bookmaker)
+  const cand = [];
+  for (const P of Ps) for (const g of P.tre || []) { if (!g.q3 || !g.t3 || g.dubbio || g.riposo) continue;
+    const lin = Object.keys(g.q3).map(Number).sort((a, b) => a - b).filter(l => pLin(g.t3, l) >= 0.05 && l >= 1.5).slice(0, 5);
+    if (!lin.length) continue; const v = lin.reduce((a, l) => a + pLin(g.t3, l) * g.q3[l][0], 0) / lin.length;
+    cand.push({ g, P, lin, v }); }
+  const perPartita = {}; for (const c of cand) if (!perPartita[c.P.id] || c.v > perPartita[c.P.id].v) perPartita[c.P.id] = c;
+  const scelti = Object.values(perPartita).sort((a, b) => b.v - a.v).slice(0, 4);
+  if (scelti.length < 2) return null;
+  const comb = scelti.reduce((a, c) => a * c.lin.length, 1), unit = 0.05;
+  return { scelti, comb, costo: comb * unit, pq: scelti.reduce((a, c) => a * pLin(c.g.t3, c.lin[0]), 1), resa: scelti.reduce((a, c) => a * c.v, 1),
+    min: unit * scelti.reduce((a, c) => a * c.g.q3[c.lin[0]][0], 1), max: unit * scelti.reduce((a, c) => a * c.lin.reduce((s_, l) => s_ + c.g.q3[l][0], 0), 1) };
+}
+function sezioneTriple() {
+  const Ps = [...D.partite].sort((a, b) => a.ts - b.ts); if (!Ps.some(P => (P.tre || []).length)) return '';
+  const eur = x => x.toFixed(2).replace('.', ',') + ' €';
+  let h = `<section><div class="sec"><h2>Triple</h2><span>canestri da 3 · prova da stanotte: probabilità del modello per ogni linea «over», quote Sisal e bet365</span></div>`;
+  const S = sistemaTriple(Ps);
+  if (S) { let vinto = 1, finiti = 0, perso = false;
+    const righe = S.scelti.map(c => { const lv = treLive(c.P, c.g), fatte = lv?.x ? lv.x.tpm : null; let somma = 0, chiuso = false;
+      if (lv?.fin) { finiti++; if (lv.x == null) somma = c.lin.length; else somma = c.lin.reduce((s_, l) => s_ + (fatte > l ? c.g.q3[l][0] : 0), 0); vinto *= somma; if (!somma) perso = true; chiuso = true; }
+      return `<div class="tr3"><div class="tn"><b>${esc(c.g.n)}</b> <small>${esc(c.g.sq)} · ${esc(c.P.a.sigla)} @ ${esc(c.P.h.sigla)} · ${fmtO.format(new Date(c.P.ts * 1000))}</small>${fatte != null ? `<span class="t3n">${fatte} ${fatte === 1 ? 'tripla' : 'triple'}${chiuso ? '' : ' ora'}</span>` : lv?.fin ? '<span class="t3n">non ha giocato: linee a 1</span>' : ''}</div>`
+        + `<div class="tl">${c.lin.map(l => `<span class="tc${fatte != null && fatte > l ? ' si' : chiuso ? ' no' : ''}">over ${nLin(l)}<b>${nq(c.g.q3[l][0])}</b><small>${pc(pLin(c.g.t3, l))}</small></span>`).join('')}</div></div>`; }).join('');
+    const esito = finiti === S.scelti.length ? (perso ? '<span class="es no">✗ persa</span>' : `<span class="es si">✓ vinti ${eur(0.05 * vinto)}</span>`) : perso ? '<span class="es no">✗ persa</span>' : '';
+    h += `<div class="card pad tre3"><div class="th"><div><div class="lab">Sistema integrale della notte</div><div class="sub">${S.scelti.length} giocatori di partite diverse, tutte le linee di ognuno · ${S.comb} combinazioni da 0,05 €</div></div>${esito}</div>${righe}`
+      + `<div class="tsum"><div><span>Costo</span><b>${eur(S.costo)}</b></div><div><span>Vincita min / max</span><b>${eur(S.min)} / ${eur(S.max)}</b></div><div><span>Prende qualcosa</span><b>${pc(S.pq)}</b></div><div><span>Ritorno atteso</span><b class="${S.resa >= 1 ? 'ok' : ''}">${Math.round(S.resa * 100)}%</b></div></div>`
+      + `<p class="sn">Vincita = 0,05 € × (somma delle quote prese di ognuno, moltiplicate fra loro). «Ritorno atteso» = quanto torna in media per ogni euro secondo il modello: sotto il 100% il margine del bookmaker supera quello che il modello vede. Scelti i giocatori con il rapporto migliore fra probabilità e quota, uno per partita.</p></div>`; }
+  h += '<div class="card">' + Ps.filter(P => (P.tre || []).length).map(P => `<details class="vn t3g" data-id="t3·${P.id}"${aperte.has('t3·' + P.id) ? ' open' : ''}><summary><span>${sqc(P.a.sigla, P.a.sigla)} @ ${sqc(P.h.sigla, P.h.sigla)}<small>${fmtO.format(new Date(P.ts * 1000))} · ${(P.tre || []).filter(g => g.q3).length} giocatori quotati</small></span><span></span><span class="arrow">›</span></summary><div class="vl">`
+    + P.tre.map(g => { const lv = treLive(P, g), f = lv?.x ? lv.x.tpm : null, lin = Object.keys(g.q3 || {}).map(Number).sort((a, b) => a - b);
+      const mostra = lin.length ? lin : [1.5, 2.5, 3.5];
+      return `<div class="tr3"><div class="tn"><b>${esc(g.n)}</b> <small>${esc(g.sq)} · ne fa in media ${String(g.t3.mu.toFixed(1)).replace('.', ',')}${g.dubbio ? ' · in dubbio' : ''}</small>${f != null ? `<span class="t3n">${f} ${f === 1 ? 'tripla' : 'triple'}</span>` : ''}</div>`
+        + `<div class="tl">${mostra.map(l => { const q = g.q3?.[l]?.[0], p_ = pLin(g.t3, l); return `<span class="tc${f != null && f > l ? ' si' : lv?.fin && f != null ? ' no' : ''}${q && p_ * q >= 1 ? ' val' : ''}">over ${nLin(l)}<b>${q ? nq(q) : '–'}</b><small>${pc(p_)}</small></span>`; }).join('')}</div></div>`; }).join('')
+    + '</div></details>').join('') + '</div></section>';
+  return h;
 }
 function disegnaMiei() {
   let h = `<section><div class="sec"><h2>I miei giocatori</h2><span>scegli chi seguire stanotte: punti, rimbalzi e assist in diretta, ogni 30 secondi</span></div>`;

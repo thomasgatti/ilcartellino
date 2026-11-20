@@ -229,6 +229,13 @@ def main(cartella, f_in, f_out, f_quote=None):
         for y in ('dd', 'td'):
             a = gbm(y == 'td').fit(tr[c], tr[y].values).predict_proba(te[c])[:, 1]; b = logit_().fit(tr[c], tr[y].values).predict_proba(te[c])[:, 1]
             te['p_' + y] = 1 / (1 + np.exp(-(LG(a) + LG(b)) / 2))
+    # triple segnate (20/11/2026, prova): media attesa e P(almeno k) per ogni giocatore di stanotte, vedi triple.py
+    try:
+        import triple as T3
+        tr3 = tr[tr.emin.notna() & (tr.n_prec >= 5)]; m3, a3 = T3.adatta(tr3); mu3, P3 = T3.prevedi(m3, a3, te)
+        te['mu3'] = mu3; te['p3'] = [list(np.round(r_[:7], 4)) for r_ in P3]; print(f'triple: allenamento {len(tr3)} righe, dispersione {a3:.3f}')
+    except Exception as e:
+        print('triple: modello non disponibile:', e); te['mu3'] = np.nan; te['p3'] = None
     out = dict(giorno=I['giorno'], creato=I['creato'], modello=dict(versione='v2' if V2 else 'v1', commit=os.environ.get('GITHUB_SHA', '')[:7]), partite=[]); tutti = []
     if quote_ora: out['quote_ora'] = quote_ora
     out['proposte_ora'] = I['creato']
@@ -243,6 +250,15 @@ def main(cartella, f_in, f_out, f_quote=None):
                     # l'utente gioca in Italia: vale la quota migliore fra i bookmaker italiani; quelli americani solo se in Italia non è quotato
                     it = bk.endswith('.it'); vecchia = q[y].get(pid)
                     if vecchia is None or (it and not vecchia[2]) or (it == vecchia[2] and prezzo > vecchia[0]): q[y][pid] = (prezzo, bk.replace('.it', ''), it)
+        q3 = {}                                           # triple: linea → giocatore → (quota, bookmaker), la migliore fra gli italiani
+        for lin, per_bk in (P['quote'].get('tre') or {}).items():
+            for bk, d in per_bk.items():
+                if not bk.endswith('.it'): continue
+                for nome, prezzo in d.items():
+                    pid = per_nome.get(abbina(nome, per_nome) or '')
+                    if pid is None: continue
+                    v_ = q3.setdefault(lin, {}).get(pid)
+                    if v_ is None or prezzo > v_[0]: q3[lin][pid] = (prezzo, bk.replace('.it', ''))
         G = []
         for r in Z.itertuples():
             if r.emin < 12 or r.gg_fermo > 30: continue
@@ -260,6 +276,10 @@ def main(cartella, f_in, f_out, f_quote=None):
             if r.pid in ult5: g['u5'] = ult5[r.pid]                                                       # ultime 5: [pt, rb, as, min]
             for y in ('dd', 'td'):
                 if r.pid in q[y]: g['q_' + y], g['b_' + y] = q[y][r.pid][:2]; g['v_' + y] = round(g['p_' + y] * g['q_' + y], 3)
+            if r.p3 is not None and r.mu3 == r.mu3:
+                g['t3'] = dict(mu=round(float(r.mu3), 2), p=[float(x) for x in r.p3])                   # p[k-1] = P(almeno k triple)
+                lq = {lin: list(d[r.pid]) for lin, d in q3.items() if r.pid in d}
+                if lq: g['q3'] = lq                                                                       # linea («2.5») → [quota, bookmaker]
             G.append(g); tutti.append(dict(g, partita=P['id']))
         G.sort(key=lambda g: -g['p_dd'])
         cand = {k: next((g['n'] for g in G if g['sq'] == P[k][1]), None) for k in ('h', 'a')}
@@ -268,7 +288,7 @@ def main(cartella, f_in, f_out, f_quote=None):
         ult = D[D.futura == 0].groupby('pid').emin.last()
         for k in ('h', 'a'):
             fuori[k] = [dict(n=n_, perche=pc, **sostituto(partite, P[k][0], pid, {g_['id'] for g_ in G}, nomi)) for pid, n_, _, st, pc in P['rosa'][k] if st == 'out' and ult.get(pid, 0) >= 15]
-        out['partite'].append(dict(id=P['id'], **({'fx': P['fx']} if P.get('fx') else {}), ts=P['ts'], h=dict(sigla=P['h'][1], nome=P['h'][2]), a=dict(sigla=P['a'][1], nome=P['a'][2]), giocatori=G[:14], candidati=cand, fuori=fuori, quote=int(bool(q['dd']))))
+        out['partite'].append(dict(id=P['id'], **({'fx': P['fx']} if P.get('fx') else {}), ts=P['ts'], h=dict(sigla=P['h'][1], nome=P['h'][2]), a=dict(sigla=P['a'][1], nome=P['a'][2]), giocatori=G[:14], tre=[{k_: g_[k_] for k_ in ('id', 'n', 'sq', 't3', 'q3', 'dubbio', 'riposo', 'min') if k_ in g_} for g_ in sorted([g_ for g_ in G if g_.get('t3') and (g_.get('q3') or g_['t3']['mu'] >= 1.5)], key=lambda g_: -g_['t3']['mu'])[:12]], candidati=cand, fuori=fuori, quote=int(bool(q['dd']))))
     tutti_tutti = list(tutti)
     tutti = [g for g in tutti if not g.get('riposo')]          # chi rischia il turno di riposo non entra in giocate e combinazioni
     if V2: tutti = [g for g in tutti if not g.get('dubbio')]   # v2: nemmeno chi è «in dubbio» (nelle prime notti misurate salta la partita 4 volte su 10)

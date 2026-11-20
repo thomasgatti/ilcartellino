@@ -17,7 +17,7 @@ const rosa = async id => { if (rose[id]) return rose[id]; const j = await get(E 
 for (const e of sb?.events || []) { const c = e.competitions?.[0]; if (![2, 3, 5].includes(e.season?.type) || c.competitors.some(x => +x.team.id > 30)) continue;
   if (!/SCHEDULED|PRE/i.test(e.status?.type?.name || '') && e.status?.type?.state !== 'pre') continue;
   const sq = k => { const x = c.competitors.find(x => x.homeAway === k); return [+x.team.id, x.team.abbreviation, x.team.displayName]; }, h = sq('home'), a = sq('away');
-  partite.push({ id: e.id, ts: Math.floor(Date.parse(e.date) / 1000), tipo: e.season.type, anno: e.season.year, h, a, rosa: { h: await rosa(h[0]), a: await rosa(a[0]) }, quote: { dd: {}, td: {} } }); }
+  partite.push({ id: e.id, ts: Math.floor(Date.parse(e.date) / 1000), tipo: e.season.type, anno: e.season.year, h, a, rosa: { h: await rosa(h[0]), a: await rosa(a[0]) }, quote: { dd: {}, td: {}, tre: {} } }); }
 console.log(`giorno ${giorno}: ${partite.length} partite da giocare · infortunati in elenco ${Object.keys(inf).length}`);
 // ---- quote ----
 const K = process.env.ODDSPAPI_KEY;
@@ -31,7 +31,11 @@ let quoteCreato = null;
 if (K && daQuotare.length && !process.env.NBA_SENZA_QUOTE) { const B = 'https://api.oddspapi.io/v4'; let chiamate = 0; quoteCreato = Math.floor(Date.now() / 1000);
   const op = async (p, q) => { for (let k = 0; k < 4; k++) { await sleep(3600); const u = new URL(B + p); for (const [a, v] of Object.entries({ ...q, apiKey: K })) u.searchParams.set(a, v); const r = await fetch(u, { signal: AbortSignal.timeout(60000) }).catch(() => null); if (!r) continue; if (r.status === 429) { const t = await r.text(); if (/REQUEST_LIMIT/.test(t)) { console.log('quota OddsPapi finita'); return null; } await sleep(5000); continue; } chiamate++; if (!r.ok) return null; return r.json(); } return null; };
   const t0 = Math.min(...partite.map(p => p.ts)), d = x => new Date(x * 1000).toISOString().slice(0, 10);
-  const leggi = (o, P) => { let n = 0; for (const [b, v] of Object.entries(o?.bookmakerOdds || {})) for (const [mid, key] of [['112602', 'dd'], ['112603', 'td']]) for (const out of Object.values(v.markets?.[mid]?.outcomes || {})) for (const x of Object.values(out.players || {})) { if (!x?.active || !x.playerName || !(x.price > 1)) continue; (P.quote[key][b] ||= {})[x.playerName] = x.price; n++; } return n; };
+  const leggi = (o, P) => { let n = 0; for (const [b, v] of Object.entries(o?.bookmakerOdds || {})) for (const [mid, key] of [['112602', 'dd'], ['112603', 'td']]) for (const out of Object.values(v.markets?.[mid]?.outcomes || {})) for (const x of Object.values(out.players || {})) { if (!x?.active || !x.playerName || !(x.price > 1)) continue; (P.quote[key][b] ||= {})[x.playerName] = x.price; n++; }
+    // triple segnate (20/11/2026): linee «over» 0,5 … 7,5, un mercato per linea (id 111792 + 2 per ogni mezzo punto); l'esito «Over» ha lo stesso id del mercato
+    for (const [b, v] of Object.entries(o?.bookmakerOdds || {})) for (let mid = 111792; mid <= 111806; mid += 2) { const out = v.markets?.[mid]?.outcomes?.[mid]; if (!out) continue; const lin = String(0.5 + (mid - 111792) / 2);
+      for (const x of Object.values(out.players || {})) { if (!x?.active || !x.playerName || !(x.price > 1)) continue; ((P.quote.tre ||= {})[lin] ||= {})[b] ||= {}; P.quote.tre[lin][b][x.playerName] = x.price; } }
+    return n; };
   // id OddsPapi delle partite: dalla pagina già pubblicata della stessa notte (NBA_FX_DA, rifacimento della sera) oppure da /fixtures
   const fxNoti = {}; if (process.env.NBA_FX_DA) { try { const V = JSON.parse(fs.readFileSync(process.env.NBA_FX_DA, 'utf8')); if (V.giorno === giorno) for (const P of V.partite || []) if (P.fx) fxNoti[P.id] = P.fx; } catch {} }
   for (const P of partite) if (fxNoti[P.id]) P.fx = fxNoti[P.id];
