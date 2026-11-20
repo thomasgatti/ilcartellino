@@ -225,7 +225,7 @@ details.alt[open] > summary .arrow { transform: rotate(90deg); }
 .altr small { color: var(--muted); } .altr .ac { display: block; } .altr .ac b { color: var(--gold); }
 /* come stanno andando */
 .storico { padding: 6px var(--pad) 12px; }
-.storico > div { display: grid; grid-template-columns: minmax(0, 1fr) 66px 56px 92px; gap: 8px; padding: 8px 0; border-top: 1px solid var(--soft); font-size: 14px; font-variant-numeric: tabular-nums; }
+.storico > div { display: grid; grid-template-columns: minmax(0, 1fr) 66px 66px; gap: 8px; padding: 8px 0; border-top: 1px solid var(--soft); font-size: 14px; font-variant-numeric: tabular-nums; }
 .storico > div span + span { text-align: right; }
 .storico .sh { border-top: 0; white-space: nowrap; font: 700 11px var(--body); text-transform: uppercase; letter-spacing: .6px; color: var(--muted); }
 .storico .pos { color: var(--good); } .storico .neg { color: var(--bad); }
@@ -286,7 +286,7 @@ html { scrollbar-gutter: stable; }
 @media (max-width: 720px) {
   .carte { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .riep { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .storico > div { grid-template-columns: minmax(0, 1fr) 58px 48px 76px; font-size: 13px; }
+  .storico > div { grid-template-columns: minmax(0, 1fr) 58px 58px; font-size: 13px; }
 }
 /* anteprima: il pallone entra nel canestro (una volta per visita, si salta toccando) */
 #splash { display: none; }
@@ -525,12 +525,12 @@ function disegna() {
     h += `<section><div class="sec"><h2>Più spazio</h2><span>giocatori con più minuti nelle ultime 3 partite rispetto a prima</span></div><div class="card"><details class="ieri"${aperte.has('spazio') ? ' open' : ''} data-id="spazio"><summary><span>${I.spazio.length} giocatori<small>minuti nelle ultime 3 partite (prima)</small></span><span class="arrow">›</span></summary><div class="more">`
       + `<div class="list">${I.spazio.map(x => el(x, `${Math.round(x.ora)} (${Math.round(x.prima)})`)).join('')}</div></div></details></div></section>`; }
   if (vista === 'oggi' && STORICO?.tipi?.length) { const S = STORICO, gg = ggIt;
-    h += `<section><div class="sec"><h2>Come stanno andando</h2><span>le proposte delle notti dal ${gg(S.dal)} al ${gg(S.al)} (${S.notti} notti)</span></div><div class="card"><div class="storico"><div class="sh"><span>Proposta</span><span>Prese</span><span>Attese</span><span>Resa con 1 €</span></div>`
-      + S.tipi.map(t => `<div><span>${esc(t.tipo)}</span><span>${t.prese} su ${t.giocate}</span><span>${String(t.attese).replace('.', ',')}</span><span class="${t.resa >= 0 ? 'pos' : 'neg'}">${t.resa >= 0 ? '+' : '−'}${Math.abs(t.resa).toFixed(2).replace('.', ',')} €</span></div>`).join('')
-      + '<p class="sn">«Attese» = quante ne aspettava il modello. Poche notti contano poco: un solo colpo grosso cambia tutto il conto.</p></div>'
-      + Object.keys(S.voci || {}).sort().reverse().map(g => { const V = S.voci[g], prese = V.filter(v => v[3] === 'si').length, resa = V.reduce((a, v) => a + v[4] - 1, 0);
+    h += `<section><div class="sec"><h2>Come stanno andando</h2><span>le proposte delle notti dal ${gg(S.dal)} al ${gg(S.al)} (${S.notti} notti)</span></div><div class="card"><div class="storico"><div class="sh"><span>Proposta</span><span>Prese</span><span>Attese</span></div>`
+      + S.tipi.map(t => `<div><span>${esc(t.tipo)}</span><span>${t.prese} su ${t.giocate}</span><span>${String(t.attese).replace('.', ',')}</span></div>`).join('')
+      + '<p class="sn">«Attese» = quante ne aspettava il modello. Sotto, le proposte di ogni notte: tocca una notte per vederle.</p></div>'
+      + Object.keys(S.voci || {}).sort().reverse().map(g => { const V = S.voci[g], prese = V.filter(v => v[3] === 'si').length;
         const ic = e => e === 'si' ? '<span class="tick si">✓</span>' : e === 'ng' ? '<span class="tick">–</span>' : '<span class="tick no">✗</span>';
-        return `<details class="vn" data-id="vn·${g}"${aperte.has('vn·' + g) ? ' open' : ''}><summary><span><b>Notte del ${gg(g)}</b><small>${prese} ${prese === 1 ? 'presa' : 'prese'} su ${V.length}</small></span><span class="${resa >= 0 ? 'pos' : 'neg'}">${resa >= 0 ? '+' : '−'}${Math.abs(resa).toFixed(2).replace('.', ',')} €</span><span class="arrow">›</span></summary><div class="vl">`
+        return `<details class="vn" data-id="vn·${g}"${aperte.has('vn·' + g) ? ' open' : ''}><summary><span><b>Notte del ${gg(g)}</b><small>${prese} ${prese === 1 ? 'presa' : 'prese'} su ${V.length}</small></span><span></span><span class="arrow">›</span></summary><div class="vl">`
           + V.map(([tipo, p, q, e, pag, gm]) => `<div class="vr"><div><div class="vt">${esc(tipo)}</div><div class="vg">${(gm || []).map(([n, c, x]) => `${ic(x)}${esc(cogn(n))} ${c.toUpperCase()}`).join(' + ') || '–'}</div></div><div class="vq">${nq(q)}<small>${pc(p)}</small></div><div class="ve">${e === 'si' ? '<span class="es si">✓ presa</span>' : e === 'rimborso' ? '<span class="es ng">rimborsata</span>' : '<span class="es no">✗ persa</span>'}</div></div>`).join('')
           + '</div></details>'; }).join('')
       + '</div></section>'; }
