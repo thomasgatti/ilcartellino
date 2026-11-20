@@ -1352,21 +1352,21 @@
   "ko": 1795269600,
   "partita": "Como - Cagliari",
   "uff": false,
-  "p3": 0.007766270992938393,
+  "p3": 0.007135414692275061,
   "trio": [
    {
     "n": "Z. Pedro",
-    "p": 0.2029,
+    "p": 0.196,
     "team": "Cagliari"
    },
    {
     "n": "A. Deiola",
-    "p": 0.1938,
+    "p": 0.1833,
     "team": "Cagliari"
    },
    {
     "n": "Y. Couto",
-    "p": 0.1702,
+    "p": 0.1712,
     "team": "Como"
    }
   ]
@@ -1377,21 +1377,21 @@
   "ko": 1795269600,
   "partita": "Lazio - Lecce",
   "uff": false,
-  "p3": 0.007471673753532239,
+  "p3": 0.007687013007088171,
   "trio": [
    {
     "n": "Y. Maleh",
-    "p": 0.2092,
+    "p": 0.2063,
     "team": "Lecce"
    },
    {
     "n": "D. Veiga",
-    "p": 0.1882,
+    "p": 0.1921,
     "team": "Lecce"
    },
    {
-    "n": "A. Pedraza",
-    "p": 0.1636,
+    "n": "L. Pellegrini",
+    "p": 0.1672,
     "team": "Lazio"
    }
   ]
@@ -1427,21 +1427,21 @@
   "ko": 1795290300,
   "partita": "Napoli - Torino",
   "uff": false,
-  "p3": 0.004887208653560572,
+  "p3": 0.004659139869727874,
   "trio": [
    {
     "n": "S. Coco",
-    "p": 0.1833,
+    "p": 0.1803,
     "team": "Torino"
    },
    {
     "n": "P. Comuzzo",
-    "p": 0.1607,
+    "p": 0.1568,
     "team": "Torino"
    },
    {
     "n": "R. Marín",
-    "p": 0.143,
+    "p": 0.1421,
     "team": "Napoli"
    }
   ]
