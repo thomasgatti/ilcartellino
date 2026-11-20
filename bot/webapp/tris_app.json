@@ -1427,7 +1427,7 @@
   "ko": 1795290300,
   "partita": "Napoli - Torino",
   "uff": false,
-  "p3": 0.005049845965666168,
+  "p3": 0.004887208653560572,
   "trio": [
    {
     "n": "S. Coco",
@@ -1435,8 +1435,8 @@
     "team": "Torino"
    },
    {
-    "n": "R. Belghali",
-    "p": 0.1661,
+    "n": "P. Comuzzo",
+    "p": 0.1607,
     "team": "Torino"
    },
    {
