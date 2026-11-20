@@ -1352,21 +1352,21 @@
   "ko": 1795269600,
   "partita": "Como - Cagliari",
   "uff": false,
-  "p3": 0.007135414692275061,
+  "p3": 0.007930654884312667,
   "trio": [
    {
     "n": "Z. Pedro",
-    "p": 0.196,
+    "p": 0.2039,
     "team": "Cagliari"
    },
    {
     "n": "A. Deiola",
-    "p": 0.1833,
+    "p": 0.1948,
     "team": "Cagliari"
    },
    {
     "n": "Y. Couto",
-    "p": 0.1712,
+    "p": 0.1722,
     "team": "Como"
    }
   ]
@@ -1377,21 +1377,21 @@
   "ko": 1795269600,
   "partita": "Lazio - Lecce",
   "uff": false,
-  "p3": 0.007687013007088171,
+  "p3": 0.007471673753532239,
   "trio": [
    {
     "n": "Y. Maleh",
-    "p": 0.2063,
+    "p": 0.2092,
     "team": "Lecce"
    },
    {
     "n": "D. Veiga",
-    "p": 0.1921,
+    "p": 0.1882,
     "team": "Lecce"
    },
    {
-    "n": "L. Pellegrini",
-    "p": 0.1672,
+    "n": "A. Pedraza",
+    "p": 0.1636,
     "team": "Lazio"
    }
   ]
@@ -1402,21 +1402,21 @@
   "ko": 1795280400,
   "partita": "Parma - Roma",
   "uff": false,
-  "p3": 0.006471867305930934,
+  "p3": 0.006671320711500881,
   "trio": [
    {
     "n": "M. Troilo",
-    "p": 0.1823,
+    "p": 0.1901,
     "team": "Parma"
    },
    {
     "n": "V. Sierro",
-    "p": 0.1795,
+    "p": 0.1834,
     "team": "Parma"
    },
    {
     "n": "B. Cristante",
-    "p": 0.1705,
+    "p": 0.1649,
     "team": "Roma"
    }
   ]
