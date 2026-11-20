@@ -83,7 +83,9 @@ section { margin-top: 28px; }
 /* voce su due righe: nome sopra, etichetta + numeri sotto */
 .item { min-width: 0; }
 .item .nm { font-weight: 600; font-size: 16px; line-height: 1.25; overflow-wrap: anywhere; }
-.item .nm .tm { font-weight: 400; color: var(--muted); font-size: 13px; margin-left: 4px; }
+.item .nm .tm { font-weight: 400; color: var(--muted); font-size: 13px; margin-left: 6px; }
+/* 20/11/2026: sigle delle squadre coi loro colori anche nelle giocate e nelle combinazioni */
+.item .nm .tm .sqc, .pick .stato .sqc { font-size: 10.5px; font-weight: 700; padding: 1px 5px; letter-spacing: .3px; vertical-align: 2px; line-height: 1.25; }
 .item .sub { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; margin-top: 3px; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; min-height: 20px; }
 .chip { font: 700 10.5px/1 var(--body); text-transform: uppercase; letter-spacing: .5px; padding: 4px 6px; border-radius: 4px; white-space: nowrap; background: rgba(255,255,255,.14); color: #fff; }
 .chip.td { background: rgba(168,212,255,.22); color: var(--sky); }
@@ -457,7 +459,7 @@ function voce(g, y, opt = {}) {
   const e = opt.esito === undefined ? esito(g.n, y) : opt.esito, l = riga(g.n), p = g['p_' + y] ?? g.p, q = g['q_' + y] ?? g.q;
   const segno = e === 'si' ? '<span class="tick si">✓</span>' : e === 'no' ? '<span class="tick no">✗</span>' : '';
   const numeri = e ? (l || (e === 'ng' ? 'non ha giocato' : '')) : `${opt.senzaP ? '' : p != null ? pc(p) : '–'}${q ? `${opt.senzaP ? '' : ' · '}quota <span class="q">${nq(q)}</span>${opt.book && g['b_' + y] ? ' ' + esc(bk(g['b_' + y])) : ''}${g['q_prima_' + y] ? ` <span class="qv">era ${nq(g['q_prima_' + y])}</span>` : ''}` : ''}`;
-  return `<div class="item"><div class="nm">${segno}${esc(g.n)}<span class="tm">${esc(g.sq)}</span></div><div class="sub">${opt.chip === false ? '' : CHIP[y]}<span class="nt"><span>${numeri}</span>${tags(g)}</span></div></div>`;
+  return `<div class="item"><div class="nm">${segno}${esc(g.n)}<span class="tm">${g.sq ? sqc(g.sq, g.sq) : ""}</span></div><div class="sub">${opt.chip === false ? '' : CHIP[y]}<span class="nt"><span>${numeri}</span>${tags(g)}</span></div></div>`;
 }
 function prima(gambe, q, motivo, chiaveAp) {
   return '';   // 19/11/2026: le proposte sostituite non si mostrano più (fino alle 23:30 la pagina dice che sono probabili)
@@ -472,7 +474,7 @@ function giocata(cls, etichetta, g, y, vuoto) {
   const pr = g.prima ? prima([Object.assign({ cosa: y, p: g.prima['p_' + y], q: g.prima['q_' + y] }, g.prima)], g.prima['q_' + y], g.motivo, etichetta + '·' + g.prima.n) : '';
   if (g.nessuna) return `<div class="card pick ${cls}">${testa('')}<div class="empty">Nessuna alternativa${g.motivo ? ' senza ' + esc(g.motivo) : ''}</div>${pr}</div>`;
   const e = esito(g.n, y), P = D.partite.find(P => String(P.id) === String(g.partita ?? partitaDi[g.n]));
-  const quando = P ? `${esc(P.a.sigla)} @ ${esc(P.h.sigla)} · ${fmtO.format(new Date(P.ts * 1000))}` : '';
+  const quando = P ? `${sqc(P.a.sigla, P.a.sigla)} @ ${sqc(P.h.sigla, P.h.sigla)} · ${fmtO.format(new Date(P.ts * 1000))}` : '';
   return `<div class="card pick ${cls} ${e ? 'e-' + e : ''}">${testa(e ? SEGNO[e] : quando)}<div class="main"><div class="big">${esc(cogn(g.n))}</div><div class="pc">${pc(g['p_' + y])}</div></div>${voce(g, y, { chip: false, senzaP: true, book: true, esito: e === 'si' || e === 'no' ? null : e })}${pr}</div>`;
 }
 // una combinazione: gambe a sinistra (con gli «altri» al posto di ciascuno), a destra riuscita, quota ed esito
