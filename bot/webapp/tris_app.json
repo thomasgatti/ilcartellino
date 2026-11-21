@@ -1426,23 +1426,23 @@
   "id": 5749757,
   "ko": 1795290300,
   "partita": "Napoli - Torino",
-  "uff": false,
-  "p3": 0.004659139869727874,
+  "uff": true,
+  "p3": 0.012048329617585996,
   "trio": [
    {
-    "n": "S. Coco",
-    "p": 0.1803,
-    "team": "Torino"
-   },
-   {
-    "n": "P. Comuzzo",
-    "p": 0.1568,
-    "team": "Torino"
-   },
-   {
-    "n": "R. Marín",
-    "p": 0.1421,
+    "n": "A. Vergara",
+    "p": 0.2447,
     "team": "Napoli"
+   },
+   {
+    "n": "G. Gineitis",
+    "p": 0.2087,
+    "team": "Torino"
+   },
+   {
+    "n": "S. Coco",
+    "p": 0.2034,
+    "team": "Torino"
    }
   ]
  },
