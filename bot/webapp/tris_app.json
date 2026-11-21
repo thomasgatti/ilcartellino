@@ -1401,23 +1401,23 @@
   "id": 5749758,
   "ko": 1795280400,
   "partita": "Parma - Roma",
-  "uff": false,
-  "p3": 0.005849974354369377,
+  "uff": true,
+  "p3": 0.008968403346076206,
   "trio": [
    {
     "n": "M. Troilo",
-    "p": 0.1882,
+    "p": 0.2034,
     "team": "Parma"
+   },
+   {
+    "n": "L. Balerdi",
+    "p": 0.1956,
+    "team": "Roma"
    },
    {
     "n": "V. Sierro",
-    "p": 0.1694,
+    "p": 0.1943,
     "team": "Parma"
-   },
-   {
-    "n": "B. Cristante",
-    "p": 0.1582,
-    "team": "Roma"
    }
   ]
  },
@@ -1527,11 +1527,11 @@
   "ko": 1795366800,
   "partita": "Milan - Frosinone",
   "uff": false,
-  "p3": 0.006553994866605937,
+  "p3": 0.007046878386306134,
   "trio": [
    {
     "n": "P. Masini",
-    "p": 0.2089,
+    "p": 0.2187,
     "team": "Frosinone"
    },
    {
@@ -1540,8 +1540,8 @@
     "team": "Frosinone"
    },
    {
-    "n": "K. De Winter",
-    "p": 0.1401,
+    "n": "Y. Musah",
+    "p": 0.1438,
     "team": "Milan"
    }
   ]
@@ -1552,21 +1552,21 @@
   "ko": 1795376700,
   "partita": "Atalanta - Inter",
   "uff": false,
-  "p3": 0.0042394194018932,
+  "p3": 0.004335461209499544,
   "trio": [
    {
     "n": "Éderson",
-    "p": 0.1708,
+    "p": 0.1737,
     "team": "Atalanta"
    },
    {
     "n": "A. Bastoni",
-    "p": 0.1529,
+    "p": 0.1548,
     "team": "Inter"
    },
    {
     "n": "D. Zappacosta",
-    "p": 0.1399,
+    "p": 0.139,
     "team": "Atalanta"
    }
   ]
