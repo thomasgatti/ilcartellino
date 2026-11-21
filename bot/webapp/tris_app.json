@@ -1351,22 +1351,22 @@
   "id": 5749753,
   "ko": 1795269600,
   "partita": "Como - Cagliari",
-  "uff": false,
-  "p3": 0.0078099745150908536,
+  "uff": true,
+  "p3": 0.012982916037710434,
   "trio": [
    {
-    "n": "Z. Pedro",
-    "p": 0.2029,
+    "n": "A. Deiola",
+    "p": 0.2451,
     "team": "Cagliari"
    },
    {
-    "n": "A. Deiola",
-    "p": 0.1938,
+    "n": "Z. Pedro",
+    "p": 0.225,
     "team": "Cagliari"
    },
    {
     "n": "Y. Couto",
-    "p": 0.1712,
+    "p": 0.2029,
     "team": "Como"
    }
   ]
