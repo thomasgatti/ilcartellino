@@ -1377,21 +1377,21 @@
   "ko": 1795269600,
   "partita": "Lazio - Lecce",
   "uff": false,
-  "p3": 0.007471673753532239,
+  "p3": 0.007938428988038093,
   "trio": [
    {
     "n": "Y. Maleh",
-    "p": 0.2092,
+    "p": 0.2111,
     "team": "Lecce"
    },
    {
     "n": "D. Veiga",
-    "p": 0.1882,
+    "p": 0.1901,
     "team": "Lecce"
    },
    {
     "n": "A. Pedraza",
-    "p": 0.1636,
+    "p": 0.1705,
     "team": "Lazio"
    }
   ]
@@ -1402,21 +1402,21 @@
   "ko": 1795280400,
   "partita": "Parma - Roma",
   "uff": false,
-  "p3": 0.006671320711500881,
+  "p3": 0.005849974354369377,
   "trio": [
    {
     "n": "M. Troilo",
-    "p": 0.1901,
+    "p": 0.1882,
     "team": "Parma"
    },
    {
     "n": "V. Sierro",
-    "p": 0.1834,
+    "p": 0.1694,
     "team": "Parma"
    },
    {
     "n": "B. Cristante",
-    "p": 0.1649,
+    "p": 0.1582,
     "team": "Roma"
    }
   ]
@@ -1477,22 +1477,22 @@
   "ko": 1795356000,
   "partita": "Sassuolo - Genoa",
   "uff": false,
-  "p3": 0.008993976919138124,
+  "p3": 0.0085696193897909,
   "trio": [
    {
     "n": "S. Wiafe",
-    "p": 0.2008,
+    "p": 0.2027,
+    "team": "Genoa"
+   },
+   {
+    "n": "L. Østigård",
+    "p": 0.198,
     "team": "Genoa"
    },
    {
     "n": "D. Ćaleta-Car",
-    "p": 0.197,
+    "p": 0.1841,
     "team": "Sassuolo"
-   },
-   {
-    "n": "L. Østigård",
-    "p": 0.196,
-    "team": "Genoa"
    }
   ]
  },
@@ -1502,16 +1502,16 @@
   "ko": 1795356000,
   "partita": "Bologna - Udinese",
   "uff": false,
-  "p3": 0.005935705979379512,
+  "p3": 0.0057025291533264,
   "trio": [
    {
     "n": "M. Palma",
-    "p": 0.1871,
+    "p": 0.1834,
     "team": "Udinese"
    },
    {
     "n": "J. Abankwah",
-    "p": 0.1676,
+    "p": 0.1643,
     "team": "Udinese"
    },
    {
@@ -1552,21 +1552,21 @@
   "ko": 1795376700,
   "partita": "Atalanta - Inter",
   "uff": false,
-  "p3": 0.004331481041922462,
+  "p3": 0.0042394194018932,
   "trio": [
    {
     "n": "Éderson",
-    "p": 0.1728,
+    "p": 0.1708,
     "team": "Atalanta"
    },
    {
     "n": "A. Bastoni",
-    "p": 0.1578,
+    "p": 0.1529,
     "team": "Inter"
    },
    {
     "n": "D. Zappacosta",
-    "p": 0.137,
+    "p": 0.1399,
     "team": "Atalanta"
    }
   ]
