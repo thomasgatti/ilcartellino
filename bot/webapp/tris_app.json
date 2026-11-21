@@ -1595,5 +1595,230 @@
     "team": "Fiorentina"
    }
   ]
+ },
+ {
+  "comp": "ucl",
+  "id": 6106317,
+  "ko": 1795542300,
+  "partita": "Bodø/Glimt - LASK",
+  "uff": false,
+  "p3": 0.008699447615241706,
+  "trio": [
+   {
+    "n": "M. Bogarde",
+    "p": 0.2264,
+    "team": "LASK"
+   },
+   {
+    "n": "X. Mbuyamba",
+    "p": 0.2139,
+    "team": "LASK"
+   },
+   {
+    "n": "S. Auklend",
+    "p": 0.1549,
+    "team": "Bodø/Glimt"
+   }
+  ]
+ },
+ {
+  "comp": "ucl",
+  "id": 6106339,
+  "ko": 1795542300,
+  "partita": "Galatasaray - Aston Villa",
+  "uff": false,
+  "p3": 0.03078901743870388,
+  "trio": [
+   {
+    "n": "J. Gomes",
+    "p": 0.3736,
+    "team": "Aston Villa"
+   },
+   {
+    "n": "B. Kamara",
+    "p": 0.2697,
+    "team": "Aston Villa"
+   },
+   {
+    "n": "D. Sánchez",
+    "p": 0.2634,
+    "team": "Galatasaray"
+   }
+  ]
+ },
+ {
+  "comp": "ucl",
+  "id": 6106259,
+  "ko": 1795550400,
+  "partita": "Arsenal - Borussia Dortmund",
+  "uff": false,
+  "p3": 0.016726029031396833,
+  "trio": [
+   {
+    "n": "R. Bensebaini",
+    "p": 0.2725,
+    "team": "Borussia Dortmund"
+   },
+   {
+    "n": "F. Silva",
+    "p": 0.255,
+    "team": "Borussia Dortmund"
+   },
+   {
+    "n": "M. Merino",
+    "p": 0.2075,
+    "team": "Arsenal"
+   }
+  ]
+ },
+ {
+  "comp": "ucl",
+  "id": 6106412,
+  "ko": 1795550400,
+  "partita": "Como - AEK Athens",
+  "uff": false,
+  "p3": 0.013141643698455696,
+  "trio": [
+   {
+    "n": "M. Gaćinović",
+    "p": 0.2476,
+    "team": "AEK Athens"
+   },
+   {
+    "n": "L. Majer",
+    "p": 0.2394,
+    "team": "AEK Athens"
+   },
+   {
+    "n": "Y. Couto",
+    "p": 0.1911,
+    "team": "Como"
+   }
+  ]
+ },
+ {
+  "comp": "ucl",
+  "id": 6106307,
+  "ko": 1795550400,
+  "partita": "Feyenoord - FC Porto",
+  "uff": false,
+  "p3": 0.016330842891744735,
+  "trio": [
+   {
+    "n": "G. Veiga",
+    "p": 0.274,
+    "team": "FC Porto"
+   },
+   {
+    "n": "A. Costa",
+    "p": 0.2565,
+    "team": "FC Porto"
+   },
+   {
+    "n": "T. Kraaijeveld",
+    "p": 0.2003,
+    "team": "Feyenoord"
+   }
+  ]
+ },
+ {
+  "comp": "ucl",
+  "id": 6106256,
+  "ko": 1795550400,
+  "partita": "Manchester City - Napoli",
+  "uff": false,
+  "p3": 0.01548278702083152,
+  "trio": [
+   {
+    "n": "A. Vergara",
+    "p": 0.2963,
+    "team": "Napoli"
+   },
+   {
+    "n": "B. Gilmour",
+    "p": 0.234,
+    "team": "Napoli"
+   },
+   {
+    "n": "E. Anderson",
+    "p": 0.1925,
+    "team": "Manchester City"
+   }
+  ]
+ },
+ {
+  "comp": "ucl",
+  "id": 6106325,
+  "ko": 1795550400,
+  "partita": "RB Leipzig - Lens",
+  "uff": false,
+  "p3": 0.025968612930801747,
+  "trio": [
+   {
+    "n": "A. Haidara",
+    "p": 0.298,
+    "team": "Lens"
+   },
+   {
+    "n": "R. Aguilar",
+    "p": 0.2806,
+    "team": "Lens"
+   },
+   {
+    "n": "C. Baumgartner",
+    "p": 0.2677,
+    "team": "RB Leipzig"
+   }
+  ]
+ },
+ {
+  "comp": "ucl",
+  "id": 6106243,
+  "ko": 1795550400,
+  "partita": "Real Madrid - PSV Eindhoven",
+  "uff": false,
+  "p3": 0.014634560711622405,
+  "trio": [
+   {
+    "n": "E. Camavinga",
+    "p": 0.2724,
+    "team": "Real Madrid"
+   },
+   {
+    "n": "R. van Bommel",
+    "p": 0.2308,
+    "team": "PSV Eindhoven"
+   },
+   {
+    "n": "K. Sano",
+    "p": 0.2007,
+    "team": "PSV Eindhoven"
+   }
+  ]
+ },
+ {
+  "comp": "ucl",
+  "id": 6106394,
+  "ko": 1795550400,
+  "partita": "Slovan Bratislava - Real Betis",
+  "uff": false,
+  "p3": 0.012062648132961047,
+  "trio": [
+   {
+    "n": "F. Bernal",
+    "p": 0.2533,
+    "team": "Real Betis"
+   },
+   {
+    "n": "N. Deossa",
+    "p": 0.2318,
+    "team": "Real Betis"
+   },
+   {
+    "n": "A. Mustafić",
+    "p": 0.1771,
+    "team": "Slovan Bratislava"
+   }
+  ]
  }
 ]
