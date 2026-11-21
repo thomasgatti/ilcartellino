@@ -1376,22 +1376,22 @@
   "id": 5749755,
   "ko": 1795269600,
   "partita": "Lazio - Lecce",
-  "uff": false,
-  "p3": 0.007938428988038093,
+  "uff": true,
+  "p3": 0.0104014207130669,
   "trio": [
    {
     "n": "Y. Maleh",
-    "p": 0.2111,
+    "p": 0.2269,
     "team": "Lecce"
    },
    {
     "n": "D. Veiga",
-    "p": 0.1901,
+    "p": 0.2083,
     "team": "Lecce"
    },
    {
     "n": "A. Pedraza",
-    "p": 0.1705,
+    "p": 0.1897,
     "team": "Lazio"
    }
   ]
