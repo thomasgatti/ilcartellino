@@ -108,7 +108,7 @@ jobs:
               d = json.load(f)
           with open('nba/oggi.json', 'w') as f:
               json.dump({'giorno': d['giorno'], 'creato': int(time.time()), 'partite': [],
-                         'consigli': {'bassa': [], 'alta': [], 'td': [], 'combinazioni': []}}, f)
+                         'consigli': {'bassa': [], 'alta': [], 'td': [], 'td_alta': [], 'combinazioni': []}}, f)
           PY
           fi
           python3 - "${{ steps.giorno.outputs.giorno }}" <<'PY'
