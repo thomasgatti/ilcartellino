@@ -83,7 +83,7 @@ def alternative(c, tutte_gambe, minimo=None, quante=3):
         g['alt'] = [dict(n=x['n'], id=x.get('id'), sq=x['sq'], partita=x['partita'], p=round(x['p'], 4), q=x['q'],
                          cp=round(c['p'] / g['p'] * x['p'], 4) if g['p'] else None, cq=round(c['q'] / g['q'] * x['q'], 2)) for x in alt]
 
-def controllo(V, C, tutti, tutti_tutti, stato_nome):
+def controllo(V, C, tutti, tutti_tutti, stato_nome, congelati=()):
     """Controllo delle 23:30 (dal 19/11/2026): le proposte del pomeriggio sono «probabili»; qui diventano ufficiali.
     Con gli infortuni e le quote appena riletti:
     - una combinazione del pomeriggio resta solo se tutti i suoi giocatori giocano e la quota nuova sta ancora nella fascia del suo titolo
@@ -94,8 +94,10 @@ def controllo(V, C, tutti, tutti_tutti, stato_nome):
     - Con una / Due triple doppie restano se tutti giocano;
     - le giocate singole restano se il giocatore gioca e la quota sta nella sua fascia (bassa da 1,70 a 2,50, alta da 3), altrimenti si prende la prima nuova.
     Le proposte vecchie non si mostrano più (niente «sostituita»): fino alle 23:30 la pagina dice che sono probabili.
-    Se il controllo si rifà sulla pagina già ufficiale, la regola è la stessa: ciò che è ancora valido resta."""
-    validi = {g['n']: g for g in tutti}; minimo = dict(FASCE)
+    Se il controllo si rifà sulla pagina già ufficiale, la regola è la stessa: ciò che è ancora valido resta.
+    congelati (22/11/2026): i giocatori delle partite già cominciate, presi così com'erano nella pagina; le proposte che li contengono restano
+    (con le loro probabilità e quote di allora), ma non entrano in combinazioni nuove."""
+    validi = {g['n']: g for g in list(congelati) + list(tutti)}; minimo = dict(FASCE)
     fascia = {n: (m, FASCE[i + 1][1] if i + 1 < len(FASCE) else 1e9) for i, (n, m) in enumerate(FASCE)}
     def rinfresca(c):
         if not c.get('gambe') or c['tipo'] not in TIPI or any(x['n'] not in validi for x in c['gambe']): return None
@@ -239,6 +241,14 @@ def main(cartella, f_in, f_out, f_quote=None):
     out = dict(giorno=I['giorno'], creato=I['creato'], modello=dict(versione='v2' if V2 else 'v1', commit=os.environ.get('GITHUB_SHA', '')[:7]), partite=[]); tutti = []
     if quote_ora: out['quote_ora'] = quote_ora
     out['proposte_ora'] = I['creato']
+    # 22/11/2026: il controllo della sera si fa anche se qualche partita è già cominciata (sabato e domenica ce n'è spesso una nel
+    # pomeriggio americano, e prima il controllo saltava: le partite della notte restavano senza quote). Il calendario ESPN contiene
+    # solo le partite da giocare: quelle già cominciate si riprendono intere dalla pagina pubblicata, senza toccarle.
+    cominciate = []
+    if V_stessa:
+        nuove_id = {str(P['id']) for P in I['partite']}
+        cominciate = [P for P in V_stessa.get('partite', []) if str(P['id']) not in nuove_id]
+        if cominciate: print('partite già cominciate, riprese dalla pagina pubblicata:', ', '.join(f"{P['a']['sigla']} @ {P['h']['sigla']}" for P in cominciate))
     for P in I['partite']:
         Z = te[te.id == P['id']]; per_nome = {norm(nomi[p]): p for p in Z.pid}
         q = {'dd': {}, 'td': {}}
@@ -291,6 +301,8 @@ def main(cartella, f_in, f_out, f_quote=None):
         for k in ('h', 'a'):
             fuori[k] = [dict(n=n_, perche=pc, **sostituto(partite, P[k][0], pid, {g_['id'] for g_ in G}, nomi)) for pid, n_, _, st, pc in P['rosa'][k] if st == 'out' and ult.get(pid, 0) >= 15]
         out['partite'].append(dict(id=P['id'], **({'fx': P['fx']} if P.get('fx') else {}), ts=P['ts'], h=dict(sigla=P['h'][1], nome=P['h'][2]), a=dict(sigla=P['a'][1], nome=P['a'][2]), giocatori=G[:14], tre=[{k_: g_[k_] for k_ in ('id', 'n', 'sq', 't3', 'q3', 'dubbio', 'riposo', 'min') if k_ in g_} for g_ in sorted([g_ for g_ in G if g_.get('t3') and (g_.get('q3') or g_['t3']['mu'] >= 1.5)], key=lambda g_: -g_['t3']['mu'])[:12]], candidati=cand, fuori=fuori, quote=int(bool(q['dd']))))
+    out['partite'] = sorted(cominciate + out['partite'], key=lambda P: P['ts'])
+    congelati = [dict(g, partita=P['id']) for P in cominciate for g in P['giocatori']]
     tutti_tutti = list(tutti)
     tutti = [g for g in tutti if not g.get('riposo')]          # chi rischia il turno di riposo non entra in giocate e combinazioni
     if V2: tutti = [g for g in tutti if not g.get('dubbio')]   # v2: nemmeno chi è «in dubbio» (nelle prime notti misurate salta la partita 4 volte su 10)
@@ -305,7 +317,7 @@ def main(cartella, f_in, f_out, f_quote=None):
     C['combinazioni'] = combinazioni(tutti)
     if V_stessa:                                               # controllo delle 23:30 sulla stessa notte (vedi controllo)
         stato_nome = {nomi[p_]: st for p_, (st, _) in stato.items() if p_ in nomi}
-        C = controllo(V_stessa, C, tutti, tutti_tutti, stato_nome)
+        C = controllo(V_stessa, C, tutti, tutti_tutti, stato_nome, congelati)
     if os.environ.get('NBA_UFFICIALE') == '1' or (V_stessa or {}).get('ufficiale'): out['ufficiale'] = 1
     out['consigli'] = C
     out['ieri'] = diario(partite, gioc, D)
