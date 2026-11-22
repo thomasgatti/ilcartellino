@@ -1451,22 +1451,22 @@
   "id": 5749754,
   "ko": 1795347000,
   "partita": "Juventus - Venezia",
-  "uff": false,
-  "p3": 0.00594804913433165,
+  "uff": true,
+  "p3": 0.008006255660442002,
   "trio": [
    {
     "n": "M. Moreno",
-    "p": 0.2461,
+    "p": 0.2525,
     "team": "Venezia"
    },
    {
     "n": "R. Halhal",
-    "p": 0.1823,
+    "p": 0.1985,
     "team": "Venezia"
    },
    {
-    "n": "D. Luiz",
-    "p": 0.1143,
+    "n": "J. Cabal",
+    "p": 0.1377,
     "team": "Juventus"
    }
   ]
