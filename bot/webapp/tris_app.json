@@ -1544,7 +1544,29 @@
     "p": 0.1697,
     "team": "Milan"
    }
-  ]
+  ],
+  "revised": {
+   "uff": true,
+   "late": true,
+   "p3": 0.016565487869278857,
+   "trio": [
+    {
+     "n": "G. Cittadini",
+     "p": 0.2566,
+     "team": "Frosinone"
+    },
+    {
+     "n": "P. Masini",
+     "p": 0.2422,
+     "team": "Frosinone"
+    },
+    {
+     "n": "D. Moreira",
+     "p": 0.2298,
+     "team": "Milan"
+    }
+   ]
+  }
  },
  {
   "comp": "sa",
