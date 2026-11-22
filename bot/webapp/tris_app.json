@@ -1569,7 +1569,29 @@
     "p": 0.1399,
     "team": "Atalanta"
    }
-  ]
+  ],
+  "revised": {
+   "uff": true,
+   "late": true,
+   "p3": 0.014320966855688452,
+   "trio": [
+    {
+     "n": "B. Pavard",
+     "p": 0.2348,
+     "team": "Inter"
+    },
+    {
+     "n": "H. Çalhanoğlu",
+     "p": 0.2326,
+     "team": "Inter"
+    },
+    {
+     "n": "G. Scalvini",
+     "p": 0.226,
+     "team": "Atalanta"
+    }
+   ]
+  }
  },
  {
   "comp": "sa",
@@ -1893,6 +1915,156 @@
     "n": "D. Kryskiv",
     "p": 0.2463,
     "team": "Shakhtar Donetsk"
+   }
+  ]
+ },
+ {
+  "comp": "ucl",
+  "id": 6106391,
+  "ko": 1795628700,
+  "partita": "Slavia Prague - Villarreal",
+  "uff": false,
+  "p3": 0.03023304302260375,
+  "trio": [
+   {
+    "n": "S. Mouriño",
+    "p": 0.3825,
+    "team": "Villarreal"
+   },
+   {
+    "n": "P. Gueye",
+    "p": 0.2643,
+    "team": "Villarreal"
+   },
+   {
+    "n": "O. Kubiak",
+    "p": 0.2578,
+    "team": "Slavia Prague"
+   }
+  ]
+ },
+ {
+  "comp": "ucl",
+  "id": 6106421,
+  "ko": 1795628700,
+  "partita": "Sabah FK - Barcelona",
+  "uff": false,
+  "p3": 0.011476926329639186,
+  "trio": [
+   {
+    "n": "Gavi",
+    "p": 0.2395,
+    "team": "Barcelona"
+   },
+   {
+    "n": "U. Rakhmonaliev",
+    "p": 0.2103,
+    "team": "Sabah FK"
+   },
+   {
+    "n": "A. Khaybulaev",
+    "p": 0.1964,
+    "team": "Sabah FK"
+   }
+  ]
+ },
+ {
+  "comp": "ucl",
+  "id": 6106253,
+  "ko": 1795636800,
+  "partita": "Inter - VfB Stuttgart",
+  "uff": false,
+  "p3": 0.017681910422280712,
+  "trio": [
+   {
+    "n": "J. Chabot",
+    "p": 0.3204,
+    "team": "VfB Stuttgart"
+   },
+   {
+    "n": "A. Karazor",
+    "p": 0.2461,
+    "team": "VfB Stuttgart"
+   },
+   {
+    "n": "H. Çalhanoğlu",
+    "p": 0.1934,
+    "team": "Inter"
+   }
+  ]
+ },
+ {
+  "comp": "ucl",
+  "id": 6106269,
+  "ko": 1795636800,
+  "partita": "Atlético Madrid - Viking",
+  "uff": false,
+  "p3": 0.016864342382791764,
+  "trio": [
+   {
+    "n": "H. Heggheim",
+    "p": 0.3147,
+    "team": "Viking"
+   },
+   {
+    "n": "K. Askildsen",
+    "p": 0.2637,
+    "team": "Viking"
+   },
+   {
+    "n": "Á. Baena",
+    "p": 0.1752,
+    "team": "Atlético Madrid"
+   }
+  ]
+ },
+ {
+  "comp": "ucl",
+  "id": 6106279,
+  "ko": 1795636800,
+  "partita": "Sporting CP - Manchester United",
+  "uff": false,
+  "p3": 0.023185940129539985,
+  "trio": [
+   {
+    "n": "A. Heaven",
+    "p": 0.3032,
+    "team": "Manchester United"
+   },
+   {
+    "n": "H. Maguire",
+    "p": 0.2766,
+    "team": "Manchester United"
+   },
+   {
+    "n": "E. Felicíssimo",
+    "p": 0.2383,
+    "team": "Sporting CP"
+   }
+  ]
+ },
+ {
+  "comp": "ucl",
+  "id": 6106294,
+  "ko": 1795636800,
+  "partita": "Club Brugge - Liverpool",
+  "uff": false,
+  "p3": 0.01763754694678999,
+  "trio": [
+   {
+    "n": "J. Gomez",
+    "p": 0.2751,
+    "team": "Liverpool"
+   },
+   {
+    "n": "K. Tsimikas",
+    "p": 0.248,
+    "team": "Liverpool"
+   },
+   {
+    "n": "F. Potts",
+    "p": 0.2229,
+    "team": "Club Brugge"
    }
   ]
  }
