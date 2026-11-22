@@ -2,9 +2,22 @@ name: NBA - aggiornamento automatico quotidiano
 # Avvio giornaliero nel primo pomeriggio americano, prima delle eventuali partite domenicali.
 # Quote (dal 18/11/2026): /odds-by-tournaments, 1 richiesta per bookmaker (Sisal, bet365) dà tutte le partite della notte.
 # Pomeriggio: 1 fixtures + 2 = 3 richieste; controllo delle 23:30 (rifai, cron-job.org «NBA sera»): 2 (gli id delle partite sono nella pagina) → ~5 al giorno, ~155 in 31 giorni su 250.
+# Dal 23/11/2026: dopo ogni modifica al modello NBA unita a main la pagina della notte si rifà subito (come «rifai»: 2 richieste OddsPapi),
+# così una novità del modello compare sul sito senza aspettare le 16:30 o le 23:30. Se la pagina della notte non c'è ancora non fa nulla
+# (la prima pagina del giorno resta quella delle 16:30) e non rende «ufficiali» le proposte.
 on:
   schedule:
     - cron: '30 15 * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'bot/nba/oggi.py'
+      - 'bot/nba/modello2.py'
+      - 'bot/nba/dataset.py'
+      - 'bot/nba/prova.py'
+      - 'bot/nba/mercato.py'
+      - 'bot/nba/triple.py'
+      - 'cloud/nba/oggi.mjs'
   workflow_dispatch:
     inputs:
       rifai:
@@ -52,13 +65,16 @@ jobs:
           then
             # si rifà se almeno una partita della notte deve ancora cominciare (fra più di 10 minuti); dal 22/11 le partite già cominciate
             # restano nella pagina così com'erano (oggi.py le riprende dalla pagina pubblicata), le altre hanno quote e infortuni riletti
-            if [ "${{ inputs.rifai }}" = "si" ] && python3 -c "import json,time,sys; sys.exit(0 if max(p['ts'] for p in json.load(open('nba/oggi.json'))['partite']) > time.time() + 600 else 1)"; then
+            if { [ "${{ inputs.rifai }}" = "si" ] || [ "${{ github.event_name }}" = "push" ]; } && python3 -c "import json,time,sys; sys.exit(0 if max(p['ts'] for p in json.load(open('nba/oggi.json'))['partite']) > time.time() + 600 else 1)"; then
               echo "genera=si" >> "$GITHUB_OUTPUT"; echo "riusa=1" >> "$GITHUB_OUTPUT"; cp nba/oggi.json /tmp/nba_quote_salvate.json
               echo "Rifaccio la pagina di $GIORNO rileggendo le quote (se non arrivano valgono quelle salvate)"
             else
               echo "genera=no" >> "$GITHUB_OUTPUT"
               echo "La pagina NBA è già aggiornata per $GIORNO"
             fi
+          elif [ "${{ github.event_name }}" = "push" ]; then
+            echo "genera=no" >> "$GITHUB_OUTPUT"
+            echo "Modifica al modello: la pagina di $GIORNO non c'è ancora, la farà il giro delle 16:30"
           else
             echo "genera=si" >> "$GITHUB_OUTPUT"
           fi
@@ -89,7 +105,7 @@ jobs:
         if: steps.giorno.outputs.genera == 'si'
         env:
           NBA_MODELLO: ${{ vars.NBA_MODELLO }}   # vuota = v2 (predefinito dal 17/11), v1 = modello di prima: per tornare indietro creare la variabile NBA_MODELLO=v1 (si torna indietro togliendo la variabile)
-          NBA_UFFICIALE: ${{ steps.giorno.outputs.riusa == '1' && '1' || '' }}   # controllo delle 23:30: le proposte diventano ufficiali
+          NBA_UFFICIALE: ${{ steps.giorno.outputs.riusa == '1' && github.event_name != 'push' && '1' || '' }}   # controllo delle 23:30: le proposte diventano ufficiali
         run: |
           # la pagina della notte prima resta visibile come «Notte scorsa» (nba/ieri.json)
           python3 - "${{ steps.giorno.outputs.giorno }}" <<'PY'
