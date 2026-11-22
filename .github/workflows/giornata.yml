@@ -116,6 +116,7 @@ jobs:
             git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Aggiorna formazioni ed esiti'
             # 18/11: se nel frattempo main è cambiato (giro NBA, un'altra chat), si riallinea e si riprova; con un conflitto vero
             # (es. stessa pagina generata) il passo fallisce in rosso e il giro dopo ricalcola tutto
+            git config user.name 'github-actions[bot]'; git config user.email '41898282+github-actions[bot]@users.noreply.github.com'   # serve al rebase
             ok=0
             for i in 1 2 3; do
               if git push origin HEAD:main; then ok=1; break; fi
