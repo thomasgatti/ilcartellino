@@ -1452,21 +1452,21 @@
   "ko": 1795347000,
   "partita": "Juventus - Venezia",
   "uff": false,
-  "p3": 0.005690368404835306,
+  "p3": 0.00594804913433165,
   "trio": [
    {
     "n": "M. Moreno",
-    "p": 0.2441,
+    "p": 0.2461,
     "team": "Venezia"
    },
    {
     "n": "R. Halhal",
-    "p": 0.1803,
+    "p": 0.1823,
     "team": "Venezia"
    },
    {
     "n": "D. Luiz",
-    "p": 0.1114,
+    "p": 0.1143,
     "team": "Juventus"
    }
   ]
@@ -1502,21 +1502,21 @@
   "ko": 1795356000,
   "partita": "Bologna - Udinese",
   "uff": false,
-  "p3": 0.005765967399474359,
+  "p3": 0.005771469954989548,
   "trio": [
    {
     "n": "M. Palma",
-    "p": 0.1844,
+    "p": 0.1807,
     "team": "Udinese"
    },
    {
     "n": "J. Abankwah",
-    "p": 0.1643,
+    "p": 0.1668,
     "team": "Udinese"
    },
    {
     "n": "T. Pobega",
-    "p": 0.1641,
+    "p": 0.1651,
     "team": "Bologna"
    }
   ]
@@ -1527,11 +1527,11 @@
   "ko": 1795366800,
   "partita": "Milan - Frosinone",
   "uff": false,
-  "p3": 0.007046878386306134,
+  "p3": 0.008350529241576718,
   "trio": [
    {
     "n": "P. Masini",
-    "p": 0.2187,
+    "p": 0.2197,
     "team": "Frosinone"
    },
    {
@@ -1541,7 +1541,7 @@
    },
    {
     "n": "Y. Musah",
-    "p": 0.1438,
+    "p": 0.1697,
     "team": "Milan"
    }
   ]
@@ -1552,21 +1552,21 @@
   "ko": 1795376700,
   "partita": "Atalanta - Inter",
   "uff": false,
-  "p3": 0.004307990033640358,
+  "p3": 0.004181111828342569,
   "trio": [
    {
     "n": "Éderson",
-    "p": 0.1737,
+    "p": 0.1718,
     "team": "Atalanta"
    },
    {
     "n": "A. Bastoni",
-    "p": 0.1538,
+    "p": 0.1499,
     "team": "Inter"
    },
    {
     "n": "D. Zappacosta",
-    "p": 0.139,
+    "p": 0.1399,
     "team": "Atalanta"
    }
   ]
@@ -1577,21 +1577,21 @@
   "ko": 1795463100,
   "partita": "Monza - Fiorentina",
   "uff": false,
-  "p3": 0.006107647881759996,
+  "p3": 0.006436983843947043,
   "trio": [
    {
     "n": "E. Kouadio",
-    "p": 0.1828,
+    "p": 0.1887,
     "team": "Monza"
    },
    {
     "n": "L. Lucchesi",
-    "p": 0.1802,
+    "p": 0.1851,
     "team": "Monza"
    },
    {
     "n": "F. Mastantuono",
-    "p": 0.1598,
+    "p": 0.1589,
     "team": "Fiorentina"
    }
   ]
@@ -1818,6 +1818,81 @@
     "n": "A. Mustafić",
     "p": 0.1771,
     "team": "Slovan Bratislava"
+   }
+  ]
+ },
+ {
+  "comp": "ucl",
+  "id": 6106235,
+  "ko": 1795636800,
+  "partita": "Paris Saint-Germain - Roma",
+  "uff": false,
+  "p3": 0.015146862812192652,
+  "trio": [
+   {
+    "n": "L. Balerdi",
+    "p": 0.2733,
+    "team": "Roma"
+   },
+   {
+    "n": "M. Hermoso",
+    "p": 0.2616,
+    "team": "Roma"
+   },
+   {
+    "n": "L. Hernández",
+    "p": 0.1826,
+    "team": "Paris Saint-Germain"
+   }
+  ]
+ },
+ {
+  "comp": "ucl",
+  "id": 6106310,
+  "ko": 1795636800,
+  "partita": "Lille - Bayern München",
+  "uff": false,
+  "p3": 0.016419280437381955,
+  "trio": [
+   {
+    "n": "K. Laimer",
+    "p": 0.2867,
+    "team": "Bayern München"
+   },
+   {
+    "n": "R. Perraud",
+    "p": 0.2272,
+    "team": "Lille"
+   },
+   {
+    "n": "B. André",
+    "p": 0.2173,
+    "team": "Lille"
+   }
+  ]
+ },
+ {
+  "comp": "ucl",
+  "id": 6106336,
+  "ko": 1795636800,
+  "partita": "Shakhtar Donetsk - Fenerbahçe",
+  "uff": false,
+  "p3": 0.021905107230918854,
+  "trio": [
+   {
+    "n": "İ. Yüksek",
+    "p": 0.2834,
+    "team": "Fenerbahçe"
+   },
+   {
+    "n": "N. Semedo",
+    "p": 0.2705,
+    "team": "Fenerbahçe"
+   },
+   {
+    "n": "D. Kryskiv",
+    "p": 0.2463,
+    "team": "Shakhtar Donetsk"
    }
   ]
  }
