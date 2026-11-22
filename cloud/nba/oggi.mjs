@@ -39,7 +39,7 @@ if (K && daQuotare.length && !process.env.NBA_SENZA_QUOTE) { const B = 'https://
   // id OddsPapi delle partite: dalla pagina già pubblicata della stessa notte (NBA_FX_DA, rifacimento della sera) oppure da /fixtures
   const fxNoti = {}; if (process.env.NBA_FX_DA) { try { const V = JSON.parse(fs.readFileSync(process.env.NBA_FX_DA, 'utf8')); if (V.giorno === giorno) for (const P of V.partite || []) if (P.fx) fxNoti[P.id] = P.fx; } catch {} }
   for (const P of partite) if (fxNoti[P.id]) P.fx = fxNoti[P.id];
-  if (partite.some(P => !P.fx)) { const fx = await op('/fixtures', { tournamentId: 132, from: d(t0 - 43200), to: d(t0 + 86400) }), F = Array.isArray(fx) ? fx : fx?.data || [];
+  if (partite.some(P => !P.fx)) { const fx = await op('/fixtures', { tournamentId: 132, from: d(t0 - 43200), to: d(t0 + 2 * 86400) })   /* 22/11: +2 giorni, le partite dopo l'01:00 UTC cadono nel giorno dopo e restavano fuori */, F = Array.isArray(fx) ? fx : fx?.data || [];
     for (const P of partite) { if (P.fx) continue; const f = F.find(f => Math.abs(Date.parse(f.startTime) / 1000 - P.ts) < 5 * 3600 && String(f.participant1Name).includes(NOMI[P.h[0]]) && String(f.participant2Name).includes(NOMI[P.a[0]])); if (f) P.fx = f.fixtureId; else console.log('  non trovata su OddsPapi:', P.a[1], '@', P.h[1]); } }
   if (process.env.NBA_QUOTE_TORNEO === '1') {
     // dal 18/11/2026: una richiesta per bookmaker dà le quote di TUTTE le partite NBA in programma (/odds-by-tournaments, mercati giocatore compresi).
