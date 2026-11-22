@@ -63,6 +63,10 @@ globalThis.fetch = (url, opts) => {
     if (!response.ok) throw new Error(`FotMob ${response.status}: ${key}`);
     const value = await response.json();
     if (!value.header?.status || !value.general?.matchId) throw new Error(`Tabellino incompleto: ${key}`);
+    // 22/11: se FotMob non dà il ruolo abituale di un giocatore (Cittadini in Milan-Frosinone) lo si ricava dalla posizione in campo:
+    // 11 portiere, sotto 40 difensore, sotto 80 centrocampista, altrimenti attaccante. Senza, la formazione restava «in attesa» per sempre.
+    for (const T of [value.content?.lineup?.homeTeam, value.content?.lineup?.awayTeam]) for (const p of [...(T?.starters || []), ...(T?.subs || [])])
+      if (p && p.usualPlayingPositionId == null && Number.isFinite(p.positionId)) p.usualPlayingPositionId = p.positionId === 11 ? 0 : p.positionId < 40 ? 1 : p.positionId < 80 ? 2 : 3;
     return value;
   }));
   return cache.get(key).then(value => ({json:async () => structuredClone(value)}));
