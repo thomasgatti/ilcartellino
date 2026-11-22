@@ -12,7 +12,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from rapporto import esiti, fotografie
 from mercato import norm, abbina
 
-GIOCATE = (('bassa', 'dd', 'Doppia doppia · quota bassa'), ('alta', 'dd', 'Doppia doppia · quota alta'), ('td', 'td', 'Tripla doppia'))
+GIOCATE = (('bassa', 'dd', 'Doppia doppia · quota bassa'), ('alta', 'dd', 'Doppia doppia · quota alta'), ('td', 'td', 'Tripla doppia · quota bassa'), ('td_alta', 'td', 'Tripla doppia · quota alta'))
+VECCHI = {'Tripla doppia': 'Tripla doppia · quota bassa'}        # 23/11/2026: la «Tripla doppia» di prima è la tripla doppia a quota bassa
 COMBO = ('Alta', 'Altissima', 'Colpo grosso', 'Con una tripla doppia', 'Due triple doppie')
 
 def valuta(O, E, gioc):
@@ -55,6 +56,8 @@ def main(cartella, f_out, pagine=()):
         except (OSError, ValueError, KeyError): pass
     S = json.load(open(f_out)) if os.path.exists(f_out) else {}
     voci = S.get('voci', {})
+    for v in voci.values():
+        for r in v: r[0] = VECCHI.get(r[0], r[0])
     for g in sorted(N):
         if g in voci or not N[g].get('partite'): continue
         if any(str(P['id']) not in E for P in N[g]['partite']): continue      # notte non ancora tutta in archivio

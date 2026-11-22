@@ -100,8 +100,8 @@ section { margin-top: 28px; }
 .es { font: 800 10.5px/1 var(--body); text-transform: uppercase; letter-spacing: .5px; padding: 4px 7px; border-radius: 4px; white-space: nowrap; }
 .es.si { background: rgba(95,224,160,.2); color: var(--good); } .es.no { background: rgba(255,120,120,.16); color: var(--bad); } .es.live { background: rgba(255,77,77,.16); color: #ffc2c2; } .es.ng { background: var(--soft); color: var(--muted); }
 
-/* le tre giocate */
-.picks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+/* le giocate della notte (dal 23/11 quattro: DD e TD, quota bassa e alta) */
+.picks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 /* le tre giocate (18/11): stessa struttura e stesse altezze in tutti e tre i riquadri — etichetta, riga di stato, nome e percentuale, giocatore e quota, poi l'eventuale proposta di prima */
 .pick { padding: var(--pad); display: flex; flex-direction: column; gap: 8px; border-top: 4px solid var(--red); }
 .pick.td { border-top-color: var(--sky); } .pick.e-si { border-top-color: var(--good); } .pick.e-no { opacity: .75; }
@@ -503,7 +503,9 @@ function disegna() {
     h += '<section><div class="sec"><h2>Le giocate della notte</h2></div><div class="picks">'
       + giocata('', 'Doppia doppia · quota bassa', (C.bassa || [])[0], 'dd', 'Nessuna quota fra 1,70 e 2,50.')
       + giocata('', 'Doppia doppia · quota alta', (C.alta || [])[0], 'dd', 'Nessuna quota alta adatta.')
-      + giocata('td', 'Tripla doppia', (C.td || [])[0], 'td', 'Nessun candidato sopra il 3%.') + '</div></section>';
+      + giocata('td', 'Tripla doppia · quota bassa', (C.td || [])[0], 'td', 'Nessun candidato sopra il 3%.')
+      // 23/11/2026: tripla doppia a quota alta (10 o più); le pagine di prima non l'hanno e non mostrano il riquadro
+      + ('td_alta' in C ? giocata('td', 'Tripla doppia · quota alta', (C.td_alta || [])[0], 'td', 'Nessuna quota da 10 in su con almeno il 3%.') : '') + '</div></section>';
     if ((C.combinazioni || []).length) h += '<section><div class="sec"><h2>Combinazioni</h2><span>giocatori di partite diverse · tocca «altri» sotto un giocatore per vedere chi metterci al suo posto</span></div><div class="card">'
       + C.combinazioni.map(combo).join('') + '</div></section>';
     h += sezioneTriple();
@@ -783,7 +785,7 @@ function mostra(v) { vista = v; D = DATI[v === 'calc' || v === 'miei' ? 'oggi' :
   if (!D.partite.length) { document.getElementById('meta').innerHTML = `Nessuna partita in programma ${v === 'oggi' ? 'stanotte' : ''} · aggiornato alle ${fmtO.format(agg)}`; document.getElementById('status').hidden = true; disegna(); return; }
   const segna = g => { if (!g || !g.n) return; if (g.partita != null && partitaDi[g.n] == null) partitaDi[g.n] = g.partita; if (g.id != null && idDi[g.n] == null) idDi[g.n] = g.id; };
   for (const P of D.partite) for (const g of P.giocatori) { partitaDi[g.n] = P.id; if (g.id != null) idDi[g.n] = g.id; }
-  const Cn = D.consigli || {}; for (const k of ['bassa', 'alta', 'td']) for (const g of Cn[k] || []) { segna(g); segna(g.prima); }
+  const Cn = D.consigli || {}; for (const k of ['bassa', 'alta', 'td', 'td_alta']) for (const g of Cn[k] || []) { segna(g); segna(g.prima); }
   if (v === 'miei') MIEI.n.forEach(segna);
   if (v === 'calc') { CALC.legs.forEach(segna); SALVATE.filter(x => x.giorno === D.giorno).forEach(x => x.legs.forEach(segna)); }
   for (const c of Cn.combinazioni || []) { (c.gambe || []).forEach(segna); (c.prima?.gambe || []).forEach(segna); }

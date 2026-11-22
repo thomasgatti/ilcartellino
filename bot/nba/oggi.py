@@ -29,6 +29,7 @@ FASCE = (('Alta', 10), ('Altissima', 30), ('Colpo grosso', 100))
 TIPI = [n for n, _ in FASCE] + ['Con una tripla doppia', 'Due triple doppie']
 LIMITE = 2
 # «quota bassa» dal 19/11/2026: fra 1,70 e 2,50 (prima sotto 2,00). Richiesta del proprietario: a 1,08-1,30 il guadagno è quasi nullo.
+TD_ALTA = 10.0                # 23/11/2026, richiesta del proprietario: tripla doppia «quota alta» = la più probabile a quota 10 o più (almeno 3%), diversa dalla «quota bassa»
 BASSA = (1.70, 2.50)          # dal 18/11/2026: lo stesso giocatore al massimo in 2 combinazioni (se salta lui, saltano al massimo due proposte)
 CAMPI_GAMBA = ('n', 'id', 'sq', 'partita', 'cosa', 'p', 'q', 'dubbio', 'ex')
 
@@ -129,7 +130,7 @@ def controllo(V, C, tutti, tutti_tutti, stato_nome, congelati=()):
         nuove = combinazioni(tutti, fisse)
     nuove.sort(key=lambda c: TIPI.index(c['tipo']) if c['tipo'] in TIPI else 99)
     C['combinazioni'] = nuove
-    for k, y, ok in (('bassa', 'dd', lambda q: BASSA[0] <= q < BASSA[1]), ('alta', 'dd', lambda q: q >= 3.0), ('td', 'td', lambda q: True)):
+    for k, y, ok in (('bassa', 'dd', lambda q: BASSA[0] <= q < BASSA[1]), ('alta', 'dd', lambda q: q >= 3.0), ('td', 'td', lambda q: True), ('td_alta', 'td', lambda q: q >= TD_ALTA)):
         v = (vecchio.get(k) or [None])[0]
         if not v or v.get('nessuna') or v.get('n') not in validi: continue
         g = validi[v['n']]; q = g.get('q_' + y) or v.get('q_' + y)
@@ -139,6 +140,7 @@ def controllo(V, C, tutti, tutti_tutti, stato_nome, congelati=()):
             v['p_' + z] = g['p_' + z]
             if g.get('q_' + z): v['q_' + z], v['b_' + z] = g['q_' + z], g['b_' + z]
         C[k] = [v] + [x for x in C.get(k, []) if x['n'] != v['n']][:2]
+    if C.get('td') and C.get('td_alta'): C['td_alta'] = [x for x in C['td_alta'] if x['n'] != C['td'][0]['n']]     # mai lo stesso giocatore nelle due triple doppie
     return C
 
 def ricombina(f):
@@ -313,6 +315,8 @@ def main(cartella, f_in, f_out, f_quote=None):
         # v1: il «valore» p × quota più alto. v2: i più probabili (il valore più alto sceglie i casi in cui il modello contraddice di più il mercato, e lì sbaglia più spesso)
         alta=[breve(g) for g in sorted([g for g in con if g['q_dd'] >= 3.0 and g['p_dd'] >= 0.10], key=lambda g: -(g['p_dd'] if V2 else g['v_dd']))[:3]],
         td=[breve(g) for g in sorted([g for g in tutti if g['p_td'] >= 0.03], key=lambda g: -g['p_td'])[:4]])
+    # tripla doppia a quota alta: la più probabile per il modello fra quelle a quota TD_ALTA o più (come la DD alta: i più probabili, non il «valore»)
+    C['td_alta'] = [breve(g) for g in sorted([g for g in tutti if g.get('q_td') and g['q_td'] >= TD_ALTA and g['p_td'] >= 0.03 and g['n'] != (C['td'][0]['n'] if C['td'] else None)], key=lambda g: -g['p_td'])[:3]]
     if not con: C['bassa'] = [breve(g) for g in sorted(tutti, key=lambda g: -g['p_dd'])[:3]]
     C['combinazioni'] = combinazioni(tutti)
     if V_stessa:                                               # controllo delle 23:30 sulla stessa notte (vedi controllo)
