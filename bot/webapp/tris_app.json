@@ -1476,23 +1476,23 @@
   "id": 5749759,
   "ko": 1795356000,
   "partita": "Sassuolo - Genoa",
-  "uff": false,
-  "p3": 0.008404947814152923,
+  "uff": true,
+  "p3": 0.014302914280720383,
   "trio": [
    {
-    "n": "S. Wiafe",
-    "p": 0.2046,
+    "n": "F. Candé",
+    "p": 0.2387,
+    "team": "Sassuolo"
+   },
+   {
+    "n": "H. Traorè",
+    "p": 0.2336,
     "team": "Genoa"
    },
    {
     "n": "L. Østigård",
-    "p": 0.2009,
+    "p": 0.2211,
     "team": "Genoa"
-   },
-   {
-    "n": "D. Ćaleta-Car",
-    "p": 0.1762,
-    "team": "Sassuolo"
    }
   ]
  },
@@ -1501,22 +1501,22 @@
   "id": 5749752,
   "ko": 1795356000,
   "partita": "Bologna - Udinese",
-  "uff": false,
-  "p3": 0.005771469954989548,
+  "uff": true,
+  "p3": 0.010331022119222873,
   "trio": [
    {
-    "n": "M. Palma",
-    "p": 0.1807,
+    "n": "J. Abankwah",
+    "p": 0.226,
     "team": "Udinese"
    },
    {
-    "n": "J. Abankwah",
-    "p": 0.1668,
+    "n": "N. Zaniolo",
+    "p": 0.2226,
     "team": "Udinese"
    },
    {
     "n": "T. Pobega",
-    "p": 0.1651,
+    "p": 0.1771,
     "team": "Bologna"
    }
   ]
