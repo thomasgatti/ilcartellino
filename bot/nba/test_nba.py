@@ -89,6 +89,22 @@ def test_combinazioni():
         assert all(x['n'] != 'G0' for x in c['gambe']), 'chi rischia il riposo non entra nelle combinazioni'
         part = [next(t['partita'] for t in T if t['n'] == x['n']) for x in c['gambe']]; assert len(set(part)) == len(part), 'gambe della stessa partita'
 
+def test_controllo_partite_cominciate():
+    """22/11: nel controllo della sera le proposte con giocatori di partite già cominciate restano, ma quei giocatori non entrano in combinazioni nuove"""
+    from oggi import controllo
+    gioc = lambda n, partita, p, q: dict(n=n, id=hash(n) % 1000, sq='X', partita=partita, p_dd=p, p_td=0.02, q_dd=q, b_dd='sisal')
+    vecchio = gioc('Primo Pomeriggio', 'A', 0.30, 4.0)
+    V = dict(consigli=dict(alta=[dict(vecchio)], bassa=[], td=[], combinazioni=[dict(tipo='Alta', p=0.06, q=16.0, gambe=[
+        dict(n='Primo Pomeriggio', cosa='dd', p=0.30, q=4.0, partita='A'), dict(n='Gioca Stanotte', cosa='dd', p=0.2, q=4.0, partita='B')])]))
+    tutti = [gioc('Gioca Stanotte', 'B', 0.2, 4.0)] + [gioc(f'Nuovo {i}', f'P{i}', 0.5 - 0.03 * i, 1.8 + 0.6 * i) for i in range(8)]
+    C = controllo(V, dict(bassa=[], alta=[], td=[]), tutti, tutti, {}, congelati=[vecchio])
+    assert C['alta'] and C['alta'][0]['n'] == 'Primo Pomeriggio', 'la giocata del pomeriggio deve restare'
+    assert any(c['tipo'] == 'Alta' and {x['n'] for x in c['gambe']} == {'Primo Pomeriggio', 'Gioca Stanotte'} for c in C['combinazioni']), 'la combinazione del pomeriggio deve restare'
+    for c in C['combinazioni']:
+        if c['tipo'] != 'Alta': assert all(x['n'] != 'Primo Pomeriggio' for x in c['gambe']), 'un giocatore di una partita cominciata non entra in combinazioni nuove'
+    C = controllo(V, dict(bassa=[], alta=[], td=[]), tutti, tutti, {})
+    assert not any(x['n'] == 'Primo Pomeriggio' for c in C['combinazioni'] for x in c['gambe']), 'senza congelati il comportamento resta quello di prima'
+
 def test_modello_v2():
     import modello2 as M2
     P, G = archivio_finto(110, seme=2)
