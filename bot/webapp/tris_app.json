@@ -1796,21 +1796,21 @@
   "ko": 1795550400,
   "partita": "RB Leipzig - Lens",
   "uff": false,
-  "p3": 0.025968612930801747,
+  "p3": 0.026588346864280347,
   "trio": [
    {
     "n": "A. Haidara",
-    "p": 0.298,
+    "p": 0.3017,
     "team": "Lens"
    },
    {
     "n": "R. Aguilar",
-    "p": 0.2806,
+    "p": 0.2801,
     "team": "Lens"
    },
    {
     "n": "C. Baumgartner",
-    "p": 0.2677,
+    "p": 0.2712,
     "team": "RB Leipzig"
    }
   ]
@@ -1821,21 +1821,21 @@
   "ko": 1795550400,
   "partita": "Real Madrid - PSV Eindhoven",
   "uff": false,
-  "p3": 0.014634560711622405,
+  "p3": 0.014040835806898955,
   "trio": [
    {
     "n": "E. Camavinga",
-    "p": 0.2724,
+    "p": 0.2588,
     "team": "Real Madrid"
    },
    {
     "n": "R. van Bommel",
-    "p": 0.2308,
+    "p": 0.232,
     "team": "PSV Eindhoven"
    },
    {
     "n": "K. Sano",
-    "p": 0.2007,
+    "p": 0.2016,
     "team": "PSV Eindhoven"
    }
   ]
@@ -1846,21 +1846,21 @@
   "ko": 1795550400,
   "partita": "Slovan Bratislava - Real Betis",
   "uff": false,
-  "p3": 0.012062648132961047,
+  "p3": 0.012339504263685127,
   "trio": [
    {
     "n": "F. Bernal",
-    "p": 0.2533,
+    "p": 0.2571,
     "team": "Real Betis"
    },
    {
     "n": "N. Deossa",
-    "p": 0.2318,
+    "p": 0.2375,
     "team": "Real Betis"
    },
    {
     "n": "A. Mustafić",
-    "p": 0.1771,
+    "p": 0.1742,
     "team": "Slovan Bratislava"
    }
   ]
