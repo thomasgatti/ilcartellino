@@ -1602,21 +1602,21 @@
   "ko": 1795542300,
   "partita": "Bodø/Glimt - LASK",
   "uff": false,
-  "p3": 0.008699447615241706,
+  "p3": 0.01094082394893978,
   "trio": [
    {
-    "n": "M. Bogarde",
-    "p": 0.2264,
+    "n": "M. Verhaeghe",
+    "p": 0.2515,
     "team": "LASK"
    },
    {
-    "n": "X. Mbuyamba",
-    "p": 0.2139,
+    "n": "M. Bogarde",
+    "p": 0.228,
     "team": "LASK"
    },
    {
     "n": "S. Auklend",
-    "p": 0.1549,
+    "p": 0.1645,
     "team": "Bodø/Glimt"
    }
   ]
@@ -1652,21 +1652,21 @@
   "ko": 1795550400,
   "partita": "Arsenal - Borussia Dortmund",
   "uff": false,
-  "p3": 0.016726029031396833,
+  "p3": 0.01534891549646385,
   "trio": [
    {
     "n": "R. Bensebaini",
-    "p": 0.2725,
+    "p": 0.2647,
     "team": "Borussia Dortmund"
    },
    {
     "n": "F. Silva",
-    "p": 0.255,
+    "p": 0.2449,
     "team": "Borussia Dortmund"
    },
    {
     "n": "M. Merino",
-    "p": 0.2075,
+    "p": 0.2041,
     "team": "Arsenal"
    }
   ]
