@@ -1544,29 +1544,7 @@
     "p": 0.1697,
     "team": "Milan"
    }
-  ],
-  "revised": {
-   "uff": true,
-   "late": true,
-   "p3": 0.016565487869278857,
-   "trio": [
-    {
-     "n": "G. Cittadini",
-     "p": 0.2566,
-     "team": "Frosinone"
-    },
-    {
-     "n": "P. Masini",
-     "p": 0.2422,
-     "team": "Frosinone"
-    },
-    {
-     "n": "D. Moreira",
-     "p": 0.2298,
-     "team": "Milan"
-    }
-   ]
-  }
+  ]
  },
  {
   "comp": "sa",
@@ -1591,29 +1569,7 @@
     "p": 0.1399,
     "team": "Atalanta"
    }
-  ],
-  "revised": {
-   "uff": true,
-   "late": true,
-   "p3": 0.014320966855688452,
-   "trio": [
-    {
-     "n": "B. Pavard",
-     "p": 0.2348,
-     "team": "Inter"
-    },
-    {
-     "n": "H. Çalhanoğlu",
-     "p": 0.2326,
-     "team": "Inter"
-    },
-    {
-     "n": "G. Scalvini",
-     "p": 0.226,
-     "team": "Atalanta"
-    }
-   ]
-  }
+  ]
  },
  {
   "comp": "sa",
