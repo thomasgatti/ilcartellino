@@ -1702,21 +1702,21 @@
   "ko": 1795550400,
   "partita": "Feyenoord - FC Porto",
   "uff": false,
-  "p3": 0.016330842891744735,
+  "p3": 0.01393670457890481,
   "trio": [
    {
     "n": "G. Veiga",
-    "p": 0.274,
+    "p": 0.2647,
     "team": "FC Porto"
    },
    {
     "n": "A. Costa",
-    "p": 0.2565,
+    "p": 0.2438,
     "team": "FC Porto"
    },
    {
     "n": "T. Kraaijeveld",
-    "p": 0.2003,
+    "p": 0.1861,
     "team": "Feyenoord"
    }
   ]
