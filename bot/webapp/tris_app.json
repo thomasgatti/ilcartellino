@@ -1727,21 +1727,21 @@
   "ko": 1795550400,
   "partita": "Manchester City - Napoli",
   "uff": false,
-  "p3": 0.01548278702083152,
+  "p3": 0.013509525534621269,
   "trio": [
    {
-    "n": "A. Vergara",
-    "p": 0.2963,
+    "n": "B. Gilmour",
+    "p": 0.2462,
     "team": "Napoli"
    },
    {
-    "n": "B. Gilmour",
-    "p": 0.234,
+    "n": "M. Olivera",
+    "p": 0.2436,
     "team": "Napoli"
    },
    {
     "n": "E. Anderson",
-    "p": 0.1925,
+    "p": 0.1942,
     "team": "Manchester City"
    }
   ]
@@ -1802,21 +1802,21 @@
   "ko": 1795550400,
   "partita": "Slovan Bratislava - Real Betis",
   "uff": false,
-  "p3": 0.012339504263685127,
+  "p3": 0.016270679727463898,
   "trio": [
    {
     "n": "F. Bernal",
-    "p": 0.2571,
+    "p": 0.2657,
     "team": "Real Betis"
    },
    {
     "n": "N. Deossa",
-    "p": 0.2375,
+    "p": 0.2471,
     "team": "Real Betis"
    },
    {
-    "n": "A. Mustafić",
-    "p": 0.1742,
+    "n": "R. Ibrahim",
+    "p": 0.2137,
     "team": "Slovan Bratislava"
    }
   ]
