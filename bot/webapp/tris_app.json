@@ -1802,21 +1802,21 @@
   "ko": 1795550400,
   "partita": "Slovan Bratislava - Real Betis",
   "uff": false,
-  "p3": 0.012339504263685127,
+  "p3": 0.016270679727463898,
   "trio": [
    {
     "n": "F. Bernal",
-    "p": 0.2571,
+    "p": 0.2657,
     "team": "Real Betis"
    },
    {
     "n": "N. Deossa",
-    "p": 0.2375,
+    "p": 0.2471,
     "team": "Real Betis"
    },
    {
-    "n": "A. Mustafić",
-    "p": 0.1742,
+    "n": "R. Ibrahim",
+    "p": 0.2137,
     "team": "Slovan Bratislava"
    }
   ]
