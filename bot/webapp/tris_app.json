@@ -1627,21 +1627,21 @@
   "ko": 1795542300,
   "partita": "Galatasaray - Aston Villa",
   "uff": false,
-  "p3": 0.03078901743870388,
+  "p3": 0.03309350201758104,
   "trio": [
    {
     "n": "J. Gomes",
-    "p": 0.3736,
+    "p": 0.3741,
     "team": "Aston Villa"
    },
    {
     "n": "B. Kamara",
-    "p": 0.2697,
+    "p": 0.2791,
     "team": "Aston Villa"
    },
    {
     "n": "D. Sánchez",
-    "p": 0.2634,
+    "p": 0.2733,
     "team": "Galatasaray"
    }
   ]
@@ -1677,21 +1677,21 @@
   "ko": 1795550400,
   "partita": "Como - AEK Athens",
   "uff": false,
-  "p3": 0.013141643698455696,
+  "p3": 0.01113283558388163,
   "trio": [
    {
-    "n": "M. Gaćinović",
-    "p": 0.2476,
+    "n": "P. Mantalos",
+    "p": 0.2387,
     "team": "AEK Athens"
    },
    {
     "n": "L. Majer",
-    "p": 0.2394,
+    "p": 0.2273,
     "team": "AEK Athens"
    },
    {
     "n": "Y. Couto",
-    "p": 0.1911,
+    "p": 0.1769,
     "team": "Como"
    }
   ]
@@ -1752,11 +1752,11 @@
   "ko": 1795550400,
   "partita": "RB Leipzig - Lens",
   "uff": false,
-  "p3": 0.026588346864280347,
+  "p3": 0.024879350968935923,
   "trio": [
    {
     "n": "A. Haidara",
-    "p": 0.3017,
+    "p": 0.3008,
     "team": "Lens"
    },
    {
@@ -1766,7 +1766,7 @@
    },
    {
     "n": "C. Baumgartner",
-    "p": 0.2712,
+    "p": 0.2545,
     "team": "RB Leipzig"
    }
   ]
@@ -1777,22 +1777,22 @@
   "ko": 1795550400,
   "partita": "Real Madrid - PSV Eindhoven",
   "uff": false,
-  "p3": 0.014040835806898955,
+  "p3": 0.008569787590144236,
   "trio": [
    {
-    "n": "E. Camavinga",
-    "p": 0.2588,
-    "team": "Real Madrid"
-   },
-   {
     "n": "R. van Bommel",
-    "p": 0.232,
+    "p": 0.2168,
     "team": "PSV Eindhoven"
    },
    {
     "n": "K. Sano",
-    "p": 0.2016,
+    "p": 0.1857,
     "team": "PSV Eindhoven"
+   },
+   {
+    "n": "M. Cucurella",
+    "p": 0.1835,
+    "team": "Real Madrid"
    }
   ]
  },
