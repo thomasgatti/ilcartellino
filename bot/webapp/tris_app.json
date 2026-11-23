@@ -1727,21 +1727,21 @@
   "ko": 1795550400,
   "partita": "Manchester City - Napoli",
   "uff": false,
-  "p3": 0.017683663679517198,
+  "p3": 0.013509525534621269,
   "trio": [
-   {
-    "n": "A. Vergara",
-    "p": 0.311,
-    "team": "Napoli"
-   },
    {
     "n": "B. Gilmour",
     "p": 0.2462,
     "team": "Napoli"
    },
    {
+    "n": "M. Olivera",
+    "p": 0.2436,
+    "team": "Napoli"
+   },
+   {
     "n": "E. Anderson",
-    "p": 0.1991,
+    "p": 0.1942,
     "team": "Manchester City"
    }
   ]
