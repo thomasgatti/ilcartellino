@@ -1576,23 +1576,23 @@
   "id": 5749756,
   "ko": 1795463100,
   "partita": "Monza - Fiorentina",
-  "uff": false,
-  "p3": 0.006436983843947043,
+  "uff": true,
+  "p3": 0.024307944907743215,
   "trio": [
    {
-    "n": "E. Kouadio",
-    "p": 0.1887,
-    "team": "Monza"
-   },
-   {
-    "n": "L. Lucchesi",
-    "p": 0.1851,
-    "team": "Monza"
-   },
-   {
-    "n": "F. Mastantuono",
-    "p": 0.1589,
+    "n": "W. Gnonto",
+    "p": 0.2927,
     "team": "Fiorentina"
+   },
+   {
+    "n": "C. Inao Oulaï",
+    "p": 0.2825,
+    "team": "Fiorentina"
+   },
+   {
+    "n": "E. Kouadio",
+    "p": 0.2535,
+    "team": "Monza"
    }
   ]
  },
