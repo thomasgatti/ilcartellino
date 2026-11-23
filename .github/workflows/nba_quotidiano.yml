@@ -30,6 +30,7 @@ concurrency:
 
 permissions:
   contents: write
+  actions: write   # per avviare «Dati NBA (ESPN)» alla fine del giro del pomeriggio (23/11)
 
 jobs:
   nba:
@@ -181,3 +182,12 @@ jobs:
           done
           echo '::warning::Registro NBA non salvato nel ramo dati'
           exit 1
+      # 23/11: il giro programmato di «Dati NBA (ESPN)» (07:17 UTC) è inaffidabile: dal 21 al 23/11 GitHub l'ha avviato una sola volta,
+      # con 8 ore di ritardo. Il giro del pomeriggio (avviato da cron-job.org «NBA pomeriggio», puntuale) lo fa partire ogni giorno:
+      # salva nel ramo dati le partite della notte scorsa (scarica solo i giorni nuovi). Non parte con «rifai» né con le modifiche al modello.
+      - name: Avvia il salvataggio dell'archivio NBA (Dati NBA ESPN)
+        if: always() && github.event_name != 'push' && inputs.rifai != 'si'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run nba_dati.yml --ref main -f minuti=15 && echo 'Dati NBA (ESPN) avviato'
