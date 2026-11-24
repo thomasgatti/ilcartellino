@@ -1602,11 +1602,11 @@
   "ko": 1795542300,
   "partita": "Bodø/Glimt - LASK",
   "uff": true,
-  "p3": 0.009693391455856602,
+  "p3": 0.009311546657714687,
   "trio": [
    {
     "n": "X. Mbuyamba",
-    "p": 0.2266,
+    "p": 0.2176,
     "team": "LASK"
    },
    {
@@ -1626,8 +1626,8 @@
   "id": 6106339,
   "ko": 1795542300,
   "partita": "Galatasaray - Aston Villa",
-  "uff": false,
-  "p3": 0.03309350201758104,
+  "uff": true,
+  "p3": 0.03321675511752628,
   "trio": [
    {
     "n": "J. Gomes",
@@ -1636,12 +1636,12 @@
    },
    {
     "n": "B. Kamara",
-    "p": 0.2791,
+    "p": 0.2781,
     "team": "Aston Villa"
    },
    {
     "n": "D. Sánchez",
-    "p": 0.2733,
+    "p": 0.2752,
     "team": "Galatasaray"
    }
   ]
@@ -1852,7 +1852,7 @@
   "ko": 1795636800,
   "partita": "Lille - Bayern München",
   "uff": false,
-  "p3": 0.01338834873147461,
+  "p3": 0.01339846334296897,
   "trio": [
    {
     "n": "K. Laimer",
@@ -1861,7 +1861,7 @@
    },
    {
     "n": "B. André",
-    "p": 0.2113,
+    "p": 0.2114,
     "team": "Lille"
    },
    {
