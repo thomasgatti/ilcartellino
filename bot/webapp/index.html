@@ -747,6 +747,9 @@ html { overflow-y: scroll; scrollbar-gutter: stable; }
 .ang-seg button { font: 700 13px var(--body); border: 0; background: transparent; color: var(--muted); padding: 6px 12px; border-radius: 999px; cursor: pointer; white-space: nowrap; }
 .ang-seg button[aria-pressed="true"] { background: var(--ag); color: #1c0f00; }
 .ang-seg button:focus-visible, .ang-more:focus-visible, .ang-open:focus-visible { outline: 2px solid var(--ag2); outline-offset: 2px; }
+.ang-day { display: grid; gap: 10px; }
+.ang-day h3 { margin: 6px 0 0; font: 800 19px/1.15 var(--display); text-transform: uppercase; letter-spacing: .03em; color: var(--ag2); display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+.ang-day h3 span { font: 600 13px var(--body); text-transform: none; letter-spacing: 0; color: var(--muted); }
 .ang-list { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 480px), 1fr)); align-items: start; }
 .ang-card { background: color-mix(in srgb, var(--surface) 94%, transparent); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; display: grid; gap: 12px; }
 .ang-card.top { border-color: transparent; box-shadow: 0 0 0 2px var(--ag) inset, 0 4px 18px color-mix(in srgb, var(--ag) 18%, transparent); }
@@ -1375,19 +1378,26 @@ function renderAngoli() {
   const comps = ['sa', 'ucl', 'uel', 'naz', 'extra'].filter(c => ANG.matches.some(m => m.c === c));
   if (astate.f !== 'all' && !comps.includes(astate.f)) astate.f = 'all';
   const list = ANG.matches.filter(m => astate.f === 'all' || m.c === astate.f);
-  const order = [...list].sort((a, b) => astate.sort === 'p' ? b.p - a.p || a.ko - b.ko : a.ko - b.ko || b.p - a.p);
-  const best = new Set([...list].filter(m => m.ko > now).sort((a, b) => b.p - a.p).slice(0, 3).map(m => m.id));
+  // Un blocco per giorno (24/11): prima ordinava per probabilità tutti i 10 giorni insieme e le partite di oggi finivano in mezzo.
+  // Dentro ogni giorno: per probabilità (o per orario); le tre in evidenza sono le migliori di quel giorno ancora da giocare.
+  const dayKey = ts => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Rome' }).format(ts * 1000), oggi = dayKey(now), domani = dayKey(now + 86400);
+  const days = [];
+  for (const m of [...list].sort((a, b) => a.ko - b.ko)) { const k = dayKey(m.ko); if (!days.length || days[days.length - 1].k !== k) days.push({ k, ko: m.ko, ms: [] }); days[days.length - 1].ms.push(m); }
+  const dayTitle = d => { const t = new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', weekday: 'long', day: 'numeric', month: 'long' }).format(d.ko * 1000); return d.k === oggi ? `Oggi · ${t}` : d.k === domani ? `Domani · ${t}` : t; };
+  const dayHtml = d => { const order = [...d.ms].sort((a, b) => astate.sort === 'p' ? b.p - a.p || a.ko - b.ko : a.ko - b.ko || b.p - a.p);
+    const best = new Set(d.ms.filter(m => m.ko > now).sort((a, b) => b.p - a.p).slice(0, 3).map(m => m.id));
+    return `<section class="ang-day"><h3>${dayTitle(d)} <span>${d.ms.length} ${d.ms.length === 1 ? 'partita' : 'partite'}</span></h3><div class="ang-list">${order.map((m, i) => angCard(m, i + 1, best.has(m.id))).join('')}</div></section>`; };
   const st = ANG.storico || [], hit = r => r.ang[0] + r.ang[1] >= S, hits = st.filter(hit).length, att = st.reduce((s, r) => s + r.p, 0);
   const alto = [...st].sort((a, b) => b.p - a.p).slice(0, Math.round(st.length / 3)), retro = st.filter(r => r.retro).length;
   const shown = astate.all ? st : st.slice(0, 12);
   const giorno = ts => new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', day: 'numeric', month: 'short' }).format(ts * 1000);
   el.innerHTML = `
-    <p class="ang-lead">Per ogni partita, la probabilità che si battano <b>almeno ${S} angoli in totale</b>. È una giocata da quota alta: succede in media in una partita su sette, quindi anche le partite in cima alla lista restano più spesso sotto i ${S}.</p>
+    <p class="ang-lead">Per ogni partita, la probabilità che si battano <b>almeno ${S} angoli in totale</b>. È una giocata da quota alta: succede in media in una partita su sette, quindi anche le partite in cima alla lista restano più spesso sotto i ${S}. Le partite sono divise per giorno; in evidenza le tre più probabili di ogni giorno.</p>
     ${ANG.matches.length ? `<div class="ang-bar">
       ${comps.length > 1 ? `<div class="ang-seg" role="group" aria-label="Competizione">${['all', ...comps].map(c => `<button type="button" data-f="${c}" aria-pressed="${astate.f === c}">${c === 'all' ? 'Tutte' : ANG_COMP[c]}</button>`).join('')}</div>` : ''}
       <div class="ang-seg" role="group" aria-label="Ordine"><button type="button" data-s="p" aria-pressed="${astate.sort === 'p'}">Più probabili</button><button type="button" data-s="t" aria-pressed="${astate.sort === 't'}">Per orario</button></div>
     </div>
-    <div class="ang-list">${order.map((m, i) => angCard(m, i + 1, best.has(m.id))).join('')}</div>` : `<p class="note">Nessuna partita in programma nei prossimi giorni: le stime tornano con il prossimo turno.</p>`}
+    ${days.length ? days.map(dayHtml).join('') : `<p class="note">Nessuna partita di questa competizione nei prossimi giorni.</p>`}` : `<p class="note">Nessuna partita in programma nei prossimi giorni: le stime tornano con il prossimo turno.</p>`}
     <h2>Verifica</h2>
     ${st.length ? `<div class="ang-tiles">
       <div class="stat"><span class="k">Partite verificate</span><span class="v">${st.length}${retro ? ` <small>${st.length - retro} stimate prima del via</small>` : ''}</span></div>
@@ -1508,7 +1518,7 @@ function setComp(c, keepId) {
     try { localStorage.setItem('ammoniti_comp', c); } catch (e) {}
     for (const q of ['.layout', '#area', '#storico', '#xintro']) document.querySelector(q).hidden = true;
     document.getElementById('hdr-round').textContent = `· ${ANG.soglia || 14} o più`;
-    document.getElementById('meta').innerHTML = '<span>Serie A, Champions, Nazionali e big match EXTRA</span>';
+    document.getElementById('meta').innerHTML = '<span>Serie A, Champions, Europa League, Nazionali e big match EXTRA</span>';
     history.replaceState(null, '', '#angoli'); renderAngoli(); compInView(c); return;
   }
   if (c !== 'sa' && !cupOf(c)) c = 'sa';
