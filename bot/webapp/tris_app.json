@@ -1602,21 +1602,21 @@
   "ko": 1795542300,
   "partita": "Bodø/Glimt - LASK",
   "uff": false,
-  "p3": 0.01094082394893978,
+  "p3": 0.012519410805265568,
   "trio": [
    {
     "n": "M. Verhaeghe",
-    "p": 0.2515,
+    "p": 0.2593,
     "team": "LASK"
    },
    {
     "n": "M. Bogarde",
-    "p": 0.228,
+    "p": 0.2401,
     "team": "LASK"
    },
    {
-    "n": "S. Auklend",
-    "p": 0.1645,
+    "n": "J. Gundersen",
+    "p": 0.1733,
     "team": "Bodø/Glimt"
    }
   ]
@@ -1652,21 +1652,21 @@
   "ko": 1795550400,
   "partita": "Arsenal - Borussia Dortmund",
   "uff": false,
-  "p3": 0.01534891549646385,
+  "p3": 0.010522832217767451,
   "trio": [
    {
-    "n": "R. Bensebaini",
-    "p": 0.2647,
-    "team": "Borussia Dortmund"
-   },
-   {
     "n": "F. Silva",
-    "p": 0.2449,
+    "p": 0.245,
     "team": "Borussia Dortmund"
    },
    {
-    "n": "M. Merino",
-    "p": 0.2041,
+    "n": "J. Ryerson",
+    "p": 0.2049,
+    "team": "Borussia Dortmund"
+   },
+   {
+    "n": "P. Hincapié",
+    "p": 0.1807,
     "team": "Arsenal"
    }
   ]
@@ -1727,16 +1727,16 @@
   "ko": 1795550400,
   "partita": "Manchester City - Napoli",
   "uff": false,
-  "p3": 0.013509525534621269,
+  "p3": 0.013193424048796244,
   "trio": [
    {
-    "n": "B. Gilmour",
-    "p": 0.2462,
+    "n": "M. Olivera",
+    "p": 0.2426,
     "team": "Napoli"
    },
    {
-    "n": "M. Olivera",
-    "p": 0.2436,
+    "n": "B. Gilmour",
+    "p": 0.2414,
     "team": "Napoli"
    },
    {
@@ -1752,11 +1752,11 @@
   "ko": 1795550400,
   "partita": "RB Leipzig - Lens",
   "uff": false,
-  "p3": 0.024879350968935923,
+  "p3": 0.024956766039369294,
   "trio": [
    {
     "n": "A. Haidara",
-    "p": 0.3008,
+    "p": 0.3017,
     "team": "Lens"
    },
    {
@@ -1777,22 +1777,22 @@
   "ko": 1795550400,
   "partita": "Real Madrid - PSV Eindhoven",
   "uff": false,
-  "p3": 0.008569787590144236,
+  "p3": 0.007987157737616091,
   "trio": [
    {
     "n": "R. van Bommel",
-    "p": 0.2168,
-    "team": "PSV Eindhoven"
-   },
-   {
-    "n": "K. Sano",
-    "p": 0.1857,
+    "p": 0.2053,
     "team": "PSV Eindhoven"
    },
    {
     "n": "M. Cucurella",
     "p": 0.1835,
     "team": "Real Madrid"
+   },
+   {
+    "n": "K. Sano",
+    "p": 0.1828,
+    "team": "PSV Eindhoven"
    }
   ]
  },
@@ -1827,21 +1827,21 @@
   "ko": 1795636800,
   "partita": "Paris Saint-Germain - Roma",
   "uff": false,
-  "p3": 0.015146862812192652,
+  "p3": 0.008361913559000173,
   "trio": [
    {
-    "n": "L. Balerdi",
-    "p": 0.2733,
-    "team": "Roma"
-   },
-   {
     "n": "M. Hermoso",
-    "p": 0.2616,
+    "p": 0.235,
     "team": "Roma"
    },
    {
-    "n": "L. Hernández",
-    "p": 0.1826,
+    "n": "M. Koné",
+    "p": 0.2139,
+    "team": "Roma"
+   },
+   {
+    "n": "S. Mayulu",
+    "p": 0.1434,
     "team": "Paris Saint-Germain"
    }
   ]
@@ -1877,22 +1877,22 @@
   "ko": 1795636800,
   "partita": "Shakhtar Donetsk - Fenerbahçe",
   "uff": false,
-  "p3": 0.021905107230918854,
+  "p3": 0.025005411999927247,
   "trio": [
    {
     "n": "İ. Yüksek",
-    "p": 0.2834,
+    "p": 0.2887,
     "team": "Fenerbahçe"
+   },
+   {
+    "n": "M. Gomes",
+    "p": 0.2747,
+    "team": "Shakhtar Donetsk"
    },
    {
     "n": "N. Semedo",
-    "p": 0.2705,
+    "p": 0.2718,
     "team": "Fenerbahçe"
-   },
-   {
-    "n": "D. Kryskiv",
-    "p": 0.2463,
-    "team": "Shakhtar Donetsk"
    }
   ]
  },
@@ -1902,21 +1902,21 @@
   "ko": 1795628700,
   "partita": "Slavia Prague - Villarreal",
   "uff": false,
-  "p3": 0.03023304302260375,
+  "p3": 0.026453806084478542,
   "trio": [
    {
     "n": "S. Mouriño",
-    "p": 0.3825,
+    "p": 0.3346,
     "team": "Villarreal"
    },
    {
-    "n": "P. Gueye",
-    "p": 0.2643,
+    "n": "N. Saliba",
+    "p": 0.3051,
     "team": "Villarreal"
    },
    {
-    "n": "O. Kubiak",
-    "p": 0.2578,
+    "n": "A. N'Guessan",
+    "p": 0.2234,
     "team": "Slavia Prague"
    }
   ]
@@ -1927,22 +1927,22 @@
   "ko": 1795628700,
   "partita": "Sabah FK - Barcelona",
   "uff": false,
-  "p3": 0.011476926329639186,
+  "p3": 0.008907026276385134,
   "trio": [
    {
-    "n": "Gavi",
-    "p": 0.2395,
+    "n": "M. Bernal",
+    "p": 0.2152,
     "team": "Barcelona"
    },
    {
     "n": "U. Rakhmonaliev",
-    "p": 0.2103,
+    "p": 0.1951,
     "team": "Sabah FK"
    },
    {
-    "n": "A. Khaybulaev",
-    "p": 0.1964,
-    "team": "Sabah FK"
+    "n": "F. López",
+    "p": 0.1829,
+    "team": "Barcelona"
    }
   ]
  },
@@ -1952,21 +1952,21 @@
   "ko": 1795636800,
   "partita": "Inter - VfB Stuttgart",
   "uff": false,
-  "p3": 0.017681910422280712,
+  "p3": 0.020232371404464843,
   "trio": [
    {
     "n": "J. Chabot",
-    "p": 0.3204,
+    "p": 0.3326,
     "team": "VfB Stuttgart"
    },
    {
     "n": "A. Karazor",
-    "p": 0.2461,
+    "p": 0.2552,
     "team": "VfB Stuttgart"
    },
    {
-    "n": "H. Çalhanoğlu",
-    "p": 0.1934,
+    "n": "P. Sučić",
+    "p": 0.2055,
     "team": "Inter"
    }
   ]
@@ -1977,21 +1977,21 @@
   "ko": 1795636800,
   "partita": "Atlético Madrid - Viking",
   "uff": false,
-  "p3": 0.016864342382791764,
+  "p3": 0.01580487088894529,
   "trio": [
    {
     "n": "H. Heggheim",
-    "p": 0.3147,
+    "p": 0.3003,
     "team": "Viking"
    },
    {
-    "n": "K. Askildsen",
-    "p": 0.2637,
+    "n": "V. Auklend",
+    "p": 0.2584,
     "team": "Viking"
    },
    {
     "n": "Á. Baena",
-    "p": 0.1752,
+    "p": 0.1756,
     "team": "Atlético Madrid"
    }
   ]
@@ -2002,21 +2002,21 @@
   "ko": 1795636800,
   "partita": "Sporting CP - Manchester United",
   "uff": false,
-  "p3": 0.023185940129539985,
+  "p3": 0.01935028116040724,
   "trio": [
    {
-    "n": "A. Heaven",
-    "p": 0.3032,
-    "team": "Manchester United"
-   },
-   {
     "n": "H. Maguire",
-    "p": 0.2766,
+    "p": 0.3012,
     "team": "Manchester United"
    },
    {
-    "n": "E. Felicíssimo",
-    "p": 0.2383,
+    "n": "P. Dorgu",
+    "p": 0.2496,
+    "team": "Manchester United"
+   },
+   {
+    "n": "M. Araújo",
+    "p": 0.2219,
     "team": "Sporting CP"
    }
   ]
@@ -2027,21 +2027,21 @@
   "ko": 1795636800,
   "partita": "Club Brugge - Liverpool",
   "uff": false,
-  "p3": 0.01763754694678999,
+  "p3": 0.015451996707715581,
   "trio": [
    {
-    "n": "J. Gomez",
-    "p": 0.2751,
+    "n": "K. Tsimikas",
+    "p": 0.2537,
     "team": "Liverpool"
    },
    {
-    "n": "K. Tsimikas",
-    "p": 0.248,
+    "n": "T. Nyoni",
+    "p": 0.2336,
     "team": "Liverpool"
    },
    {
     "n": "F. Potts",
-    "p": 0.2229,
+    "p": 0.2248,
     "team": "Club Brugge"
    }
   ]
