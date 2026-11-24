@@ -1752,22 +1752,22 @@
   "ko": 1795550400,
   "partita": "RB Leipzig - Lens",
   "uff": false,
-  "p3": 0.024956766039369294,
+  "p3": 0.02114609562719667,
   "trio": [
    {
     "n": "A. Haidara",
-    "p": 0.3017,
-    "team": "Lens"
-   },
-   {
-    "n": "R. Aguilar",
-    "p": 0.2801,
+    "p": 0.3008,
     "team": "Lens"
    },
    {
     "n": "C. Baumgartner",
-    "p": 0.2545,
+    "p": 0.2679,
     "team": "RB Leipzig"
+   },
+   {
+    "n": "S. Abdulhamid",
+    "p": 0.2262,
+    "team": "Lens"
    }
   ]
  },
