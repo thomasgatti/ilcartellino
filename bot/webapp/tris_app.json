@@ -1651,8 +1651,8 @@
   "id": 6106259,
   "ko": 1795550400,
   "partita": "Arsenal - Borussia Dortmund",
-  "uff": false,
-  "p3": 0.010522832217767451,
+  "uff": true,
+  "p3": 0.009235660760798884,
   "trio": [
    {
     "n": "F. Silva",
@@ -1665,8 +1665,8 @@
     "team": "Borussia Dortmund"
    },
    {
-    "n": "P. Hincapié",
-    "p": 0.1807,
+    "n": "M. Lewis-Skelly",
+    "p": 0.1586,
     "team": "Arsenal"
    }
   ]
@@ -1701,8 +1701,8 @@
   "id": 6106307,
   "ko": 1795550400,
   "partita": "Feyenoord - FC Porto",
-  "uff": false,
-  "p3": 0.01393670457890481,
+  "uff": true,
+  "p3": 0.013809945461081923,
   "trio": [
    {
     "n": "G. Veiga",
@@ -1711,12 +1711,12 @@
    },
    {
     "n": "A. Costa",
-    "p": 0.2438,
+    "p": 0.2429,
     "team": "FC Porto"
    },
    {
     "n": "T. Kraaijeveld",
-    "p": 0.1861,
+    "p": 0.1852,
     "team": "Feyenoord"
    }
   ]
@@ -1726,17 +1726,17 @@
   "id": 6106256,
   "ko": 1795550400,
   "partita": "Manchester City - Napoli",
-  "uff": false,
-  "p3": 0.013193424048796244,
+  "uff": true,
+  "p3": 0.012033646175215395,
   "trio": [
    {
     "n": "M. Olivera",
-    "p": 0.2426,
+    "p": 0.2323,
     "team": "Napoli"
    },
    {
     "n": "B. Gilmour",
-    "p": 0.2414,
+    "p": 0.2299,
     "team": "Napoli"
    },
    {
@@ -1751,23 +1751,23 @@
   "id": 6106325,
   "ko": 1795550400,
   "partita": "RB Leipzig - Lens",
-  "uff": false,
-  "p3": 0.02114609562719667,
+  "uff": true,
+  "p3": 0.020458771779286452,
   "trio": [
    {
     "n": "A. Haidara",
-    "p": 0.3008,
+    "p": 0.3046,
+    "team": "Lens"
+   },
+   {
+    "n": "Y. Titraoui",
+    "p": 0.2411,
     "team": "Lens"
    },
    {
     "n": "C. Baumgartner",
-    "p": 0.2679,
+    "p": 0.2401,
     "team": "RB Leipzig"
-   },
-   {
-    "n": "S. Abdulhamid",
-    "p": 0.2262,
-    "team": "Lens"
    }
   ]
  },
@@ -1776,12 +1776,12 @@
   "id": 6106243,
   "ko": 1795550400,
   "partita": "Real Madrid - PSV Eindhoven",
-  "uff": false,
-  "p3": 0.007987157737616091,
+  "uff": true,
+  "p3": 0.008362045614500881,
   "trio": [
    {
     "n": "R. van Bommel",
-    "p": 0.2053,
+    "p": 0.2149,
     "team": "PSV Eindhoven"
    },
    {
@@ -1801,22 +1801,22 @@
   "id": 6106394,
   "ko": 1795550400,
   "partita": "Slovan Bratislava - Real Betis",
-  "uff": false,
-  "p3": 0.016270679727463898,
+  "uff": true,
+  "p3": 0.016651589445197266,
   "trio": [
    {
     "n": "F. Bernal",
-    "p": 0.2657,
+    "p": 0.2666,
     "team": "Real Betis"
    },
    {
-    "n": "N. Deossa",
-    "p": 0.2471,
+    "n": "V. Gómez",
+    "p": 0.2423,
     "team": "Real Betis"
    },
    {
     "n": "R. Ibrahim",
-    "p": 0.2137,
+    "p": 0.2222,
     "team": "Slovan Bratislava"
    }
   ]
