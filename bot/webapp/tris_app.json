@@ -1852,22 +1852,22 @@
   "ko": 1795636800,
   "partita": "Lille - Bayern München",
   "uff": false,
-  "p3": 0.016419280437381955,
+  "p3": 0.01338834873147461,
   "trio": [
    {
     "n": "K. Laimer",
-    "p": 0.2867,
+    "p": 0.2741,
     "team": "Bayern München"
    },
    {
-    "n": "R. Perraud",
-    "p": 0.2272,
+    "n": "B. André",
+    "p": 0.2113,
     "team": "Lille"
    },
    {
-    "n": "B. André",
-    "p": 0.2173,
-    "team": "Lille"
+    "n": "D. Upamecano",
+    "p": 0.1993,
+    "team": "Bayern München"
    }
   ]
  },
