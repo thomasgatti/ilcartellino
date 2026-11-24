@@ -1652,16 +1652,16 @@
   "ko": 1795550400,
   "partita": "Arsenal - Borussia Dortmund",
   "uff": true,
-  "p3": 0.009235660760798884,
+  "p3": 0.008261148531499788,
   "trio": [
    {
     "n": "F. Silva",
-    "p": 0.245,
+    "p": 0.2288,
     "team": "Borussia Dortmund"
    },
    {
-    "n": "J. Ryerson",
-    "p": 0.2049,
+    "n": "F. Nmecha",
+    "p": 0.1963,
     "team": "Borussia Dortmund"
    },
    {
@@ -1676,22 +1676,22 @@
   "id": 6106412,
   "ko": 1795550400,
   "partita": "Como - AEK Athens",
-  "uff": false,
-  "p3": 0.01113283558388163,
+  "uff": true,
+  "p3": 0.010254883525562955,
   "trio": [
    {
-    "n": "P. Mantalos",
-    "p": 0.2387,
+    "n": "M. Gaćinović",
+    "p": 0.2295,
     "team": "AEK Athens"
    },
    {
     "n": "L. Majer",
-    "p": 0.2273,
+    "p": 0.2264,
     "team": "AEK Athens"
    },
    {
     "n": "Y. Couto",
-    "p": 0.1769,
+    "p": 0.1701,
     "team": "Como"
    }
   ]
@@ -1752,7 +1752,7 @@
   "ko": 1795550400,
   "partita": "RB Leipzig - Lens",
   "uff": true,
-  "p3": 0.020458771779286452,
+  "p3": 0.022258046137226848,
   "trio": [
    {
     "n": "A. Haidara",
@@ -1760,14 +1760,14 @@
     "team": "Lens"
    },
    {
-    "n": "Y. Titraoui",
-    "p": 0.2411,
-    "team": "Lens"
+    "n": "C. Baumgartner",
+    "p": 0.2584,
+    "team": "RB Leipzig"
    },
    {
-    "n": "C. Baumgartner",
-    "p": 0.2401,
-    "team": "RB Leipzig"
+    "n": "S. Baidoo",
+    "p": 0.2439,
+    "team": "Lens"
    }
   ]
  },
