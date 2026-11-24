@@ -1601,17 +1601,17 @@
   "id": 6106317,
   "ko": 1795542300,
   "partita": "Bodø/Glimt - LASK",
-  "uff": false,
-  "p3": 0.012519410805265568,
+  "uff": true,
+  "p3": 0.009693391455856602,
   "trio": [
    {
-    "n": "M. Verhaeghe",
-    "p": 0.2593,
+    "n": "X. Mbuyamba",
+    "p": 0.2266,
     "team": "LASK"
    },
    {
-    "n": "M. Bogarde",
-    "p": 0.2401,
+    "n": "Alemão",
+    "p": 0.2129,
     "team": "LASK"
    },
    {
