@@ -748,6 +748,13 @@ html { overflow-y: scroll; scrollbar-gutter: stable; }
 .ang-seg button[aria-pressed="true"] { background: var(--ag); color: #1c0f00; }
 .ang-seg button:focus-visible, .ang-more:focus-visible, .ang-open:focus-visible { outline: 2px solid var(--ag2); outline-offset: 2px; }
 .ang-day { display: grid; gap: 10px; }
+.ang-altre > summary { cursor: pointer; font-weight: 700; color: var(--muted); padding: 6px 2px; }
+.ang-altre > summary:hover { color: var(--ink); }
+.ang-altre[open] > summary { margin-bottom: 10px; }
+.ang-sg .ang-ver { padding-top: 4px; }
+.ang-row.prop { border-color: color-mix(in srgb, var(--ag) 60%, var(--line)); }
+.ang-row.prop.hit { border-color: color-mix(in srgb, var(--good) 75%, var(--line)); }
+.ang-badge { font-style: normal; font-weight: 800; color: #1c0f00; background: var(--ag); border-radius: 4px; padding: 0 5px; margin-right: 6px; font-size: 11px; text-transform: uppercase; letter-spacing: .3px; }
 .ang-day h3 { margin: 6px 0 0; font: 800 19px/1.15 var(--display); text-transform: uppercase; letter-spacing: .03em; color: var(--ag2); display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
 .ang-day h3 span { font: 600 13px var(--body); text-transform: none; letter-spacing: 0; color: var(--muted); }
 .ang-list { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 480px), 1fr)); align-items: start; }
@@ -1350,7 +1357,7 @@ function extraHist(r) {
 }
 // ---- Sezione ANGOLI: probabilità di almeno 14 angoli nella partita (data.json → angoli, scritto da cloud/angoli.mjs) ----
 const ANG = ALL.angoli && ((ALL.angoli.matches || []).length || (ALL.angoli.storico || []).length) ? ALL.angoli : null;
-const astate = { f: 'all', sort: 'p', all: false };
+const astate = { all: false, open: null };
 const itn = (v, d = 1) => Number(v).toFixed(d).replace('.', ',');
 const ANG_COMP = { sa: 'Serie A', ucl: 'Champions', uel: 'Europa League', naz: 'Nazionali', extra: 'EXTRA' };
 const angCols = c => c || ['#5d6c7b', '#ffffff'];
@@ -1374,52 +1381,65 @@ function angCard(m, rank, top) {
   </article>`;
 }
 function renderAngoli() {
+  // 25/11/2026: in alto le 2 proposte di ogni giorno (le altre partite in una tendina), sotto lo storico a tendine per giorno.
   const el = document.getElementById("sez-angoli"), S = ANG.soglia || 14, now = Date.now() / 1000;
-  const comps = ['sa', 'ucl', 'uel', 'naz', 'extra'].filter(c => ANG.matches.some(m => m.c === c));
-  if (astate.f !== 'all' && !comps.includes(astate.f)) astate.f = 'all';
-  const list = ANG.matches.filter(m => astate.f === 'all' || m.c === astate.f);
-  // Un blocco per giorno (24/11): prima ordinava per probabilità tutti i 10 giorni insieme e le partite di oggi finivano in mezzo.
-  // Dentro ogni giorno: per probabilità (o per orario); le tre in evidenza sono le migliori di quel giorno ancora da giocare.
-  const dayKey = ts => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Rome' }).format(ts * 1000), oggi = dayKey(now), domani = dayKey(now + 86400);
-  const days = [];
-  for (const m of [...list].sort((a, b) => a.ko - b.ko)) { const k = dayKey(m.ko); if (!days.length || days[days.length - 1].k !== k) days.push({ k, ko: m.ko, ms: [] }); days[days.length - 1].ms.push(m); }
-  const dayTitle = d => { const t = new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', weekday: 'long', day: 'numeric', month: 'long' }).format(d.ko * 1000); return d.k === oggi ? `Oggi · ${t}` : d.k === domani ? `Domani · ${t}` : t; };
-  const dayHtml = d => { const order = [...d.ms].sort((a, b) => astate.sort === 'p' ? b.p - a.p || a.ko - b.ko : a.ko - b.ko || b.p - a.p);
-    const best = new Set(d.ms.filter(m => m.ko > now).sort((a, b) => b.p - a.p).slice(0, 3).map(m => m.id));
-    return `<section class="ang-day"><h3>${dayTitle(d)} <span>${d.ms.length} ${d.ms.length === 1 ? 'partita' : 'partite'}</span></h3><div class="ang-list">${order.map((m, i) => angCard(m, i + 1, best.has(m.id))).join('')}</div></section>`; };
-  const st = ANG.storico || [], hit = r => r.ang[0] + r.ang[1] >= S, hits = st.filter(hit).length, att = st.reduce((s, r) => s + r.p, 0);
-  const alto = [...st].sort((a, b) => b.p - a.p).slice(0, Math.round(st.length / 3)), retro = st.filter(r => r.retro).length;
-  const shown = astate.all ? st : st.slice(0, 12);
-  const giorno = ts => new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', day: 'numeric', month: 'short' }).format(ts * 1000);
+  const dayKey = ts => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Rome' }).format(ts * 1000), oggi = dayKey(now), domani = dayKey(now + 86400), ieri = dayKey(now - 86400);
+  const dayLong = ts => new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', weekday: 'long', day: 'numeric', month: 'long' }).format(ts * 1000);
+  const PROP = ANG.proposte || {}, byP = (a, b) => b.p - a.p || a.ko - b.ko;
+  const propIds = (k, L) => PROP[k]?.ids || [...L].sort(byP).slice(0, 2).map(m => m.id);   // dati vecchi senza proposte: le due più alte
+  const groupDays = L => { const g = []; for (const m of L) { const k = dayKey(m.ko); let d = g.find(x => x.k === k); if (!d) g.push(d = { k, ko: m.ko, ms: [] }); d.ms.push(m); } return g; };
+  const hit = r => r.ang[0] + r.ang[1] >= S;
+  // --- prossimi giorni
+  const days = groupDays([...ANG.matches].sort((a, b) => a.ko - b.ko));
+  const dayHtml = d => {
+    const ids = propIds(d.k, d.ms), props = ids.map(id => d.ms.find(m => m.id === id)).filter(Boolean), altre = d.ms.filter(m => !ids.includes(m.id)).sort(byP);
+    const titolo = (d.k === oggi ? 'Oggi · ' : d.k === domani ? 'Domani · ' : '') + dayLong(d.ko);
+    return `<section class="ang-day"><h3>${titolo} <span>${props.length === 1 ? 'la proposta' : 'le 2 proposte'} su ${d.ms.length} ${d.ms.length === 1 ? 'partita' : 'partite'}</span></h3>
+      <div class="ang-list">${props.map((m, i) => angCard(m, i + 1, true)).join('')}</div>
+      ${altre.length ? `<details class="ang-altre"><summary>Le altre ${altre.length} ${altre.length === 1 ? 'partita' : 'partite'} del giorno</summary><div class="ang-list">${altre.map((m, i) => angCard(m, props.length + i + 1, false)).join('')}</div></details>` : ''}
+    </section>`;
+  };
+  // --- storico
+  const st = ANG.storico || [], sdays = groupDays([...st].sort((a, b) => b.ko - a.ko));
+  const pr = st.filter(r => (PROP[dayKey(r.ko)] ? r.prop : propIds(dayKey(r.ko), st.filter(x => dayKey(x.ko) === dayKey(r.ko))).includes(r.id)));
+  const prSet = new Set(pr.map(r => r.id)), prOk = pr.filter(hit).length, prAtt = pr.reduce((s, r) => s + r.p, 0), allOk = st.filter(hit).length;
+  const prVere = pr.filter(r => !PROP[dayKey(r.ko)]?.retro);
+  const shownDays = astate.all ? sdays : sdays.slice(0, 10);
+  if (!astate.open) astate.open = new Set(sdays.length ? [sdays[0].k] : []);
+  const row = r => `<div class="ang-row${hit(r) ? ' hit' : ''}${prSet.has(r.id) ? ' prop' : ''}"><span class="who"><b>${esc(r.h)} – ${esc(r.a)}</b><small>${prSet.has(r.id) ? '<i class="ang-badge">Proposta</i>' : ''}${esc(r.lega)}${r.finale ? ' · finita ' + esc(r.finale) : ''}</small></span>
+      <span class="pp">${itn(r.p * 100, 0)}%</span><span class="tot">${hit(r) ? '✓ ' : ''}${r.ang[0] + r.ang[1]}<small>${r.ang[0]} + ${r.ang[1]} angoli</small></span></div>`;
+  const sdayHtml = d => {
+    const P = d.ms.filter(r => prSet.has(r.id)).sort(byP), R = d.ms.filter(r => !prSet.has(r.id)).sort(byP), leghe = [...new Set(d.ms.map(r => r.lega))].join(', ');
+    const titolo = d.k === oggi ? 'Oggi · ' + dayLong(d.ko) : d.k === ieri ? 'Ieri · ' + dayLong(d.ko) : dayLong(d.ko);
+    return `<details class="hgroup ang-sg" data-k="${d.k}" style="--cc: var(--ag)"${astate.open.has(d.k) ? ' open' : ''}><summary><b>${titolo}</b><span>${esc(leghe)} · proposte con ${S}+: ${P.filter(hit).length} su ${P.length} · tutte: ${d.ms.filter(hit).length} su ${d.ms.length}${PROP[d.k]?.retro || d.ms.every(r => r.retro) ? ' · scelte a posteriori' : ''}</span></summary>
+      <div class="hbody"><div class="ang-ver">${[...P, ...R].map(row).join('')}</div></div></details>`;
+  };
   el.innerHTML = `
-    <p class="ang-lead">Per ogni partita, la probabilità che si battano <b>almeno ${S} angoli in totale</b>. È una giocata da quota alta: succede in media in una partita su sette, quindi anche le partite in cima alla lista restano più spesso sotto i ${S}. Le partite sono divise per giorno; in evidenza le tre più probabili di ogni giorno.</p>
-    ${ANG.matches.length ? `<div class="ang-bar">
-      ${comps.length > 1 ? `<div class="ang-seg" role="group" aria-label="Competizione">${['all', ...comps].map(c => `<button type="button" data-f="${c}" aria-pressed="${astate.f === c}">${c === 'all' ? 'Tutte' : ANG_COMP[c]}</button>`).join('')}</div>` : ''}
-      <div class="ang-seg" role="group" aria-label="Ordine"><button type="button" data-s="p" aria-pressed="${astate.sort === 'p'}">Più probabili</button><button type="button" data-s="t" aria-pressed="${astate.sort === 't'}">Per orario</button></div>
-    </div>
-    ${days.length ? days.map(dayHtml).join('') : `<p class="note">Nessuna partita di questa competizione nei prossimi giorni.</p>`}` : `<p class="note">Nessuna partita in programma nei prossimi giorni: le stime tornano con il prossimo turno.</p>`}
-    <h2>Verifica</h2>
+    <p class="ang-lead">Ogni giorno le <b>2 partite con la probabilità più alta di finire con almeno ${S} angoli</b> in totale. È una giocata da quota alta: succede in una partita su sette, quindi anche le proposte restano più spesso sotto i ${S}.</p>
+    <h2>Le proposte</h2>
+    ${days.length ? (astate.tutti ? days : days.slice(0, 3)).map(dayHtml).join('') + (days.length > 3 && !astate.tutti ? `<button type="button" class="ang-more" id="ang-giorni">Mostra i giorni successivi (${days.length - 3})</button>` : '') : `<p class="note">Nessuna partita in programma nei prossimi giorni: le proposte tornano con il prossimo turno.</p>`}
+    <h2>Storico</h2>
     ${st.length ? `<div class="ang-tiles">
-      <div class="stat"><span class="k">Partite verificate</span><span class="v">${st.length}${retro ? ` <small>${st.length - retro} stimate prima del via</small>` : ''}</span></div>
-      <div class="stat"><span class="k">Finite con ${S}+ angoli</span><span class="v">${hits} <small>attese ${itn(att)}</small></span></div>
-      <div class="stat"><span class="k">Nel terzo più alto</span><span class="v">${alto.filter(hit).length} su ${alto.length} <small>attese ${itn(alto.reduce((s, r) => s + r.p, 0))}</small></span></div>
+      <div class="stat"><span class="k">Proposte finite con ${S}+</span><span class="v">${prOk} su ${pr.length} <small>attese ${itn(prAtt)}</small></span></div>
+      <div class="stat"><span class="k">Tutte le partite con ${S}+</span><span class="v">${allOk} su ${st.length} <small>${itn(100 * allOk / st.length, 0)}%</small></span></div>
+      <div class="stat"><span class="k">Proposte scelte prima del via</span><span class="v">${prVere.length ? `${prVere.filter(hit).length} su ${prVere.length}` : '– <small>si parte da oggi</small>'}</span></div>
     </div>
-    <div class="ang-ver">${shown.map(r => `<div class="ang-row${hit(r) ? ' hit' : ''}"><span class="who"><b>${esc(r.h)} – ${esc(r.a)}</b><small>${esc(r.lega)} · ${giorno(r.ko)}${r.retro ? ' · ricalcolata' : ''}</small></span>
-      <span class="pp">${itn(r.p * 100, 0)}%</span><span class="tot">${hit(r) ? '✓ ' : ''}${r.ang[0] + r.ang[1]}<small>${r.ang[0]} + ${r.ang[1]}</small></span></div>`).join('')}</div>
-    ${st.length > 12 && !astate.all ? `<button type="button" class="ang-more" id="ang-more">Mostra tutte le ${st.length} partite</button>` : ''}
-    ${retro ? `<p class="note">«Ricalcolata»: partita giocata prima che nascesse la sezione; la stima è stata rifatta dopo, usando solo i dati disponibili prima del calcio d'inizio.</p>` : ''}`
+    <p class="note">Una tendina per giorno, dalla più recente: in cima le due proposte, poi le altre partite del giorno con la probabilità stimata prima del via e gli angoli battuti.</p>
+    ${shownDays.map(sdayHtml).join('')}
+    ${sdays.length > 10 && !astate.all ? `<button type="button" class="ang-more" id="ang-more">Mostra tutti i ${sdays.length} giorni</button>` : ''}
+    ${st.some(r => r.retro) || Object.values(PROP).some(p => p.retro) ? `<p class="note">«Scelte a posteriori»: giorni giocati prima che esistessero le proposte; le due partite sono quelle con la stima prepartita più alta, ma nessuno le aveva indicate prima. Il conto onesto è «Proposte scelte prima del via».</p>` : ''}`
       : `<p class="note">Qui compariranno gli angoli veri delle partite finite, accanto alla probabilità stimata prima del calcio d'inizio.</p>`}
     <details class="ang-how"><summary>Come si legge</summary>
       <p>La stima parte dalle ultime 20 gare di ciascuna squadra: angoli battuti e concessi, tiri, tocchi in area avversaria, xG e possesso, insieme alla media della competizione. Non servono le formazioni, quindi la probabilità è disponibile già giorni prima e si ferma al calcio d'inizio.</p>
+      <p>Le 2 proposte di un giorno si aggiornano finché quel giorno non comincia; al primo calcio d'inizio restano fisse, e lo storico le giudica così.</p>
       <p>«Quota equa» è la quota a cui la giocata sarebbe in pari secondo il modello (1 diviso la probabilità): una quota del bookmaker più alta è a favore, una più bassa no. «Sulla media» dice di quanti punti percentuali la partita supera la frequenza abituale della competizione.</p>
       <p>Nelle prove sul passato (13.291 partite dal 2023/24, ogni stagione stimata solo con i dati precedenti) il 10% di partite con la probabilità più alta è finito con ${S}+ angoli il 23,6% delle volte, contro il 14,3% di tutte le partite. Il vantaggio c'è ma è piccolo, e sulle singole giornate conta molto il caso.</p>
-      <p>Per le nazionali lo storico è più corto (Nations League, Europei, Mondiali e qualificazioni dal 2021) e i ${S}+ sono più rari: circa una partita su dieci. Nelle 613 partite di prova il modello ha fatto comunque meglio della media.</p>
       ${ANG.updated ? `<p>Ultimo aggiornamento: ${fmtDay(ANG.updated).toLowerCase()} alle ${fmtTime(ANG.updated)}.</p>` : ''}
     </details>`;
-  for (const b of el.querySelectorAll('[data-f]')) b.addEventListener('click', () => { astate.f = b.dataset.f; renderAngoli(); });
-  for (const b of el.querySelectorAll('[data-s]')) b.addEventListener('click', () => { astate.sort = b.dataset.s; renderAngoli(); });
   for (const b of el.querySelectorAll('.ang-open')) b.addEventListener('click', () => { const id = +b.dataset.id; setComp(compOf(id), id); scrollTo({ top: 0 }); });
+  el.querySelectorAll('.ang-sg').forEach(d => d.addEventListener('toggle', () => { d.open ? astate.open.add(d.dataset.k) : astate.open.delete(d.dataset.k); }));
   const more = document.getElementById('ang-more'); if (more) more.addEventListener('click', () => { astate.all = true; renderAngoli(); });
+  const gg = document.getElementById('ang-giorni'); if (gg) gg.addEventListener('click', () => { astate.tutti = true; renderAngoli(); });
 }
 function setView(v) {
   state.view = v; document.getElementById('tab-partite').setAttribute('aria-pressed', String(v === 'partite')); document.getElementById('tab-area').setAttribute('aria-pressed', String(v === 'area'));

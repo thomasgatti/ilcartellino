@@ -22,6 +22,13 @@ const FISSE = [['sa', '55', 'Serie A'], ['ucl', '42', 'Champions League'], ['uel
 const data = JSON.parse(fs.readFileSync(DATA, 'utf8'));
 const ang = data.angoli ||= { updated: 0, soglia: SOGLIA, matches: [], storico: [], col: {} };
 ang.matches ||= []; ang.storico ||= []; ang.col ||= {}; ang.soglia = SOGLIA;
+// Proposte del giorno (25/11/2026): per ogni giorno (ora italiana) le 2 partite con la probabilità più alta.
+// Si ricalcolano finché il giorno non è cominciato; al primo calcio d'inizio del giorno restano fisse, così lo storico
+// le giudica come erano prima delle partite. ang.proposte = { 'AAAA-MM-GG': { ids: [id, id], retro?: 1 } }.
+ang.proposte ||= {};
+const NPROP = 2, dayKey = ts => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Rome' }).format(ts * 1000);
+const top2 = L => [...L].sort((a, b) => b.p - a.p || a.ko - b.ko).slice(0, NPROP).map(m => m.id);
+const isProp = m => (ang.proposte[dayKey(m.ko)]?.ids || []).includes(m.id) ? 1 : 0;
 const xm = (data.extra?.matches || []).filter(m => m.ko > now);
 const nm = (data.cups?.naz?.matches || []).filter(m => m.ko > now);   // Nazionali (16/11): le partite della sezione Nazionali
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -45,7 +52,7 @@ for (const m of [...ang.matches]) {
   const c = (j.content?.stats?.Periods?.All?.stats || []).flatMap(g => g.stats || []).find(s => s.key === 'corners')?.stats;
   if (!(Array.isArray(c) && c.length === 2 && c.every(Number.isFinite))) { if (now > m.ko + day) drop(); continue; }   // FotMob a volte pubblica le statistiche in ritardo
   const H = j.header.teams;
-  ang.storico.unshift({ id: m.id, c: m.c, lega: m.lega, ko: m.ko, h: m.h, a: m.a, hc: m.hc, ac: m.ac, p: m.p, mu: m.mu, base: m.base, finale: `${H[0].score}-${H[1].score}`, ang: c });
+  ang.storico.unshift({ id: m.id, c: m.c, lega: m.lega, ko: m.ko, h: m.h, a: m.a, hc: m.hc, ac: m.ac, p: m.p, mu: m.mu, base: m.base, finale: `${H[0].score}-${H[1].score}`, ang: c, ...(isProp(m) ? { prop: 1 } : {}) });
   drop(); console.log('ANGOLI archiviata', m.h, m.a, c.join('-'));
 }
 
@@ -138,6 +145,21 @@ try {
   }
 } catch (e) { console.log('ANGOLI: nazionali nello storico non aggiunte:', e.message); }
 ang.storico = ang.storico.slice(0, 400);
+
+// --- 6. proposte del giorno
+{ const per = {};
+  for (const m of ang.matches) (per[dayKey(m.ko)] ||= []).push(m);
+  for (const [k, L] of Object.entries(per)) {
+    const iniziato = L.some(m => m.ko <= now) || ang.storico.some(r => dayKey(r.ko) === k);
+    if (!ang.proposte[k] || (!iniziato && !ang.proposte[k].retro)) ang.proposte[k] = { ids: top2(L) };
+  }
+  // giorni già giocati prima delle proposte: scelte a posteriori dalle stime prepartita dello storico (retro: 1)
+  const gst = {}; for (const r of ang.storico) (gst[dayKey(r.ko)] ||= []).push(r);
+  for (const [k, L] of Object.entries(gst)) if (!ang.proposte[k]) ang.proposte[k] = { ids: top2(L), retro: 1 };
+  for (const r of ang.storico) { if (isProp(r)) r.prop = 1; else delete r.prop; }
+  const keep = new Set([...ang.matches, ...ang.storico].map(m => dayKey(m.ko)));
+  for (const k of Object.keys(ang.proposte)) if (!keep.has(k)) delete ang.proposte[k];
+}
 ang.n = M.n; ang.updated = calOk ? Math.round(now) : 0;   // calendario mancante: si riprova al giro dopo
 fs.writeFileSync(DATA, JSON.stringify(data));
 console.log('ANGOLI aggiornata:', ang.matches.length, 'partite,', ang.storico.length, 'nello storico ·', ang.matches.map(m => `${m.h}-${m.a} ${Math.round(m.p * 100)}%`).join(', '));
