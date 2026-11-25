@@ -1927,7 +1927,7 @@
   "ko": 1795628700,
   "partita": "Sabah FK - Barcelona",
   "uff": false,
-  "p3": 0.008907026276385134,
+  "p3": 0.008863640705133001,
   "trio": [
    {
     "n": "M. Bernal",
@@ -1936,7 +1936,7 @@
    },
    {
     "n": "U. Rakhmonaliev",
-    "p": 0.1951,
+    "p": 0.1941,
     "team": "Sabah FK"
    },
    {
@@ -2027,7 +2027,7 @@
   "ko": 1795636800,
   "partita": "Club Brugge - Liverpool",
   "uff": false,
-  "p3": 0.015451996707715581,
+  "p3": 0.015385715885903376,
   "trio": [
    {
     "n": "K. Tsimikas",
@@ -2041,7 +2041,7 @@
    },
    {
     "n": "F. Potts",
-    "p": 0.2248,
+    "p": 0.2238,
     "team": "Club Brugge"
    }
   ]
