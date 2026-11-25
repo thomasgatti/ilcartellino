@@ -2045,5 +2045,205 @@
     "team": "Club Brugge"
    }
   ]
+ },
+ {
+  "comp": "sa",
+  "id": 5749769,
+  "ko": 1795808700,
+  "partita": "Venezia - Bologna",
+  "uff": false,
+  "p3": 0.015295174595458793,
+  "trio": [
+   {
+    "n": "R. Halhal",
+    "p": 0.2598,
+    "team": "Venezia"
+   },
+   {
+    "n": "J. Jesus",
+    "p": 0.2372,
+    "team": "Venezia"
+   },
+   {
+    "n": "T. Pobega",
+    "p": 0.214,
+    "team": "Bologna"
+   }
+  ]
+ },
+ {
+  "comp": "sa",
+  "id": 5749763,
+  "ko": 1795874400,
+  "partita": "Frosinone - Parma",
+  "uff": false,
+  "p3": 0.010615371791923225,
+  "trio": [
+   {
+    "n": "V. Sierro",
+    "p": 0.2264,
+    "team": "Parma"
+   },
+   {
+    "n": "M. Troilo",
+    "p": 0.2186,
+    "team": "Parma"
+   },
+   {
+    "n": "P. Masini",
+    "p": 0.1849,
+    "team": "Frosinone"
+   }
+  ]
+ },
+ {
+  "comp": "sa",
+  "id": 5749767,
+  "ko": 1795885200,
+  "partita": "Torino - Lazio",
+  "uff": false,
+  "p3": 0.009400386376470624,
+  "trio": [
+   {
+    "n": "R. Floriani",
+    "p": 0.2072,
+    "team": "Lazio"
+   },
+   {
+    "n": "G. Gineitis",
+    "p": 0.2044,
+    "team": "Torino"
+   },
+   {
+    "n": "M. Zaccagni",
+    "p": 0.1913,
+    "team": "Lazio"
+   }
+  ]
+ },
+ {
+  "comp": "sa",
+  "id": 5749764,
+  "ko": 1795895100,
+  "partita": "Inter - Genoa",
+  "uff": false,
+  "p3": 0.003456379966998067,
+  "trio": [
+   {
+    "n": "L. Østigård",
+    "p": 0.1705,
+    "team": "Genoa"
+   },
+   {
+    "n": "J. Vásquez",
+    "p": 0.1499,
+    "team": "Genoa"
+   },
+   {
+    "n": "A. Bastoni",
+    "p": 0.1166,
+    "team": "Inter"
+   }
+  ]
+ },
+ {
+  "comp": "sa",
+  "id": 5749768,
+  "ko": 1795951800,
+  "partita": "Udinese - Fiorentina",
+  "uff": false,
+  "p3": 0.017270972860270517,
+  "trio": [
+   {
+    "n": "N. Zaniolo",
+    "p": 0.2665,
+    "team": "Udinese"
+   },
+   {
+    "n": "M. Palma",
+    "p": 0.2389,
+    "team": "Udinese"
+   },
+   {
+    "n": "C. Inao Oulaï",
+    "p": 0.2339,
+    "team": "Fiorentina"
+   }
+  ]
+ },
+ {
+  "comp": "sa",
+  "id": 5749766,
+  "ko": 1795960800,
+  "partita": "Sassuolo - Napoli",
+  "uff": false,
+  "p3": 0.0026748542805689036,
+  "trio": [
+   {
+    "n": "R. Marín",
+    "p": 0.1538,
+    "team": "Napoli"
+   },
+   {
+    "n": "F. Candé",
+    "p": 0.1259,
+    "team": "Sassuolo"
+   },
+   {
+    "n": "K. Thorstvedt",
+    "p": 0.119,
+    "team": "Sassuolo"
+   }
+  ]
+ },
+ {
+  "comp": "sa",
+  "id": 5749760,
+  "ko": 1795971600,
+  "partita": "Roma - Monza",
+  "uff": false,
+  "p3": 0.0030384526057012883,
+  "trio": [
+   {
+    "n": "S. Goglichidze",
+    "p": 0.146,
+    "team": "Monza"
+   },
+   {
+    "n": "L. Lucchesi",
+    "p": 0.1426,
+    "team": "Monza"
+   },
+   {
+    "n": "B. Cristante",
+    "p": 0.1258,
+    "team": "Roma"
+   }
+  ]
+ },
+ {
+  "comp": "sa",
+  "id": 5749762,
+  "ko": 1795981500,
+  "partita": "Como - Juventus",
+  "uff": false,
+  "p3": 0.008579598497193183,
+  "trio": [
+   {
+    "n": "D. Luiz",
+    "p": 0.2226,
+    "team": "Juventus"
+   },
+   {
+    "n": "G. Bremer",
+    "p": 0.1882,
+    "team": "Juventus"
+   },
+   {
+    "n": "Y. Couto",
+    "p": 0.1766,
+    "team": "Como"
+   }
+  ]
  }
 ]
