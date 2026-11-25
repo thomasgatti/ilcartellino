@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta name="build" content="2026-11-25T01:32:46Z">
+<meta name="build" content="2026-11-25T01:41:27Z">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -750,6 +750,14 @@ html { overflow-y: scroll; scrollbar-gutter: stable; }
 .ang-seg button[aria-pressed="true"] { background: var(--ag); color: #1c0f00; }
 .ang-seg button:focus-visible, .ang-more:focus-visible, .ang-open:focus-visible { outline: 2px solid var(--ag2); outline-offset: 2px; }
 .ang-day { display: grid; gap: 10px; }
+.ang-live { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; padding: 10px 12px; border-radius: 10px; background: color-mix(in srgb, var(--paper) 60%, transparent); border: 1px solid var(--line); font-size: 14px; color: var(--muted); }
+.ang-live b { font: 800 22px/1 var(--display); color: var(--ink); font-variant-numeric: tabular-nums; }
+.ang-live b.ok { color: var(--good); }
+.ang-live .manca { margin-left: auto; font-weight: 700; color: var(--ink); }
+.ang-lbar { flex: 1 0 100%; height: 6px; border-radius: 999px; background: color-mix(in srgb, var(--ink) 10%, transparent); position: relative; overflow: hidden; }
+.ang-lbar > i { position: absolute; inset: 0 auto 0 0; border-radius: 999px; background: linear-gradient(90deg, #ff6a1a, var(--ag2)); }
+.ang-card.valore { box-shadow: 0 0 0 2px var(--good) inset, 0 4px 18px color-mix(in srgb, var(--good) 18%, transparent); }
+.ang-val .v small { color: var(--good); font-weight: 700; }
 .ang-altre > summary { cursor: pointer; font-weight: 700; color: var(--muted); padding: 6px 2px; }
 .ang-altre > summary:hover { color: var(--ink); }
 .ang-altre[open] > summary { margin-bottom: 10px; }
@@ -1379,11 +1387,54 @@ const astate = { all: false, open: null };
 const itn = (v, d = 1) => Number(v).toFixed(d).replace('.', ',');
 const ANG_COMP = { sa: 'Serie A', ucl: 'Champions', uel: 'Europa League', naz: 'Nazionali', extra: 'EXTRA' };
 const angCols = c => c || ['#5d6c7b', '#ffffff'];
+// ---- Angoli live (25/11): tabellone ESPN della competizione, una chiamata per competizione e giorno, ogni 45 secondi ----
+const ANG_ESPN = { sa: 'ita.1', ucl: 'uefa.champions', uel: 'uefa.europa', naz: 'uefa.nations' }, angLiveData = {};
+function angLiveHtml(id) {
+  const L = angLiveData[id]; if (!L) return '';
+  const S = ANG.soglia || 14, tot = L.h + L.a, ok = tot >= S;
+  return `<span class="pill ${L.fin ? 'done' : 'live'}">${L.fin ? 'Finita' : esc(L.clock || 'In corso')}</span>
+    <b class="${ok ? 'ok' : ''}">${ok ? '✓ ' : ''}${tot} angoli</b><span>${L.h} + ${L.a}</span>
+    <span class="manca">${ok ? `${S} raggiunti` : L.fin ? `sotto i ${S}` : `ne mancano ${S - tot}`}</span>
+    <i class="ang-lbar"><i style="width:${Math.min(100, tot / S * 100).toFixed(1)}%"></i></i>`;
+}
+function angLivePaint(id) { const el = document.querySelector(`.ang-live[data-id="${id}"]`); if (!el) return; el.hidden = !angLiveData[id]; el.innerHTML = angLiveHtml(id); el.closest('.ang-card')?.querySelector('.ang-meta .pill')?.remove(); }
+let angLiveBusy = false;
+async function angLiveTick() {
+  if (!ANG || state.comp !== 'angoli' || document.hidden || angLiveBusy) return;
+  const now = Date.now() / 1000, groups = {};
+  for (const m of ANG.matches) {
+    if (m.ko - 300 > now || now > m.ko + 3 * 3600 || angLiveData[m.id]?.fin) continue;
+    const lg = m.c === 'extra' ? ESPN_LG[m.lega] : ANG_ESPN[m.c]; if (!lg) continue;
+    (groups[lg + '|' + new Date(m.ko * 1000).toISOString().slice(0, 10).replace(/-/g, '')] ||= []).push(m);
+  }
+  angLiveBusy = true;
+  try {
+    for (const [k, ms] of Object.entries(groups)) {
+      const [lg, d] = k.split('|'); let j; try { j = await espnJson(lg + '/scoreboard?dates=' + d); } catch { continue; }
+      for (const m of ms) {
+        const cand = (j.events || []).filter(e => Math.abs(Date.parse(e.date) / 1000 - m.ko) <= 1200);
+        const score = e => teamSides.filter(([sd, ha]) => { const t = e.competitions?.[0]?.competitors?.find(x => x.homeAway === ha)?.team; return [t?.displayName, t?.shortDisplayName, t?.name].some(n => teamWordsMatch(m[sd], n) || (m.en && teamWordsMatch(m.en[sd === 'h' ? 0 : 1], n))); }).length;
+        const e = cand.map(e => [e, score(e)]).filter(([, s]) => s === 2 || (s === 1 && cand.length === 1)).sort((a, b) => b[1] - a[1])[0]?.[0]; if (!e) continue;
+        const c = e.competitions[0], st = c.status?.type; if (!st || st.state === 'pre') continue;
+        const cn = ha => wholeStat(c.competitors.find(x => x.homeAway === ha)?.statistics?.find(s => s.name === 'wonCorners')?.displayValue);
+        const h = cn('home'), a = cn('away'); if (h == null || a == null) continue;
+        angLiveData[m.id] = { h, a, fin: !!st.completed, clock: st.completed ? 'Finita' : st.state === 'in' ? (st.shortDetail || c.status.displayClock) : '' };
+        angLivePaint(m.id);
+      }
+    }
+  } finally { angLiveBusy = false; }
+}
+setInterval(angLiveTick, 45000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) angLiveTick(); });
 function angCard(m, rank, top) {
   const S = ANG.soglia || 14, now = Date.now() / 1000, w = v => Math.max(2, Math.min(100, v / .3 * 100)).toFixed(1), tot = m.mu[0] + m.mu[1];
   const sq = (name, s) => s ? `<div><b>${esc(name)}</b><span>${itn(s[0])} a favore · ${itn(s[1])} contro a gara</span><span>${S}+ in ${s[2]} delle ultime ${s[3]}</span></div>` : '';
-  const stato = m.ko <= now ? `<span class="pill ${now > m.ko + 115 * 60 ? 'done' : 'live'}">${now > m.ko + 115 * 60 ? 'In attesa degli angoli finali' : 'In corso'}</span>` : '';
-  return `<article class="ang-card${top ? ' top' : ''}">
+  const stato = m.ko <= now && !angLiveData[m.id] ? `<span class="pill ${now > m.ko + 115 * 60 ? 'done' : 'live'}">${now > m.ko + 115 * 60 ? 'In attesa degli angoli finali' : 'In corso'}</span>` : '';
+  // quota over 13,5 (cloud/quote_angoli.mjs): valore = probabilità × quota − 1
+  const q = m.q?.over > 1 ? m.q : null, val = q ? m.p * q.over - 1 : 0;
+  const terza = q ? `<div class="stat ${val > 0 ? 'ang-val' : ''}"><span class="k">Quota ${esc(q.b)}</span><span class="v">${itn(q.over, 2)} <small>${val > 0 ? 'valore +' + itn(val * 100, 0) + '%' : 'sotto l’equa'}</small></span></div>`
+    : `<div class="stat"><span class="k">Sulla media</span><span class="v">${m.p >= m.base ? '+' : '−'}${itn(Math.abs(m.p - m.base) * 100, 0)} <small>punti</small></span></div>`;
+  return `<article class="ang-card${top ? ' top' : ''}${q && val > 0 ? ' valore' : ''}">
     <div class="ang-head"><span class="ang-rank" aria-hidden="true">${rank}</span>
       <div class="ang-teams"><span>${teamMark(m.h, angCols(m.hc))}<em>${esc(m.h)}</em></span><span>${teamMark(m.a, angCols(m.ac))}<em>${esc(m.a)}</em></span></div>
       <div class="ang-pct"><b>${itn(m.p * 100, 0)}%</b><small>${S}+ angoli</small></div></div>
@@ -1392,8 +1443,9 @@ function angCard(m, rank, top) {
     <div class="ang-nums">
       <div class="stat"><span class="k">Angoli attesi</span><span class="v">${itn(tot)} <small>${itn(m.mu[0])} + ${itn(m.mu[1])}</small></span></div>
       <div class="stat"><span class="k">Quota equa</span><span class="v">${itn(1 / m.p, 2)}</span></div>
-      <div class="stat"><span class="k">Sulla media</span><span class="v">${m.p >= m.base ? '+' : '−'}${itn(Math.abs(m.p - m.base) * 100, 0)} <small>punti</small></span></div>
+      ${terza}
     </div>
+    <div class="ang-live" data-id="${m.id}"${angLiveData[m.id] ? '' : ' hidden'}>${angLiveHtml(m.id)}</div>
     ${m.sq ? `<div class="ang-sq">${sq(m.h, m.sq.h)}${sq(m.a, m.sq.a)}</div>` : ''}
     ${allMatches().some(x => x.id === m.id) ? `<button type="button" class="ang-open" data-id="${m.id}">Apri la partita nei cartellini ›</button>` : ''}
   </article>`;
@@ -1449,8 +1501,8 @@ function renderAngoli() {
       : `<p class="note">Qui compariranno gli angoli veri delle partite finite, accanto alla probabilità stimata prima del calcio d'inizio.</p>`}
     <details class="ang-how"><summary>Come si legge</summary>
       <p>La stima parte dalle ultime 20 gare di ciascuna squadra: angoli battuti e concessi, tiri, tocchi in area avversaria, xG e possesso, insieme alla media della competizione. Non servono le formazioni, quindi la probabilità è disponibile già giorni prima e si ferma al calcio d'inizio.</p>
-      <p>Le 2 proposte di un giorno si aggiornano finché quel giorno non comincia; al primo calcio d'inizio restano fisse, e lo storico le giudica così.</p>
-      <p>«Quota equa» è la quota a cui la giocata sarebbe in pari secondo il modello (1 diviso la probabilità): una quota del bookmaker più alta è a favore, una più bassa no. «Sulla media» dice di quanti punti percentuali la partita supera la frequenza abituale della competizione.</p>
+      <p>Le 2 proposte di un giorno si aggiornano finché quel giorno non comincia; al primo calcio d'inizio restano fisse, e lo storico le giudica così. Durante la partita il conteggio degli angoli si aggiorna da solo ogni 45 secondi.</p>
+      <p>«Quota equa» è la quota a cui la giocata sarebbe in pari secondo il modello (1 diviso la probabilità): una quota del bookmaker più alta è a favore, una più bassa no. Quando c'è, accanto compare la quota dell'over 13,5 angoli (Sisal per prima) letta nelle ore prima del via; la scheda col bordo verde è una proposta «di valore», con la quota sopra l'equa. «Sulla media» dice di quanti punti percentuali la partita supera la frequenza abituale della competizione.</p>
       <p>Nelle prove sul passato (13.291 partite dal 2023/24, ogni stagione stimata solo con i dati precedenti) il 10% di partite con la probabilità più alta è finito con ${S}+ angoli il 23,6% delle volte, contro il 14,3% di tutte le partite. Il vantaggio c'è ma è piccolo, e sulle singole giornate conta molto il caso.</p>
       ${ANG.updated ? `<p>Ultimo aggiornamento: ${fmtDay(ANG.updated).toLowerCase()} alle ${fmtTime(ANG.updated)}.</p>` : ''}
     </details>`;
@@ -1557,7 +1609,7 @@ function setComp(c, keepId) {
     for (const q of ['.layout', '#area', '#storico', '#xintro']) document.querySelector(q).hidden = true;
     document.getElementById('hdr-round').textContent = `· ${ANG.soglia || 14} o più`;
     document.getElementById('meta').innerHTML = '<span>Serie A, Champions, Europa League, Nazionali e big match EXTRA</span>';
-    history.replaceState(null, '', '#angoli'); renderAngoli(); compInView(c); return;
+    history.replaceState(null, '', '#angoli'); renderAngoli(); compInView(c); angLiveTick(); return;
   }
   if (c !== 'sa' && !cupOf(c)) c = 'sa';
   for (const k of ['sa', 'ucl', 'naz', 'extra']) document.getElementById('comp-' + k).setAttribute('aria-pressed', String(c === k));

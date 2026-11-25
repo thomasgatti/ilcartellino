@@ -52,7 +52,7 @@ for (const m of [...ang.matches]) {
   const c = (j.content?.stats?.Periods?.All?.stats || []).flatMap(g => g.stats || []).find(s => s.key === 'corners')?.stats;
   if (!(Array.isArray(c) && c.length === 2 && c.every(Number.isFinite))) { if (now > m.ko + day) drop(); continue; }   // FotMob a volte pubblica le statistiche in ritardo
   const H = j.header.teams;
-  ang.storico.unshift({ id: m.id, c: m.c, lega: m.lega, ko: m.ko, h: m.h, a: m.a, hc: m.hc, ac: m.ac, p: m.p, mu: m.mu, base: m.base, finale: `${H[0].score}-${H[1].score}`, ang: c, ...(isProp(m) ? { prop: 1 } : {}) });
+  ang.storico.unshift({ id: m.id, c: m.c, lega: m.lega, ko: m.ko, h: m.h, a: m.a, hc: m.hc, ac: m.ac, p: m.p, mu: m.mu, base: m.base, finale: `${H[0].score}-${H[1].score}`, ang: c, ...(isProp(m) ? { prop: 1 } : {}), ...(m.q?.over ? { q: m.q } : {}) });
   drop(); console.log('ANGOLI archiviata', m.h, m.a, c.join('-'));
 }
 
@@ -64,7 +64,7 @@ const W = walk(ms, OPTS), M = train(W.rows);
 // ultime 20 gare di ogni squadra: quante con almeno 14 angoli
 const last = {}; for (const m of ms) for (const t of [m.h, m.a]) (last[t] ||= []).push(m.t.angoli[0] + m.t.angoli[1]);
 const n14 = t => { const L = (last[t] || []).slice(-OPTS.n); return [L.filter(x => x >= SOGLIA).length, L.length]; };
-const idByName = {}; for (const m of ms) { idByName[m.hn] = m.h; idByName[m.an] = m.a; }
+const idByName = {}, enById = {}; for (const m of ms) { idByName[m.hn] = m.h; idByName[m.an] = m.a; enById[m.h] = m.hn; enById[m.a] = m.an; }
 
 // nomi italiani (classifiche) e colori già usati in pagina
 const itName = {}; for (const g of [...(data.classifiche?.sa || []), ...(data.classifiche?.ucl || [])]) for (const r of g.rows || []) if (r[10]) itName[r[10]] = r[1];
@@ -113,6 +113,9 @@ for (const m of out.filter(m => !m.hc || !m.ac).slice(0, 12)) {
   if (tc.home) ang.col[m.hid] = [tc.home, '#ffffff']; if (tc.away) ang.col[m.aid] = [tc.away, '#ffffff'];
   m.hc ||= ang.col[m.hid] || null; m.ac ||= ang.col[m.aid] || null;
 }
+// nome inglese (per trovare la partita su OddsPapi) e quota già letta da cloud/quote_angoli.mjs: restano fra un ricalcolo e l'altro
+const prima = new Map(ang.matches.map(m => [m.id, m]));
+for (const m of out) { if (!m.en && enById[m.hid] && enById[m.aid]) m.en = [enById[m.hid], enById[m.aid]]; const q = prima.get(m.id)?.q; if (q && !m.q) m.q = q; }
 ang.matches = out.sort((a, b) => a.ko - b.ko);
 
 // --- 4. primo avvio: lo storico parte con le ultime tre settimane di Serie A e Champions, ricalcolate a posteriori

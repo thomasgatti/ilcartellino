@@ -11,6 +11,7 @@ on:
       - 'cloud/giornata.mjs'
       - 'cloud/angoli.mjs'
       - 'cloud/attesa.mjs'
+      - 'cloud/quote_angoli.mjs'
   workflow_run:
     workflows: ['Aggiorna dati FotMob']
     branches: [main]
@@ -72,6 +73,11 @@ jobs:
         continue-on-error: true
         env:
           ANGOLI_FORZA: ${{ github.event_name == 'workflow_dispatch' && inputs.prova && '1' || '' }}
+      - name: Quote over 13,5 angoli delle proposte (OddsPapi, chiave a parte)
+        run: node cloud/quote_angoli.mjs
+        continue-on-error: true
+        env:
+          ODDSPAPI_KEY_ANGOLI: ${{ secrets.ODDSPAPI_KEY_ANGOLI }}
       - name: Rigenera l'interfaccia
         run: |
           if git diff --quiet -- bot/webapp/data.json bot/webapp/lineups.txt bot/webapp/vercel/risultati.json; then exit 0; fi
