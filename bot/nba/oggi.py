@@ -28,6 +28,9 @@ V2 = (os.environ.get('NBA_MODELLO') or 'v2').strip().lower() != 'v1'
 FASCE = (('Alta', 10), ('Altissima', 30), ('Colpo grosso', 100))
 TIPI = [n for n, _ in FASCE] + ['Con una tripla doppia', 'Due triple doppie']
 LIMITE = 2
+# notti corte (25/11/2026): con meno di 5 partite niente Colpo grosso e nessun giocatore in due combinazioni
+# (24/11, 3 partite: il Colpo grosso doveva prendere giocatori al 10% e Sarr, perso, faceva cadere due proposte)
+POCHE_PARTITE = 5
 # «quota bassa» dal 19/11/2026: fra 1,70 e 2,50 (prima sotto 2,00). Richiesta del proprietario: a 1,08-1,30 il guadagno è quasi nullo.
 TD_ALTA = 10.0                # 23/11/2026, richiesta del proprietario: tripla doppia «quota alta» = la più probabile a quota 10 o più (almeno 3%), diversa dalla «quota bassa»
 BASSA = (1.70, 2.50)          # dal 18/11/2026: lo stesso giocatore al massimo in 2 combinazioni (se salta lui, saltano al massimo due proposte)
@@ -43,6 +46,7 @@ def combinazioni(tutti, fisse=None):
         if g.get('q_dd') and g['p_dd'] >= 0.08: gambe.append(dict(base, cosa='dd', p=g['p_dd'], q=g['q_dd']))
         if g.get('q_td') and g['p_td'] >= 0.03: gambe.append(dict(base, cosa='td', p=g['p_td'], q=g['q_td']))
     gambe = sorted(gambe, key=lambda x: -x['p']); tutte_gambe = list(gambe); gambe = gambe[:40]; cand = []
+    corta = len({g['partita'] for g in tutti}) < POCHE_PARTITE; limite = 1 if corta else LIMITE
     for k in (2, 3):
         for c in itertools.combinations(gambe, k):
             if len({x['partita'] for x in c}) < k: continue
@@ -54,7 +58,7 @@ def combinazioni(tutti, fisse=None):
     for f in fisse.values(): registra(f['gambe'])
     def scegli(nome, buone):
         for p, q, c in buone:
-            if frozenset((x['n'], x['cosa']) for x in c) in visti or any(conta.get(x['n'], 0) >= LIMITE for x in c): continue
+            if frozenset((x['n'], x['cosa']) for x in c) in visti or any(conta.get(x['n'], 0) >= limite for x in c): continue
             registra(c); return dict(tipo=nome, p=round(p, 4), q=round(q, 2), gambe=[{a: x[a] for a in CAMPI_GAMBA if a in x} for x in c])
     fasce = []
     for i, (nome, minimo) in enumerate(FASCE):
@@ -66,6 +70,7 @@ def combinazioni(tutti, fisse=None):
     out = []
     for nome, filtro, ordine in fasce:
         if nome in fisse: out.append(fisse[nome]); continue
+        if corta and nome == 'Colpo grosso': continue
         r = scegli(nome, sorted([c for c in cand if filtro(c)], key=ordine))
         if r: out.append(r)
     for c in out: alternative(c, tutte_gambe, dict(FASCE).get(c['tipo']))
