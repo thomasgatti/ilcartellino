@@ -1901,22 +1901,22 @@
   "id": 6106391,
   "ko": 1795628700,
   "partita": "Slavia Prague - Villarreal",
-  "uff": false,
-  "p3": 0.023887089782490965,
+  "uff": true,
+  "p3": 0.021437412668860793,
   "trio": [
    {
     "n": "S. Mouriño",
-    "p": 0.3346,
+    "p": 0.3365,
     "team": "Villarreal"
    },
    {
-    "n": "S. Comesaña",
-    "p": 0.2707,
+    "n": "P. Gueye",
+    "p": 0.2581,
     "team": "Villarreal"
    },
    {
-    "n": "A. N'Guessan",
-    "p": 0.2273,
+    "n": "W. Nowak",
+    "p": 0.2128,
     "team": "Slavia Prague"
    }
   ]
@@ -1926,23 +1926,23 @@
   "id": 6106421,
   "ko": 1795628700,
   "partita": "Sabah FK - Barcelona",
-  "uff": false,
-  "p3": 0.008863640705133001,
+  "uff": true,
+  "p3": 0.010909071838838621,
   "trio": [
    {
-    "n": "M. Bernal",
-    "p": 0.2152,
+    "n": "Gavi",
+    "p": 0.238,
     "team": "Barcelona"
    },
    {
-    "n": "U. Rakhmonaliev",
-    "p": 0.1941,
+    "n": "Almeida",
+    "p": 0.2015,
     "team": "Sabah FK"
    },
    {
-    "n": "F. López",
-    "p": 0.1829,
-    "team": "Barcelona"
+    "n": "U. Rakhmonaliev",
+    "p": 0.1961,
+    "team": "Sabah FK"
    }
   ]
  },
