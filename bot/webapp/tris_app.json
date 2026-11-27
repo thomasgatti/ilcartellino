@@ -2052,21 +2052,21 @@
   "ko": 1795808700,
   "partita": "Venezia - Bologna",
   "uff": false,
-  "p3": 0.01768889740070653,
+  "p3": 0.01834854638180226,
   "trio": [
    {
     "n": "R. Halhal",
-    "p": 0.2706,
+    "p": 0.2716,
     "team": "Venezia"
    },
    {
-    "n": "J. Jesus",
-    "p": 0.25,
+    "n": "M. Moreno",
+    "p": 0.2519,
     "team": "Venezia"
    },
    {
     "n": "T. Pobega",
-    "p": 0.2255,
+    "p": 0.2312,
     "team": "Bologna"
    }
   ]
@@ -2077,21 +2077,21 @@
   "ko": 1795874400,
   "partita": "Frosinone - Parma",
   "uff": false,
-  "p3": 0.010615371791923225,
+  "p3": 0.006432722502887359,
   "trio": [
    {
     "n": "V. Sierro",
-    "p": 0.2264,
+    "p": 0.1948,
     "team": "Parma"
    },
    {
     "n": "M. Troilo",
-    "p": 0.2186,
+    "p": 0.1823,
     "team": "Parma"
    },
    {
     "n": "P. Masini",
-    "p": 0.1849,
+    "p": 0.1562,
     "team": "Frosinone"
    }
   ]
@@ -2102,22 +2102,22 @@
   "ko": 1795885200,
   "partita": "Torino - Lazio",
   "uff": false,
-  "p3": 0.009400386376470624,
+  "p3": 0.006012237924351267,
   "trio": [
    {
     "n": "R. Floriani",
-    "p": 0.2072,
+    "p": 0.1862,
     "team": "Lazio"
-   },
-   {
-    "n": "G. Gineitis",
-    "p": 0.2044,
-    "team": "Torino"
    },
    {
     "n": "M. Zaccagni",
-    "p": 0.1913,
+    "p": 0.1711,
     "team": "Lazio"
+   },
+   {
+    "n": "P. Comuzzo",
+    "p": 0.1627,
+    "team": "Torino"
    }
   ]
  },
@@ -2127,21 +2127,21 @@
   "ko": 1795895100,
   "partita": "Inter - Genoa",
   "uff": false,
-  "p3": 0.003456379966998067,
+  "p3": 0.004872024496061271,
   "trio": [
    {
     "n": "L. Østigård",
-    "p": 0.1705,
+    "p": 0.1901,
     "team": "Genoa"
    },
    {
     "n": "J. Vásquez",
-    "p": 0.1499,
+    "p": 0.1695,
     "team": "Genoa"
    },
    {
     "n": "A. Bastoni",
-    "p": 0.1166,
+    "p": 0.1303,
     "team": "Inter"
    }
   ]
