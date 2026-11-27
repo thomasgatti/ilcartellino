@@ -2077,21 +2077,21 @@
   "ko": 1795874400,
   "partita": "Frosinone - Parma",
   "uff": false,
-  "p3": 0.006536180550794983,
+  "p3": 0.006539014762422391,
   "trio": [
    {
     "n": "V. Sierro",
-    "p": 0.1986,
+    "p": 0.1958,
     "team": "Parma"
    },
    {
     "n": "M. Troilo",
-    "p": 0.1784,
+    "p": 0.1833,
     "team": "Parma"
    },
    {
     "n": "P. Masini",
-    "p": 0.159,
+    "p": 0.1571,
     "team": "Frosinone"
    }
   ]
