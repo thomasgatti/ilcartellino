@@ -2077,21 +2077,21 @@
   "ko": 1795874400,
   "partita": "Frosinone - Parma",
   "uff": false,
-  "p3": 0.006539014762422391,
+  "p3": 0.006536180550794983,
   "trio": [
    {
     "n": "V. Sierro",
-    "p": 0.1958,
+    "p": 0.1986,
     "team": "Parma"
    },
    {
     "n": "M. Troilo",
-    "p": 0.1833,
+    "p": 0.1784,
     "team": "Parma"
    },
    {
     "n": "P. Masini",
-    "p": 0.1571,
+    "p": 0.159,
     "team": "Frosinone"
    }
   ]
@@ -2102,7 +2102,7 @@
   "ko": 1795885200,
   "partita": "Torino - Lazio",
   "uff": false,
-  "p3": 0.006012237924351267,
+  "p3": 0.0066821467575090086,
   "trio": [
    {
     "n": "R. Floriani",
@@ -2110,13 +2110,13 @@
     "team": "Lazio"
    },
    {
-    "n": "M. Zaccagni",
-    "p": 0.1711,
+    "n": "A. Pedraza",
+    "p": 0.1825,
     "team": "Lazio"
    },
    {
-    "n": "P. Comuzzo",
-    "p": 0.1627,
+    "n": "S. Coco",
+    "p": 0.1695,
     "team": "Torino"
    }
   ]
@@ -2127,21 +2127,21 @@
   "ko": 1795895100,
   "partita": "Inter - Genoa",
   "uff": false,
-  "p3": 0.004872024496061271,
+  "p3": 0.003913146040105373,
   "trio": [
    {
-    "n": "L. Østigård",
-    "p": 0.1901,
-    "team": "Genoa"
-   },
-   {
     "n": "J. Vásquez",
-    "p": 0.1695,
+    "p": 0.1725,
     "team": "Genoa"
    },
    {
-    "n": "A. Bastoni",
-    "p": 0.1303,
+    "n": "A. Marcandalli",
+    "p": 0.1586,
+    "team": "Genoa"
+   },
+   {
+    "n": "M. Thuram",
+    "p": 0.1233,
     "team": "Inter"
    }
   ]
