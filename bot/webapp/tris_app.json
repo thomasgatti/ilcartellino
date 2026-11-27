@@ -2051,22 +2051,22 @@
   "id": 5749769,
   "ko": 1795808700,
   "partita": "Venezia - Bologna",
-  "uff": false,
-  "p3": 0.018796351661931162,
+  "uff": true,
+  "p3": 0.022666954151492568,
   "trio": [
    {
-    "n": "R. Halhal",
-    "p": 0.2725,
+    "n": "M. Moreno",
+    "p": 0.279,
     "team": "Venezia"
    },
    {
-    "n": "J. Jesus",
-    "p": 0.2519,
+    "n": "R. Halhal",
+    "p": 0.275,
     "team": "Venezia"
    },
    {
     "n": "T. Pobega",
-    "p": 0.236,
+    "p": 0.2547,
     "team": "Bologna"
    }
   ]
