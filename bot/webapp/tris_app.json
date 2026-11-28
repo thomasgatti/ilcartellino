@@ -2152,11 +2152,11 @@
   "ko": 1795951800,
   "partita": "Udinese - Fiorentina",
   "uff": false,
-  "p3": 0.017270972860270517,
+  "p3": 0.015710299346752547,
   "trio": [
    {
     "n": "N. Zaniolo",
-    "p": 0.2665,
+    "p": 0.2569,
     "team": "Udinese"
    },
    {
@@ -2166,7 +2166,7 @@
    },
    {
     "n": "C. Inao Oulaï",
-    "p": 0.2339,
+    "p": 0.2207,
     "team": "Fiorentina"
    }
   ]
@@ -2177,7 +2177,7 @@
   "ko": 1795960800,
   "partita": "Sassuolo - Napoli",
   "uff": false,
-  "p3": 0.0026748542805689036,
+  "p3": 0.002571395483602062,
   "trio": [
    {
     "n": "R. Marín",
@@ -2185,13 +2185,13 @@
     "team": "Napoli"
    },
    {
-    "n": "F. Candé",
-    "p": 0.1259,
-    "team": "Sassuolo"
+    "n": "F. Anguissa",
+    "p": 0.121,
+    "team": "Napoli"
    },
    {
-    "n": "K. Thorstvedt",
-    "p": 0.119,
+    "n": "F. Candé",
+    "p": 0.1191,
     "team": "Sassuolo"
    }
   ]
@@ -2202,21 +2202,21 @@
   "ko": 1795971600,
   "partita": "Roma - Monza",
   "uff": false,
-  "p3": 0.0030384526057012883,
+  "p3": 0.0027878458686725217,
   "trio": [
    {
     "n": "S. Goglichidze",
-    "p": 0.146,
+    "p": 0.1421,
     "team": "Monza"
    },
    {
     "n": "L. Lucchesi",
-    "p": 0.1426,
+    "p": 0.1387,
     "team": "Monza"
    },
    {
     "n": "B. Cristante",
-    "p": 0.1258,
+    "p": 0.122,
     "team": "Roma"
    }
   ]
@@ -2227,21 +2227,21 @@
   "ko": 1795981500,
   "partita": "Como - Juventus",
   "uff": false,
-  "p3": 0.008579598497193183,
+  "p3": 0.007373489962614897,
   "trio": [
    {
     "n": "D. Luiz",
-    "p": 0.2226,
+    "p": 0.2197,
     "team": "Juventus"
    },
    {
     "n": "G. Bremer",
-    "p": 0.1882,
+    "p": 0.1872,
     "team": "Juventus"
    },
    {
     "n": "Y. Couto",
-    "p": 0.1766,
+    "p": 0.1546,
     "team": "Como"
    }
   ]
