@@ -2077,21 +2077,21 @@
   "ko": 1795874400,
   "partita": "Frosinone - Parma",
   "uff": true,
-  "p3": 0.0075296912181843974,
+  "p3": 0.007370878202532957,
   "trio": [
    {
     "n": "A. Ndiaye",
-    "p": 0.1956,
+    "p": 0.1946,
     "team": "Parma"
    },
    {
     "n": "M. Troilo",
-    "p": 0.1926,
+    "p": 0.1917,
     "team": "Parma"
    },
    {
     "n": "P. Masini",
-    "p": 0.1723,
+    "p": 0.1704,
     "team": "Frosinone"
    }
   ]
