@@ -2227,21 +2227,21 @@
   "ko": 1795981500,
   "partita": "Como - Juventus",
   "uff": false,
-  "p3": 0.007373489962614897,
+  "p3": 0.00673309006933264,
   "trio": [
    {
     "n": "D. Luiz",
-    "p": 0.2197,
+    "p": 0.2015,
     "team": "Juventus"
    },
    {
     "n": "G. Bremer",
-    "p": 0.1872,
+    "p": 0.1725,
     "team": "Juventus"
    },
    {
     "n": "Y. Couto",
-    "p": 0.1546,
+    "p": 0.167,
     "team": "Como"
    }
   ]
