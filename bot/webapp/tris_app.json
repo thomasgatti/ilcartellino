@@ -2076,22 +2076,22 @@
   "id": 5749763,
   "ko": 1795874400,
   "partita": "Frosinone - Parma",
-  "uff": false,
-  "p3": 0.005441390714545423,
+  "uff": true,
+  "p3": 0.0075296912181843974,
   "trio": [
    {
-    "n": "V. Sierro",
-    "p": 0.1977,
+    "n": "A. Ndiaye",
+    "p": 0.1956,
     "team": "Parma"
    },
    {
     "n": "M. Troilo",
-    "p": 0.1784,
+    "p": 0.1926,
     "team": "Parma"
    },
    {
     "n": "P. Masini",
-    "p": 0.133,
+    "p": 0.1723,
     "team": "Frosinone"
    }
   ]
