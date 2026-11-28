@@ -2101,22 +2101,22 @@
   "id": 5749767,
   "ko": 1795885200,
   "partita": "Torino - Lazio",
-  "uff": false,
-  "p3": 0.007111040843275403,
+  "uff": true,
+  "p3": 0.01063035153279658,
   "trio": [
    {
+    "n": "N. Patterson",
+    "p": 0.2172,
+    "team": "Torino"
+   },
+   {
     "n": "A. Pedraza",
-    "p": 0.1962,
+    "p": 0.2172,
     "team": "Lazio"
    },
    {
-    "n": "R. Floriani",
-    "p": 0.1843,
-    "team": "Lazio"
-   },
-   {
-    "n": "S. Coco",
-    "p": 0.1695,
+    "n": "G. Gineitis",
+    "p": 0.1943,
     "team": "Torino"
    }
   ]
