@@ -2102,21 +2102,21 @@
   "ko": 1795885200,
   "partita": "Torino - Lazio",
   "uff": true,
-  "p3": 0.01063035153279658,
+  "p3": 0.011989346680430852,
   "trio": [
    {
     "n": "N. Patterson",
-    "p": 0.2172,
+    "p": 0.225,
     "team": "Torino"
    },
    {
     "n": "A. Pedraza",
-    "p": 0.2172,
+    "p": 0.2201,
     "team": "Lazio"
    },
    {
     "n": "G. Gineitis",
-    "p": 0.1943,
+    "p": 0.2087,
     "team": "Torino"
    }
   ]
