@@ -2102,16 +2102,16 @@
   "ko": 1795885200,
   "partita": "Torino - Lazio",
   "uff": false,
-  "p3": 0.0066821467575090086,
+  "p3": 0.007111040843275403,
   "trio": [
    {
-    "n": "R. Floriani",
-    "p": 0.1862,
+    "n": "A. Pedraza",
+    "p": 0.1962,
     "team": "Lazio"
    },
    {
-    "n": "A. Pedraza",
-    "p": 0.1825,
+    "n": "R. Floriani",
+    "p": 0.1843,
     "team": "Lazio"
    },
    {
@@ -2127,11 +2127,11 @@
   "ko": 1795895100,
   "partita": "Inter - Genoa",
   "uff": false,
-  "p3": 0.004228596170803151,
+  "p3": 0.003832095049851887,
   "trio": [
    {
     "n": "J. Vásquez",
-    "p": 0.1725,
+    "p": 0.1715,
     "team": "Genoa"
    },
    {
@@ -2140,8 +2140,8 @@
     "team": "Genoa"
    },
    {
-    "n": "M. Thuram",
-    "p": 0.1233,
+    "n": "N. Barella",
+    "p": 0.1124,
     "team": "Inter"
    }
   ]
